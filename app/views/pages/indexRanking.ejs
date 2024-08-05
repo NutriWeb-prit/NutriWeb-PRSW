@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="imagens/logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="css/styleRanking.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"rel="stylesheet">
+    <title>Ranking - NutriWeb</title>
+</head>
+
+    <body>
+
+        <header class="header">
+            
+            <div class="left-section">
+                <a href="/"><img src="imagens/logo.png" alt="Logo" class="logo"></a>
+        
+                <a href="/ranking" class="ranking">
+                    <div class="btn-ranking">
+                        <img src="imagens/icone-ranking.png" alt="Ranking Icon" class="icon-rank">
+                        <button class="ranking-button">Ranking</button>
+                    </div>
+                </a>
+
+                <a href="/profissionais"><button class="profissionais-button">Profissionais</button></a>
+            </div>
+
+            <div class="center-section">
+                <div class="input-premium">
+                    <span class="material-icons search-icon md-24">search</span>
+                    <input type="text">
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <button class="premium-button">Premium</button>
+                <a href="/entrar"><button class="entrar-button">Entrar</button></a>
+            </div>
+            
+        </header>
+        
+        <main>
+            <section class="ranking-section">
+
+                <div class="header-content">
+                    <a href="/"><span class="material-icons arrow-icon md-24">arrow_back_ios</span></a>
+                    <span class="header-text">Ranking</span>
+                </div>
+                
+                <img src="imagens/img-ranking.png" alt="Exemplo Imagem" class="responsive-img">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Especialidade</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Bia</td>
+                            <td>Nutricionista</td>
+                        </tr>
+                        <tr>
+                            <td>André</td>
+                            <td>Personal</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+
+        <section class="home-mobile">
+
+            <div class="menu">
+                <div class="left-section">
+                    <a href="/"><img src="imagens/logo.png" alt="Logo" class="logo"></a>
+                </div>
+
+                <div class="right-section">
+                    <span class="material-icons search-icon md-24 menu-icon">menu</span>
+                </div>
+            </div>
+            
+            <div class="mobile-menu hidden">
+                <ul>
+                    <li><a href="/entrar">Entrar</a></li>
+                    <li><a href="/ranking">Ranking</a></li>
+                    <li><a href="/profissionais">Profissionais</a></li>
+                    <li><a href="#">Premium</a></li>
+                </ul>
+            </div>
+
+        </section>    
+
+    </body>
+    <script src="js/indexMenu.js"></script>
+</html>

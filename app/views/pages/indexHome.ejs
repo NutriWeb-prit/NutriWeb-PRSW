@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="imagens/logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="css/styleHome.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"rel="stylesheet">
+    <title>Home - NutriWeb</title>
+</head>
+    <body>
+        
+        <header class="header">
+            
+            <div class="left-section">
+                <img src="imagens/logo.png" alt="Logo" class="logo">
+        
+                <a href="/ranking" class="ranking">
+                    <div class="btn-ranking">
+                        <img src="imagens/icone-ranking.png" alt="Ranking Icon" class="icon-rank">
+                        <button class="ranking-button">Ranking</button>
+                    </div>
+                </a>
+
+                <a href="/profissionais"><button class="profissionais-button">Profissionais</button></a>
+            </div>
+
+            <div class="center-section">
+                <div class="input-premium">
+                    <span class="material-icons search-icon md-24">search</span>
+                    <input type="text">
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <button class="premium-button">Premium</button>
+                <a href="/entrar"><button class="entrar-button">Entrar</button></a>
+            </div>
+            
+        </header>
+        
+        <div class="img-header">
+            <div class="img-text">
+                Comece uma <span class="green-text"> vida </span> mais <span class="green-text">Saudável</span>
+            </div>
+            <img src="imagens/img-home.jpg" alt="img-home">
+        </div>
+
+        <button class="filter-button">
+            Filtrar
+            <span class="material-icons md-24">tune</span>
+        </button>
+
+        <div class="cards-container">
+            <!-- <span class="material-icons arrow arrow-left md-36">chevron_left</span> -->
+            <div class="cards-wrapper">
+                <div class="card">
+                    <a href="/perfilnutri" class="card-perfil">
+                        <div class="card-header">
+                            <img src="imagens/user-card.png" alt="Profile">
+                            <div>
+                                <div class="name">Pessoa 1</div>
+                                <div class="profession">Nutricionista</div>
+                            </div>
+                        </div>
+                    </a>
+                    <img src="imagens/img-card.png" alt="Content" class="content-img">
+                    <div class="caption">Legenda...</div>
+                </div>
+
+                <div class="card">
+                    <a href="/perfilnutri" class="card-perfil">
+                        <div class="card-header">
+                            <img src="imagens/user-card.png" alt="Profile">
+                            <div>
+                                <div class="name">Pessoa 2</div>
+                                <div class="profession">Nutricionista</div>
+                            </div>
+                        </div>
+                    </a> 
+                    <img src="imagens/img-card.png" alt="Content" class="content-img">
+                    <div class="caption">Legenda...</div>
+                </div>
+
+                <div class="card">
+                    <a href="/perfilnutri" class="card-perfil">
+                        <div class="card-header">
+                            <img src="imagens/user-card.png" alt="Profile">
+                            <div>
+                                <div class="name">Pessoa 3</div>
+                                <div class="profession">Nutricionista</div>
+                            </div>
+                        </div>
+                    </a>   
+                    <img src="imagens/img-card.png" alt="Content" class="content-img">
+                    <div class="caption">Legenda...</div>
+                </div>
+
+                <div class="card">
+                    <a href="/perfilnutri" class="card-perfil">
+                        <div class="card-header">
+                            <img src="imagens/user-card.png" alt="Profile">
+                            <div>
+                                <div class="name">Pessoa 4</div>
+                                <div class="profession">Nutricionista</div>
+                            </div>
+                        </div>
+                    </a>    
+                    <img src="imagens/img-card.png" alt="Content" class="content-img">
+                    <div class="caption">Legenda...</div>
+                </div>
+            </div>
+            <!-- <span class="material-icons arrow arrow-right md-36">chevron_right</span> -->
+        </div>
+
+        <div id="modal" class="modal">
+            <div class="modal-content">
+
+                <div class="modal-image">
+                    <img src="imagens/img-login.jpg" alt="Content Image" id="modal-img">
+                </div>
+
+                <div class="modal-card">
+                    <a href="/perfilnutri" class="card-perfil card-modal">
+                        <div class="card-header">
+                            <img src="imagens/user-card.png" alt="Profile" id="modal-profile">
+                            <div>
+                                <div class="name" id="modal-name">Nome</div>
+                                <div class="profession">Nutricionista</div>
+                            </div>
+                        </div>
+                    </a>
+                    
+                    <div class="modal-image-mobile">
+                        <img src="imagens/img-login.jpg" alt="Content Image" id="modal-img">
+                    </div>
+
+                    <div class="modal-description">
+                        <h2>QUAIS SÃO OS BENEFÍCIOS DO MAMÃO?</h2>
+                        <p>Além de ser considerado um alimento com efeito calmante natural, o mamão fornece em vitaminas A, C, cálcio, ferro, potássio, licopeno e fibras, entre outros nutrientes.</p>
+                        <h3>XÔ ENVELHECIMENTO PRECOCE</h3>
+                        <p>Ele possui betacaroteno e outras substâncias com ação antioxidante que afastam os danos causados à pele pela ação dos radicais livres. Por conter vitaminas C, A e E, também contribui para uma maior firmeza da pele.</p>
+                        <h3>AÇÃO DETOXIFICANTE</h3>
+                        <p>Os antioxidantes presentes na fruta também ajudam no processo natural de eliminação das toxinas pelo fígado.</p>
+                    </div>
+                </div>
+
+                <span class="close-modal md-24" id="close-modal">&times;</span>
+            </div>
+        </div>        
+        
+        <section class="home-mobile">
+
+            <div class="menu">
+                <div class="left-section">
+                    <img src="imagens/logo.png" alt="Logo" class="logo">
+                </div>
+
+                <div class="right-section">
+                    <span class="material-icons search-icon md-24 menu-icon">menu</span>
+                </div>
+            </div>
+            
+            <div class="mobile-menu hidden">
+                <ul>
+                    <li><a href="/entrar">Entrar</a></li>
+                    <li><a href="/ranking">Ranking</a></li>
+                    <li><a href="/profissionais">Profissionais</a></li>
+                    <li><a href="#">Premium</a></li>
+                </ul>
+            </div>
+
+            <div class="img-header-mobile">
+
+                <img src="imagens/img-home.jpg" alt="img-home">
+                <div class="img-text">
+                    Comece uma <span class="green-text"> vida </span> mais <span class="green-text">saudável</span>
+                </div>
+                
+            </div>            
+
+            <div class="search-container-mobile">
+                <span class="material-icons search-icon-mobile">search</span>
+                <input type="text" class="search-input-mobile">
+                
+                <button class="filter-button-mobile">
+                    Filtrar
+                    <span class="material-icons filter-mobile">tune</span>
+                </button>
+            </div>
+
+            <div class="cards-container-mobile">
+                <!-- <span class="material-icons arrow arrow-left md-36">chevron_left</span> -->
+                <div class="cards-wrapper">
+                    <div class="card">
+                    <a href="/perfilnutri" class="card-perfil">
+                        <div class="card-header">
+                            <img src="imagens/user-card.png" alt="Profile">
+                            <div>
+                                <div class="name">Pessoa 1</div>
+                                <div class="profession">Nutricionista</div>
+                            </div>
+                        </div>
+                    </a>
+                        <img src="imagens/img-card.png" alt="Content" class="content-img">
+                        <div class="caption">Legenda...</div>
+                    </div>
+                    
+                    <div class="card">
+                    <a href="/perfilnutri" class="card-perfil">
+                        <div class="card-header">
+                            <img src="imagens/user-card.png" alt="Profile">
+                            <div>
+                                <div class="name">Pessoa 2</div>
+                                <div class="profession">Nutricionista</div>
+                            </div>
+                        </div>
+                    </a>
+                        <img src="imagens/img-card.png" alt="Content" class="content-img">
+                        <div class="caption">Legenda...</div>
+                    </div>
+    
+                    <div class="card">
+                    <a href="/perfilnutri" class="card-perfil">
+                        <div class="card-header">
+                            <img src="imagens/user-card.png" alt="Profile">
+                            <div>
+                                <div class="name">Pessoa 3</div>
+                                <div class="profession">Nutricionista</div>
+                            </div>
+                        </div>
+                    </a>
+                        <img src="imagens/img-card.png" alt="Content" class="content-img">
+                        <div class="caption">Legenda...</div>
+                    </div>
+    
+                    <div class="card">
+                    <a href="/perfilnutri" class="card-perfil">
+                        <div class="card-header">
+                            <img src="imagens/user-card.png" alt="Profile">
+                            <div>
+                                <div class="name">Pessoa 4</div>
+                                <div class="profession">Nutricionista</div>
+                            </div>
+                        </div>
+                    </a>
+                        <img src="imagens/img-card.png" alt="Content" class="content-img">
+                        <div class="caption">Legenda...</div>
+                    </div>
+                </div>
+                <!-- <span class="material-icons arrow arrow-right md-36">chevron_right</span> -->
+            </div>
+
+        </section>
+        
+    </body>
+    <script src="js/indexMenu.js"></script>
+    <script src="js/modalHome.js"></script>
+</html>

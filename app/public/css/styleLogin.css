@@ -1,0 +1,267 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    background-image: url("../imagens/img-home.jpg");
+}
+
+.header-content {
+    width: 90%;
+    display: flex;
+    justify-content: flex-start;
+    padding: 20px;
+}
+
+.back-button {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: green;
+    font-size: 25px;
+}
+
+.back-arrow{
+    color: #fff;
+}
+
+.arrow-icon.md-24 {
+    font-size: 36px;
+    cursor: pointer;
+    margin-right: 8px;
+}
+
+.login-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.side-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.side-image img {
+    max-width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.left{
+    width: 200px;
+    margin-right: 100px;
+}
+
+.login-card-container {
+    display: flex;
+    align-items: stretch;
+    height: 400px; 
+}
+
+.login-card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px 0 0 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 350px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-card h2 {
+    margin-bottom: 20px;
+    color: green;
+}
+
+.login-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.login-card input {
+    padding: 10px;
+    border: none;
+    border-bottom: 1px solid green;
+    border-radius: 5px;
+    outline: none;
+    background-color: transparent;
+    width: 100%;
+}
+
+.login-card button[type="submit"] {
+    padding: 10px;
+    background-color: green;
+    color: #fff;
+    border: none;
+    border-radius: 40px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.or-divider {
+    margin: 20px 0;
+}
+
+.social-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.social-buttons button {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border: none;
+    border-radius: 40px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.social-buttons button span.material-icons {
+    margin-right: 10px;
+}
+
+.google-button {
+    background-color: #db4437;
+    color: #fff;
+}
+
+.facebook-button {
+    background-color: #3b5998;
+    color: #fff;
+}
+
+.apple-button {
+    background-color: #000;
+    color: #fff;
+}
+
+.side-image.right {
+    width: 298px;
+    height: 100%; 
+}
+
+.side-image.right img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0 10px 10px 0;
+}
+
+.mobile{
+    display: none;
+}
+
+@media (max-width: 1020px) {
+    .mobile{
+        display: flex;
+    }
+    .side-image{
+        display: none;
+    }
+
+    .mobile {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: rgba(0, 0, 0, 0.599);
+        width: 100%;
+        box-sizing: border-box;
+        position: fixed;
+        top: 0;
+        z-index: 1;
+    }
+
+    .container {
+        margin-top: 0; 
+        margin-left: 0; 
+    }
+    
+    .card {
+        max-width: calc(100% - 40px); 
+        margin-right: 0; 
+        margin-left: 0;
+        margin-bottom: 0;
+    }
+
+    .menu {
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 20px;
+        background-color: rgba(0, 0, 0, 0.599);
+        border-bottom: 1px solid #ddd;
+        width: 100%;
+        box-sizing: border-box;
+        position: fixed;
+        top: 0;
+        background: url("../imagens/img-home.jpg");
+    }
+
+    .mobile-menu {
+        display: flex;
+        flex-direction: column;
+        align-items: left;
+        background-image: url("../imagens/img-home.jpg");
+        position: fixed;
+        border-radius: 20px;
+        top: 12%;
+        left: 50%;
+        width: 40%;
+        height: 30%;
+        z-index: 2;
+        justify-content: center;
+        padding: 20px;
+    }
+    
+    .mobile-menu ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        text-align: center;
+    }
+    
+    .mobile-menu ul li {
+        margin: 20px 0;
+    }
+    
+    .mobile-menu ul li a {
+        text-decoration: none;
+        color: white;
+        font-size: 24px;
+    }
+    
+    .mobile-menu.hidden {
+        display: none;
+    }
+
+    .menu .logo {
+        height: 50px;
+    }
+
+    .right-section .search-icon {
+        font-size: 50px;
+        color: green;
+        cursor: pointer;
+    }
+
+    .login-card {
+        background-color: transparent;
+        color: #fff;
+    }
+
+    .login-card input {
+       color: #fff;
+    }
+}

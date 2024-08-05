@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/stylePerfilNutri.css">
+    <link rel="icon" href="imagens/logo.png" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@40,400,0,0" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <title>Perfil - NutriWeb</title>
+</head>
+    <body class="body">
+        
+        <header class="header">
+            
+            <div class="left-section">
+                <a href="/"><img src="imagens/logo.png" alt="Logo" class="logo"></a>
+        
+                <a href="/ranking" class="ranking">
+                    <div class="btn-ranking">
+                        <img src="imagens/icone-ranking.png" alt="Ranking Icon" class="icon-rank">
+                        <button class="ranking-button">Ranking</button>
+                    </div>
+                </a>
+
+                <a href="/profissionais"><button class="profissionais-button">Profissionais</button></a>
+            </div>
+
+            <div class="center-section">
+                <div class="input-premium">
+                    <span class="material-icons search-icon md-24">search</span>
+                    <input type="text">
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <button class="premium-button">Premium</button>
+                <a href="/entrar"><button class="entrar-button">Entrar</button></a>
+            </div>
+            
+        </header>
+            
+        <section class="home-mobile">
+
+            <div class="menu">
+                <div class="left-section">
+                    <img src="imagens/logo.png" alt="Logo" class="logo">
+                </div>
+
+                <div class="right-section">
+                    <span class="material-icons search-icon md-24 menu-icon">menu</span>
+                </div>
+            </div>
+            
+            <div class="mobile-menu hidden">
+                <ul>
+                    <li><a href="/entrar">Entrar</a></li>
+                    <li><a href="/ranking">Ranking</a></li>
+                    <li><a href="/profissionais">Profissionais</a></li>
+                    <li><a href="#">Premium</a></li>
+                </ul>
+            </div>
+
+        </section>
+
+        <!-- Conteudo do site -->
+
+        <main class="conteudo">
+            <section id="info_perfil">
+
+                <div id="container_foto">
+                    <div id="foto_perfil">
+                    </div>
+                </div><br>
+
+                <div id="infrmacoes_nutri">
+                    <p>
+                        Nome: <br>
+                        Especialidade: <br>
+                        sobre <br>
+                    </p>
+                </div>
+
+                <div id="info_contato">
+                    <h4>Informações de Contato</h4>
+                    <div class="divisao"></div>
+                </div>
+
+                <div id="rede_sociais">
+                    
+                    <p class="contato">
+                        <img src="imagens/whatsapp-logo-computer-icons-png-favpng-wMENFvu5MVSPHJBMEHuwGNSZr-removebg-preview.png" alt="" class="icone_contato">
+                        (xx) xxxxx-xxxx
+                    </p>
+
+                    
+                    <p class="contato">
+                        <img src="imagens/OIP-removebg-preview.png" alt="" class="icone_contato">
+                        @doutor__123
+                    </p>
+
+                    
+                    <p class="contato">
+                        <img src="imagens/OIP-removebg-preview (1).png" alt="" class="icone_contato">
+                        doutor123@gmail.com
+                    </p>
+                </div>
+
+                <div id="editar_perfil">
+                    
+                    <span class="material-symbols-outlined caneta">
+                        edit
+                        </span>
+                    <p>
+                        Editar Perfil
+                    </p>
+                </div>
+                
+            </section>
+
+            <div id="publi_avaliacao">
+
+                <div id="publi_selecionar" onclick="clicarDois()">
+                    <p>Publicações</p>
+                </div>
+
+                <div id="avaliacao_selecionar" onclick="clicarUm()">
+                    <p>Avaliações</p>
+                </div>
+
+            </div>
+            <section id="publi">
+                <article class="img">
+                    <img src="imagens/addIcon_NutriWeb-removebg-preview.png" alt="" id="adicionar_foto">
+                </article>
+                
+                <article class="img">
+                    <img src="imagens/img-post-frutas.jpg" alt="" class="post_img">
+                </article>
+
+                <article class="img">
+                    <img src="imagens/img-post-kiwi.jpg" alt=""  class="post_img">
+                </article>
+
+                <article class="img">
+                    <img src="imagens/img-post-whey.jpg" alt=""  class="post_img">
+                </article>
+
+            </section>
+
+
+            <section id="avaliar_nutri">
+
+                <article class="avaliacao">
+
+                    <section class="nome_avaliador">
+                        <div id="nome">
+                            <span class="material-symbols-outlined icone_conta">account_circle</span>
+                            <p id="nome-escrito">Bruna</p>
+                        </div>
+
+                        <div id="container-estrela">
+                            <img src="imagens/estrela-pontiaguda (1).png" alt="">
+                            <img src="imagens/estrela-pontiaguda (1).png" alt="">
+                            <img src="imagens/estrela-pontiaguda (1).png" alt="">
+                            <img src="imagens/estrela-pontiaguda (1).png" alt="">
+                            <img src="imagens/estrela-pontiaguda.png" alt="">
+                            <img src="imagens/estrela-pontiaguda.png" alt="">
+                        </div>
+
+                    </section>
+
+                    <p class="comentario">
+                        Comentário sobre o nutricionista
+                    </p>
+                </article>
+                
+                <article class="avaliacao">
+
+                    <section class="nome_avaliador">
+
+                        <div id="nome">
+                            <span class="material-symbols-outlined icone_conta">account_circle</span>
+                            <p id="nome-escrito">Bruna</p>
+                        </div>
+
+                        <div id="container-estrela">
+                            <img src="imagens/estrela-pontiaguda (1).png" alt="">
+                            <img src="imagens/estrela-pontiaguda (1).png" alt="">
+                            <img src="imagens/estrela-pontiaguda (1).png" alt="">
+                            <img src="imagens/estrela-pontiaguda (1).png" alt="">
+                            <img src="imagens/estrela-pontiaguda.png" alt="">
+                            <img src="imagens/estrela-pontiaguda.png" alt="">
+                        </div>
+
+                    </section>
+
+                    <p class="comentario">
+                        Comentário sobre o nutricionista
+                    </p>
+
+                </article>
+
+                <article class="avaliacao">
+                    <section class="nome_avaliador">
+                        <div id="nome">
+                            <span class="material-symbols-outlined icone_conta">account_circle</span>
+                            <p id="nome-escrito">Bruna</p>
+                        </div>
+                        <div id="container-estrela">
+                            <img src="imagens/estrela-pontiaguda (1).png" alt="">
+                            <img src="imagens/estrela-pontiaguda (1).png" alt="">
+                            <img src="imagens/estrela-pontiaguda (1).png" alt="">
+                            <img src="imagens/estrela-pontiaguda (1).png" alt="">
+                            <img src="imagens/estrela-pontiaguda.png" alt="">
+                            <img src="imagens/estrela-pontiaguda.png" alt="">
+                        </div>
+                    </section>
+
+                    <p class="comentario">
+                        Comentário sobre o nutricionista
+                    </p>
+
+                </article>
+            </section>
+        </main>
+        
+    </body>
+    <script src="js/scriptPerfil.js"></script>
+</html>

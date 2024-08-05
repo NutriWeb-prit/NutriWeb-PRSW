@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="imagens/logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="css/styleCadastrarCliente.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <title>Cadastro nutricionista - NutriWeb</title>
+</head>
+    <body>
+
+        <div class="header-content">
+            <a href="/cadastro" class="back-button">
+                <span class="material-icons arrow-icon md-24">arrow_back_ios</span>
+                <span class="back-arrow">Voltar</span>
+            </a>
+        </div>
+
+        <div class="container">
+            <div class="card">
+                <div class="conteudo-form">
+                    <form action="/" method="get" class="cadastro-form">
+                        <h2>Cadastre-se e comece sua jornada</h2>
+                        <div class="campo-form">
+                            <label for="nome">Nome completo:</label>
+                            <input type="text" id="nome" name="nome" placeholder="Digite seu nome completo" required>
+                        </div>
+                        <div class="campo-form">
+                            <label for="email">E-mail:</label>
+                            <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required>
+                        </div>
+                        <div class="campo-form">
+                            <label for="senha">Crie uma senha:</label>
+                            <input type="password" id="senha" name="senha" placeholder="Crie uma senha" required>
+                        </div>
+                        <div class="campo-form">
+                            <label for="senha">Objetivo(opcional)</label>
+                            <input type="text" id="objetivo" name="objetivo" placeholder="Digite seu objetivo pessoal com o uso do site">
+                        </div>
+                        <button type="submit" class="btn-cadastrar">Cadastrar</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="imagem-container">
+                <a href="/"><img src="imagens/logo.png" alt="Imagem" class="imagem-fullwidth"></a>
+            </div>
+        </div>
+
+        <section class="mobile">
+
+            <div class="menu">
+                <div class="left-section">
+                    <a href="/"><img src="imagens/logo.png" alt="Logo" class="logo"></a>
+                </div>
+
+                <div class="right-section">
+                    <span class="material-icons search-icon md-24 menu-icon">menu</span>
+                </div>
+            </div>
+
+            <div class="mobile-menu hidden">
+                <ul>
+                    <li><a href="/entrar">Entrar</a></li>
+                    <li><a href="/ranking">Ranking</a></li>
+                    <li><a href="/profissionais">Profissionais</a></li>
+                    <li><a href="#">Premium</a></li>
+                </ul>
+            </div>
+
+        </section>
+
+    </body>
+    <script src="js/indexMenu.js"></script>
+</html>
