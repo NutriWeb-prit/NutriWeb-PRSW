@@ -36,5 +36,8 @@ router.get("/profissionais", function (req, res) {
 router.get("/ranking", function (req, res) {
     res.render('pages/indexRanking')
 });
+router.get("/premium", function (req, res) {
+    res.render('pages/indexPremium')
+});
 
 module.exports = router;

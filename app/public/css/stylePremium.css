@@ -38,6 +38,7 @@ body {
 .btn-ranking {
     margin: 0 40px;
     align-items: center;
+    cursor: pointer;
 }
 
 .btn-ranking .icon-rank {
@@ -109,83 +110,88 @@ body {
     margin-top: 25px;
 }
 
-.content {
-    margin-top: 100px; 
-    padding: 20px;
-    text-align: center;
-}
-
-.header-content {
-    display: flex;
-    align-items: left;
-    justify-content: left;
-    margin-bottom: 20px;
-}
-
-.arrow-icon {
-    font-size: 36px;
-    color: green;
-}
-
-.arrow-icon.md-24 {
-    font-size: 36px;
-    cursor: pointer;
-}
-
-.header-text {
-    font-size: 36px;
-    margin-left: 10px;
-    color: #333;
-}
-
-.cards-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-}
-
-.cards-container a{
-    outline: none;
-    text-decoration: none;
-}
-
-.card {
-    background-color: #fff;
-    border: 4px solid rgb(1, 86, 1);
-    border-radius: 40px;
-    width: 200px;
-    text-align: left;
-    padding: 20px;
-    box-sizing: border-box;
-}
-
-.card-image {
-    width: 100%;
-    height: auto;
-    border-radius: 50%;
-}
-
-.card-info {
-    margin-top: 10px;
-    color: black;
-}
-
-.card-name {
-    font-size: 20px;
-    margin: 10px 0 5px;
-}
-
-.card-specialty {
-    font-size: 16px;
-}
-
-.home-mobile {
+.home-mobile{
     display: none;
 }
 
-@media (max-width: 768px) {
+.center-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+    text-align: center;
+}
+.title {
+    font-size: 3rem;
+    margin-top: 7rem;
+    font-weight: bold;
+    color: rgb(5, 92, 5)
+}
+.subtitle {
+    font-size: 1.5rem;
+    margin-top: 1rem;
+    color: #555;
+}
 
+.cards {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 25px;
+    margin-top: 20px;
+}
+
+.card-pro{
+    border-top: 5px rgb(4, 160, 4) solid;
+}
+.card-gold{
+    border-top: 5px orange solid;
+}
+
+article {
+    background-color: rgba(128, 128, 128, 0.196);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    width: 280px;
+    height: 400px;
+    margin-bottom: 100px;
+}
+
+h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 2rem;
+    color: #333;
+}
+
+.cards article p {
+    font-size: 24px;
+}
+
+.cards article p span.basic-price {
+    font-size: 40px;
+    font-weight: bold;
+}
+.cards article p span.pro-price {
+    color: rgb(4, 160, 4); 
+    font-size: 40px;
+    font-weight: bold;
+}
+.cards article p span.gold-price {
+    color: orange; 
+    font-size: 40px;
+    font-weight: bold;
+}
+
+
+@media (max-width: 768px) {
     .header {
         flex-direction: column;
         align-items: center;
@@ -201,19 +207,16 @@ body {
         margin-top: 10px;
         justify-content: center;
     }
-
-    .cards-container {
-        flex-direction: column;
-        align-items: center;
+    .home-mobile {
+        display: none;
     }
 
-    .card {
-        width: 80%;
+    .cards {
+        grid-template-columns: repeat(3, 1fr);
     }
-    
 }
 
-@media (max-width: 940px) {
+@media (max-width: 1070px) {
 
     .header{
         display: none;
@@ -250,46 +253,15 @@ body {
     }
     
     .menu .logo {
-        height: 50px;
+        height: 40px;
     }
     
     .right-section .search-icon {
-        font-size: 50px;
-        color: green;
+        font-size: 24px;
+        color: #fff;
         cursor: pointer;
-    }
-
-    .arrow-icon.md-24 {
-        font-size: 30px;
-        cursor: pointer;
-    }
-
-    .header-text {
-        font-size: 30px;
-        margin-left: 2px;
-    }
-
-    .card {
-        background-color: #fff;
-        border: 4px solid green;
-        border-radius: 40px;
-        width: 200px;
-        text-align: left;
-        padding: 20px;
-        box-sizing: border-box;
-    }
-
-    .card-name {
-        font-size: 20px;
-        color: black;
-        margin: 10px 0 5px;
     }
     
-    .card-specialty {
-        font-size: 16px;
-        color: black;
-    }
-
     .mobile-menu {
         display: flex;
         flex-direction: column;
@@ -297,7 +269,7 @@ body {
         background-image: url("../imagens/img-home.jpg");
         position: fixed;
         border-radius: 20px;
-        top: 14%;
+        top: 12%;
         left: 50%;
         width: 40%;
         height: 30%;
@@ -333,5 +305,15 @@ body {
     
     .menu {
         z-index: 3;
+    }
+
+    .menu .logo {
+        height: 50px;
+    }
+    
+    .right-section .search-icon {
+        font-size: 50px;
+        color: green;
+        cursor: pointer;
     }
 }

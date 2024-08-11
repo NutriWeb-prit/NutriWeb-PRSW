@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/stylePremium.css">
     <link rel="icon" href="imagens/logo.png" type="image/x-icon">
-    <link rel="stylesheet" href="css/styleEntrar.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"rel="stylesheet">
-    <title>Entrar - NutriWeb</title>
+    <title>Premium - NutriWeb</title>
 </head>
-
     <body>
         
         <header class="header">
@@ -40,28 +39,29 @@
             
         </header>
 
-        <main class="main-content">
-            <section class="welcome-section">
+        <section class="center-content">
+            <h1 class="title">Planos</h1>
+            <p class="subtitle">Conheça nossos planos e veja qual faz mais sentido para você.</p>
+        </section>
 
-                <section class="left-image">
-                    <img src="imagens/img-entrar.jpg" alt="Exemplo Imagem" class="responsive-img">
-                </section>
-
-                <section class="header-content">
-                    <a href="/"><span class="material-icons arrow-icon md-24">arrow_back_ios</span></a>
-                </section>
-
-                <section class="right-card">
-                    <h2>Seja Bem-Vindo ao NutriWeb!</h2>
-                    <section class="buttons">
-                        <a href="/login"><button class="btn">Já tenho cadastro</button></a>
-                        <a href="/cadastro"><button class="btn">Sou novo por aqui</button></a>
-                    </section>
-                </section>
-
-            </section>
-        </main>
-
+        <section class="cards">
+            <article>
+                <h2>Básico</h2>
+                <p><span class="basic-price">R$ 0</span>/gratuito</p>
+            </article>
+        
+            <article class="card-pro">
+                <h2>Pro</h2>
+                <p><span class="pro-price">R$ 25</span>/por mês</p>
+            </article>
+        
+            <article class="card-gold">
+                <h2>Gold</h2>
+                <p><span class="gold-price">R$ 50</span>/por mês</p>
+            </article>
+        </section>
+        
+            
         <section class="home-mobile">
 
             <section class="menu">
@@ -83,6 +83,8 @@
                 </ul>
             </section>
 
+        </section>
+        
     </body>
     <script src="js/indexMenu.js"></script>
 </html>
