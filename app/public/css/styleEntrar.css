@@ -18,6 +18,11 @@ body {
     width: 100%;
     box-sizing: border-box;
     background: url("../imagens/img-home.jpg");
+    background-size: cover;
+    justify-content: center;
+
+    background-position: center;
+    
 }
 
 .left-section, .center-section, .right-section {
