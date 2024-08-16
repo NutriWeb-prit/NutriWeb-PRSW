@@ -65,13 +65,13 @@ document.addEventListener('DOMContentLoaded', function() {
         clearInterval(autoPlayInterval);
     }
 
-    document.querySelector('.carousel-control-next').addEventListener('click', function() {
+    document.querySelector('.carousel-control-next-mobile').addEventListener('click', function() {
         stopAutoPlay(); 
         showNextItem();
         startAutoPlay(); 
     });
 
-    document.querySelector('.carousel-control-prev').addEventListener('click', function() {
+    document.querySelector('.carousel-control-prev-mobile').addEventListener('click', function() {
         stopAutoPlay();
         showPrevItem();
         startAutoPlay(); 
