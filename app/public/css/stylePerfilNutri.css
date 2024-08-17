@@ -7,7 +7,7 @@ body {
 }
 
 .header {
-    z-index: 1;
+    z-index: 2;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -116,15 +116,23 @@ body {
     display: none;
 }
 
-
-/* CONTEUDO */
-main{
-    margin: 150px 40px 40px 40px;
-    display: flex;
-    justify-content: space-between;
+#imagem_de_fundo{
+    margin-top: 70px;
+    height: 250px;
+    width: 100%;
+    border: 2px solid black;
+    background-image: url("../imagens/img-home.jpg");
 }
 
 
+/* CONTEUDO */
+
+main{
+    z-index: 1;
+    margin: -40px 40px 40px 40px;
+    display: flex;
+    justify-content: space-between;
+}
 
 .img{
     width: 200px;
@@ -136,13 +144,19 @@ main{
     display: grid;    
     grid-template-columns: 200px 200px;
     column-gap: 2em;
-    row-gap: 1em;
 }
 
 #adicionar_foto{
-    width: 100%;
-    height: 100%;
+    width: 25%;
+    height: 25%;
+    margin-top: 50%;
+    margin-left: 50%;
+    transform: translate(-50%, -50%);
     cursor: pointer;
+    background: #fff;
+    border: 3px solid green;
+    border-radius: 10px ;
+    padding: 4.5em;
 }
 
 .post_img{
@@ -210,10 +224,10 @@ main{
 }
 
 
-#foto_perfil{
-    background: #87e61c;
-    width: 125px;
-    height: 125px;
+.foto_perfil{
+    background: none;
+    height: 100px;
+    width: 100px;
     border-radius: 100%;
     margin-top: 1em;
 }
@@ -224,7 +238,7 @@ main{
 
 #info_contato{
     text-align: center;
-    margin-top: 2em;
+    margin-top: 10em;
     color: #047502;
 }
 
