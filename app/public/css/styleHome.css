@@ -847,3 +847,12 @@ body {
         border-radius: 10px;
     }
 }
+
+@media (min-height: 760px) {
+
+.nutricionista-mobile{
+        text-align: center;
+        margin-top: 450px;
+    }
+
+}
