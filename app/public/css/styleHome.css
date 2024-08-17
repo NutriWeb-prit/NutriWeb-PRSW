@@ -142,6 +142,22 @@ body {
     opacity: 0;
     transition: opacity 1s ease;
 }
+.hidden {
+    display: none;
+}
+
+#btn-sabeMais {
+    position: absolute;
+    top: 70.8%;
+    left: 31%;
+    transform: translate(-50%, -50%);
+    padding: 15px 80px;
+    background-color: green;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
 
 .carousel-item.active {
     opacity: 1;
@@ -606,6 +622,19 @@ body {
     
     .carousel-item-mobile.active {
         opacity: 1;
+    }
+
+    #btn-sabeMais-mobile {
+        position: absolute;
+        top: 35%;
+        left: 30%;
+        transform: translate(-50%, -50%);
+        padding: 10px 30px;
+        background-color: green;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
     }
     
     .carousel img {

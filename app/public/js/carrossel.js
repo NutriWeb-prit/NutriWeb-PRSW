@@ -80,3 +80,57 @@ document.addEventListener('DOMContentLoaded', function() {
     startAutoPlay();
 });
 
+document.addEventListener('DOMContentLoaded', function () {
+    const carouselItems = document.querySelectorAll('.carousel-item');
+    const carouselItemsMobile = document.querySelectorAll('.carousel-item-mobile');
+    const nextButton = document.querySelector('.carousel-control-next');
+    const prevButton = document.querySelector('.carousel-control-prev');
+    const nextButtonMobile = document.querySelector('.carousel-control-next-mobile');
+    const prevButtonMobile = document.querySelector('.carousel-control-prev-mobile');
+    const thirdImageButton = document.getElementById('btn-sabeMais');
+    const thirdImageButtonMobile = document.getElementById('btn-sabeMais-mobile');
+
+    let currentIndex = 0;
+    let currentIndexMobile = 0;
+
+    function updateCarousel(items, button, index, isMobile = false) {
+        items.forEach((item, i) => {
+            item.classList.remove('active');
+            if (i === index) {
+                item.classList.add('active');
+                if (i === 2) { 
+                    if (isMobile) {
+                        button.classList.remove('hidden');
+                    } else {
+                        button.classList.remove('hidden');
+                    }
+                } else {
+                    button.classList.add('hidden');
+                }
+            }
+        });
+    }
+
+    nextButton.addEventListener('click', () => {
+        currentIndex = (currentIndex + 1) % carouselItems.length;
+        updateCarousel(carouselItems, thirdImageButton, currentIndex);
+    });
+
+    prevButton.addEventListener('click', () => {
+        currentIndex = (currentIndex - 1 + carouselItems.length) % carouselItems.length;
+        updateCarousel(carouselItems, thirdImageButton, currentIndex);
+    });
+
+    nextButtonMobile.addEventListener('click', () => {
+        currentIndexMobile = (currentIndexMobile + 1) % carouselItemsMobile.length;
+        updateCarousel(carouselItemsMobile, thirdImageButtonMobile, currentIndexMobile, true);
+    });
+
+    prevButtonMobile.addEventListener('click', () => {
+        currentIndexMobile = (currentIndexMobile - 1 + carouselItemsMobile.length) % carouselItemsMobile.length;
+        updateCarousel(carouselItemsMobile, thirdImageButtonMobile, currentIndexMobile, true);
+    });
+
+    updateCarousel(carouselItems, thirdImageButton, currentIndex);
+    updateCarousel(carouselItemsMobile, thirdImageButtonMobile, currentIndexMobile, true);
+});

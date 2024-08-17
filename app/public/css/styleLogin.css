@@ -165,6 +165,7 @@ body {
     font-size: 13px;
     text-decoration: underline;
     background: none;
+    cursor: pointer;
 }
 
 .side-image.right {
@@ -280,8 +281,8 @@ body {
     }
 
     .login-card {
-        background-color: transparent;
         color: #fff;
+        border-radius: 20px;
     }
 
     .login-card input {
