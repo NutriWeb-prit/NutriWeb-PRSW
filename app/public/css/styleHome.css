@@ -851,7 +851,13 @@ body {
 @media (min-height: 760px) {
 
 .nutricionista-mobile{
-        text-align: center;
+        margin-top: 350px;
+    }
+
+}
+@media (min-height: 1000px) {
+
+.nutricionista-mobile{
         margin-top: 450px;
     }
 
