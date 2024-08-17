@@ -13,7 +13,7 @@ body {
 
 .header-content {
     width: 90%;
-    display: none;
+    display: flex;
     justify-content: flex-start;
     padding: 20px;
 }
@@ -89,7 +89,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    width: 100%;
+    width: 95%;
 }
 
 .login-card input {
@@ -109,6 +109,7 @@ body {
     border: none;
     border-radius: 40px;
     cursor: pointer;
+    margin-bottom: 30px;
     width: 100%;
 }
 
@@ -139,6 +140,7 @@ body {
 
 .google-button {
     background-color: #db4437;
+    margin-top: 30px;
     color: #fff;
 }
 
@@ -152,11 +154,24 @@ body {
     color: #fff;
 }
 
+.novo-usuario{
+    margin-left: 200px;
+    margin-top: 30px;
+}
+
+.novo-usuario button{
+    border: none;
+    color: green;
+    font-size: 13px;
+    text-decoration: underline;
+    background: none;
+}
+
 .side-image.right {
-    width: 298px;
+    width: 378px;
     height: 100%; 
     position: relative;
-    left: -1%;
+    left: -1.5%;
 }
 
 .side-image.right img {
