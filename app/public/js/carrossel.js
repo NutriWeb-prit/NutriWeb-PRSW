@@ -92,6 +92,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let currentIndex = 0;
     let currentIndexMobile = 0;
+    let intervalId;
+    let intervalIdMobile;
+
 
     function updateCarousel(items, button, index, isMobile = false) {
         items.forEach((item, i) => {
@@ -111,6 +114,24 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    function startAutoPlay() {
+        intervalId = setInterval(AutoPlay, 3000);
+    }
+ 
+    function startAutoPlayMobile() {
+        intervalIdMobile = setInterval(AutoPlayMobile, 3000);
+    }
+ 
+    function resetAutoPlay() {
+        clearInterval(intervalId);
+        startAutoPlay();
+    }
+ 
+    function resetAutoPlayMobile() {
+        clearInterval(intervalIdMobile);
+        startAutoPlayMobile();
+    }
+ 
     function AutoPlay() {
         currentIndex = (currentIndex + 1) % carouselItems.length;
         updateCarousel(carouselItems, thirdImageButton, currentIndex);
@@ -121,32 +142,31 @@ document.addEventListener('DOMContentLoaded', function () {
         updateCarousel(carouselItemsMobile, thirdImageButtonMobile, currentIndexMobile, true);
     }
 
-    function stopAutoPlay() {
-        clearInterval(setInterval);
-        clearInterval(setIntervalMobile);
-    }
- 
-    setInterval(AutoPlay, 3000);
-    setInterval(AutoPlayMobile, 3000);
+    startAutoPlay();
+    startAutoPlayMobile();
 
     nextButton.addEventListener('click', () => {
         currentIndex = (currentIndex + 1) % carouselItems.length;
         updateCarousel(carouselItems, thirdImageButton, currentIndex);
+        resetAutoPlay()
     });
 
     prevButton.addEventListener('click', () => {
         currentIndex = (currentIndex - 1 + carouselItems.length) % carouselItems.length;
         updateCarousel(carouselItems, thirdImageButton, currentIndex);
+        resetAutoPlay()
     });
 
     nextButtonMobile.addEventListener('click', () => {
         currentIndexMobile = (currentIndexMobile + 1) % carouselItemsMobile.length;
         updateCarousel(carouselItemsMobile, thirdImageButtonMobile, currentIndexMobile, true);
+        resetAutoPlayMobile()
     });
 
     prevButtonMobile.addEventListener('click', () => {
         currentIndexMobile = (currentIndexMobile - 1 + carouselItemsMobile.length) % carouselItemsMobile.length;
         updateCarousel(carouselItemsMobile, thirdImageButtonMobile, currentIndexMobile, true);
+        resetAutoPlayMobile()
     });
 
     updateCarousel(carouselItems, thirdImageButton, currentIndex);
