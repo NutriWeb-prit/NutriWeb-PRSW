@@ -148,23 +148,8 @@ body {
 .card-pro{
     border-top: 5px rgb(4, 160, 4) solid;
 }
-.card-gold{
+.card-basic{
     border-top: 5px orange solid;
-}
-
-.btn-assinar {
-    background-color: gray;
-    color: white;
-    border: none;
-    padding: 10px;
-    border-radius: 0 0 8px 8px; 
-    font-size: 18px;
-    cursor: pointer;
-    width: 100%; 
-    box-sizing: border-box; 
-    position: absolute; 
-    bottom: 0;
-    left: 0;
 }
 
 .btn-assinar-pro{
@@ -182,7 +167,7 @@ body {
     left: 0;
 }
 
-.btn-assinar-gold{
+.btn-assinar{
     background-color: orange;
     color: white;
     border: none;
@@ -233,7 +218,7 @@ p {
     font-size: 40px;
     font-weight: bold;
 }
-.cards article p span.gold-price {
+.cards article p span.basic-price {
     color: orange; 
     font-size: 40px;
     font-weight: bold;

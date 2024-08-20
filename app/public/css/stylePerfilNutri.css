@@ -119,6 +119,8 @@ body {
 #imagem_de_fundo{
     margin-top: 70px;
     height: 250px;
+    background-size: cover;
+    background-position: center;
     width: 100%;
     border: 2px solid black;
     background-image: url("../imagens/img-home.jpg");

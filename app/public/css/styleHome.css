@@ -243,6 +243,11 @@ body {
     color: white;
 }
 
+.material-icons.md-24.menu-close {
+    font-size: 24px;
+    color: white;
+}
+
 .nutricionista{
     text-align: center;
 }
@@ -670,6 +675,10 @@ body {
         color: green; 
     }
 
+    .material-icons.md-24.menu-close {
+        font-size: 40px; 
+        color: green; 
+    }
     .img-text {
         position: absolute;
         text-align: center;
@@ -721,10 +730,9 @@ body {
         background-image: url("../imagens/img-home.jpg");
         position: fixed;
         border-radius: 20px;
-        top: 12%;
-        left: 50%;
+        left: 51%;
         width: 40%;
-        height: 30%;
+        height: 100%;
         z-index: 2;
         justify-content: center;
         padding: 20px;
@@ -753,6 +761,12 @@ body {
     
     .menu-icon {
         cursor: pointer;
+    }
+
+    .menu-close{
+        display: none;
+        font-size: 30px;
+        color: green;
     }
     
     .menu {
