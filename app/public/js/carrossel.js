@@ -172,3 +172,7 @@ document.addEventListener('DOMContentLoaded', function () {
     updateCarousel(carouselItems, thirdImageButton, currentIndex);
     updateCarousel(carouselItemsMobile, thirdImageButtonMobile, currentIndexMobile, true);
 });
+
+function irPagina() {
+    window.location.href = "/tiponutri";
+}

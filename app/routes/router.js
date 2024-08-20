@@ -39,5 +39,9 @@ router.get("/ranking", function (req, res) {
 router.get("/premium", function (req, res) {
     res.render('pages/indexPremium')
 });
+router.get("/tiponutri", function (req, res) {
+    res.render('pages/indexTipoNutri')
+});
+
 
 module.exports = router;
