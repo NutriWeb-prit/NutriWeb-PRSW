@@ -92,6 +92,49 @@ body {
     width: 95%;
 }
 
+.erro-form {
+    color: red !important;
+    border: 1px solid red !important;
+    border-radius: 5px !important;
+    padding-left: 5px !important;
+    background-color: lightpink !important;
+}
+
+.login-card .notification {
+    position: fixed;
+    top: 20px;
+    right: 50%;
+    background-color: red;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    transition: opacity 0.5s ease;
+    z-index: 1000;
+}
+
+.login-card .notification:empty {
+    display:none
+}
+
+.login-card .notification2 {
+    position: fixed;
+    top: 100px;
+    right: 50%;
+    background-color: red;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    transition: opacity 0.5s ease;
+    z-index: 1000;
+}
+
+.login-card .notification2:empty {
+    display:none
+}
+
+
 .login-card input {
     padding: 10px;
     border: none;
@@ -276,14 +319,5 @@ body {
         font-size: 50px;
         color: green;
         cursor: pointer;
-    }
-
-    .login-card {
-        color: #fff;
-        border-radius: 20px;
-    }
-
-    .login-card input {
-       color: #fff;
     }
 }

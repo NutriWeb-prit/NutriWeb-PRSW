@@ -44,6 +44,116 @@ body {
     margin-left: 80px; 
 }
 
+.erro-form {
+    color: red !important;
+    border: 1px solid red !important;
+    border-radius: 5px !important;
+    padding-left: 5px !important;
+    background-color: lightpink !important;
+}
+
+.container .notification {
+    position: fixed;
+    top: 10px;
+    right: 50%;
+    background-color: red;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    transition: opacity 0.5s ease;
+    z-index: 1000;
+}
+
+.container .notification:empty {
+    display:none
+}
+
+.container .notification2 {
+    position: fixed;
+    top: 70px;
+    right: 50%;
+    background-color: red;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    transition: opacity 0.5s ease;
+    z-index: 1000;
+}
+
+.container .notification2:empty {
+    display:none
+}
+
+.container .notification3 {
+    position: fixed;
+    top: 130px;
+    right: 50%;
+    background-color: red;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    transition: opacity 0.5s ease;
+    z-index: 1000;
+}
+
+.container .notification3:empty {
+    display:none
+}
+
+.container .notification4 {
+    position: fixed;
+    top: 10px;
+    right: 30%;
+    background-color: red;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    transition: opacity 0.5s ease;
+    z-index: 1000;
+}
+
+.container .notification4:empty {
+    display:none
+}
+
+.container .notification5 {
+    position: fixed;
+    top: 70px;
+    right: 30%;
+    background-color: red;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    transition: opacity 0.5s ease;
+    z-index: 1000;
+}
+
+.container .notification5:empty {
+    display:none
+}
+
+.container .notification6 {
+    position: fixed;
+    top: 130px;
+    right: 30%;
+    background-color: red;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    transition: opacity 0.5s ease;
+    z-index: 1000;
+}
+
+.container .notification6:empty {
+    display:none
+}
+
 .card {
     flex: 1;
     max-width: 400px;
@@ -161,6 +271,116 @@ input[type="password"]:focus {
         margin-left: 0; 
     }
     
+    .erro-form {
+        color: red !important;
+        border: 1px solid red !important;
+        border-radius: 5px !important;
+        padding-left: 5px !important;
+        background-color: lightpink !important;
+    }
+    
+    .container .notification {
+        position: fixed;
+        top: 10px;
+        right: 80%;
+        background-color: red;
+        color: white;
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        transition: opacity 0.5s ease;
+        z-index: 1000;
+    }
+    
+    .container .notification:empty {
+        display:none
+    }
+    
+    .container .notification2 {
+        position: fixed;
+        top: 70px;
+        right: 80%;
+        background-color: red;
+        color: white;
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        transition: opacity 0.5s ease;
+        z-index: 1000;
+    }
+    
+    .container .notification2:empty {
+        display:none
+    }
+    
+    .container .notification3 {
+        position: fixed;
+        top: 130px;
+        right: 80%;
+        background-color: red;
+        color: white;
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        transition: opacity 0.5s ease;
+        z-index: 1000;
+    }
+    
+    .container .notification3:empty {
+        display:none
+    }
+    
+    .container .notification4 {
+        position: fixed;
+        top: 10px;
+        right: 0%;
+        background-color: red;
+        color: white;
+        padding: 5px;
+        border-radius: 5px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        transition: opacity 0.5s ease;
+        z-index: 1000;
+    }
+    
+    .container .notification4:empty {
+        display:none
+    }
+    
+    .container .notification5 {
+        position: fixed;
+        top: 70px;
+        right: 0%;
+        background-color: red;
+        color: white;
+        padding: 5px;
+        border-radius: 5px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        transition: opacity 0.5s ease;
+        z-index: 1000;
+    }
+    
+    .container .notification5:empty {
+        display:none
+    }
+    
+    .container .notification6 {
+        position: fixed;
+        top: 130px;
+        right: 0%;
+        background-color: red;
+        color: white;
+        padding: 5px;
+        border-radius: 5px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        transition: opacity 0.5s ease;
+        z-index: 1000;
+    }
+    
+    .container .notification6:empty {
+        display:none
+    }
+
     .card {
         max-width: calc(100% - 40px); 
         margin-right: 0; 

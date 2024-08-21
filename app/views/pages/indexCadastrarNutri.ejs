@@ -9,7 +9,38 @@
     <title>Cadastro nutricionista - NutriWeb</title>
 </head>
     <body>
-
+        <% 
+        let erroValidacao = {"nome" : "", "telefone":"", "email" : "", "senha" : "", "area":"", "crn":""};
+        let msgErro = {"nome" : "", "telefone":"", "email" : "", "senha" : "", "area":"", "crn":""};
+        if(listaErros) {
+            listaErros.errors.forEach( function(erro) {
+                if (erro.path == "nome") {
+                    erroValidacao.nome = "erro-form",
+                    msgErro.nome = erro.msg
+                }
+                if (erro.path == "telefone") {
+                    erroValidacao.telefone = "erro-form",
+                    msgErro.telefone = erro.msg
+                }
+                if (erro.path == "email") {
+                    erroValidacao.email = "erro-form",
+                    msgErro.email = erro.msg
+                }
+                if (erro.path == "senha") {
+                    erroValidacao.senha = "erro-form",
+                    msgErro.senha = erro.msg
+                }
+                if (erro.path == "area") {
+                    erroValidacao.area = "erro-form",
+                    msgErro.area = erro.msg
+                }
+                if (erro.path == "nome") {
+                    erroValidacao.crn = "erro-form",
+                    msgErro.crn = erro.msg
+                }
+            });
+        } 
+        %>
         <section class="header-content">
             <a href="/cadastro" class="back-button">
                 <span class="material-icons arrow-icon md-24">arrow_back_ios</span>
@@ -20,31 +51,37 @@
         <section class="container">
             <section class="card">
                 <section class="conteudo-form">
-                    <form action="/" method="get" class="cadastro-form">
+                    <span class="notification"><%= msgErro.nome %></span>
+                    <span class="notification2"><%= msgErro.telefone %></span>
+                    <span class="notification3"><%= msgErro.email %></span>
+                    <span class="notification4"><%= msgErro.senha %></span>
+                    <span class="notification5"><%= msgErro.area %></span>
+                    <span class="notification6"><%= msgErro.crn %></span>
+                    <form action="/cadastrarnutri" method="post" class="cadastro-form">
                         <h2>Cadastre-se e comece sua jornada</h2>
                         <section class="campo-form">
                             <label for="nome">Nome completo:</label>
-                            <input type="text" id="nome" name="nome" placeholder="Digite seu nome completo" required>
+                            <input type="text" id="nome" name="nome" value="<%= valores.nome %>" class="<%= erroValidacao.nome %>" placeholder="Digite seu nome completo">
                         </section>
                         <section class="campo-form">
-                            <label for="nome">Telefone:</label>
-                            <input type="text" id="nome" name="nome" placeholder="Digite o número de seu telefone" required>
+                            <label for="telefone">Telefone:</label>
+                            <input type="text" id="telefone" name="telefone" value="<%= valores.telefone %>" class="<%= erroValidacao.telefone %>" placeholder="Digite o número de seu telefone">
                         </section>
                         <section class="campo-form">
                             <label for="email">E-mail:</label>
-                            <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required>
+                            <input type="text" id="email" name="email" value="<%= valores.email %>" class="<%= erroValidacao.email %>" placeholder="Digite seu e-mail">
                         </section>
                         <section class="campo-form">
                             <label for="senha">Crie uma senha:</label>
-                            <input type="password" id="senha" name="senha" placeholder="Crie uma senha" required>
+                            <input type="text" id="senha" name="senha" value="<%= valores.senha %>" class="<%= erroValidacao.senha %>"placeholder="Crie uma senha">
                         </section>
                         <section class="campo-form">
-                            <label for="especialidade">Digite em qual área da nutrição você se sente mais familiarizado:</label>
-                            <input type="text" id="especialidade" name="especialidade" placeholder="Ex: alimentação sem glúten" required>
+                            <label for="area">Digite em qual área da nutrição você se sente mais familiarizado:</label>
+                            <input type="text" id="area" name="area" value="<%= valores.area %>" class="<%= erroValidacao.area %>" placeholder="Ex: alimentação sem glúten">
                         </section>
                         <section class="campo-form">
-                            <label for="NumeroCRN">Número do CRN:</label>
-                            <input type="text" id="NumeroCRN" name="NumeroCRN" placeholder="Digite seu número do CRN">
+                            <label for="crn">Número do CRN:</label>
+                            <input type="text" id="crn" name="crn" value="<%= valores.crn %>" class="<%= erroValidacao.crn %>" placeholder="Digite seu número do CRN">
                         </section>
                         <button type="submit" class="btn-cadastrar">Cadastrar</button>
                     </form>

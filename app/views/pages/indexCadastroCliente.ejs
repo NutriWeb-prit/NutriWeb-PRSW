@@ -9,7 +9,26 @@
     <title>Cadastro nutricionista - NutriWeb</title>
 </head>
     <body>
-
+        <% 
+        let erroValidacao = {"nome" : "", "email" : "", "senha" : ""};
+        let msgErro = {"nome" : "", "email" : "", "senha" : ""};
+        if(listaErros) {
+            listaErros.errors.forEach( function(erro) {
+                if (erro.path == "nome") {
+                    erroValidacao.nome = "erro-form",
+                    msgErro.nome = erro.msg
+                }
+                if (erro.path == "email") {
+                    erroValidacao.email = "erro-form",
+                    msgErro.email = erro.msg
+                }
+                if (erro.path == "senha") {
+                    erroValidacao.senha = "erro-form",
+                    msgErro.senha = erro.msg
+                }
+            });
+        } 
+        %>
         <section class="header-content">
             <a href="/cadastro" class="back-button">
                 <span class="material-icons arrow-icon md-24">arrow_back_ios</span>
@@ -20,25 +39,28 @@
         <section class="container">
             <section class="card">
                 <section class="conteudo-form">
-                    <form action="/" method="get" class="cadastro-form">
+                    <span class="notification"><%= msgErro.nome %></span>
+                    <span class="notification2"><%= msgErro.email %></span>
+                    <span class="notification3"><%= msgErro.senha %></span>
+                    <form action="/cadastrarcliente" method="post" class="cadastro-form">
                         <h2>Cadastre-se e comece sua jornada</h2>
                         <section class="campo-form">
                             <label for="nome">Nome completo:</label>
-                            <input type="text" id="nome" name="nome" placeholder="Digite seu nome completo" required>
+                            <input type="text" id="nome" name="nome" value="<%= valores.nome %>" class="<%= erroValidacao.nome %>" placeholder="Digite seu nome completo">
                         </section>
                         <section class="campo-form">
                             <label for="email">E-mail:</label>
-                            <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required>
+                            <input type="text" id="email" name="email" value="<%= valores.email %>" class="<%= erroValidacao.email %>" placeholder="Digite seu e-mail">
                         </section>
                         <section class="campo-form">
                             <label for="senha">Crie uma senha:</label>
-                            <input type="password" id="senha" name="senha" placeholder="Crie uma senha" required>
+                            <input type="text" id="senha" name="senha" value="<%= valores.senha %>" class="<%= erroValidacao.senha %>" placeholder="Crie uma senha">
                         </section>
                         <section class="campo-form">
-                            <label for="senha">Objetivo(opcional)</label>
+                            <label for="objetivo">Objetivo(opcional)</label>
                             <input type="text" id="objetivo" name="objetivo" placeholder="Digite seu objetivo pessoal com o uso do site">
                         </section>
-                        <button type="submit" class="btn-cadastrar">Cadastrar</button>
+                        <input type="submit" class="btn-cadastrar" value="Cadastrar">
                     </form>
                 </section>
             </section>

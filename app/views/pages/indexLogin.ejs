@@ -10,6 +10,22 @@
 </head>
 
     <body>
+        <% 
+        let erroValidacao = {"email" : "", "senha" : ""};
+        let msgErro = {"email" : "", "senha" : ""};
+        if(listaErros) {
+            listaErros.errors.forEach( function(erro) {
+                if (erro.path == "email") {
+                    erroValidacao.email = "erro-form",
+                    msgErro.email = erro.msg
+                }
+                if (erro.path == "senha") {
+                    erroValidacao.senha = "erro-form",
+                    msgErro.senha = erro.msg
+                }
+            });
+        } %>
+        
 
         <section class="header-content">
             <a href="/" class="back-button">
@@ -25,11 +41,13 @@
     
             <section class="login-card">
                 <h2>Login</h2>
-                <form>
-                    <input type="email" placeholder="E-mail">
-                    <input type="password" placeholder="Senha">
-                    <button type="submit">Entrar</button>
+                <form method="post" action="/Entrar">
+                    <input type="text" name="email" id="email" value="<%= valores.email %>" class="<%= erroValidacao.email %>" placeholder="E-mail">
+                    <input type="text" name="senha" id="senha" value="<%= valores.senha %>" class="<%= erroValidacao.senha %>" placeholder="Senha">
+                    <input type="submit" value="Entrar">
                 </form>
+                <span class="notification"><%= msgErro.email %></span>
+                <span class="notification2"><%= msgErro.senha %></span>
                 <span class="or-sectionider">_____________ Ou _____________</span>
                 <section class="social-buttons">
                     <button class="google-button"><span class="material-icons">login</span>Entrar com o Google</button>
