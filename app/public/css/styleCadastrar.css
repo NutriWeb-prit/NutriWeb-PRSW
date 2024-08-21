@@ -181,13 +181,11 @@ body {
         align-items: left;
         background-image: url("../imagens/img-home.jpg");
         position: fixed;
-        border-radius: 20px;
-        top: 12%;
+        top: 11.7%;
         left: 50%;
         width: 40%;
-        height: 30%;
+        height: 100%;
         z-index: 2;
-        justify-content: center;
         padding: 20px;
     }
     

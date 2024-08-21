@@ -168,7 +168,7 @@ main{
 }   
 
 .avaliacao{
-    width: 300px;
+    width: 250px;
     height: 125px;
     border: 2px solid green;
     border-radius: 20px;
@@ -380,15 +380,15 @@ main{
     }
 
     .img{
-        width: 150px;
-        height: 150px;
+        width: 130px;
+        height: 130px;
         overflow: hidden;
     }
     
     #publi{
         display: grid;    
-        grid-template-columns: 200px 200px;
-        column-gap: 2em;
+        grid-template-columns: 100px 100px;
+        column-gap: 4em;
         row-gap: 1em;
     }
 

@@ -116,6 +116,27 @@ body {
     display: none;
 }
 
+.tipos-nutri {
+    background-color: rgb(9, 67, 9);
+    text-align: left;
+    padding: 20px;
+    color: white; 
+    margin-top: 50px;
+    font-size: 30px;
+}
+
+.tipos-nutri h1,
+.tipos-nutri p {
+    margin: 0 auto;
+    max-width: 70%; 
+    padding: 30px;
+}
+
+.tipos-nutri p {
+    font-size: 23px;
+}
+
+
 @media (max-width: 1070px) {
 
     .header{
@@ -168,13 +189,11 @@ body {
         align-items: left;
         background-image: url("../imagens/img-home.jpg");
         position: fixed;
-        border-radius: 20px;
-        top: 12%;
+        top: 11%;
         left: 50%;
         width: 40%;
-        height: 30%;
+        height: 100%;
         z-index: 2;
-        justify-content: center;
         padding: 20px;
     }
     
