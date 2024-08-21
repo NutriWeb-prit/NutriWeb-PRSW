@@ -236,4 +236,16 @@ body {
         cursor: pointer;
     }
    
+    .tipos-nutri {
+        font-size: 25px;
+    }
+    
+    .tipos-nutri h1,
+    .tipos-nutri p {
+        max-width: 100%; 
+    }
+    
+    .tipos-nutri p {
+        font-size: 21px;
+    }
 }
