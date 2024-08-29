@@ -105,55 +105,6 @@ body {
     opacity: 0.8;
 }
 
-footer {
-    background-color: rgb(9, 67, 9);
-    color: #ffffff;
-    font-family: 'Arial', sans-serif;
-    cursor: pointer;
-    margin-top: 50px;
-}
-  
-.footer-container {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    padding: 0 50px;
-}
-
-.footer-logo {
-    flex: 0 1 150px;
-    margin: 10px;
-}
-  
-.footer-logo img {
-    max-width: 45%;
-    height: auto;
-    margin-top: 15px;
-}
-  
-.footer-informacao,
-.footer-social {
-    flex: 1;
-    margin: 10px;
-    margin-right: 150px;
-}
-  
-.footer-social .social-icons a {
-   color: #ffffff;
-   font-size: 24px;
-   text-decoration: none;
-}
-  
-.footer-bottom {
-   text-align: center;
-   padding: 15px 0;
-   background-color: #1c1c1c;
-}
-  
-.footer-bottom p {
-    margin: 0;
-}
-
 @media (max-width: 768px) {
     .main-content {
         flex-direction: column;
