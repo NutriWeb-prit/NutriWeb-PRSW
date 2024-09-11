@@ -15,7 +15,7 @@ router.post(
     function (req, res) {
         const listaErros = validationResult(req);
         if (listaErros.isEmpty()) {
-            return res.render("pages/indexLogin", {retorno: null, valores: {email: req.body.email, senha: req.body.senha}, listaErros:null});
+            return res.redirect("/")
         }else {
             console.log(listaErros);
             return res.render("pages/indexLogin", {retorno: null, valores: {email: req.body.email, senha: req.body.senha}, listaErros:listaErros});
@@ -37,7 +37,7 @@ router.post(
     function (req, res) {
         const listaErros = validationResult(req);
         if (listaErros.isEmpty()) {
-            return res.render("pages/indexCadastroCliente", {retorno: null, valores: {nome: req.body.nome, email: req.body.email, senha: req.body.senha}, listaErros:null});
+            return res.redirect("/")
         }else {
             console.log(listaErros);
             return res.render("pages/indexCadastroCliente", {retorno: null, valores: {email: req.body.email, senha: req.body.senha}, listaErros:listaErros});
@@ -62,7 +62,7 @@ router.post(
     function (req, res) {
         const listaErros = validationResult(req);
         if (listaErros.isEmpty()) {
-            return res.render("pages/indexCadastrarNutri", {retorno: null, valores: {nome: req.body.nome, telefone: req.body.telefone, email: req.body.email, senha: req.body.senha, area: req.body.area, crn: req.body.crn}, listaErros:null});
+            return res.redirect("/")
         }else {
             console.log(listaErros);
             return res.render("pages/indexCadastrarNutri", {retorno: null, valores: {nome: req.body.nome, telefone: req.body.telefone, email: req.body.email, senha: req.body.senha, area: req.body.area, crn: req.body.crn}, listaErros:listaErros});
@@ -77,10 +77,6 @@ router.get("/", function (req, res) {
 
 router.get("/cadastro", function (req, res) {
     res.render('pages/indexCadastrar')
-});
-
-router.get("/entrar", function (req, res) {
-    res.render('pages/indexEntrar')
 });
 
 router.get("/perfilnutri", function (req, res) {
