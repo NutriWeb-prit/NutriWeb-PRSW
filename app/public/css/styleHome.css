@@ -395,8 +395,9 @@ body {
 
 .content-img {
     width: 100%;
-    height: auto;
+    height: 300px; 
     border-radius: 10%;
+    object-fit: cover;
 }
 
 .caption {
