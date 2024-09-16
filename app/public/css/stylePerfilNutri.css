@@ -146,6 +146,11 @@ main{
     display: grid;    
     grid-template-columns: 200px 200px;
     column-gap: 2em;
+    margin-top: 150px;
+}
+
+#avaliar_nutri{
+    margin-top: 150px;
 }
 
 #adicionar_foto{
@@ -235,7 +240,14 @@ main{
 }
 
 #infrmacoes_nutri{
-    margin: 1em;
+    margin: 2em;
+    font-weight: bold;
+}
+
+.tipo-nutri{
+    font-weight: none;
+    color: gray;
+    font-family: cursive;
 }
 
 #info_contato{

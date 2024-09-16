@@ -122,7 +122,7 @@ body {
     padding: 20px;
     color: white; 
     margin-top: 50px;
-    margin-bottom: 100px;
+    margin-bottom: 50px;
     font-size: 30px;
 }
 
@@ -135,6 +135,110 @@ body {
 
 .tipos-nutri p {
     font-size: 23px;
+}
+
+.informações-nutri {
+    text-align: left;
+    padding: 20px;
+    font-size: 25px;
+}
+
+.informações-nutri h1,
+.informações-nutri p {
+    margin: 0 auto;
+    max-width: 70%; 
+    padding: 30px;
+}
+
+.informações-nutri p{
+    font-size: 20px;
+}
+
+.bloco-textos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; 
+    margin: 0 auto; 
+    max-width: 1070px; 
+}
+
+.bloco {
+    flex: 1 1 45%; 
+    padding: 15px;
+    box-sizing: border-box; 
+}
+
+.bloco h1 {
+    font-size: 1.5em; 
+    margin-bottom: 10px; 
+}
+
+.bloco p {
+    font-size: 1.2em; 
+    line-height: 1.6; 
+}
+
+.escolhe-nutri {
+    background-color: rgb(9, 67, 9);
+    text-align: left;
+    padding: 20px;
+    color: white; 
+    margin-top: 50px;
+    margin-bottom: 50px;
+    font-size: 20px;
+}
+
+.escolhe-nutri h1,
+.escolhe-nutri p {
+    margin: 0 auto;
+    max-width: 70%; 
+    padding: 30px;
+}
+
+.escolhe-nutri p {
+    font-size: 23px;
+}
+
+.inicia {
+    text-align: left;
+    padding: 20px;
+    color: green; 
+    margin-top: 50px;
+    margin-bottom: 50px;
+    font-size: 20px;
+}
+
+.inicia h1,
+.inicia p {
+    margin: 0 auto;
+    max-width: 70%; 
+    padding: 30px;
+}
+
+.inicia p {
+    font-size: 23px;
+    color: rgba(0, 0, 0, 0.67);
+}
+
+.btn-comeca {
+    text-align: center; 
+}
+
+.btn-comeca button {
+    background-color: green; 
+    color: white; 
+    border: none; 
+    padding: 15px 50px;
+    font-size: 20px; 
+    cursor: pointer; 
+    border-radius: 5px; 
+    margin-top: 20px; 
+    transition: background-color 0.3s ease;
+    margin-bottom: 50px;
+}
+
+.btn-comeca button:hover {
+    background-color: darkgreen; 
 }
 
 footer {
@@ -289,13 +393,37 @@ footer {
         font-size: 25px;
     }
     
+    .tipos-nutri h1{
+        margin-top: 40px;
+    }
+
     .tipos-nutri h1,
     .tipos-nutri p {
         max-width: 100%; 
+        padding: 0px 0px 50px 0px;
     }
     
     .tipos-nutri p {
         font-size: 21px;
+    }
+
+    .informações-nutri h1,
+    .informações-nutri p {
+        margin: 0 auto;
+        max-width: 100%;
+        padding: 0px 0px 50px 0px;
+    }
+
+    .escolhe-nutri h1,
+    .escolhe-nutri p {
+        max-width: 100%; 
+        padding: 0px 0px 50px 0px;
+    }
+
+    .inicia h1,
+    .inicia p {
+        max-width: 100%; 
+        padding: 0px 0px 50px 0px;
     }
 
     footer{
