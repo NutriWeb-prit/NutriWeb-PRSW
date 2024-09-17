@@ -1,104 +1,62 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="imagens/logo-icon.png" type="image/x-icon">
-    <link rel="stylesheet" href="css/styleLogin.css">
+    <link rel="stylesheet" href="css/stylePublicar.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <title>Login - NutriWeb</title>
+    <title>Publicar - NutriWeb</title>
 </head>
-
     <body>
-
         <header class="header">
             
-            <div class="left-section">
+            <section class="left-section">
                 <a href="/"><img src="imagens/logo.png" alt="Logo" class="logo"></a>
         
                 <a href="/ranking" class="ranking">
-                    <div class="btn-ranking">
+                    <section class="btn-ranking">
                         <img src="imagens/icone-ranking.png" alt="Ranking Icon" class="icon-rank">
                         <button class="ranking-button">Ranking</button>
-                    </div>
+                    </section>
                 </a>
 
                 <a href="/profissionais"><button class="profissionais-button">Profissionais</button></a>
-            </div>
+            </section>
 
-            <div class="center-section">
-                <div class="input-premium">
+            <section class="center-section">
+                <section class="input-premium">
                     <span class="material-icons search-icon md-24">search</span>
                     <input type="text">
-                </div>
-            </div>
+                </section>
+            </section>
             
-            <div class="right-section">
+            <section class="right-section">
                 <a href="/premium"><button class="premium-button">Premium</button></a>
                 <a href="/login"><button class="entrar-button">Entrar</button></a>
-            </div>
-            
+            </section>
         </header>
 
-        <% 
-        let erroValidacao = {"email" : "", "senha" : ""};
-        let msgErro = {"email" : "", "senha" : ""};
-        if(listaErros) {
-            listaErros.errors.forEach( function(erro) {
-                if (erro.path == "email") {
-                    erroValidacao.email = "erro-form",
-                    msgErro.email = erro.msg
-                }
-                if (erro.path == "senha") {
-                    erroValidacao.senha = "erro-form",
-                    msgErro.senha = erro.msg
-                }
-            });
-        } %>
-        
-
-        <section class="header-content">
-            <a href="/" class="back-button">
-                <span class="material-icons arrow-icon md-24">arrow_back_ios</span>
-                <span class="back-arrow">Voltar</span>
-            </a>
-        </section>
-
-        <section class="login-container">
-            <section class="side-image left">
-                <a href="/"><img src="imagens/logo.png" alt="Imagem Esquerda"></a>
+        <section class="publicar">
+            <section class="left-publicar">
+                <h1>Publicar</h1>
+                <img src="phpublicacao.png">
             </section>
-    
-            <section class="login-card">
-                <h2>Login</h2>
+            <section class="right-publicar">
+                <h1>Legenda</h1>
                 <form method="post" action="/entrar">
-                    <input type="text" name="email" id="email" value="<%= valores.email %>" class="<%= erroValidacao.email %>" placeholder="E-mail">
-                    <input type="password" name="senha" id="senha" value="<%= valores.senha %>" class="<%= erroValidacao.senha %>" placeholder="Senha">
+                    <input type="text" name="legenda" id="legenda">
+                    <input type="text" name="local" id="local">
                     <input type="submit" value="Entrar" class="btn-entrar">
                 </form>
-                <span class="notification"><%= msgErro.email %></span>
-                <span class="notification2"><%= msgErro.senha %></span>
-                <span class="or-sectionider">_______ Ou _______</span>
-                <section class="social-buttons">
-                    <button class="google-button"><span class="material-icons">login</span>Entrar com o Google</button>
-                    <button class="facebook-button"><span class="material-icons">facebook</span>Entrar com o Facebook</button>
-                    <button class="apple-button"><span class="material-icons">apple</span>Entrar com a Apple</button>
-                </section>
-
-                <section class="novo-usuario">
-                    <a href="/cadastro"><button>Criar uma nova conta</button></a>
-                </section>
-            </section>
-    
-            <section class="side-image right">
-                <img src="imagens/img-login.jpg" alt="Imagem Direita">
             </section>
         </section>
 
-        <section class="mobile">
+        <section class="home-mobile">
 
             <section class="menu">
+
                 <section class="left-section">
                     <a href="/"><img src="imagens/logo.png" alt="Logo" class="logo"></a>
                 </section>
@@ -106,6 +64,7 @@
                 <section class="right-section">
                     <span class="material-icons search-icon md-24 menu-icon">menu</span>
                 </section>
+
             </section>
 
             <section class="mobile-menu hidden">
@@ -119,11 +78,11 @@
 
         </section>
 
-        <footer class="footer-mobile">
+        <footer>
             <section class="footer-container">
 
                 <section class="footer-logo">
-                    <a href="/"><img src="imagens/logo.png" alt="Logo" class="logo"></a>
+                    <a href="/"><img src="imagens/logo.png" class="img-footer" alt="Logo" class="logo"></a>
                 </section>
 
               <section class="footer-informacao">
@@ -143,7 +102,7 @@
               <p>&copy; 2024 NutriWeb. Todos os direitos reservados.</p>
             </section>
         </footer>
-
+    </section>
     </body>
-    <script src="js/indexMenu.js"></script>
+<script src="js/indexMenu.js"></script>
 </html>

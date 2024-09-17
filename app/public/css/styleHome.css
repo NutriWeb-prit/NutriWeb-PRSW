@@ -128,6 +128,8 @@ body {
     object-fit: cover; 
 }
 
+/* header */
+
 .carousel {
     position: relative;
     width: 100%;
@@ -749,23 +751,7 @@ footer {
 
     .filter-button-mobile {
         display: none;
-        /* position: relative;
-        align-items: center;
-        background-color: green;
-        color: white;
-        border: none;
-        padding: 10px 5px;
-        border-radius: 15px;
-        font-size: 18px;
-        cursor: pointer;
-        align-self: flex-end; */
     }
-
-    /* .filter-mobile {
-        margin-left: 8px;
-        font-size: 24px;
-        color: white;
-    } */
 
     .search-container-mobile {
         display: flex;

@@ -23,6 +23,8 @@ body {
     width: 100%;
     box-sizing: border-box;
     background: url("../imagens/img-home.jpg");
+    background-size: cover;
+    background-position: center;
 }
 
 .left-section, .center-section, .right-section {
@@ -170,7 +172,7 @@ body {
     border: 2px solid green;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
-    padding: 20px;
+    padding: 50px;
     max-width: 400px;
     width: 100%;
     min-height: 450px;
@@ -218,13 +220,14 @@ footer {
     background-color: rgb(9, 67, 9);
     color: #ffffff;
     font-family: 'Arial', sans-serif;
+    width: 100%;
 }
   
 .footer-container {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-    padding: 0 50px;
+    padding-left: 30px;
 }
 
 .footer-logo {

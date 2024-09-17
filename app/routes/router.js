@@ -95,6 +95,9 @@ router.get("/premium", function (req, res) {
 router.get("/tiponutri", function (req, res) {
     res.render('pages/indexTipoNutri')
 });
+router.get("/publicar", function (req, res) {
+    res.render('pages/indexPublicar')
+});
 
 
 module.exports = router;
