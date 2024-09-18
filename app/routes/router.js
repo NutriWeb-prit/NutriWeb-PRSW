@@ -79,7 +79,7 @@ router.get("/cadastro", function (req, res) {
 });
 
 router.get('/perfilnutri', function (req, res) {
-    res.render('pages/indexperfilnutri');
+    res.render('pages/indexPerfilNutri');
 });
 
 router.get("/profissionais", function (req, res) {
