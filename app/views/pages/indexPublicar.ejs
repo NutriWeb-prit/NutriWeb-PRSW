@@ -41,14 +41,17 @@
         <section class="publicar">
             <section class="left-publicar">
                 <h1>Publicar</h1>
-                <img src="phpublicacao.png">
+                <img id="placeholder" src="imagens/phpublicacao.png">
+                <input type="file" id="imageUpload" accept="image/*">
+                <label for="imageUpload" class="upload-button">Selecione uma Imagem</label>
             </section>
             <section class="right-publicar">
-                <h1>Legenda</h1>
-                <form method="post" action="/entrar">
-                    <input type="text" name="legenda" id="legenda">
+                <form>
+                    <h1>Legenda</h1>
+                    <textarea id="legenda" name="legenda" rows="15" cols="70"></textarea>
+                    <h1>Localização</h1>
                     <input type="text" name="local" id="local">
-                    <input type="submit" value="Entrar" class="btn-entrar">
+                    <input type="submit" value="Publicar" class="btn-publicar">
                 </form>
             </section>
         </section>
@@ -105,4 +108,5 @@
     </section>
     </body>
 <script src="js/indexMenu.js"></script>
+<script src="js/uploadimage.js"></script>
 </html>
