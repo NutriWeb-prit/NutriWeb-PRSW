@@ -176,7 +176,6 @@ main{
 
 .avaliacao{
     width: 250px;
-    height: 125px;
     border: 2px solid green;
     border-radius: 20px;
     overflow: hidden;
@@ -202,7 +201,7 @@ main{
     grid-template-columns: 20px 20px;
 }
 
-#nome-escrito{
+.nome-escrito{
     color:#fff;
 }
 
@@ -246,6 +245,10 @@ main{
     font-weight: bold;
 }
 
+#sobremim {
+    font-weight: normal;
+}
+
 .tipo-nutri{
     font-weight: none;
     color: gray;
@@ -254,7 +257,6 @@ main{
 
 #info_contato{
     text-align: center;
-    margin-top: 10em;
     color: #047502;
 }
 

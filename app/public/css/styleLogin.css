@@ -4,10 +4,7 @@ body {
     padding: 0;
     display: flex;
     flex-direction: column;
-    background-image: url("../imagens/img-home.jpg");
     min-height: 100vh;
-    background-size: cover;
-    background-position: center;
 }
 
 .header {
@@ -137,7 +134,7 @@ body {
 }
 
 .back-arrow{
-    color: #fff;
+    color: #000000;
 }
 
 .arrow-icon.md-24 {
@@ -261,7 +258,7 @@ body {
 
 .btn-entrar {
     padding: 10px;
-    background-color: green;
+    background-color: #2B8B1E;
     color: #fff;
     border: none;
     border-radius: 40px;
@@ -285,42 +282,39 @@ body {
 .social-buttons button {
     display: flex;
     align-items: center;
+    background-color: white;
+    border-style: solid;
+    border-color: green;
     padding: 10px;
-    border: none;
-    border-radius: 40px;
+    border-radius: 10px;
     cursor: pointer;
     width: 100%;
+    font-size: 15px;
+    color:#000000
 }
 
-.social-buttons button span.material-icons {
+.social-buttons button span.material-icons, svg.material-icons {
     margin-right: 10px;
+    font-size: 24px;
 }
 
 .google-button {
-    background-color: #db4437;
     margin-top: 30px;
-    color: #fff;
 }
 
-.facebook-button {
-    background-color: #3b5998;
-    color: #fff;
-}
-
-.apple-button {
-    background-color: #000;
-    color: #fff;
+#facebook {
+    color: #1877F2;
 }
 
 .novo-usuario{
-    margin-left: 200px;
+    align-items: center;
     margin-top: 30px;
 }
 
 .novo-usuario button{
     border: none;
     color: green;
-    font-size: 13px;
+    font-size: 18px;
     text-decoration: underline;
     background: none;
     cursor: pointer;
