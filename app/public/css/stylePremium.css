@@ -55,7 +55,7 @@ body {
 .btn-ranking .ranking-button,
 .profissionais-button,
 .premium-button,
-.entrar-button {
+.entrar-button, .meuperfil-button {
     background-color: transparent;
     border: none;
     font-size: 18px;
@@ -101,6 +101,10 @@ body {
     border-radius: 10px;
     font-size: 18px;
     cursor: pointer;
+}
+
+.premium-button {
+    margin-left: 40px;
 }
 
 .premium-button:hover,

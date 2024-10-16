@@ -102,5 +102,8 @@ router.get("/publicar", function (req, res) {
     res.render('pages/indexPublicar')
 });
 
+router.get("/perfilcliente", function (req, res) {
+    res.render('pages/indexPerfilCliente')
+});
 
 module.exports = router;

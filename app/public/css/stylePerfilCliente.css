@@ -1,4 +1,5 @@
 body {
+    overflow-x: hidden;
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
@@ -7,7 +8,7 @@ body {
 }
 
 .header {
-    z-index: 1;
+    z-index: 2;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -25,6 +26,7 @@ body {
 .left-section, .center-section, .right-section {
     display: flex;
     align-items: center;
+    justify-content: center;
 }
 
 .center-section {
@@ -40,6 +42,7 @@ body {
 .btn-ranking {
     margin: 0 40px;
     align-items: center;
+    cursor: pointer;
 }
 
 .btn-ranking .icon-rank {
@@ -115,106 +118,192 @@ body {
     margin-top: 25px;
 }
 
-.content {
-    margin-top: 100px; 
-    text-align: center;
+.home-mobile{
+    display: none;
 }
 
-.header-content {
+#imagem_de_fundo{
+    margin-top: 70px;
+    height: 250px;
+    background-size: cover;
+    background-position: center;
+    width: 100%;
+    border: 2px solid black;
+    background-image: url("../imagens/bannerperfilnutri.png");
+}
+
+
+/* CONTEUDO */
+
+main{
+    z-index: 1;
+    margin: -40px 40px 40px 40px;
     display: flex;
-    align-items: left;
-    justify-content: left;
-    margin-bottom: 20px;
-    padding: 20px;
+    justify-content: space-between;
 }
 
-.arrow-icon {
-    font-size: 36px;
-    color: green;
+.img{
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
 }
 
-.arrow-icon.md-24 {
-    font-size: 36px;
+#publi{
+    display: grid;    
+    grid-template-columns: 200px 200px;
+    grid-template-rows: 230px 230px 230px;
+    column-gap: 2em;
+    margin-top: 150px;
+}
+
+#avaliar_nutri{
+    margin-top: 150px;
+}
+
+#adicionar_foto{
+    width: 25%;
+    height: 25%;
+    margin-top: 50%;
+    margin-left: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    background: #fff;
+    border: 3px solid green;
+    border-radius: 10px ;
+    padding: 4.5em;
+}
+
+.post_img{
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+}   
+
+.avaliacao{
+    width: 250px;
+    border: 2px solid green;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 2em;
+}
+
+.nome_avaliador{
+    width: 100%;
+    height: 50%;
+    background: #047502;
+    border-radius: 10px;
+}
+
+.icone_conta{
+    color: #FFF;
+    width: 3em ;
+    margin: 13px 15px;
+}
+
+#nome{
+    display: grid;
+    column-gap: 25px;
+    grid-template-columns: 20px 20px;
+}
+
+.nome-escrito{
+    color:#fff;
+}
+
+#container-estrela{
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin: -10px;
+}
+
+.comentario{
+    margin: 10px 10px;
+    font-size: large;
+}
+
+#info_perfil{
+    border: none;
+    background-color: #ccc;
+    width: 270px;
+}
+
+#container_foto{
+    height: 100px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1em;
+}
+
+
+.foto_perfil{
+    background: none;
+    height: 100px;
+    width: 100px;
+    border-radius: 100%;
+    margin-top: 1em;
+}
+
+#infrmacoes_nutri{
+    margin: 2em;
+    font-weight: bold;
+}
+
+#sobremim {
+    font-weight: normal;
+}
+
+.tipo-nutri{
+    font-weight: none;
+    color: gray;
+    font-family: cursive;
+}
+
+#info_contato{
+    text-align: center;
+    color: #047502;
+}
+
+.divisao{
+    width: 100%;
+    height: 2px;
+    background: green;
+    margin-top: -10px;
+}
+
+#rede_sociais{
+    padding: 10px;
+}
+
+.contato{
+    color: #000;
+    display: flex;
+    align-items: center;
+}
+
+.icone_contato{
+    width: 20px;
+    margin-right: 8px;
+}
+
+#editar-perfil{
+    width: 100%;
+    display: none;
+    align-items: center;
+    margin: 10px 150px 30px ;
     cursor: pointer;
 }
 
-.header-text {
-    font-size: 36px;
-    margin-left: 10px;
-    color: #333;
-}
-
-.tipo-nutrição{
-    text-align: center;
-    width: 99.8%;
-    border-radius: 10px;
-    padding: 1px;
-    margin-bottom: 70px;
-    background-color: rgb(165, 177, 165);
-}
-
-.tipo-nutrição h1{
-    color: rgb(7, 69, 7);
-    font-size: 35px;
-}
-
-.tipo-nutrição h2{
-    color: rgb(67, 64, 64);
-    font-size: 25px;
-}
-
-.cards-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-}
-
-.cards-container a{
-    outline: none;
-    text-decoration: none;
-}
-
-.card {
-    background-color: #fff;
-    border: 4px solid rgb(1, 86, 1);
-    border-radius: 40px;
-    width: 200px;
-    text-align: left;
-    padding: 20px;
-    box-sizing: border-box;
-    margin-bottom: 100px;
-}
-
-.card-image {
-    width: 100%;
-    height: auto;
-    border-radius: 50%;
-}
-
-.card-info {
-    margin-top: 10px;
-    color: black;
-}
-
-.card-name {
-    font-size: 20px;
-    margin: 10px 0 5px;
-}
-
-.card-specialty {
-    font-size: 16px;
-}
-
-.avaliacao_nutri{
-    color: green;
+#publi_avaliacao{
+    display:none;
 }
 
 footer {
     background-color: rgb(9, 67, 9);
     color: #ffffff;
     font-family: 'Arial', sans-serif;
-    text-align: left;
+    cursor: pointer;
 }
   
 .footer-container {
@@ -233,7 +322,6 @@ footer {
     max-width: 45%;
     height: auto;
     margin-top: 15px;
-    cursor: pointer;
 }
   
 .footer-informacao,
@@ -259,12 +347,8 @@ footer {
     margin: 0;
 }
 
-.home-mobile {
-    display: none;
-}
 
 @media (max-width: 768px) {
-
     .header {
         flex-direction: column;
         align-items: center;
@@ -281,21 +365,114 @@ footer {
         justify-content: center;
     }
 
-    .cards-container {
-        flex-direction: column;
-        align-items: center;
+    .home-mobile {
+        display: none;
     }
 
-    .card {
-        width: 80%;
+    /* Conteúdo mobile */
+    .body{
+        background-image: url(imagens/img-home.jpg);
+        background-repeat: no-repeat;
+        background-size: 100%;
+    }
+
+    .conteudo{
+        display: block;
+    }
+
+    #info_perfil{
+        background:none;
+        margin: -25px;
+        display: block;
+    }
+
+    #container_foto{
+        justify-content: flex-start;
+        margin-bottom: 3em;
+        margin-left: 1em;
+        margin-top: 3em;
+    }
+
+    #info_contato{
+        text-align: left;
+        margin-top: 1em;
+        margin-left: 1em;
+        margin-bottom: -2em;
+        color: #047502;
+    }
+
+    .contato{
+        font-size: small;
+        margin-left: 1em;
+    }
+
+    .icone_contato{
+        width: 15px;
+    }
+
+    #editar_perfil,
+    .divisao{
+        display: none;
+    }
+
+    #publi_avaliacao{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1em;
+        margin: 2em;
+        height: 1.4em;
+        text-align: center;
+        border: 1px solid green;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    #avaliacao_selecionar p{
+        margin: 2px;
+    }
+    #publi_selecionar p{
+        margin: 2px;
+    }
+
+    #avaliacao_selecionar{
+        width: 50%;
+        height: 1.4em;
+        border-radius: 5px;
+    }
+
+    #publi_selecionar{
+        background: green;
+        color: #fff;
+        width: 50%;
+        height: 1.4em;
+        border-radius: 5px;
+    }
+
+    .img{
+        width: 130px;
+        height: 130px;
+        overflow: hidden;
     }
     
+    #publi{
+        display: grid;    
+        grid-template-columns: 100px 100px;
+        column-gap: 4em;
+        row-gap: 1em;
+    }
+
+    #avaliar_nutri{
+        display: none;
+        margin-left: 2em;
+    }
+
     footer{
         display: none;
     }
 }
 
-@media (max-width: 940px) {
+@media (max-width: 1070px) {
 
     .header{
         display: none;
@@ -332,46 +509,15 @@ footer {
     }
     
     .menu .logo {
-        height: 50px;
+        height: 40px;
     }
     
     .right-section .search-icon {
-        font-size: 50px;
-        color: green;
+        font-size: 24px;
+        color: #fff;
         cursor: pointer;
-    }
-
-    .arrow-icon.md-24 {
-        font-size: 30px;
-        cursor: pointer;
-    }
-
-    .header-text {
-        font-size: 30px;
-        margin-left: 2px;
-    }
-
-    .card {
-        background-color: #fff;
-        border: 4px solid green;
-        border-radius: 40px;
-        width: 200px;
-        text-align: left;
-        padding: 20px;
-        box-sizing: border-box;
-    }
-
-    .card-name {
-        font-size: 20px;
-        color: black;
-        margin: 10px 0 5px;
     }
     
-    .card-specialty {
-        font-size: 16px;
-        color: black;
-    }
-
     .mobile-menu {
         display: flex;
         flex-direction: column;
@@ -415,6 +561,16 @@ footer {
         z-index: 3;
     }
 
+    .menu .logo {
+        height: 50px;
+    }
+    
+    .right-section .search-icon {
+        font-size: 50px;
+        color: green;
+        cursor: pointer;
+    }
+   
     footer{
         display: none;
     }
