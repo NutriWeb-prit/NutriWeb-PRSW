@@ -451,6 +451,18 @@ body {
     flex-direction: column;
 }
 
+.btn-container-favorite{
+    display: flex;
+    justify-content: flex-start;
+}
+
+.btn-favorite{
+    margin-left: auto;
+    color: transparent;
+    -webkit-text-stroke: 2px black; 
+    cursor: pointer;
+}
+
 .modal-description h2,
 .modal-description h3 {
     color: green;
