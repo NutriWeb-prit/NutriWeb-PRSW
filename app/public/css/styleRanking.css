@@ -129,9 +129,25 @@ body {
     margin-bottom: 20px;
 }
 
+.back {
+    position: absolute;
+    left: 15px;
+    top: 3%;
+}
+
+.back-button {
+    display: flex;
+    top: 15%;
+    align-items: center;
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+    font-size: 25px;
+    margin-top: 100px;
+}
+
 .arrow-icon {
     font-size: 36px;
-    color: green;
+    color: rgb(250, 250, 250);
 }
 
 .arrow-icon.md-24 {
