@@ -149,7 +149,7 @@ body {
     transition: opacity 1s ease;
 }
 .hidden {
-    display: none;
+    display: none !important;
 }
 
 #btn-sabeMais {
@@ -219,6 +219,20 @@ body {
     display: none;
 }
 
+.listafiltrar {
+    display: flex;
+    position: absolute;
+    flex-direction: column;
+    align-items: left;
+    align-self: flex-end;
+    top: 77%;
+    background-color: white;
+    box-shadow: #1c1c1c 0px 0px 20px;
+    border-radius: 10px;
+    margin: 15px 15px 0px 0px;
+    padding: 20px;
+}
+
 .filter-button {
     display: flex;
     align-items: center;
@@ -233,6 +247,7 @@ body {
     align-self: flex-end;
     margin-right: 40px;
 }
+
 
 .filter-button .material-icons {
     margin-left: 8px;
@@ -273,7 +288,7 @@ body {
     overflow-x: auto; 
     scroll-behavior: smooth; 
     gap: 30px;
-    margin-top: 30px;
+    margin-top: 50px;
     margin-bottom: 30px;
     padding: 10px;
     justify-content: center;   

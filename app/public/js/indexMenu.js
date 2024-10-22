@@ -12,3 +12,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    const filterbutton = document.querySelector('.filter-button');
+    const listafiltrar = document.querySelector('.listafiltrar');
+
+    filterbutton.addEventListener('click', function() {
+        listafiltrar.classList.toggle('hidden');
+    });
+});
