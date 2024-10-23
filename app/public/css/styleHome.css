@@ -283,15 +283,45 @@ body {
     font-size: 23px;
 }
 
+.carousel-prev, .carousel-next {
+    position: absolute;
+    top: 115%;
+    transform: translateY(-50%);
+    background: none;
+    color: rgb(0, 0, 0);
+    border: none;
+    border-radius: 20px;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 10px;
+    z-index: 1;
+}
+
+.carousel-prev {
+    left: 30%;
+}
+
+.carousel-next {
+    right: 30%;
+}
+
 .cards-container-profissional {
     display: flex;
-    overflow-x: auto; 
+    position: relative;
+    overflow: hidden; 
     scroll-behavior: smooth; 
     gap: 30px;
     margin-top: 50px;
     margin-bottom: 30px;
     padding: 10px;
-    justify-content: center;   
+    justify-content: flex-start;
+    max-width: 900px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.cards-container-profissional::-webkit-scrollbar {
+    display: none;
 }
 
 .cards-container-profissional a{
@@ -302,6 +332,8 @@ body {
 .card-nutri {
     background-color: #fff;
     border: 3px solid rgb(1, 86, 1);
+    flex: 0 0 200px;
+    scroll-snap-align: center;
     border-radius: 40px;
     width: 200px;
     text-align: left;
