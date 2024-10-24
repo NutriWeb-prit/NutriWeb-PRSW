@@ -285,10 +285,11 @@ body {
 
 .carousel-prev, .carousel-next {
     position: absolute;
-    top: 115%;
+    top: 125%;
     transform: translateY(-50%);
     background: none;
-    color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.5);;
+    color: #fff;
     border: none;
     border-radius: 20px;
     font-size: 2rem;
@@ -298,11 +299,25 @@ body {
 }
 
 .carousel-prev {
-    left: 20%;
+    left: 15%;
+    margin-left: -10px;
 }
 
 .carousel-next {
-    right: 20%;
+    right: 15%;
+    margin-right: -10px;
+}
+
+@media (max-width: 1400px) {
+    .carousel-prev {
+        left: 10%;
+        margin-left: -80px;
+    }
+    
+    .carousel-next {
+        right: 10%;
+        margin-right: -80px;
+    }
 }
 
 .cards-container-profissional {
