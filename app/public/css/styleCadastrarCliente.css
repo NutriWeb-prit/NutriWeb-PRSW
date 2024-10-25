@@ -235,6 +235,21 @@ body {
     text-align: left;
 }
 
+#password-requirements {
+    background: none;
+    padding: 10px;
+    border: 1px solid #555;
+    margin-top: 10px;
+}
+
+.invalid {
+    color: red;
+}
+
+.valid {
+    color: green;
+}
+
 .campo-form {
     margin-bottom: 15px;
     text-align: left;

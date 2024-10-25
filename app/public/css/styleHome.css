@@ -222,6 +222,7 @@ body {
 .listafiltrar {
     display: flex;
     position: absolute;
+    z-index: 2;
     flex-direction: column;
     align-items: left;
     align-self: flex-end;
@@ -677,10 +678,9 @@ footer {
         display: none;
     }
     .filter-button {
-        display: none;
+        display: flex;
         position: absolute;
-        z-index: 10;
-        margin-top: 350px;
+        margin-top: 400px;
     }
 
     .home-mobile {
@@ -701,7 +701,7 @@ footer {
     }
     
     .menu {
-        z-index: 1;
+        z-index: 99;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -805,6 +805,15 @@ footer {
     
     .carousel-control-next-mobile {
         right: 10px;
+    }
+
+    #filter-desktop {
+        display: none;
+    }
+
+    #filter-icon-mobile {
+        font-size: 24px;
+        color: white;
     }
 
     .material-icons.md-24 {
@@ -924,10 +933,13 @@ footer {
         display: none; 
     }
 
+    .listafiltrar {
+        top: 55%;
+    }
 
     .nutricionista-mobile{
         text-align: center;
-        margin-top: 320px;
+        margin-top: 4500px;
     }
 
     .nutricionista-mobile h1{
@@ -1015,7 +1027,7 @@ footer {
 @media (min-height: 760px) {
 
 .nutricionista-mobile{
-        margin-top: 350px;
+        margin-top: 450px;
     }
 
 }

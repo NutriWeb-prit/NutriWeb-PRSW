@@ -24,7 +24,12 @@ router.post(
     
     body("nome").isLength({min:2}).withMessage("O nome deve conter 2 ou mais caracteres!"),
     body("email").isEmail().withMessage("Insira um Email válido!"),
-    body("senha").isLength({min:5}).withMessage("A senha deve conter 5 ou mais caracteres!"),
+    body("senha")
+        .isLength({min:5}).withMessage("Insira uma senha válida!")
+        .matches(/[A-Z]/).withMessage("Insira uma senha válida!")
+        .matches(/[a-z]/).withMessage("Insira uma senha válida!")
+        .matches(/\d/).withMessage("Insira uma senha válida!")
+        .matches(/[\W_]/).withMessage("Insira uma senha válida!"),
     
     function (req, res) {
         const listaErros = validationResult(req);
@@ -43,8 +48,13 @@ router.post(
     body("nome").isLength({min:2}).withMessage("O nome deve conter 2 ou mais caracteres!"),
     body("telefone").isMobilePhone().withMessage("Insira um número de telefone válido!"),
     body("email").isEmail().withMessage("Insira um Email válido!"),
-    body("senha").isLength({min:5}).withMessage("A senha deve conter 5 ou mais caracteres!"),
-    body("area").isLength({min:2}).isAlpha().withMessage("Insira uma área da nutrição válida!"),
+    body("senha")
+        .isLength({min:5}).withMessage("Insira uma senha válida!")
+        .matches(/[A-Z]/).withMessage("Insira uma senha válida!")
+        .matches(/[a-z]/).withMessage("Insira uma senha válida!")
+        .matches(/\d/).withMessage("Insira uma senha válida!")
+        .matches(/[\W_]/).withMessage("Insira uma senha válida!"),
+    body("area").isLength({min:2}).withMessage("Selecione no mínimo uma especialização!"),
     body("crn").isLength({min:5}).withMessage("Insira um CRN válido!"),
     
     function (req, res) {

@@ -56,7 +56,7 @@ body {
 .btn-ranking .ranking-button,
 .profissionais-button,
 .premium-button,
-.entrar-button {
+.entrar-button, .meuperfil-button {
     background-color: transparent;
     border: none;
     font-size: 18px;
@@ -102,6 +102,10 @@ body {
     border-radius: 10px;
     font-size: 18px;
     cursor: pointer;
+}
+
+.premium-button {
+    margin-left: 40px;
 }
 
 .premium-button:hover,
@@ -287,8 +291,42 @@ body {
     text-align: left;
 }
 
+.hidden {
+    display: none !important;
+}
+
+#password-requirements {
+    background: none;
+    padding: 10px;
+    border: 1px solid #555;
+    margin-top: 10px;
+}
+
+.invalid {
+    color: red;
+}
+
+.valid {
+    color: green;
+}
+
+#campo-form-checkbox {
+    margin-bottom: 30px;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    margin-top: 8px;
+}
+
 label {
-    display: block;
+    color: #555;
+}
+
+#label-checkbox {
+    display: inline-flex;
+    max-width: 50%;
     margin-bottom: 5px;
     color: #555;
 }

@@ -86,7 +86,17 @@
                         </section>
                         <section class="campo-form">
                             <label for="senha">Crie uma senha:</label>
-                            <input type="password" id="senha" name="senha" value="<%= valores.senha %>" class="<%= erroValidacao.senha %>" placeholder="Crie uma senha">
+                            <input type="password" id="senha" name="senha" value="<%= valores.senha %>" class="<%= erroValidacao.senha %>"placeholder="Crie uma senha">
+                            <section id="password-requirements">
+                                <span>A senha deve conter:</span>
+                                <ul>
+                                    <li id="length" class="invalid">Pelo menos 8 caracteres</li>
+                                    <li id="uppercase" class="invalid">Pelo menos uma letra maiúscula</li>
+                                    <li id="lowercase" class="invalid">Pelo menos uma letra minúscula</li>
+                                    <li id="number" class="invalid">Pelo menos um número</li>
+                                    <li id="special" class="invalid">Pelo menos um caractere especial</li>
+                                </ul>
+                            </section>
                         </section>
                         <section class="campo-form">
                             <label for="objetivo">Objetivo(opcional)</label>
@@ -151,4 +161,5 @@
         </footer>
     </body>
     <script src="js/indexMenu.js"></script>
+    <script src="js/validacaotemporeal.js"></script>
 </html>
