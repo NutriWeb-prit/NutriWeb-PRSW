@@ -291,7 +291,7 @@ main{
     grid-template-columns: 200px 200px;
     grid-template-rows: 230px 230px 230px;
     column-gap: 2em;
-    margin-top: 200px;
+    margin-top: 250px;
 }
 
 #avaliar_nutri{
@@ -302,7 +302,7 @@ main{
     display: inline-flex;
     position: absolute;
     justify-content: center;
-    top: 37%;
+    top: 45%;
     width: 412px;
     color: black;
     padding: 10px 10px;
@@ -313,7 +313,7 @@ main{
     display: inline-flex;
     position: absolute;
     justify-content: center;
-    top: 37%;
+    top: 45%;
     right: 65px;
     color: black;
     padding: 10px 10px;
@@ -326,7 +326,7 @@ main{
     position: absolute;
     align-items: center;
     justify-content: center;
-    top: 45%;
+    top: 55%;
     width: 412px;
     background-color: green;
     text-decoration: none;
@@ -582,8 +582,9 @@ footer {
 }
 
 
-@media (max-width: 768px) {
+@media (max-width: 1100px) {
     .header {
+        display: none;
         flex-direction: column;
         align-items: center;
     }
@@ -600,7 +601,94 @@ footer {
     }
 
     .home-mobile {
+        display: flex;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .menu {
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 20px;
+        background-color: rgba(0, 0, 0, 0.599);
+        border-bottom: 1px solid #ddd;
+        width: 100%;
+        box-sizing: border-box;
+        position: fixed; 
+        top: 0;
+        background: url("../imagens/img-home.jpg");
+    }
+    
+    .left-section, .right-section {
+        display: flex;
+        align-items: center;
+    }
+    
+    .menu .logo {
+        height: 40px;
+    }
+    
+    .right-section .search-icon {
+        font-size: 24px;
+        color: #fff;
+        cursor: pointer;
+    }
+    
+    .mobile-menu {
+        display: flex;
+        flex-direction: column;
+        align-items: left;
+        background-image: url("../imagens/img-home.jpg");
+        position: fixed;
+        top: 11.7%;
+        left: 50%;
+        width: 40%;
+        height: 100%;
+        z-index: 2;
+        padding: 20px;
+    }
+    
+    .mobile-menu ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        text-align: center;
+    }
+    
+    .mobile-menu ul li {
+        margin: 20px 0;
+    }
+    
+    .mobile-menu ul li a {
+        text-decoration: none;
+        color: white;
+        font-size: 24px;
+    }
+    
+    .mobile-menu.hidden {
         display: none;
+    }
+    
+    .menu-icon {
+        cursor: pointer;
+    }
+    
+    .menu {
+        z-index: 3;
+    }
+
+    .menu .logo {
+        height: 50px;
+    }
+    
+    .right-section .search-icon {
+        font-size: 50px;
+        color: green;
+        cursor: pointer;
     }
 
     /* Conteúdo mobile */
@@ -701,110 +789,76 @@ footer {
         margin-left: 2em;
     }
 
-    footer{
-        display: none;
+    #tituloavaliacao {
+        top: 1050px; 
+        left: 48%;
+        width: 0;
+        font-size: 30px;
+        text-align: center; 
     }
-}
-
-@media (max-width: 1070px) {
-
-    .header{
-        display: none;
-    }
-    .home-mobile {
-        display: flex;
-    }
-
-    .home-mobile {
+    .avaliacao{
         width: 100%;
-        display: flex;
+        height: 40%;
+        margin-left: -13px;
+    }
+
+    #titulopubli{
+        width: 0;
+        font-size: 30px;
+        top: 1050px; 
+        left: 48%;
+        text-align: center;       
+    }
+
+    #novapublicacao {
+        width: 80%; 
+        font-size: 20px;
+        top: 1100px;
+        left: 7%;
+        margin-top: 20px;
+    }
+
+    .container-avaliar {
         flex-direction: column;
-        align-items: center;
-    }
-    
-    .menu {
-        z-index: 1;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 10px 20px;
-        background-color: rgba(0, 0, 0, 0.599);
-        border-bottom: 1px solid #ddd;
-        width: 100%;
-        box-sizing: border-box;
-        position: fixed; 
-        top: 0;
-        background: url("../imagens/img-home.jpg");
-    }
-    
-    .left-section, .right-section {
-        display: flex;
-        align-items: center;
-    }
-    
-    .menu .logo {
-        height: 40px;
-    }
-    
-    .right-section .search-icon {
-        font-size: 24px;
-        color: #fff;
-        cursor: pointer;
-    }
-    
-    .mobile-menu {
-        display: flex;
-        flex-direction: column;
-        align-items: left;
-        background-image: url("../imagens/img-home.jpg");
-        position: fixed;
-        top: 11.7%;
-        left: 50%;
-        width: 40%;
+        width: 100%; 
         height: 100%;
-        z-index: 2;
-        padding: 20px;
-    }
-    
-    .mobile-menu ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        text-align: center;
-    }
-    
-    .mobile-menu ul li {
-        margin: 20px 0;
-    }
-    
-    .mobile-menu ul li a {
-        text-decoration: none;
-        color: white;
-        font-size: 24px;
-    }
-    
-    .mobile-menu.hidden {
-        display: none;
-    }
-    
-    .menu-icon {
-        cursor: pointer;
-    }
-    
-    .menu {
-        z-index: 3;
+        padding: 10px; 
+        border-radius: 0;
+        box-sizing: border-box; 
     }
 
-    .menu .logo {
-        height: 50px;
+    .barra-avaliar {
+        margin-right: 0;
+        margin-bottom: 10px; 
+        width: 98%; 
+        height: 10px; 
     }
-    
-    .right-section .search-icon {
-        font-size: 50px;
-        color: green;
-        cursor: pointer;
+
+    .perfil-avaliar {
+        flex-direction: column; 
+        align-items: flex-start; 
     }
-   
+
+    .content-avaliar #avaliacao {
+        width: 93%; 
+        columns: auto; 
+    }
+
+    .buttons-avaliar {
+        flex-direction: column; 
+        width: 97%;
+        align-items: stretch; 
+    }
+
+    .buttons-avaliar button {
+        width: 97%; 
+        margin: 5px 0; 
+    }
+
+    .bookmarkBtn{
+        margin-bottom: 20%;
+    }
+
     footer{
         display: none;
     }
