@@ -136,9 +136,148 @@ body {
 
 main{
     z-index: 1;
-    margin: -40px 40px 40px 40px;
+    margin: -40px 40px 60px 40px;
     display: flex;
     justify-content: space-between;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.notification {
+    position: fixed;
+    top: 15%;
+    right: 40%;
+    background-color: red;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    transition: opacity 0.5s ease;
+    z-index: 1000;
+}
+
+.notification:empty {
+    display:none
+}
+
+.overlay {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5); 
+    backdrop-filter: blur(1px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.barra-avaliar {
+    background: linear-gradient(to bottom, rgb(121, 202, 96), rgb(6, 83, 29));
+    margin-right: 20px;
+    width: 10px;
+}
+
+.container-avaliar {
+    display: flex;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000; /* Garante que o menu esteja na frente */
+}
+
+.perfil-avaliar {
+    display: flex;
+    position: relative;
+    align-items: center;
+    width: 100%;
+    text-decoration: none;
+    outline: none;
+}
+
+.perfil-avaliar #nome-avaliar {
+    font-size: 18px;
+    font-weight: bold;
+    color: black;
+}
+
+.perfil-avaliar #legenda-avaliar {
+    font-size: 14px;
+    color: gray;
+}
+
+#img-avaliar {
+    margin-right: 10px;
+    width: 50px;
+    height: auto;
+    border-radius: 50%;
+}
+
+#rating {
+    font-size: 40px;
+    cursor: pointer;
+}
+
+.star {
+    color: lightgray; 
+    transition: color 0.2s ease-in-out; 
+}
+
+.star.active {
+    color: gold; /* Cor das estrelas quando ativas (amarelas) */
+}
+
+/* Adiciona hover a todas as estrelas até a que o mouse está sobre */
+.star.hovered {
+    color: gold; /* A estrela atual e as da esquerda ficam amarelas */
+}
+
+.star.hovered ~ .star {
+    color: lightgray; /* As estrelas à direita ficam cinza */
+}
+
+.content-avaliar #avaliacao {
+    border-color: black;
+    border-width: 4px;
+    border-radius: 10px;
+    margin-top: 10px;
+    padding: 10px;
+}
+
+.buttons-avaliar {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 15px;
+}
+
+.buttons-avaliar #postar {
+    color: white;
+    font-weight: bold;
+    background-color: green;
+    font-size: 18px;
+    padding: 15px;
+    margin-left: 10px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.buttons-avaliar .cancelar {
+    color: green;
+    font-weight: bold;
+    background: none;
+    font-size: 18px;
+    padding: 15px;
+    margin-left: 10px;
+    border-radius: 10px;
+    border: 2px solid green;
+    cursor: pointer;
 }
 
 .img{
@@ -152,24 +291,56 @@ main{
     grid-template-columns: 200px 200px;
     grid-template-rows: 230px 230px 230px;
     column-gap: 2em;
-    margin-top: 150px;
+    margin-top: 200px;
 }
 
 #avaliar_nutri{
     margin-top: 150px;
 }
 
-#adicionar_foto{
-    width: 25%;
-    height: 25%;
-    margin-top: 50%;
-    margin-left: 50%;
-    transform: translate(-50%, -50%);
+#titulopubli {
+    display: inline-flex;
+    position: absolute;
+    justify-content: center;
+    top: 37%;
+    width: 412px;
+    color: black;
+    padding: 10px 10px;
+    font-size: 35px;
+}
+
+#tituloavaliacao {
+    display: inline-flex;
+    position: absolute;
+    justify-content: center;
+    top: 37%;
+    right: 65px;
+    color: black;
+    padding: 10px 10px;
+    font-size: 35px;
+}
+
+
+#novapublicacao {
+    display: inline-flex;
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+    top: 45%;
+    width: 412px;
+    background-color: green;
+    text-decoration: none;
+    color: white;
+    border: none;
+    padding: 10px 10px;
+    border-radius: 15px;
+    font-size: 20px;
     cursor: pointer;
-    background: #fff;
-    border: 3px solid green;
-    border-radius: 10px ;
-    padding: 4.5em;
+}
+
+#novapublicacao .material-symbols-outlined {
+    font-size: 30px;
+    margin-right: 5px;
 }
 
 .post_img{
@@ -214,12 +385,76 @@ main{
     display: flex;
     justify-content: flex-end;
     margin: -10px;
+    padding-bottom: 15px;
 }
 
 .comentario{
     margin: 10px 10px;
     font-size: large;
 }
+
+.bookmarkBtn {
+    position: absolute;
+    right: 3%;
+    width: 100px;
+    height: 40px;
+    border-radius: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.349);
+    background-color: rgb(12, 12, 12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition-duration: 0.3s;
+    overflow: hidden;
+}
+  
+.IconContainer {
+    width: 30px;
+    height: 30px;
+    background: linear-gradient(to bottom, rgb(122, 223, 92), rgb(6, 83, 29));
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    z-index: 2;
+    transition-duration: 0.3s;
+}
+  
+.icon {
+    border-radius: 1px;
+}
+  
+.text {
+    height: 100%;
+    width: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    z-index: 1;
+    transition-duration: 0.3s;
+    font-size: 1.04em;
+}
+  
+.bookmarkBtn:hover .IconContainer {
+    width: 90px;
+    transition-duration: 0.3s;
+}
+  
+.bookmarkBtn:hover .text {
+    transform: translate(10px);
+    width: 0;
+    font-size: 0;
+    transition-duration: 0.3s;
+}
+  
+.bookmarkBtn:active {
+    transform: scale(0.95);
+    transition-duration: 0.3s;
+}
+  
 
 #info_perfil{
     border: none;

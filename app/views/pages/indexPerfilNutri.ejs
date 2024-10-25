@@ -12,7 +12,18 @@
     <title>Perfil Do Nutricionista - NutriWeb</title>
 </head>
     <body class="body">
-        
+        <% 
+        let erroValidacao = {"avaliacao" : ""};
+        let msgErro = {"avaliacao" : ""};
+        if(listaErros) {
+            listaErros.errors.forEach( function(erro) {
+                if (erro.path == "avaliacao") {
+                    erroValidacao.avaliacao = "erro-form",
+                    msgErro.avaliacao = erro.msg
+                }
+            });
+        } 
+        %>
         <header class="header">
             
             <section class="left-section">
@@ -69,6 +80,37 @@
         <!-- Conteudo do site -->
 
         <section id="conteudo-completo">
+            <section class="overlay hidden">
+                <section class="container-avaliar">
+                    <section class="barra-avaliar"></section>
+                    <section class="avaliar">
+                        <a href="/perfilcliente" class="perfil-avaliar">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdGIriHwMYbjKJI76jDDK8KzXXSZhiNKGs9g&s" id="img-avaliar">
+                            <section>
+                                <section id="nome-avaliar">Carlos Oliveira</section>
+                                <section id="legenda-avaliar">As postagens são públicas.</section>
+                            </section>
+                        </a>
+                        <section class="content-avaliar">
+                            <span class="notification"><%= msgErro.avaliacao %></span>
+                            <section id="rating">
+                                <span class="star" data-value="1">★</span>
+                                <span class="star" data-value="2">★</span>
+                                <span class="star" data-value="3">★</span>
+                                <span class="star" data-value="4">★</span>
+                                <span class="star" data-value="5">★</span>
+                            </section>
+                            <form action="/publicaravaliacao" method="post">
+                                <textarea id="avaliacao" name="avaliacao" value="<%= valores.avaliacao %>" class="<%= erroValidacao.nome %>" rows="15" cols="70" placeholder="Faça sua avaliação deste profissional"></textarea>
+                                <section class="buttons-avaliar">
+                                    <button type="button" onclick="fecharMenu()" class="cancelar">Cancelar</button>
+                                    <button type="submit" id="postar">Postar</button>
+                                </section>
+                            </form>
+                        </section>
+                    </section>
+                </section>
+            </section>
              <section id="imagem_de_fundo">
              </section>
                      <main class="conteudo">
@@ -130,10 +172,14 @@
                 </section>
 
                 <section id="publi">
+                    <span id="titulopubli">Publicações</span>
+                    <a href="/publicar" id="novapublicacao">
+                        <span class="material-symbols-outlined">add</span>
+                        <span>Nova Publicação</span>
+                    </a>
                     <article class="img">
-                        <a href="/publicar"><img src="imagens/addIcon_NutriWeb-removebg-preview.png" alt="" id="adicionar_foto"></a>
+                        <img src="imagens/img-post-estrogonofe.jpg" alt="" class="post_img">
                     </article>
-             
                     <article class="img">
                         <img src="imagens/img-post-frutas.jfif" alt="" class="post_img">
                     </article>
@@ -153,6 +199,7 @@
                 
                 <section id="avaliar_nutri">
                     <article class="avaliacao">
+                        <span id="tituloavaliacao">Avaliações</span>
                         <section class="nome_avaliador">
                             <section id="nome">
                                 <span class="material-symbols-outlined icone_conta">account_circle</span>
@@ -225,6 +272,16 @@
                             Comentário sobre o nutricionista
                         </p>
                     </article>
+                    <button class="bookmarkBtn">
+                        <span class="IconContainer">
+                          <svg viewBox="0 0 384 512" height="0.9em" class="icon">
+                            <path
+                              d="M0 48V487.7C0 501.1 10.9 512 24.3 512c5 0 9.9-1.5 14-4.4L192 400 345.7 507.6c4.1 2.9 9 4.4 14 4.4c13.4 0 24.3-10.9 24.3-24.3V48c0-26.5-21.5-48-48-48H48C21.5 0 0 21.5 0 48z"
+                            ></path>
+                          </svg>
+                        </span>
+                        <p class="text">Avalie</p>
+                      </button>
                 </section>
                      </main>
 
@@ -255,6 +312,7 @@
          </section>
     </body>
     <script src="js/scriptPerfil.js"></script>
+    <script src="js/rating.js"></script>
     <script src="js/indexMenu.js"></script>
     <script src="js/listanutricionistas.js"></script>
 </html>

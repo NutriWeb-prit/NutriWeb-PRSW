@@ -68,6 +68,22 @@ router.post(
     }
 );
 
+router.post(
+    "/publicaravaliacao", 
+    
+    body("avaliacao").isLength({min:1}).withMessage("Preencha a avaliação!"),
+    
+    function (req, res) {
+        const listaErros = validationResult(req);
+        if (listaErros.isEmpty()) {
+            return res.redirect('/');
+        }else {
+            console.log(listaErros);
+            return res.render("pages/indexPerfilNutri", {retorno: null, valores: {avaliacao: req.body.avaliacao}, listaErros:listaErros});
+        }
+    }
+);
+
 router.get("/login", function (req, res) {
     res.render('pages/indexLogin', { retorno: null, valores: {email:"", senha:""}, listaErros: null});
 });
@@ -80,16 +96,16 @@ router.get("/cadastronutri", function (req, res) {
     res.render('pages/indexCadastrarNutri', { retorno: null, valores: {nome:"", telefone:"", email:"", senha:"", area:"", crn:""}, listaErros: null});
 });
 
+router.get('/perfilnutri', function (req, res) {
+    res.render('pages/indexPerfilNutri', { retorno: null, valores: {avaliacao:""}, listaErros: null});
+});
+
 router.get("/", function (req, res) {
     res.render('pages/indexHome')
 });
 
 router.get("/cadastro", function (req, res) {
     res.render('pages/indexCadastrar')
-});
-
-router.get('/perfilnutri', function (req, res) {
-    res.render('pages/indexPerfilNutri');
 });
 
 router.get("/profissionais", function (req, res) {

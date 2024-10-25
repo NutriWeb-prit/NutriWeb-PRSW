@@ -26,3 +26,21 @@ document.addEventListener('DOMContentLoaded', function() {
         listafiltrar.classList.toggle('hidden');
     });
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    const buttonavaliar = document.querySelector('.bookmarkBtn');
+    const buttonavaliarmobile = document.querySelector('bookmarkBtn');
+    const overlay = document.querySelector('.overlay');
+
+    buttonavaliar.addEventListener('click', function() {
+        overlay.classList.toggle('hidden');
+    });
+
+    buttonavaliarmobile.addEventListener('click', function() {
+        overlay.classList.toggle('hidden');
+    });
+});
+
+function fecharMenu() {
+    document.querySelector('.overlay').classList.toggle('hidden');    
+};
