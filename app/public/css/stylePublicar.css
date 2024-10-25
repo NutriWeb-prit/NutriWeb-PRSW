@@ -291,6 +291,47 @@ footer {
     .card {
         width: 80%;
     }
+
+    .publicar {
+        flex-direction: column; 
+        align-items: center; 
+        padding: 20px; 
+        margin-top: 100px;
+    }
+
+    .left-publicar,
+    .right-publicar {
+        width: 100%; 
+        margin-bottom: 20px; 
+    }
+    .right-publicar{
+        margin-right: 20px;
+    }
+
+    .left-publicar h1 {
+        font-size: 30px; 
+        margin: 10px 0; 
+    }
+
+    .left-publicar img {
+        max-width: 100%; 
+        height: auto; 
+    }
+
+    .right-publicar form {
+        width: 100%; 
+    }
+
+    .right-publicar #legenda,
+    .right-publicar #local {
+        width: 100%; 
+    }
+
+    .btn-publicar,
+    .upload-button {
+        width: 80%; 
+        text-align: center;
+    }
     
     footer{
         display: none;
@@ -358,6 +399,47 @@ footer {
         text-align: left;
         padding: 20px;
         box-sizing: border-box;
+    }
+
+    .publicar {
+        flex-direction: column; 
+        align-items: center; 
+        padding: 20px; 
+        margin-top: 100px;
+    }
+
+    .left-publicar,
+    .right-publicar {
+        width: 100%; 
+        margin-bottom: 20px; 
+    }
+    .right-publicar{
+        margin-right: 20px;
+    }
+
+    .left-publicar h1 {
+        font-size: 30px; 
+        margin: 10px 0; 
+    }
+
+    .left-publicar img {
+        max-width: 100%; 
+        height: auto; 
+    }
+
+    .right-publicar form {
+        width: 100%; 
+    }
+
+    .right-publicar #legenda,
+    .right-publicar #local {
+        width: 100%; 
+    }
+
+    .btn-publicar,
+    .upload-button {
+        width: 80%; 
+        text-align: center;
     }
 
     .card-name {

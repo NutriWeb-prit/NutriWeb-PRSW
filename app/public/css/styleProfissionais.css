@@ -147,9 +147,9 @@ body {
 .tipo-nutrição{
     text-align: center;
     width: 99.8%;
-    border-radius: 10px;
+    border-radius: 5px;
     padding: 1px;
-    margin-bottom: 70px;
+    margin-bottom: 50px;
     background-color: rgb(165, 177, 165);
 }
 
@@ -183,7 +183,7 @@ body {
     text-align: left;
     padding: 20px;
     box-sizing: border-box;
-    margin-bottom: 100px;
+    margin-bottom: 50px;
 }
 
 .card-image {
@@ -282,12 +282,32 @@ footer {
     }
 
     .cards-container {
-        flex-direction: column;
-        align-items: center;
+        display: flex;
+        flex-wrap: nowrap; 
+        overflow-x: auto;  
+        -webkit-overflow-scrolling: touch; 
+        justify-content: flex-start;
+        scroll-behavior: smooth; 
+        gap: 20px; 
+        margin-top: 20px;
+        padding: 20px; 
+        width: 100%; 
+        box-sizing: border-box; 
     }
 
     .card {
-        width: 80%;
+        flex: 0 0 auto; 
+        width: 100%; 
+        max-width: 200px; 
+        margin-right: 10px; 
+    }
+
+    .cards-container {
+        scrollbar-width: none;
+    }
+    
+    .cards-container::-webkit-scrollbar {
+        display: none;
     }
     
     footer{
@@ -359,6 +379,28 @@ footer {
         text-align: left;
         padding: 20px;
         box-sizing: border-box;
+    }
+
+    .cards-container {
+        display: flex;
+        flex-wrap: nowrap; 
+        overflow-x: auto;  
+        -webkit-overflow-scrolling: touch; 
+        justify-content: flex-start;
+        scroll-behavior: smooth; 
+        gap: 20px; 
+        margin-top: 20px;
+        padding: 20px; 
+        width: 100%; 
+        box-sizing: border-box; 
+    }
+
+    .cards-container {
+        scrollbar-width: none;
+    }
+    
+    .cards-container::-webkit-scrollbar {
+        display: none;
     }
 
     .card-name {
