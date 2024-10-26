@@ -677,10 +677,13 @@ footer {
     .cards-container{
         display: none;
     }
+    
     .filter-button {
         display: flex;
         position: absolute;
-        margin-top: 400px;
+        top: 50%;
+        left: 80%;
+        transform: translate(-50%, -80%);
     }
 
     .home-mobile {
@@ -939,7 +942,7 @@ footer {
 
     .nutricionista-mobile{
         text-align: center;
-        margin-top: 4500px;
+        margin-top: 400px;
     }
 
     .nutricionista-mobile h1{

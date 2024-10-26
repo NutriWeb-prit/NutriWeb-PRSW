@@ -160,6 +160,28 @@ main{
     margin-top: 150px;
 }
 
+#titulopubli {
+    display: inline-flex;
+    position: absolute;
+    justify-content: center;
+    top: 45%;
+    width: 412px;
+    color: black;
+    padding: 10px 10px;
+    font-size: 35px;
+}
+
+#tituloavaliacao {
+    display: inline-flex;
+    position: absolute;
+    justify-content: center;
+    top: 45%;
+    right: 65px;
+    color: black;
+    padding: 10px 10px;
+    font-size: 35px;
+}
+
 #adicionar_foto{
     width: 25%;
     height: 25%;
@@ -215,6 +237,7 @@ main{
     display: flex;
     justify-content: flex-end;
     margin: -10px;
+    padding-bottom: 15px;
 }
 
 .comentario{
@@ -348,10 +371,11 @@ footer {
 }
 
 
-@media (max-width: 768px) {
+@media (max-width: 1100px) {
     .header {
         flex-direction: column;
         align-items: center;
+        display: none;
     }
 
     .left-section, .right-section {
@@ -363,122 +387,6 @@ footer {
     .center-section {
         margin-top: 10px;
         justify-content: center;
-    }
-
-    .home-mobile {
-        display: none;
-    }
-
-    /* Conteúdo mobile */
-    .body{
-        background-image: url(imagens/img-home.jpg);
-        background-repeat: no-repeat;
-        background-size: 100%;
-    }
-
-    .conteudo{
-        display: block;
-    }
-
-    #info_perfil{
-        background:none;
-        margin: -25px;
-        display: block;
-    }
-
-    #container_foto{
-        justify-content: flex-start;
-        margin-bottom: 3em;
-        margin-left: 1em;
-        margin-top: 3em;
-    }
-
-    #info_contato{
-        text-align: left;
-        margin-top: 1em;
-        margin-left: 1em;
-        margin-bottom: -2em;
-        color: #047502;
-    }
-
-    .contato{
-        font-size: small;
-        margin-left: 1em;
-    }
-
-    .icone_contato{
-        width: 15px;
-    }
-
-    #editar_perfil,
-    .divisao{
-        display: none;
-    }
-
-    #publi_avaliacao{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 1em;
-        margin: 2em;
-        height: 1.4em;
-        text-align: center;
-        border: 1px solid green;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-    #avaliacao_selecionar p{
-        margin: 2px;
-    }
-    #publi_selecionar p{
-        margin: 2px;
-    }
-
-    #avaliacao_selecionar{
-        width: 50%;
-        height: 1.4em;
-        border-radius: 5px;
-    }
-
-    #publi_selecionar{
-        background: green;
-        color: #fff;
-        width: 50%;
-        height: 1.4em;
-        border-radius: 5px;
-    }
-
-    .img{
-        width: 130px;
-        height: 130px;
-        overflow: hidden;
-    }
-    
-    #publi{
-        display: grid;    
-        grid-template-columns: 100px 100px;
-        column-gap: 4em;
-        row-gap: 1em;
-    }
-
-    #avaliar_nutri{
-        display: none;
-        margin-left: 2em;
-    }
-
-    footer{
-        display: none;
-    }
-}
-
-@media (max-width: 1070px) {
-
-    .header{
-        display: none;
-    }
-    .home-mobile {
-        display: flex;
     }
 
     .home-mobile {
@@ -570,7 +478,127 @@ footer {
         color: green;
         cursor: pointer;
     }
-   
+
+    /* Conteúdo mobile */
+    .body{
+        background-image: url(imagens/img-home.jpg);
+        background-repeat: no-repeat;
+        background-size: 100%;
+    }
+
+    .conteudo{
+        display: block;
+    }
+
+    #info_perfil{
+        background:none;
+        margin: -25px;
+        display: block;
+    }
+
+    #container_foto{
+        justify-content: flex-start;
+        margin-bottom: 3em;
+        margin-left: 1em;
+        margin-top: 3em;
+    }
+
+    #info_contato{
+        text-align: left;
+        margin-top: 1em;
+        margin-left: 1em;
+        margin-bottom: -2em;
+        color: #047502;
+    }
+
+    .contato{
+        font-size: small;
+        margin-left: 1em;
+    }
+
+    .icone_contato{
+        width: 15px;
+    }
+
+    #editar_perfil,
+    .divisao{
+        display: none;
+    }
+
+    #tituloavaliacao {
+        top: 1050px; 
+        left: 48%;
+        width: 0;
+        font-size: 30px;
+        text-align: center; 
+    }
+
+    #publi_avaliacao{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1em;
+        margin: 2em;
+        height: 1.4em;
+        text-align: center;
+        border: 1px solid green;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    #avaliacao_selecionar p{
+        margin: 2px;
+    }
+    #publi_selecionar p{
+        margin: 2px;
+    }
+
+    #avaliacao_selecionar{
+        width: 50%;
+        height: 1.4em;
+        border-radius: 5px;
+    }
+
+    .avaliacao{
+        width: 100%;
+        height: 40%;
+        margin-left: -13px;
+    }
+
+    #titulopubli{
+        width: 0;
+        font-size: 30px;
+        top: 1030px; 
+        left: 48%;
+        text-align: center;     
+    }
+
+    #publi_selecionar{
+        background: green;
+        color: #fff;
+        width: 50%;
+        height: 1.4em;
+        border-radius: 5px;
+    }
+
+    .img{
+        width: 130px;
+        height: 130px;
+        overflow: hidden;
+    }
+    
+    #publi{
+        display: grid;    
+        grid-template-columns: 100px 100px;
+        column-gap: 4em;
+        row-gap: 1em;
+    }
+
+    #avaliar_nutri{
+        display: none;
+        margin-left: 2em;
+    }
+
     footer{
         display: none;
     }
