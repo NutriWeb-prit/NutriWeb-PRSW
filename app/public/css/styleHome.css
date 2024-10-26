@@ -677,6 +677,11 @@ footer {
     .cards-container{
         display: none;
     }
+
+    a {
+        text-decoration: none;
+        outline: none;
+    }
     
     .filter-button {
         display: flex;
