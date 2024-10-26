@@ -683,7 +683,7 @@ footer {
         position: absolute;
         top: 50%;
         left: 80%;
-        transform: translate(-50%, -80%);
+        transform: translate(-50%, -50%);
     }
 
     .home-mobile {
@@ -943,6 +943,8 @@ footer {
     .nutricionista-mobile{
         text-align: center;
         margin-top: 400px;
+        text-decoration: none;
+        outline: none;
     }
 
     .nutricionista-mobile h1{
