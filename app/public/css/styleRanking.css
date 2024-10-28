@@ -37,13 +37,12 @@ body {
     margin-right: 10px;
 }
 
-.btn-ranking {
+.ranking-button {
     margin: 0 40px;
-    align-items: center;
     cursor: pointer;
 }
 
-.btn-ranking .icon-rank {
+.icon-rank {
     height: 40px;
     margin-right: 5px;
 }
@@ -52,7 +51,7 @@ body {
     text-decoration: none;
 }
 
-.btn-ranking .ranking-button,
+.ranking-button,
 .profissionais-button,
 .premium-button,
 .entrar-button, .meuperfil-button {
@@ -112,9 +111,6 @@ body {
     opacity: 0.8;
 }
 
-.profissionais-button {
-    margin-top: 25px;
-}
 
 .ranking-section {
     padding: 20px;

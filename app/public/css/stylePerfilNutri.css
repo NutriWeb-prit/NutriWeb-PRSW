@@ -38,13 +38,12 @@ body {
     margin-right: 10px;
 }
 
-.btn-ranking {
+.ranking-button {
     margin: 0 40px;
-    align-items: center;
     cursor: pointer;
 }
 
-.btn-ranking .icon-rank {
+.icon-rank {
     height: 40px;
     margin-right: 5px;
 }
@@ -53,7 +52,7 @@ body {
     text-decoration: none;
 }
 
-.btn-ranking .ranking-button,
+.ranking-button,
 .profissionais-button,
 .premium-button,
 .entrar-button, .meuperfil-button {
@@ -111,10 +110,6 @@ body {
 .premium-button:hover,
 .entrar-button:hover {
     opacity: 0.8;
-}
-
-.profissionais-button {
-    margin-top: 25px;
 }
 
 .home-mobile{
@@ -302,7 +297,7 @@ main{
     display: inline-flex;
     position: absolute;
     justify-content: center;
-    top: 45%;
+    top: 37%;
     width: 412px;
     color: black;
     padding: 10px 10px;
@@ -313,7 +308,7 @@ main{
     display: inline-flex;
     position: absolute;
     justify-content: center;
-    top: 45%;
+    top: 37%;
     right: 65px;
     color: black;
     padding: 10px 10px;
@@ -326,7 +321,7 @@ main{
     position: absolute;
     align-items: center;
     justify-content: center;
-    top: 55%;
+    top: 45%;
     width: 412px;
     background-color: green;
     text-decoration: none;
@@ -476,12 +471,17 @@ main{
     height: 100px;
     width: 100px;
     border-radius: 100%;
-    margin-top: 1em;
+    margin-top: 2%;
 }
 
 #infrmacoes_nutri{
-    margin: 2em;
+    margin: 2em 1em 2em 2em;
     font-weight: bold;
+}
+
+#infrmacoes_nutri h1 {
+    margin-top: 21.28px;
+    margin-bottom: 5px;
 }
 
 #sobremim {
@@ -712,7 +712,7 @@ footer {
         justify-content: flex-start;
         margin-bottom: 3em;
         margin-left: 1em;
-        margin-top: 3em;
+        margin-top: 0;
     }
 
     #info_contato{
@@ -805,7 +805,7 @@ footer {
     #titulopubli{
         width: 0;
         font-size: 30px;
-        top: 1050px; 
+        top: 950px; 
         left: 48%;
         text-align: center;       
     }
@@ -813,7 +813,7 @@ footer {
     #novapublicacao {
         width: 80%; 
         font-size: 20px;
-        top: 1100px;
+        top: 1000px;
         left: 7%;
         margin-top: 20px;
     }

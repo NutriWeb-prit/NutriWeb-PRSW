@@ -37,13 +37,12 @@ body {
     margin-right: 10px;
 }
 
-.btn-ranking {
+.ranking-button {
     margin: 0 40px;
-    align-items: center;
     cursor: pointer;
 }
 
-.btn-ranking .icon-rank {
+.icon-rank {
     height: 40px;
     margin-right: 5px;
 }
@@ -52,7 +51,7 @@ body {
     text-decoration: none;
 }
 
-.btn-ranking .ranking-button,
+.ranking-button,
 .profissionais-button,
 .premium-button,
 .entrar-button, .meuperfil-button {
@@ -110,10 +109,6 @@ body {
 .premium-button:hover,
 .entrar-button:hover {
     opacity: 0.8;
-}
-
-.profissionais-button {
-    margin-top: 25px;
 }
 
 .img-header {
@@ -286,7 +281,7 @@ body {
 
 .carousel-prev, .carousel-next {
     position: absolute;
-    top: 125%;
+    top: 115%;
     transform: translateY(-50%);
     background: none;
     background-color: rgba(0, 0, 0, 0.5);;

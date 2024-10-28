@@ -39,22 +39,21 @@ body {
     margin-right: 10px;
 }
 
-.btn-ranking {
+.ranking-button {
     margin: 0 40px;
-    align-items: center;
     cursor: pointer;
 }
 
-.btn-ranking .icon-rank {
+.icon-rank {
     height: 40px;
     margin-right: 5px;
 }
 
-.ranking{
+.ranking {
     text-decoration: none;
 }
 
-.btn-ranking .ranking-button,
+.ranking-button,
 .profissionais-button,
 .premium-button,
 .entrar-button, .meuperfil-button {
@@ -112,10 +111,6 @@ body {
 .premium-button:hover,
 .entrar-button:hover {
     opacity: 0.8;
-}
-
-.profissionais-button {
-    margin-top: 25px;
 }
 
 .home-mobile{
