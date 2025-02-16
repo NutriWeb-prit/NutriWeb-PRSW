@@ -143,37 +143,23 @@ main{
     overflow: hidden;
 }
 
-#publi{
+#publi, #avaliar_nutri {
+    margin-top: 60px;
+}
+
+.grid-publicacoes{
     display: grid;    
     grid-template-columns: 200px 200px;
     grid-template-rows: 230px 230px 230px;
     column-gap: 2em;
-    margin-top: 150px;
 }
 
-#avaliar_nutri{
-    margin-top: 150px;
-}
-
-#titulopubli {
-    display: inline-flex;
-    position: absolute;
-    justify-content: center;
-    top: 45%;
-    width: 412px;
+#titulopubli, #tituloavaliacao {
+    display: block;
+    text-align: center;
     color: black;
     padding: 10px 10px;
-    font-size: 35px;
-}
-
-#tituloavaliacao {
-    display: inline-flex;
-    position: absolute;
-    justify-content: center;
-    top: 45%;
-    right: 65px;
-    color: black;
-    padding: 10px 10px;
+    margin-bottom: 50px;
     font-size: 35px;
 }
 

@@ -1,7 +1,6 @@
 body {
     font-family: Arial, sans-serif;
     margin: 0;
-    padding: 0;
     display: flex;
     flex-direction: column;
 }
@@ -190,6 +189,28 @@ body {
 
 .carousel-control-next {
     right: 10px;
+}
+
+.carousel-indicators {
+    position: absolute;
+    top: 93%;
+    left: 50%;
+    color: white;
+    border: none;
+    padding: 10px;
+}
+
+.indicator {
+    width: 12px;
+    height: 12px;
+    margin: 0 5px;
+    border-radius: 50%;
+    background-color: gray;
+    cursor: pointer;
+}
+
+.indicator.active {
+    background-color: #5da43b; /* Cor azul para o indicador ativo */
 }
 
 
@@ -415,15 +436,13 @@ body {
     display: flex;
     flex-direction: column;
     cursor: pointer;
-    align-items: center;
+    align-items: left;
     margin-bottom: 50px;
 }
 
 .card-header {
     display: flex;
     align-items: center;
-    position: relative;
-    right: 30%;
     padding: 10px;
     width: 100%;
     background-color: transparent;

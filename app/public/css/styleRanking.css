@@ -163,13 +163,49 @@ body {
     color: rgb(1, 103, 1);
 }
 
-.responsive-img{
+.ranking-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100vw;
+    padding-top: 75px;
+}
+
+.ranking-text {
+    margin: 0 auto;
+    max-width: 40vmax;
     width: 100%;
+}
+
+.ranking-text h1 {
+    font-size: 3rem;
+    margin: 0;
+}
+
+.ranking-text h4 {
+    margin-top: 15px;
+    font-size: 1.4rem;
+}
+
+.ranking-text h1, .ranking-text h4 {
+    font-family: "Montserrat";
+    text-align: center;
+    color: #144b0d;
+}
+
+.ranking-text p {
+    font-size: 1.1rem;
+}
+
+.img-ranking {
+    width: 100%;
+    max-width: 40vw;
+    float: left;
 }
 
 table {
     margin: 1em auto;
-    width:70%;
+    width: 70vw;
     border-collapse: collapse;
     margin-bottom: 20px;
 }
@@ -264,6 +300,27 @@ footer {
   
 .footer-bottom p {
     margin: 0;
+}
+
+@media (max-width: 1300px) {
+    .ranking-text {
+        margin: 0 auto;
+        max-width: 40vmax;
+    }
+    
+    .ranking-text h1 {
+        font-size: 2.7rem;
+        margin: 0;
+    }
+    
+    .ranking-text h4 {
+        margin-top: 15px;
+        font-size: 1.1rem;
+    }
+    
+    .ranking-text p {
+        font-size: 1.05rem;
+    }
 }
 
 @media (max-width: 950px) {
@@ -374,10 +431,6 @@ footer {
     
     .menu {
         z-index: 3;
-    }
-
-    .responsive-img{
-        margin-top: 60px;
     }
 
     footer{

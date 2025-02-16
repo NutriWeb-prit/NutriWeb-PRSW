@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     const carouselItems = document.querySelectorAll('.carousel-item');
     const carouselItemsMobile = document.querySelectorAll('.carousel-item-mobile');
+    const indicators = document.querySelectorAll('.indicator');
     const nextButton = document.querySelector('.carousel-control-next');
     const prevButton = document.querySelector('.carousel-control-prev');
     const nextButtonMobile = document.querySelector('.carousel-control-next-mobile');
@@ -28,6 +29,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 } else {
                     button.classList.add('hidden');
                 }
+            }
+        });
+
+        indicators.forEach((indicator, i) => {
+            indicator.classList.remove('active');
+            if (i === index) {
+                indicator.classList.add('active');
             }
         });
     }
