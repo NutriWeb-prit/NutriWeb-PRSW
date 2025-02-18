@@ -236,13 +236,27 @@ footer {
 
 .footer-logo {
     flex: 0 1 150px;
-    margin: 10px;
+    margin: 30px;
 }
   
 .footer-logo img {
     max-width: 45%;
     height: auto;
     margin-top: 15px;
+}
+
+.footer-informacao {
+    padding-top: 13px;
+    padding-bottom: 13px;
+}
+
+.footer-informacao a{
+    display: flex;
+    align-items: column;
+    text-decoration: none;
+    color: #fff;
+    font-size: 15px;
+    padding: 4px;
 }
   
 .footer-informacao,
