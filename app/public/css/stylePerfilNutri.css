@@ -534,7 +534,7 @@ main{
 }
 
 footer {
-    background-color: rgb(9, 67, 9);
+    background-color: #144b0d;
     color: #ffffff;
     font-family: 'Arial', sans-serif;
     cursor: pointer;
@@ -556,6 +556,11 @@ footer {
     max-width: 45%;
     height: auto;
     margin-top: 15px;
+}
+
+.footer-logo a{
+    color: white;
+    text-decoration: none;
 }
 
 .footer-informacao {

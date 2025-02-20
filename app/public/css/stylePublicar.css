@@ -207,7 +207,7 @@ body {
 }
 
 footer {
-    background-color: rgb(9, 67, 9);
+    background-color: #144b0d;
     color: #ffffff;
     font-family: 'Arial', sans-serif;
     text-align: left;
@@ -231,6 +231,11 @@ footer {
     height: auto;
     margin-top: 15px;
     cursor: pointer;
+}
+
+.footer-logo a{
+    color: white;
+    text-decoration: none;
 }
 
 .footer-informacao {
