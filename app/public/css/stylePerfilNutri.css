@@ -122,6 +122,7 @@ body {
     background-size: cover;
     background-position: center;
     width: 100%;
+    z-index: 10;
     border: 2px solid black;
     background-image: url("../imagens/bannerperfilnutri.png");
 }
@@ -200,6 +201,37 @@ main{
     font-size: 18px;
     font-weight: bold;
     color: black;
+}
+
+#nome {
+    display: flex;
+    align-items: center;
+    gap: 10px; 
+    position: relative;
+}
+
+#nome img {
+    flex-shrink: 0; 
+    display: block;
+}
+
+.nome-escrito {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    white-space: nowrap; 
+    margin-left: 25px; 
+}
+
+
+#nome img {
+    width: 40px; 
+    height: 40px;
+    border-radius: 50%; 
+    object-fit: cover; 
+    border: 2px solid #ccc;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+    margin: 20px;
 }
 
 .perfil-avaliar #legenda-avaliar {
@@ -305,23 +337,25 @@ main{
 }
 
 #tituloavaliacao {
-    display: inline-flex;
+    display: flex; 
     position: absolute;
     justify-content: center;
-    top: 37%;
-    right: 65px;
+    align-items: center; 
+    top: 50%; 
+    right: 23px;
+    transform: translateY(-50%); 
     color: black;
-    padding: 10px 10px;
-    font-size: 35px;
+    padding: 20px;
+    font-size: 30px;
+    white-space: nowrap; 
 }
-
 
 #novapublicacao {
     display: inline-flex;
     position: absolute;
     align-items: center;
     justify-content: center;
-    top: 45%;
+    top: 50%;
     width: 412px;
     background-color: green;
     text-decoration: none;
@@ -346,8 +380,9 @@ main{
 
 .avaliacao{
     width: 250px;
-    border: 2px solid green;
-    border-radius: 20px;
+    background-color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15), 0 2px 5px rgba(0, 0, 0, 0.1);
+    border: none;
     overflow: hidden;
     margin-bottom: 2em;
 }
@@ -355,12 +390,11 @@ main{
 .nome_avaliador{
     width: 100%;
     height: 50%;
-    background: #047502;
     border-radius: 10px;
 }
 
 .icone_conta{
-    color: #FFF;
+    color: black;
     width: 3em ;
     margin: 13px 15px;
 }
@@ -371,16 +405,17 @@ main{
     grid-template-columns: 20px 20px;
 }
 
-.nome-escrito{
-    color:#fff;
-}
-
 #container-estrela{
     width: 100%;
     display: flex;
     justify-content: flex-end;
-    margin: -10px;
-    padding-bottom: 15px;
+    margin: -20px;
+    padding-bottom: 25px;
+    gap: 5px;
+}
+
+.stay-desativada {
+    filter: brightness(0) saturate(100%) invert(75%) sepia(0%) saturate(300%) hue-rotate(0deg);
 }
 
 .comentario{
@@ -453,7 +488,8 @@ main{
 
 #info_perfil{
     border: none;
-    background-color: #ccc;
+    background-color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15), 0 2px 5px rgba(0, 0, 0, 0.1);
     width: 270px;
 }
 
@@ -471,27 +507,52 @@ main{
     height: 100px;
     width: 100px;
     border-radius: 100%;
-    margin-top: 2%;
+    margin-top: 10%;
 }
 
-#infrmacoes_nutri{
-    margin: 2em 1em 2em 2em;
+#infrmacoes_nutri {
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 800px; 
+    margin: 20px auto;
+}
+
+#nomenutri {
+    font-size: 32px;
     font-weight: bold;
+    color: #333;
+    text-align: center;
+    margin-bottom: 10px;
 }
 
-#infrmacoes_nutri h1 {
-    margin-top: 21.28px;
-    margin-bottom: 5px;
+.tipo-nutri {
+    font-size: 18px;
+    font-weight: 500;
+    color: #777;
+    text-align: center;
+    margin-bottom: 20px;
 }
 
-#sobremim {
-    font-weight: normal;
+#sobremim, #faculdade {
+    font-size: 16px;
+    color: #555;
+    line-height: 1.5;
+    margin-bottom: 15px;
 }
 
-.tipo-nutri{
-    font-weight: none;
-    color: gray;
-    font-family: cursive;
+#faculdade {
+    font-weight: bold;
+    color: #333;
+}
+
+.perfil-imagem {
+    max-width: 100%;
+    border-radius: 8px;
+    margin-top: 20px;
+    margin-bottom: 50px;
+    display: block; 
+    margin-left: auto;
+    margin-right: auto;
 }
 
 #info_contato{
