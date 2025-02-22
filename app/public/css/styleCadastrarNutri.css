@@ -270,6 +270,7 @@ body {
     text-align: center;
     margin: 50px;
     margin-right: 20px; 
+    margin-bottom: 0px; 
 }
 
 .strong-cad{
@@ -279,8 +280,7 @@ body {
 }
 
 .cadastro-form h2 {
-    padding: 10px;
-    font-size: 25px;
+    font-size: 30px;
     color: gray;
     margin-bottom: 20px;
     text-align: left;
@@ -418,6 +418,240 @@ input[type="number"]::-webkit-inner-spin-button {
     transform: scale(1.3); 
     margin-right: 10px; 
 }
+
+.barra-progresso {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.progresso {
+    width: 30px;
+    height: 8px;
+    background-color: #ccc;
+    border-radius: 2px;
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+    margin-bottom: 50px;
+}
+
+.progresso.ativo {
+    width: 70px; 
+    background-color: green; 
+}
+
+.card-two{
+    display: none;
+    flex: 1;
+    max-width: 400px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 50px;
+    margin-right: 20px;
+    margin-bottom: 0px;
+}
+
+.cadastro-form h1{
+    font-size: 20px;
+    color: #04410f;
+    font-weight: bold;
+}
+
+.campo-imagem {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.icone-camera {
+    font-size: 50px !important; 
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    background-color: #f1f1f1;
+    color: gray;
+    padding: 60px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.icone-camera span.material-symbols-outlined {
+    font-size: 48px;
+}
+
+.input-imagem {
+    display: none;
+}
+.input-banner {
+    display: none;
+}
+
+.icone-ajuda {
+    font-size: 5px;
+    cursor: pointer;
+    position: absolute;
+    bottom: 10px;
+    color: #fff;
+    border-radius: 10px;
+    padding: 1px;
+    background-color: #04410f;
+    right: 10px;
+}
+
+.informacao {
+    background-color: #157313;
+    padding: 15px;
+    border-radius: 5px;
+    color: white;
+    position: absolute;
+    top: 150px; 
+    left: 400px; 
+    width: 250px;
+    font-size: 14px;
+    display: none; 
+    /* z-index: 10;  */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+}
+
+.adiciona-banner {
+    display: flex;
+    justify-content: center; 
+    background-color: #f1f1f1;
+    align-items: center; 
+    width: 100%; 
+    height: 100px;
+    border: 1px solid #ddd; 
+    margin-bottom: 50px;
+}
+
+.icone-add {
+    font-size: 30px !important; 
+    border-radius: 50%;
+    background-color: gray;
+    color: white;
+    border: 2px solid gray;
+    cursor: pointer; 
+}
+
+.sobre-p{
+    color: gray;
+    font-weight: bolder;
+}
+
+.campo-texto {
+    width: 100%;
+    height: 150px; 
+    padding: 10px;
+    border: 2px solid green; 
+    border-radius: 8px; 
+    font-size: 16px;
+    font-family: Arial, sans-serif;
+    resize: vertical; 
+    box-sizing: border-box; 
+}
+
+.campo-texto::placeholder {
+    color: #888; 
+    font-style: italic; 
+}
+
+.btn-upload {
+    width: 100%;
+    padding: 15px;
+    margin: 20px 0;
+    background-color: green; 
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.talvez {
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 35px;
+}
+
+.talvez p {
+    font-size: 14px;
+    color: #555;
+    cursor: pointer;
+}
+
+.title_cursos{
+    color: #04410f !important;
+}
+
+.input-cad {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 3px solid #2b8b1e  !important; 
+    border-radius: 15px !important;
+    background-color: white !important;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.label-especialidade {
+    font-size: 16px;
+    color: #333;
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bolder;
+}
+
+.btn-upload {
+    width: 100%;
+    padding: 12px;
+    background-color: #2b8b1e ;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-bottom: 15px;
+}
+
+.icone-upload {
+    margin-right: 8px; 
+    font-size: 20px; 
+}
+
+.adicionar-mais {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    background: none;
+    color: #2b8b1e ;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    width: auto;  
+    margin-top: 10px;  
+    text-align: center;
+}
+
+.icone-add {
+    margin-right: 8px; 
+    font-size: 20px;  
+}
+
 
 @media (max-width: 768px) {
     .checkbox-group-container {

@@ -76,7 +76,7 @@
         </section>
 
         <section class="container">
-            <section class="card">
+            <section class="card" id="card">
                 <section class="conteudo-form">
                     <span class="notification"><%= msgErro.nome %></span>
                     <span class="notification2"><%= msgErro.telefone %></span>
@@ -180,10 +180,151 @@
                             Continuar <i class="fas fa-arrow-right seta"></i>
                         </button>
                     </form>
-                </section>
+                </section>          
+                
             </section>
-
+            
         </section>
+
+        <section class="container">
+            <section class="card-two" id="card-two">
+                <section class="conteudo-form">
+                    
+                        
+                    <form action="/cadastrarnutri" method="post" class="cadastro-form">
+                        <h2><strong class="strong-cad">Personalizando</strong><br> seu perfil</h2>
+
+                        <h1>Adicione uma Foto de Perfil</h1>
+
+                        <div class="campo-imagem">
+                            <label for="input-imagem">
+                                <span class="material-icons icone-camera">add_a_photo</span>
+                            </label>
+                            <input type="file" id="input-imagem" class="input-imagem" accept="image/*" />
+
+                            <span class="material-icons icone-ajuda" onclick="toggleInfo()">question_mark</span>
+
+                            <div id="informacao" class="informacao" style="display: none;">
+                                <p>Para escolher uma foto de perfil ideal como nutricionista, 
+                                    aposte em uma imagem com fundo claro e sem distrações, garantindo 
+                                    que o foco fique em você.</p>
+
+                                <p>Aproxime a câmera para que seu rosto fique nítido e visível, evitando fotos 
+                                    muito distantes, que podem dificultar o reconhecimento fácil. Opte por uma 
+                                    expressão amigável e profissional, transmitindo confiança e acolhimento.</p>
+                                
+                                <p>A iluminação natural é um bônus, pois ajuda a destacar seus traços de forma natural.</p>
+                            </div>
+                        </div>
+                        
+                        <h1>Adicione um banner</h1>
+
+                        <div class="adiciona-banner">
+                            <label for="input-banner">
+                                <span class="material-icons icone-add">add</span>
+                            </label>
+
+                            <input type="file" id="input-banner" class="input-banner" accept="image/*" />
+                        </div>
+                
+                        <button class="btn-cadastrar">
+                            Continuar <i class="fas fa-arrow-right seta"></i>
+                        </button>
+                    </form>
+                        
+                    </form>
+                </section>          
+                
+            </section>
+            
+        </section>
+
+        <section class="container">
+            <section class="card-two" id="card-three">
+                <section class="conteudo-form">
+                        
+                    <form action="/cadastrarnutri" method="post" class="cadastro-form">
+                        <h2><strong class="strong-cad">Personalizando</strong><br> seu perfil</h2>
+
+                        <h1>Sobre você</h1>
+                        <p class="sobre-p">Conte um pouco sobre você e sua missão: o que você motiva, o que busca alcançar 
+                        e como deseja impactar a vida das pessoas!</p>
+                        
+                        <textarea placeholder="Ex: Sou Roberta Santos, nutricionista especializada em nutrição esportiva. Meu objetivo é ajudar a alimentação para potencializar resultados e promover saúde. Cada atleta é único, e estou aqui para traçar uma jornada nutricional que faz a diferença no seu treino e na sua vida!" class="campo-texto"></textarea>
+                
+                        <h1>Mostre onde estudou e quais cursos fez</h1>
+
+                        <button class="btn-upload">Faça o Upload dos Certificados</button>
+
+                        <div class="talvez">
+                            <p>Talvez depois</p>
+                        </div>
+
+                        <button class="btn-cadastrar">Concluir</button>
+                    </form>
+
+                </section>          
+            </section>
+            
+        </section>
+
+        <section class="container">
+            <section class="card-two" id="card-four">
+                <section class="conteudo-form">
+                    
+                    <form action="/cadastrarnutri" method="post" class="cadastro-form">
+                        <h2 class="title_cursos">Mostre onde estudou e quais cursos fez</h2>
+
+                        <h1>Faculdade</h1>
+                        <label class="label-especialidade" for="faculdade">Nome:</label>
+                        <input type="text" id="faculdade" placeholder="Ex: Bacharelado em Nutrição" class="input-cad">
+
+                        <label class="label-especialidade" for="faculdade">Organização:</label>
+                        <input type="text" id="faculdade" placeholder="Ex: Universidade de São Paulo (USP)" class="input-cad">
+                                        
+                        <button class="btn-upload">
+                            <span class="material-icons icone-upload">cloud_upload</span>
+                            Faça o Upload dos Certificados
+                        </button>
+                        
+                        <div class="adicionar-mais">
+                            <span class="material-icons icone-add">add</span> Adicionar mais
+                        </div>
+
+                        <h1>Curso</h1>
+                        <label class="label-especialidade" for="curso">Curso:</label>
+                        <input type="text" id="faculdade" placeholder="Ex: Especialização em Nutrição Estética" class="input-cad">
+
+                        <label class="label-especialidade" for="faculdade">Organização:</label>
+                        <input type="text" id="faculdade" placeholder="Ex: Faculdade Metódo de São Paulo" class="input-cad">
+                                        
+                        <button class="btn-upload">
+                            <span class="material-icons icone-upload">cloud_upload</span>
+                            Faça o Upload dos Certificados
+                        </button>
+                        
+                        <div class="adicionar-mais">
+                            <span class="material-icons icone-add">add</span> Adicionar mais
+                        </div>
+                                                
+
+                        <button class="btn-cadastrar">
+                            Continuar <i class="fas fa-arrow-right seta"></i>
+                        </button>
+                    </form>
+                    
+                </section>          
+                
+            </section>
+            
+        </section>
+
+        <div class="barra-progresso">
+            <span class="progresso ativo"></span>
+            <span class="progresso"></span>
+            <span class="progresso"></span>
+            <span class="progresso"></span>
+        </div>
 
         <section class="mobile">
 
@@ -244,4 +385,5 @@
     </body>
     <script src="js/indexMenu.js"></script>
     <script src="js/validacaotemporeal.js"></script>
+    <script src="js/form-card.js"></script>
 </html>
