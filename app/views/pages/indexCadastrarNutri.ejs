@@ -85,21 +85,14 @@
                     <span class="notification5"><%= msgErro.area %></span>
                     <span class="notification6"><%= msgErro.crn %></span>
                     <form action="/cadastrarnutri" method="post" class="cadastro-form">
-                        <h2>Cadastre-se e comece sua jornada</h2>
+                        <h2><strong class="strong-cad">Cadastre-se,</strong><br> e comece sua jornada!</h2>
                         <section class="campo-form">
-                            <label for="nome">Nome completo:</label>
-                            <input type="text" id="nome" name="nome" value="<%= valores.nome %>" class="<%= erroValidacao.nome %>" placeholder="Digite seu nome completo">
+                            <input type="text" id="nome" name="nome" value="<%= valores.nome %>" class="<%= erroValidacao.nome %>" placeholder="Nome Completo">
                         </section>
                         <section class="campo-form">
-                            <label for="telefone">Telefone:</label>
-                            <input type="text" id="telefone" name="telefone" value="<%= valores.telefone %>" class="<%= erroValidacao.telefone %>" placeholder="Digite o número de seu telefone">
+                            <input type="text" id="email" name="email" value="<%= valores.email %>" class="<%= erroValidacao.email %>" placeholder="E-mail">
                         </section>
                         <section class="campo-form">
-                            <label for="email">E-mail:</label>
-                            <input type="text" id="email" name="email" value="<%= valores.email %>" class="<%= erroValidacao.email %>" placeholder="Digite seu e-mail">
-                        </section>
-                        <section class="campo-form">
-                            <label for="senha">Crie uma senha:</label>
                             <input type="password" id="senha" name="senha" value="<%= valores.senha %>" class="<%= erroValidacao.senha %>"placeholder="Crie uma senha">
                             <section id="password-requirements">
                                 <span>A senha deve conter:</span>
@@ -112,57 +105,84 @@
                                 </ul>
                             </section>
                         </section>
-                        <section class="campo-form" id="campo-form-checkbox">
-                            <label for="area">Digite em qual área da nutrição você se sente mais familiarizado:</label>
-                            <section class="checkbox-group">
-                                <input type="checkbox" name="area" id="esportiva">
-                                <label for="esportiva">Nutrição Esportiva</label>
-                            </section>
-                            <section class="checkbox-group">
-                                <input type="checkbox" name="area" id="estetica">
-                                <label for="estetica">Nutrição Estética</label>
-                            </section>
-                            <section class="checkbox-group">
-                                <input type="checkbox" name="area" id="clinica">
-                                <label for="clinica">Nutrição Clínica</label>
-                            </section>
-                            <section class="checkbox-group">
-                                <input type="checkbox" name="area" id="vegetariana">
-                                <label for="vegetariana">Nutrição Vegetariana</label>
-                            </section>
-                            <section class="checkbox-group">
-                                <input type="checkbox" name="area" id="maternoinfantil">
-                                <label for="maternoinfantil">Nutrição Materno-Infantil</label>
-                            </section>
-                            <section class="checkbox-group">
-                                <input type="checkbox" name="area" id="geriatrica">
-                                <label for="geriatrica">Nutrição Geriátrica</label>
-                            </section>
-                            <section class="checkbox-group">
-                                <input type="checkbox" name="area" id="preventiva">
-                                <label for="preventiva">Nutrição Preventiva</label>
-                            </section>
-                            <section class="checkbox-group">
-                                <input type="checkbox" name="area" id="balanceada">
-                                <label for="balanceada">Nutrição Balanceada</label>
-                            </section>
-                            <section class="checkbox-group">
-                                <input type="checkbox" name="area" id="funcional">
-                                <label for="funcional">Nutrição Funcional</label>
-                            </section>
-                        </section>
+                        
                         <section class="campo-form">
-                            <label for="crn">Número do CRN:</label>
-                            <input type="text" id="crn" name="crn" value="<%= valores.crn %>" class="<%= erroValidacao.crn %>" placeholder="Digite seu número do CRN">
+                            <label for="telefone">Telefone:</label>
+                            <div class="campo-telefone-container">
+                                <div class="campo-ddd">
+                                    <label for="ddd">DDD:</label>
+                                    <input type="number" id="ddd" name="ddd" maxlength="2">
+                                </div>
+                                <div class="campo-telefone">
+                                    <input type="number" id="telefone-numero" name="telefone" value="<%= valores.telefone %>" class="<%= erroValidacao.telefone %>">
+                                </div>
+                            </div>
                         </section>
-                        <button type="submit" class="btn-cadastrar">Cadastrar</button>
+                        
+                        
+                        <section class="campo-form" id="campo-form-checkbox">
+                            <h1>Especialidade</h1>
+                            <label for="area">Em qual área da nutrição você se sente mais familiarizado:</label>
+                            
+                            <section class="checkbox-group-container">
+                                <section class="checkbox-group">
+                                    <input type="checkbox" name="area" id="esportiva">
+                                    <label for="esportiva">Nutrição Esportiva</label>
+                                </section>
+                                
+                                <section class="checkbox-group">
+                                    <input type="checkbox" name="area" id="estetica">
+                                    <label for="estetica">Nutrição Estética</label>
+                                </section>
+                                
+                                <section class="checkbox-group">
+                                    <input type="checkbox" name="area" id="clinica">
+                                    <label for="clinica">Nutrição Clínica</label>
+                                </section>
+                                
+                                <section class="checkbox-group">
+                                    <input type="checkbox" name="area" id="vegetariana">
+                                    <label for="vegetariana">Nutrição Vegetariana</label>
+                                </section>
+                                
+                                <section class="checkbox-group">
+                                    <input type="checkbox" name="area" id="maternoinfantil">
+                                    <label for="maternoinfantil">Nutrição Materno-Infantil</label>
+                                </section>
+                                
+                                <section class="checkbox-group">
+                                    <input type="checkbox" name="area" id="geriatrica">
+                                    <label for="geriatrica">Nutrição Geriátrica</label>
+                                </section>
+                                
+                                <section class="checkbox-group">
+                                    <input type="checkbox" name="area" id="preventiva">
+                                    <label for="preventiva">Nutrição Preventiva</label>
+                                </section>
+                                
+                                <section class="checkbox-group">
+                                    <input type="checkbox" name="area" id="balanceada">
+                                    <label for="balanceada">Nutrição Balanceada</label>
+                                </section>
+                                
+                                <section class="checkbox-group">
+                                    <input type="checkbox" name="area" id="funcional">
+                                    <label for="funcional">Nutrição Funcional</label>
+                                </section>
+                            </section>
+                        </section>
+                        
+                        <section class="campo-form">
+                            <input type="text" id="crn" name="crn" value="<%= valores.crn %>" class="<%= erroValidacao.crn %>" placeholder="Número de CRN">
+                        </section>
+
+                        <button class="btn-cadastrar">
+                            Continuar <i class="fas fa-arrow-right seta"></i>
+                        </button>
                     </form>
                 </section>
             </section>
 
-            <section class="imagem-container">
-                <a href="/"><img src="imagens/logo.png" alt="Imagem" class="imagem-fullwidth"></a>
-            </section>
         </section>
 
         <section class="mobile">

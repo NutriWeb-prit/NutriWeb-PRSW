@@ -148,7 +148,6 @@ body {
     align-items: center;
     flex-wrap: wrap;
     margin-top: 10px; 
-    margin-left: 80px; 
 }
 
 .erro-form {
@@ -263,7 +262,7 @@ body {
 
 .card {
     flex: 1;
-    max-width: 400px;
+    max-width: 600px;
     background-color: #fff;
     padding: 20px;
     border-radius: 10px;
@@ -271,6 +270,12 @@ body {
     text-align: center;
     margin: 50px;
     margin-right: 20px; 
+}
+
+.strong-cad{
+    color: #04410f;
+    font-weight: bold;
+    text-align: none;
 }
 
 .cadastro-form h2 {
@@ -284,6 +289,66 @@ body {
 .campo-form {
     margin-bottom: 15px;
     text-align: left;
+}
+
+.campo-telefone-container {
+    display: flex;
+    gap: 20px;
+    width: calc(100% - 4px);
+    margin-top: 10px;
+}
+
+.campo-ddd,
+.campo-telefone {
+    display: flex;
+    flex-direction: column; 
+}
+
+.campo-ddd {
+    width: 60px; 
+}
+
+.campo-telefone {
+    flex-grow: 1; 
+}
+
+.campo-ddd label,
+.campo-telefone label {
+    font-size: 15px; 
+    margin-bottom: 5px; 
+    color: gray;
+    font-weight: bold;
+    margin-left: 0;
+}
+
+.campo-ddd input,
+.campo-telefone input {
+    width: 100%; 
+    font-size: 20px;
+    padding: 8px;
+    border: none;
+    background-color: #d9d9d9;
+    border-radius: 5px;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.campo-telefone input {
+    margin-top: 23px;
+}
+
+.campo-ddd input {
+    width: 60px; 
+}
+
+.campo-telefone input {
+    width: 100%;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 .hidden {
@@ -306,37 +371,78 @@ body {
 }
 
 #campo-form-checkbox {
-    margin-bottom: 30px;
+    max-width: 100%; 
+    margin: 0 auto; 
+    padding-bottom: 50px;
+    font-size: 14px;
+
+}
+
+#campo-form-checkbox h1 {
+    text-align: left;
+    margin-bottom: 20px;
+    font-size: 1.5em;
+    white-space: nowrap; 
+}
+
+.checkbox-group label {
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    width: 100%; 
+    max-width: 170px;
+    display: block;
+}
+
+.checkbox-group-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 10px; 
+    margin-top: 10px;
 }
 
 .checkbox-group {
     display: flex;
     align-items: center;
-    margin-top: 8px;
+    padding: 10px;
+    border-radius: 8px; 
+    background-color: #5da43b ; 
+    color: white; 
 }
 
-label {
-    color: #555;
+.checkbox-group input {
+    margin-right: 10px;
 }
 
-#label-checkbox {
-    display: inline-flex;
-    max-width: 50%;
-    margin-bottom: 5px;
-    color: #555;
+.checkbox-group input[type="checkbox"] {
+    transform: scale(1.3); 
+    margin-right: 10px; 
+}
+
+@media (max-width: 768px) {
+    .checkbox-group-container {
+        grid-template-columns: repeat(2, 1fr); 
+    }
+}
+
+@media (max-width: 480px) {
+    .checkbox-group-container {
+        grid-template-columns: 1fr;
+    }
 }
 
 input[type="text"],
 input[type="email"],
 input[type="password"] {
-    width: calc(100% - 24px);
+    width: calc(100% - 4px);
     padding: 12px;
+    font-size: 20px;
     margin-bottom: 15px;
-    border: none;
-    border-bottom: 1px solid black;
+    border: none; 
+    background-color: #d9d9d9; 
     border-radius: 5px;
     outline: none;
-    transition: border-color 0.2s ease-in-out;
+    transition: background-color 0.2s ease-in-out;
     box-sizing: border-box;
 }
 
@@ -346,25 +452,34 @@ input[type="password"]:focus {
     border-color: #28a745;
 }
 
+input::placeholder {
+    font-size: 14px;
+    font-weight: bold;
+    color: #545454; 
+}
+
 .btn-cadastrar {
     display: block;
     margin: 10px auto;
     padding: 10px 20px;
     background-color: #fff;
-    color: black;
-    width: 100%;
+    color: #5da43b;
+    font-weight: bolder;
+    width: 50%;
     text-decoration: none;
     outline: none;
     border: none;
     border-radius: 40px;
-    border: 2px solid green;
+    border: 3px solid #5da43b;
     font-size: 18px;
     cursor: pointer;
-    transition: background-color 0.3s ease-in-out;
 }
 
-.btn-cadastrar:hover {
-    background-color: #1e7e34;
+.seta {
+    margin-left: 8px;
+    font-size: 25px;
+    font-weight: 900;
+    vertical-align: middle;
 }
 
 .imagem-container {
