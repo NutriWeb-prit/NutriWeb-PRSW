@@ -4,6 +4,7 @@ body {
     padding: 0;
     display: flex;
     flex-direction: column;
+    box-sizing: border-box;
 }
 
 .header {
@@ -160,7 +161,6 @@ body {
 .ranking-section h1 {
     font-size: 2em;
     margin-bottom: 20px;
-    color: rgb(1, 103, 1);
 }
 
 .ranking-content {
@@ -220,14 +220,60 @@ em{
 
 th, td {
     padding: 15px;
-    text-align: right;
-}
-.posicao_geral{
-    text-align: center;
 }
 
-.nome{
+.posicao_geral {
     text-align: left;
+    width: 220px;
+}
+
+.top3 h1 {
+    color: #2b8b1e;
+    width: 50px;
+}
+
+.nome {
+    text-align: left;
+}
+
+.nome a {
+    text-decoration: none;
+    color: black;
+}
+
+.nome p {
+    font-size: 20px;
+    margin: 0;
+}
+
+.nutri-img {
+    float: left;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.nota {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+
+.nota p {
+    color: grey;
+}
+
+.nota strong {
+    color: black;
+}
+
+#container-estrela{
+    display: flex;
+    height: 20px;
+    gap: 5px;
+    margin: 0 10px;
 }
 
 tbody tr {

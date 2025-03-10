@@ -145,24 +145,27 @@ body {
     width: 99.8%;
     border-radius: 5px;
     padding: 1px;
-    margin-bottom: 50px;
-    background-color: rgb(165, 177, 165);
+    margin-bottom: 40px;
 }
 
 .tipo-nutrição h1{
-    color: rgb(7, 69, 7);
+    color: black;
     font-size: 35px;
+    margin: 35px 0 0 0;
 }
 
 .tipo-nutrição h2{
     color: rgb(67, 64, 64);
     font-size: 25px;
+    margin: 10px 0 0 0;
 }
 
 .cards-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    align-items: center;
+    margin-bottom: 100px;
     gap: 20px;
 }
 
@@ -173,13 +176,12 @@ body {
 
 .card {
     background-color: #fff;
-    border: 4px solid rgb(1, 86, 1);
-    border-radius: 40px;
+    border: 3px solid rgb(1, 86, 1);
+    border-radius: 20px;
     width: 200px;
     text-align: left;
     padding: 20px;
     box-sizing: border-box;
-    margin-bottom: 50px;
 }
 
 .card-image {
@@ -328,6 +330,10 @@ footer {
     footer{
         display: none;
     }
+
+    #hidden {
+        display: none;
+    }
 }
 
 @media (max-width: 940px) {
@@ -387,20 +393,15 @@ footer {
     }
 
     .card {
-        background-color: #fff;
-        border: 4px solid green;
-        border-radius: 40px;
+        border-radius: 20px;
         width: 200px;
-        text-align: left;
-        padding: 20px;
-        box-sizing: border-box;
     }
 
     .cards-container {
         display: flex;
         flex-wrap: nowrap; 
         overflow-x: auto;  
-        -webkit-overflow-scrolling: touch; 
+           -webkit-overflow-scrolling: touch; 
         justify-content: flex-start;
         scroll-behavior: smooth; 
         gap: 20px; 
@@ -473,6 +474,10 @@ footer {
     }
 
     footer{
+        display: none;
+    }
+
+    #hidden {
         display: none;
     }
 }
