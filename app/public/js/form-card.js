@@ -1,27 +1,23 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const barras = document.querySelectorAll('.barra-progresso .progresso');
+    const continuar = document.querySelectorAll('.continuar');
     const cards = [
-        document.getElementById('card'),
         document.getElementById('card-two'),
         document.getElementById('card-three'),
         document.getElementById('card-four')
     ];
+    const barraProgresso = document.querySelectorAll('.barra-progresso .progresso');
 
-    barras.forEach(function(barra, index) {
+    let currentIndex = 0;
+
+    continuar.forEach(function(barra, index) {
         barra.addEventListener('click', function() {
-            barras.forEach(function(item) {
-                item.classList.remove('ativo');
-            });
+            cards[currentIndex].style.display = 'none';
 
-            cards.forEach(function(card) {
-                card.style.display = 'none';
-            });
+            currentIndex++;
 
-            if (cards[index]) {
-                cards[index].style.display = 'block';
-            }
-            for (let i = 0; i <= index; i++) {
-                barras[i].classList.add('ativo');
+            if (cards[currentIndex]) {
+                cards[currentIndex].style.display = 'block';
+                barraProgresso[currentIndex+1].classList.add('ativo');
             }
         });
     });
@@ -34,4 +30,8 @@ function toggleInfo() {
     } else {
         info.style.display = 'none';
     }
+}
+
+function irLogin() {
+    window.location.href = '/login';
 }

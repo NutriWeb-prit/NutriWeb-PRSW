@@ -1,17 +1,40 @@
- const image = document.getElementById('placeholder');
- const imageUpload = document.getElementById('imageUpload');
+function handleImageUpload(event, imageElement) {
+    const file = event.target.files[0];
 
+    if (file) {
+        const reader = new FileReader();
 
- imageUpload.addEventListener('change', function(event) {
-     const file = event.target.files[0];
+        reader.onload = function(e) {
+            imageElement.src = e.target.result;
+        }
 
-     if (file) {
-         const reader = new FileReader();
+        reader.readAsDataURL(file);
+    }
+}
 
-         reader.onload = function(e) {
-             image.src = e.target.result;
-         }
+const foto = document.getElementById('placeholder-foto');
+const fotoUpload = document.getElementById('input-imagem');
 
-         reader.readAsDataURL(file);
-     }
- });
+if (foto && fotoUpload) {
+    fotoUpload.addEventListener('change', function(event) {
+        handleImageUpload(event, foto);
+    });
+}
+
+const banner = document.getElementById('placeholder-banner');
+const bannerUpload = document.getElementById('input-banner');
+
+if (banner && bannerUpload) {
+    bannerUpload.addEventListener('change', function(event) {
+        handleImageUpload(event, banner);
+    });
+}
+
+const image = document.getElementById('placeholder');
+const imageUpload = document.getElementById('imageUpload');
+
+if (image && imageUpload) {
+    imageUpload.addEventListener('change', function(event) {
+        handleImageUpload(event, image);
+    });
+}

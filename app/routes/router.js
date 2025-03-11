@@ -43,7 +43,7 @@ router.post(
 );
 
 router.post(
-    "/cadastrarnutri", 
+    "/card1", 
     
     body("nome").isLength({min:2}).withMessage("O nome deve conter 2 ou mais caracteres!"),
     body("telefone").isMobilePhone().withMessage("Insira um número de telefone válido!"),
@@ -59,12 +59,23 @@ router.post(
     
     function (req, res) {
         const listaErros = validationResult(req);
+        let card1Sucesso = false;
         if (listaErros.isEmpty()) {
-            return res.redirect("/")
-        }else {
-            console.log(listaErros);
-            return res.render("pages/indexCadastrarNutri", {retorno: null, valores: {nome: req.body.nome, telefone: req.body.telefone, email: req.body.email, senha: req.body.senha, area: req.body.area, crn: req.body.crn}, listaErros:listaErros});
+            card1Sucesso = true;
         }
+
+        return res.render("pages/indexCadastrarNutri", {
+            card1Sucesso: card1Sucesso,
+            valores: {
+                nome: req.body.nome,
+                telefone: req.body.telefone,
+                email: req.body.email,
+                senha: req.body.senha,
+                area: req.body.area,
+                crn: req.body.crn
+            },
+            listaErros: listaErros.isEmpty() ? null : listaErros
+        });
     }
 );
 

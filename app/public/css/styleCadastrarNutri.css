@@ -441,7 +441,7 @@ input[type="number"]::-webkit-inner-spin-button {
     background-color: green; 
 }
 
-.card-two{
+.card-others {
     display: none;
     flex: 1;
     max-width: 400px;
@@ -452,6 +452,10 @@ input[type="number"]::-webkit-inner-spin-button {
     margin: 50px;
     margin-right: 20px;
     margin-bottom: 0px;
+}
+
+.active {
+    display: block;
 }
 
 .cadastro-form h1{
@@ -480,6 +484,22 @@ input[type="number"]::-webkit-inner-spin-button {
     cursor: pointer;
 }
 
+.placeholder-foto, .placeholder-banner {
+    object-fit: cover;
+    border: 2px solid #ccc;
+    cursor: pointer;
+}
+
+.placeholder-foto {
+    height: 174px;
+    width: 174px;
+    border-radius: 50%;
+}
+
+.placeholder-banner {
+    height: 100px;
+    width: 400px;
+}
 .icone-camera span.material-symbols-outlined {
     font-size: 48px;
 }

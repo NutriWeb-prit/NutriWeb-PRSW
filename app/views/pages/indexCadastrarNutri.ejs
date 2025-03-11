@@ -35,13 +35,22 @@
                     erroValidacao.area = "erro-form",
                     msgErro.area = erro.msg
                 }
-                if (erro.path == "nome") {
+                if (erro.path == "crn") {
                     erroValidacao.crn = "erro-form",
                     msgErro.crn = erro.msg
                 }
             });
-        } 
-        %>
+        }%>
+
+        <% 
+        let card1 = "";
+        let card2 = "";
+        let barra = "";
+        if (typeof card1Sucesso !== "undefined" && card1Sucesso) {
+            card1 = "hidden";
+            card2 = "active";
+            barra = "ativo"
+        }%>
 
         <header class="header">
             
@@ -76,7 +85,7 @@
         </section>
 
         <section class="container">
-            <section class="card" id="card">
+            <section class="card <%= card1 %>" id="card">
                 <section class="conteudo-form">
                     <span class="notification"><%= msgErro.nome %></span>
                     <span class="notification2"><%= msgErro.telefone %></span>
@@ -84,7 +93,7 @@
                     <span class="notification4"><%= msgErro.senha %></span>
                     <span class="notification5"><%= msgErro.area %></span>
                     <span class="notification6"><%= msgErro.crn %></span>
-                    <form action="/cadastrarnutri" method="post" class="cadastro-form">
+                    <form action="/card1" method="post" class="cadastro-form" id="card">
                         <h2><strong class="strong-cad">Cadastre-se,</strong><br> e comece sua jornada!</h2>
                         <section class="campo-form">
                             <input type="text" id="nome" name="nome" value="<%= valores.nome %>" class="<%= erroValidacao.nome %>" placeholder="Nome Completo">
@@ -176,7 +185,7 @@
                             <input type="text" id="crn" name="crn" value="<%= valores.crn %>" class="<%= erroValidacao.crn %>" placeholder="Número de CRN">
                         </section>
 
-                        <button class="btn-cadastrar">
+                        <button  type="submit" class="btn-cadastrar">
                             Continuar <i class="fas fa-arrow-right seta"></i>
                         </button>
                     </form>
@@ -187,20 +196,20 @@
         </section>
 
         <section class="container">
-            <section class="card-two" id="card-two">
+            <section class="card-others <%= card2 %>" id="card-two">
                 <section class="conteudo-form">
                     
                         
-                    <form action="/cadastrarnutri" method="post" class="cadastro-form">
+                    <form action="" method="post" class="cadastro-form" id="card-two">
                         <h2><strong class="strong-cad">Personalizando</strong><br> seu perfil</h2>
 
                         <h1>Adicione uma Foto de Perfil</h1>
 
                         <div class="campo-imagem">
                             <label for="input-imagem">
-                                <span class="material-icons icone-camera">add_a_photo</span>
+                                <img class="placeholder-foto" id="placeholder-foto" src="imagens/placeholderFoto.png">
                             </label>
-                            <input type="file" id="input-imagem" class="input-imagem" accept="image/*" />
+                            <input type="file" name="input-imagem" id="input-imagem" class="input-imagem" accept="image/*" />
 
                             <span class="material-icons icone-ajuda" onclick="toggleInfo()">question_mark</span>
 
@@ -221,13 +230,13 @@
 
                         <div class="adiciona-banner">
                             <label for="input-banner">
-                                <span class="material-icons icone-add">add</span>
+                                <img class="placeholder-banner" id="placeholder-banner" src="imagens/placeholderBanner.png">
                             </label>
 
-                            <input type="file" id="input-banner" class="input-banner" accept="image/*" />
+                            <input type="file"  name="input-banner" id="input-banner" class="input-banner" accept="image/*" />
                         </div>
                 
-                        <button class="btn-cadastrar">
+                        <button type="button" class="btn-cadastrar continuar">
                             Continuar <i class="fas fa-arrow-right seta"></i>
                         </button>
                     </form>
@@ -240,10 +249,10 @@
         </section>
 
         <section class="container">
-            <section class="card-two" id="card-three">
+            <section class="card-others" id="card-three">
                 <section class="conteudo-form">
                         
-                    <form action="/cadastrarnutri" method="post" class="cadastro-form">
+                    <form action="/card3" method="post" class="cadastro-form" id="card-three">
                         <h2><strong class="strong-cad">Personalizando</strong><br> seu perfil</h2>
 
                         <h1>Sobre você</h1>
@@ -251,16 +260,10 @@
                         e como deseja impactar a vida das pessoas!</p>
                         
                         <textarea placeholder="Ex: Sou Roberta Santos, nutricionista especializada em nutrição esportiva. Meu objetivo é ajudar a alimentação para potencializar resultados e promover saúde. Cada atleta é único, e estou aqui para traçar uma jornada nutricional que faz a diferença no seu treino e na sua vida!" class="campo-texto"></textarea>
-                
-                        <h1>Mostre onde estudou e quais cursos fez</h1>
 
-                        <button class="btn-upload">Faça o Upload dos Certificados</button>
-
-                        <div class="talvez">
-                            <p>Talvez depois</p>
-                        </div>
-
-                        <button class="btn-cadastrar">Concluir</button>
+                        <button type="button" form="card-three" class="btn-cadastrar continuar">
+                            Continuar <i class="fas fa-arrow-right seta"></i>
+                        </button>
                     </form>
 
                 </section>          
@@ -269,10 +272,10 @@
         </section>
 
         <section class="container">
-            <section class="card-two" id="card-four">
+            <section class="card-others" id="card-four">
                 <section class="conteudo-form">
                     
-                    <form action="/cadastrarnutri" method="post" class="cadastro-form">
+                    <form action="/login" class="cadastro-form" id="card-four">
                         <h2 class="title_cursos">Mostre onde estudou e quais cursos fez</h2>
 
                         <h1>Faculdade</h1>
@@ -282,7 +285,7 @@
                         <label class="label-especialidade" for="faculdade">Organização:</label>
                         <input type="text" id="faculdade" placeholder="Ex: Universidade de São Paulo (USP)" class="input-cad">
                                         
-                        <button class="btn-upload">
+                        <button type="button" class="btn-upload">
                             <span class="material-icons icone-upload">cloud_upload</span>
                             Faça o Upload dos Certificados
                         </button>
@@ -298,7 +301,7 @@
                         <label class="label-especialidade" for="faculdade">Organização:</label>
                         <input type="text" id="faculdade" placeholder="Ex: Faculdade Metódo de São Paulo" class="input-cad">
                                         
-                        <button class="btn-upload">
+                        <button type="button" class="btn-upload">
                             <span class="material-icons icone-upload">cloud_upload</span>
                             Faça o Upload dos Certificados
                         </button>
@@ -306,9 +309,8 @@
                         <div class="adicionar-mais">
                             <span class="material-icons icone-add">add</span> Adicionar mais
                         </div>
-                                                
 
-                        <button class="btn-cadastrar">
+                        <button type="submit" onclick="irLogin()" form="card-four" class="btn-cadastrar">
                             Continuar <i class="fas fa-arrow-right seta"></i>
                         </button>
                     </form>
@@ -321,7 +323,7 @@
 
         <div class="barra-progresso">
             <span class="progresso ativo"></span>
-            <span class="progresso"></span>
+            <span class="progresso <%= barra %>"></span>
             <span class="progresso"></span>
             <span class="progresso"></span>
         </div>
@@ -386,4 +388,5 @@
     <script src="js/indexMenu.js"></script>
     <script src="js/validacaotemporeal.js"></script>
     <script src="js/form-card.js"></script>
+    <script src="js/uploadimage.js"></script>
 </html>
