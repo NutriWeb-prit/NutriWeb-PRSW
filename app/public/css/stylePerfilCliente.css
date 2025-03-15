@@ -261,9 +261,11 @@ main{
 
 #info_perfil{
     border: none;
-    background-color: white;
+    /* background-color: white; */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15), 0 2px 5px rgba(0, 0, 0, 0.1);
     width: 270px;
+    position: relative;
+    bottom: 60px;
 }
 
 #container_foto{
@@ -277,8 +279,8 @@ main{
 
 .foto_perfil{
     background: none;
-    height: 100px;
-    width: 100px;
+    height: 120px;
+    width: 120px;
     border-radius: 100%;
     margin-top: 1em;
 }
