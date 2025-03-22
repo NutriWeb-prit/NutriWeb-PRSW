@@ -1,4 +1,4 @@
-# 🥗 NutriWeb
+# 🥗
 
 <p align="center">
   <img src="app/public/imagens/logo-NutriWeb.png" alt="NutriWeb Logo" width="200">
