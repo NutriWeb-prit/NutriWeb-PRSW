@@ -2,6 +2,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const params = new URLSearchParams(window.location.search);
     const id = params.get('id');
 
+    /*
+        Esportiva: 5/8
+        Clínica: 5/8
+        Estética: 5/8
+        Vegetariana: 1/8
+        Materno-Infantil: 2/8
+        Geriátrica: 1/8
+        Preventiva: 2/8
+        Balanceada: 1/8
+        Funcional: 2/8
+    */
+
     const nutricionistas = {
         1: { nome: 'Julia Barros', especialidade: 'Nutrição Esportiva', imagem: 'imagens/profissional1.png', contato: { whatsapp: '(11) 12345-6789', instagram: '@julia_barros', email: 'julia@nutricionista.com', sobre: "Sou Júlia Barros, especialista em nutrição esportiva. Meu objetivo é ajudar você a melhorar seu desempenho e alcançar suas metas com uma alimentação estratégica. Vamos juntos rumo ao seu melhor!" } },
         2: { nome: 'Roberta Santos', especialidade: 'Nutrição Clínica', imagem: 'imagens/profissional2.png', contato: { whatsapp: '(21) 98765-4321', instagram: '@roberta_santos', email: 'roberta@nutricionista.com', sobre: "Me chamo Roberta Santos, nutricionista clínica. Trabalho para promover saúde e bem-estar, ajustando a alimentação para tratar e prevenir doenças. Cada pessoa é única, e estou aqui para te guiar nesse processo." } },
@@ -15,6 +27,18 @@ document.addEventListener('DOMContentLoaded', function() {
         10: { nome: 'Lucas Mendes', especialidade: 'Nutrição Clínica', imagem: 'imagens/profissional10.png', contato: { whatsapp: '(73) 56535-2746 ', instagram: '@lucas_mendes', email: 'lucas@nutricionista.com', sobre: "Olá! Sou Lucas Mendes, nutricionista clínico. Meu foco é ajudar você a prevenir e tratar doenças por meio de uma alimentação equilibrada e adequada. Saúde é prioridade, e estou aqui para orientar você nesse caminho!" } },
         11: { nome: 'Carla Souza', especialidade: 'Nutrição Clínica', imagem: 'imagens/profissional11.png', contato: { whatsapp: '(43) 76452-2938 ', instagram: '@carla_souza', email: 'carla@nutricionista.com', sobre: "Prazer, sou Carla Souza, especialista em nutrição clínica. Quero ajudar você a garantir uma nutrição adequada para sua vida, criando hábitos saudáveis que vão durar para a vida toda!" } },
         12: { nome: 'Renata Dias', especialidade: 'Nutrição Esportiva', imagem: 'imagens/profissional12.png', contato: { whatsapp: '(34) 91767-3918', instagram: '@renata_dias', email: 'renata@nutricionista.com', sobre: "Eu sou Renata Dias, especializado em nutrição esportiva de alta performance. Se você é um atleta ou busca otimizar seu rendimento, estou aqui para ajustar sua alimentação e levar você ao seu máximo potencial." } },
+        13: { nome: 'Bruno Teixeira', especialidade: 'Nutrição Esportiva', imagem: 'imagens/profissional13.png', contato: { whatsapp: '(61) 91234-5678', instagram: '@bruno_teixeira', email: 'bruno@nutricionista.com', sobre: "Sou Bruno Teixeira, nutricionista esportivo dedicado a impulsionar sua performance com uma alimentação adequada ao seu estilo de treino. Vamos alcançar juntos sua melhor forma física e mental!" } },
+        14: { nome: 'Larissa Monteiro', especialidade: 'Nutrição Estética', imagem: 'imagens/profissional14.png', contato: { whatsapp: '(85) 99876-5432', instagram: '@larissa_monteiro', email: 'larissa@nutricionista.com', sobre: "Olá! Eu sou Larissa Monteiro, nutricionista estética apaixonada por ajudar pessoas a se sentirem bem consigo mesmas. Com nutrição personalizada, vamos destacar sua beleza natural de dentro para fora!" } },
+        15: { nome: 'Daniela Castro', especialidade: 'Nutrição Clínica', imagem: 'imagens/profissional15.png', contato: { whatsapp: '(19) 92345-6789', instagram: '@daniela_castro', email: 'daniela@nutricionista.com', sobre: "Sou Daniela Castro, especialista em nutrição clínica. Acredito na força da alimentação como aliada no tratamento e prevenção de doenças. Estou aqui para te ajudar a viver melhor!" } },
+        16: { nome: 'Henrique Lopes', especialidade: 'Nutrição Vegetariana', imagem: 'imagens/profissional16.png', contato: { whatsapp: '(47) 93456-7890', instagram: '@henrique_lopes', email: 'henrique@nutricionista.com', sobre: "Olá! Eu sou Henrique Lopes, especialista em nutrição vegetariana. Ajudo você a ter uma alimentação equilibrada, saudável e ética, respeitando seu estilo de vida e promovendo saúde em cada refeição." } },
+        17: { nome: 'Mirella Cunha', especialidade: 'Nutrição Materno-Infantil', imagem: 'imagens/profissional17.png', contato: { whatsapp: '(31) 99812-3456', instagram: '@mirella_cunha', email: 'mirella@nutricionista.com', sobre: "Sou Mirella Cunha, especialista em nutrição materno-infantil. Minha missão é cuidar da alimentação de mães e bebês, garantindo um desenvolvimento saudável desde os primeiros momentos da vida." } },
+        18: { nome: 'Gustavo Ribeiro', especialidade: 'Nutrição Geriátrica', imagem: 'imagens/profissional18.png', contato: { whatsapp: '(62) 98345-6781', instagram: '@gustavo_ribeiro', email: 'gustavo@nutricionista.com', sobre: "Olá! Eu sou Gustavo Ribeiro, nutricionista geriátrico. Trabalho para promover saúde, vitalidade e bem-estar na terceira idade, com planos alimentares adaptados às necessidades dessa fase da vida." } },
+        19: { nome: 'Tatiane Moura', especialidade: 'Nutrição Preventiva', imagem: 'imagens/profissional19.png', contato: { whatsapp: '(27) 97654-3210', instagram: '@tatiane_moura', email: 'tatiane@nutricionista.com', sobre: "Oi, sou Tatiane Moura, nutricionista preventiva. Meu trabalho é ajudar você a evitar doenças e manter a saúde com escolhas alimentares conscientes e estratégias nutricionais eficazes." } },
+        20: { nome: 'Eduardo Lima', especialidade: 'Nutrição Balanceada', imagem: 'imagens/profissional20.png', contato: { whatsapp: '(44) 91234-0987', instagram: '@eduardo_lima', email: 'eduardo@nutricionista.com', sobre: "Sou Eduardo Lima, especialista em nutrição balanceada. Acredito no equilíbrio como chave para uma vida saudável. Com um plano alimentar ajustado às suas rotinas, vamos atingir seus objetivos com prazer e saúde." } },
+        21: { nome: 'Amanda Torres', especialidade: 'Nutrição Funcional', imagem: 'imagens/profissional21.png', contato: { whatsapp: '(45) 99887-6655', instagram: '@amanda_torres', email: 'amanda@nutricionista.com', sobre: "Olá! Eu sou Amanda Torres, nutricionista funcional. Minha missão é tratar a causa dos seus sintomas com uma nutrição estratégica, promovendo saúde de forma integrada e duradoura." } },
+        22: { nome: 'Fernando Paiva', especialidade: 'Nutrição Preventiva', imagem: 'imagens/profissional22.png', contato: { whatsapp: '(16) 97654-1209', instagram: '@fernando_paiva', email: 'fernando@nutricionista.com', sobre: "Eu sou Fernando Paiva, nutricionista voltado à prevenção. Através da alimentação correta, ajudo você a manter o organismo em equilíbrio e prevenir doenças antes que elas apareçam." } },
+        23: { nome: 'Isabela Martins', especialidade: 'Nutrição Materno-Infantil', imagem: 'imagens/profissional23.png', contato: { whatsapp: '(41) 97890-1234', instagram: '@isabela_martins', email: 'isabela@nutricionista.com', sobre: "Oi! Sou Isabela Martins, nutricionista materno-infantil. Acompanho gestantes, lactantes e crianças em suas fases mais importantes, com foco em nutrição adequada para crescimento e saúde duradoura." } },
+        24: { nome: 'Vitor Amaral', especialidade: 'Nutrição Funcional', imagem: 'imagens/profissional24.png', contato: { whatsapp: '(13) 98654-7654', instagram: '@vitor_amaral', email: 'vitor@nutricionista.com', sobre: "Sou Vitor Amaral, especialista em nutrição funcional. Acredito no poder dos alimentos como terapia. Vamos juntos construir uma rotina alimentar que trate a raiz dos seus desequilíbrios e promova saúde real." } },
     };
 
     const comentarios = {
@@ -89,6 +113,94 @@ document.addEventListener('DOMContentLoaded', function() {
             comentario2: 'Renata me acompanhou de perto, ajustando meu plano conforme minhas necessidades e progressos.', 
             comentario3: 'Renata me ajudou a ganhar massa magra com um plano alimentar ajustado ao meu treino e estilo de vida.', 
             comentario4: 'A Renata me mostrou que é possível comer bem sem abrir mão do prazer, e ainda obter ótimos resultados para a saúde.'}, 
+
+        13: {nome1: 'Rafael', nome2: 'Lucas', nome3: 'Diego', nome4: 'Fernanda',
+            comentario1: 'Excelente profissional! Minha performance melhorou muito com o plano alimentar dele.',
+            comentario2: 'Muito atencioso e entende as necessidades de quem treina pesado.',
+            comentario3: 'Recomendo demais! Alimentação focada em resultado real.',
+            comentario4: 'Clareza, compromisso e muito conhecimento. Gostei bastante do acompanhamento.'},
+
+        14: {nome1: 'Bianca', nome2: 'Júlia', nome3: 'Michele', nome4: 'Renata',
+            comentario1: 'A Larissa é incrível! Minha pele e cabelo melhoraram muito.',
+            comentario2: 'Muito querida e profissional. Explica tudo com muita paciência.',
+            comentario3: 'Senti mais autoestima e bem-estar desde que comecei com ela',
+            comentario4: 'Atendimento acolhedor e personalizado. Estou amando o resultado!'},
+
+        15: {nome1: 'Tiago', nome2: 'Cláudia', nome3: 'José', nome4: 'Marina',
+            comentario1: 'A Daniela realmente entende de nutrição clínica. Me ajudou com meu problema digestivo.',
+            comentario2: 'Super dedicada e competente. Me sinto muito melhor!',
+            comentario3: 'Plano alimentar feito sob medida. Estou me sentindo mais saudável.',
+            comentario4: 'Muito ética e cuidadosa. Gostei da abordagem prática dela.'},
+
+        16: {nome1: 'Camila', nome2: 'Pedro', nome3: 'Alice', nome4: 'Igor',
+            comentario1: 'Achei incrível como ele respeita o estilo de vida vegetariano e ainda equilibra tudo.',
+            comentario2: 'Nunca me senti tão bem com uma dieta! Henrique é sensacional.',
+            comentario3: 'Atendimento humanizado e super informativo.',
+            comentario4: 'Ótimo profissional! Me ensinou muito sobre combinações nutricionais vegetarianas.'},
+
+        17: {
+            nome1: 'Vanessa', nome2: 'Lorena', nome3: 'Aline', nome4: 'Renata',
+            comentario1: 'Me ajudou muito na fase da gestação. Sou grata demais!',
+            comentario2: 'Excelente com crianças! Meu filho adorou as dicas.',
+            comentario3: 'Muito doce e competente. Recomendo para todas as mamães!',
+            comentario4: 'O plano alimentar funcionou super bem com meu bebê.'
+        },
+            
+        18: {
+            nome1: 'Flávia', nome2: 'Paulo', nome3: 'Sandra', nome4: 'Marina',
+            comentario1: 'Muito atencioso com os idosos. Meu pai se adaptou super bem.',
+            comentario2: 'Fez um plano alimentar ideal para a idade da minha avó. Resultado excelente.',
+            comentario3: 'Trata os pacientes com carinho e respeito.',
+            comentario4: 'Confiável e experiente. Nota 10!'
+        },
+            
+        19: {
+            nome1: 'Letícia', nome2: 'Rafael', nome3: 'Eliane', nome4: 'João',
+            comentario1: 'Com Tatiane aprendi que alimentação previne mais do que remédio.',
+            comentario2: 'Ela é prática e vai direto ao ponto. Adorei!',
+            comentario3: 'Agora me alimento melhor e não fico mais doente com frequência.',
+            comentario4: 'Abordagem consciente e informativa. Me senti cuidada.'
+        },
+            
+        20: {
+            nome1: 'Priscila', nome2: 'Gustavo', nome3: 'Tainá', nome4: 'Henrique',
+            comentario1: 'Plano equilibrado e fácil de seguir. Já vejo diferença!',
+            comentario2: 'Sabe adaptar a dieta à rotina. Excelente profissional.',
+            comentario3: 'Gostei da forma como ele prioriza o equilíbrio. Nada radical.',
+            comentario4: 'Finalmente encontrei uma alimentação sustentável pra mim.'
+        },
+            
+        21: {
+            nome1: 'Jéssica', nome2: 'Carol', nome3: 'Felipe', nome4: 'Beatriz',
+            comentario1: 'A Amanda mudou minha vida! Tratou causas que ninguém percebia.',
+            comentario2: 'A nutrição funcional realmente faz diferença. Recomendo muito!',
+            comentario3: 'Muito dedicada e conhecedora. Adorei o atendimento.',
+            comentario4: 'Melhorei sintomas que tinha há anos. Sou muito grata!'
+        },
+            
+        22: {
+            nome1: 'Luana', nome2: 'Eduardo', nome3: 'Simone', nome4: 'Fábio',
+            comentario1: 'Trabalho preventivo que realmente funciona. Profissional excelente!',
+            comentario2: 'Aprendi muito sobre o impacto da alimentação no meu dia a dia.',
+            comentario3: 'Gostei muito da abordagem focada na saúde a longo prazo.',
+            comentario4: 'Consulta leve, educativa e super eficiente.'
+        },
+            
+        23: {
+            nome1: 'Juliana', nome2: 'Paula', nome3: 'Letícia', nome4: 'Mônica',
+            comentario1: 'Muito carinhosa com as crianças. Minha filha adora!',
+            comentario2: 'Foi essencial no meu pós-parto. Recomendo!',
+            comentario3: 'Traz informações claras e práticas. Me ajudou bastante.',
+            comentario4: 'Atendimento excelente para mães e bebês. Nota 10!'
+        },
+            
+        24: {
+            nome1: 'André', nome2: 'Karina', nome3: 'Tatiane', nome4: 'Rodrigo',
+            comentario1: 'Trabalho incrível! Meu corpo e mente estão mais equilibrados.',
+            comentario2: 'O Vitor é muito atento aos detalhes. A nutrição funcional fez toda a diferença.',
+            comentario3: 'Recuperei minha disposição e saúde com a ajuda dele.',
+            comentario4: 'Explica tudo com paciência e embasamento. Recomendo de olhos fechados!'
+        }
     };
 
     const nutri = nutricionistas[id];

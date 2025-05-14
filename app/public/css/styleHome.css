@@ -173,11 +173,12 @@ body {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
+    background: none;
+    color: black;
     border: none;
     border-radius: 20px;
-    font-size: 2rem;
+    width: 55px !important;
+    height: 75px !important;
     cursor: pointer;
     padding: 10px;
 }
@@ -194,21 +195,22 @@ body {
     position: absolute;
     top: 93%;
     left: 50%;
-    color: white;
     border: none;
     padding: 10px;
 }
 
 .indicator {
-    width: 12px;
-    height: 12px;
+    display: inline-block;
+    width: 20px;
+    height: 8px;
     margin: 0 5px;
-    border-radius: 50%;
-    background-color: gray;
-    cursor: pointer;
+    border-radius: 2px;
+    background-color: white;
+    transition: all 0.3s ease-in-out;
 }
 
 .indicator.active {
+    width: 50px;
     background-color: #5da43b; /* Cor azul para o indicador ativo */
 }
 
@@ -303,7 +305,7 @@ body {
     top: 115%;
     transform: translateY(-50%);
     background: none;
-    background-color: rgba(0, 0, 0, 0.5);;
+    background-color: rgba(0, 0, 0, 0.5);
     color: #fff;
     border: none;
     border-radius: 20px;
