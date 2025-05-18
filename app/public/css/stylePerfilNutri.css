@@ -312,6 +312,196 @@ main{
     overflow: hidden;
 }
 
+.card {
+    background-color: none;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    width: 280px;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    align-items: left;
+    margin-bottom: 50px;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    padding-top: 20px;
+    width: 100%;
+    background-color: transparent;
+}
+
+.card-perfil{
+    width: 30%;
+    white-space: nowrap;
+    text-decoration: none;
+    outline: none;
+}
+
+.card-header img {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+}
+
+.card-header .name {
+    font-size: 18px;
+    font-weight: bold;
+    color: black;
+}
+
+.card-header .profession {
+    font-size: 14px;
+    color: gray;
+}
+
+.content-img {
+    width: 100%;
+    height: 300px; 
+    border-radius: 10%;
+    object-fit: cover;
+}
+
+.caption {
+    padding: 10px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.modal {
+    position: fixed;
+    display: none; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+    z-index: 3;
+}
+
+.modal-content {
+    background: white;
+    width: 80%;
+    max-width: 1200px;
+    display: flex;
+    border-radius: 10px;
+    position: relative;
+}
+
+.modal-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    padding-right: 20px;
+}
+
+.modal-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px 0px 0px 10px;
+}
+
+.modal-card {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-header-modal{
+    display: flex;
+    align-items: center;
+    padding: 0;
+    padding-top: 20px;
+    width: 30%;
+    background-color: transparent;
+}
+
+.modal-description{
+    padding-right: 20px;
+}
+
+.btn-favorite{
+    margin-left: auto;
+    color: transparent;
+    -webkit-text-stroke: 2px black; 
+    cursor: pointer;
+    margin-right: 8px;
+}
+
+.btn-comment{
+    cursor: pointer;
+}
+
+.container-comentarios {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    padding: 8px 12px;
+    /* margin: 20px auto;  */
+    margin-right: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+}
+
+.container-comentarios .material-icons {
+    font-size: 24px;
+    color: #555;
+    margin-right: 8px;
+}
+
+.container-comentarios input {
+    border: none;
+    outline: none;
+    flex: 1;
+    font-size: 14px;
+    background: transparent;
+}
+
+.btn-enviar {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    color: #007BFF;
+    font-size: 14px;
+}
+
+.btn-enviar:hover {
+    color: #0056b3;
+}
+
+.modal-description h2,
+.modal-description h3 {
+    color: green;
+    margin-top: 20px;
+}
+
+.modal-description p {
+    margin-top: 10px;
+}
+
+.close-modal {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    color: green;
+}
+.close-modal.md-24{
+    font-size: 45px;
+}
+
 #publi, #avaliar_nutri{
     margin-top: 60px;
 }
@@ -321,6 +511,42 @@ main{
     grid-template-columns: 200px 200px;
     grid-template-rows: 230px 230px 230px;
     column-gap: 2em;
+}
+
+.image-modal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    padding-top: 50px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.9);
+}
+
+.image-modal .modal-content {
+    display: block;
+    margin: auto;
+    max-width: 30%;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -40%);
+    max-height: 70vh;
+    align-content: center;
+    border-radius: 10px;
+}
+
+.image-modal .close-modal {
+    position: absolute;
+    top: 20px;
+    right: 35px;
+    color: #fff;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
 }
 
 #tituloavaliacao {
