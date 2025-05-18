@@ -11,13 +11,17 @@
 </head>
     <body>
         <% 
-        let erroValidacao = {"nome" : "", "email" : "", "senha" : ""};
-        let msgErro = {"nome" : "", "email" : "", "senha" : ""};
+        let erroValidacao = {"nome" : "", "telefone":"", "email" : "", "senha" : "", "area":""};
+        let msgErro = {"nome" : "", "telefone":"", "email" : "", "senha" : "", "area":""};
         if(listaErros) {
             listaErros.errors.forEach( function(erro) {
                 if (erro.path == "nome") {
                     erroValidacao.nome = "erro-form",
                     msgErro.nome = erro.msg
+                }
+                if (erro.path == "telefone") {
+                    erroValidacao.telefone = "erro-form",
+                    msgErro.telefone = erro.msg
                 }
                 if (erro.path == "email") {
                     erroValidacao.email = "erro-form",
@@ -27,9 +31,22 @@
                     erroValidacao.senha = "erro-form",
                     msgErro.senha = erro.msg
                 }
+                if (erro.path == "area") {
+                    erroValidacao.area = "erro-form",
+                    msgErro.area = erro.msg
+                }
             });
-        } 
-        %>
+        }%>
+
+        <% 
+        let card1 = "";
+        let card2 = "";
+        let barra = "";
+        if (typeof card1Sucesso !== "undefined" && card1Sucesso) {
+            card1 = "hidden";
+            card2 = "active";
+            barra = "ativo"
+        }%>
 
         <header class="header">
             
@@ -64,23 +81,22 @@
         </section>
 
         <section class="container">
-            <section class="card">
+            <section class="card <%= card1 %>" id="card">
                 <section class="conteudo-form">
                     <span class="notification"><%= msgErro.nome %></span>
-                    <span class="notification2"><%= msgErro.email %></span>
-                    <span class="notification3"><%= msgErro.senha %></span>
-                    <form action="/cadastrarcliente" method="post" class="cadastro-form">
-                        <h2>Cadastre-se e comece sua jornada</h2>
+                    <span class="notification2"><%= msgErro.telefone %></span>
+                    <span class="notification3"><%= msgErro.email %></span>
+                    <span class="notification4"><%= msgErro.senha %></span>
+                    <span class="notification5"><%= msgErro.area %></span>
+                    <form action="/card1" method="post" class="cadastro-form" id="card">
+                        <h2><strong class="strong-cad">Cadastre-se,</strong><br> e comece sua jornada!</h2>
                         <section class="campo-form">
-                            <label for="nome">Nome completo:</label>
-                            <input type="text" id="nome" name="nome" value="<%= valores.nome %>" class="<%= erroValidacao.nome %>" placeholder="Digite seu nome completo">
+                            <input type="text" id="nome" name="nome" value="<%= valores.nome %>" class="<%= erroValidacao.nome %>" placeholder="Nome Completo">
                         </section>
                         <section class="campo-form">
-                            <label for="email">E-mail:</label>
-                            <input type="text" id="email" name="email" value="<%= valores.email %>" class="<%= erroValidacao.email %>" placeholder="Digite seu e-mail">
+                            <input type="text" id="email" name="email" value="<%= valores.email %>" class="<%= erroValidacao.email %>" placeholder="E-mail">
                         </section>
                         <section class="campo-form">
-                            <label for="senha">Crie uma senha:</label>
                             <input type="password" id="senha" name="senha" value="<%= valores.senha %>" class="<%= erroValidacao.senha %>"placeholder="Crie uma senha">
                             <section id="password-requirements">
                                 <span>A senha deve conter:</span>
@@ -93,19 +109,139 @@
                                 </ul>
                             </section>
                         </section>
+                        
                         <section class="campo-form">
-                            <label for="objetivo">Objetivo(opcional)</label>
-                            <input type="text" id="objetivo" name="objetivo" placeholder="Digite seu objetivo pessoal com o uso do site">
+                            <label for="telefone">Telefone:</label>
+                            <div class="campo-telefone-container">
+                                <div class="campo-ddd">
+                                    <label for="ddd">DDD:</label>
+                                    <input type="number" id="ddd" name="ddd" maxlength="2">
+                                </div>
+                                <div class="campo-telefone">
+                                    <input type="number" id="telefone-numero" name="telefone" value="<%= valores.telefone %>" class="<%= erroValidacao.telefone %>">
+                                </div>
+                            </div>
                         </section>
-                        <input type="submit" class="btn-cadastrar" value="Cadastrar">
-                    </form>
-                </section>
-            </section>
+                        
+                        
+                        <section class="campo-form" id="campo-form-checkbox">
+                            <h1>Objetivo com a Nutrição</h1>
+                            <label for="area">Qual seu principal interesse nutricional?</label>
+                            
+                            <section class="checkbox-group-container">
+                                <section class="checkbox-group">
+                                    <input type="checkbox" name="area" id="emagrecimento">
+                                    <label for="emagrecimento">Emagrecimento</label>
+                                </section>
+                                
+                                <section class="checkbox-group">
+                                    <input type="checkbox" name="area" id="massaMuscular">
+                                    <label for="massaMuscular">Ganho de Massa Muscular</label>
+                                </section>
+                                
+                                <section class="checkbox-group">
+                                    <input type="checkbox" name="area" id="Controle">
+                                    <label for="Controle">Controle de Doenças</label>
+                                </section>
+                                
+                                <section class="checkbox-group">
+                                    <input type="checkbox" name="area" id="estetica">
+                                    <label for="estetica">Estética Corporal</label>
+                                </section>
+                                
+                                <section class="checkbox-group">
+                                    <input type="checkbox" name="area" id="doençasCronicas">
+                                    <label for="doençasCronicas">Doenças Crônicas</label>
+                                </section>
+                                
+                                <section class="checkbox-group">
+                                    <input type="checkbox" name="area" id="dietaVegetariana">
+                                    <label for="dietaVegetariana">Dieta Vegetariana</label>
+                                </section>
+                                
+                                <section class="checkbox-group">
+                                    <input type="checkbox" name="area" id="gestantesCrianças">
+                                    <label for="gestantesCrianças">Gestantes/Crianças</label>
+                                </section>
+                                
+                                <section class="checkbox-group">
+                                    <input type="checkbox" name="area" id="saudeIdoso">
+                                    <label for="saudeIdoso">Saúde Idoso</label>
+                                </section>
+                                
+                                <section class="checkbox-group">
+                                    <input type="checkbox" name="area" id="alimentacaoSaudavel">
+                                    <label for="alimentacaoSaudavel">Alimentação Saudável</label>
+                                </section>
+                            </section>
+                        </section>
 
-            <section class="imagem-container">
-                <a href="/"><img src="imagens/logo.png" alt="Imagem" class="imagem-fullwidth"></a>
+                        <button  type="submit" class="btn-cadastrar">
+                            Continuar <i class="fas fa-arrow-right seta"></i>
+                        </button>
+                    </form>
+                </section>          
+                
+            </section>
+            
+        </section>
+
+        <section class="container">
+            <section class="card-others <%= card2 %>" id="card-two">
+                <section class="conteudo-form">
+                    
+                        
+                    <form action="" method="post" class="cadastro-form" id="card-two">
+                        <h2><strong class="strong-cad">Personalizando</strong><br> seu perfil</h2>
+
+                        <h1>Adicione uma Foto de Perfil</h1>
+
+                        <div class="campo-imagem">
+                            <label for="input-imagem">
+                                <img class="placeholder-foto" id="placeholder-foto" src="imagens/placeholderFoto.png">
+                            </label>
+                            <input type="file" name="input-imagem" id="input-imagem" class="input-imagem" accept="image/*" />
+
+                            <span class="material-icons icone-ajuda" onclick="toggleInfo()">question_mark</span>
+
+                            <div id="informacao" class="informacao" style="display: none;">
+                                <p>Para escolher uma boa foto de perfil, prefira uma imagem 
+                                com fundo claro e sem distrações, deixando o foco em você.</p>
+
+                                <p>Tente aproximar a câmera para que seu rosto fique visível 
+                                e fácil de reconhecer. Evite fotos muito distantes ou com muitos filtros.</p>
+                                
+                                <p>Uma expressão natural e simpática ajuda a passar confiança. 
+                                Se possível, use luz natural — ela valoriza sua imagem de forma leve e real.</p>
+                            </div>
+                        </div>
+                        
+                        <h1>Adicione um banner</h1>
+
+                        <div class="adiciona-banner">
+                            <label for="input-banner">
+                                <img class="placeholder-banner" id="placeholder-banner" src="imagens/placeholderBanner.png">
+                            </label>
+
+                            <input type="file"  name="input-banner" id="input-banner" class="input-banner" accept="image/*" />
+                        </div>
+                
+                        <button type="button" class="btn-cadastrar continuar">
+                            Continuar <i class="fas fa-arrow-right seta"></i>
+                        </button>
+                    </form>
+                        
+                    </form>
+                </section>          
             </section>
         </section>
+
+        <div class="barra-progresso">
+            <span class="progresso ativo"></span>
+            <span class="progresso <%= barra %>"></span>
+            <!-- <span class="progresso"></span> -->
+            <!-- <span class="progresso"></span> -->
+        </div>
 
         <section class="mobile">
 
@@ -139,22 +275,22 @@
                     <a href="/"><h3>NutriWeb</h3></a>
                 </section>
 
-              <section class="footer-informacao">
-                <a href="/">Página Inicial</a>
-                <a href="/ranking">Ranking</a>
-                <a href="/profissionais">Profissionais</a>
-                <a href="/premium">Premium</a>
-                <a href="/login">Login</a>
-                <a href="/">Sobre nós</a> 
-                <a href="/tipoNutri">Como escolher o profissional ideal?</a>
-              </section>
+                <section class="footer-informacao">
+                    <a href="/">Página Inicial</a>
+                    <a href="/ranking">Ranking</a>
+                    <a href="/profissionais">Profissionais</a>
+                    <a href="/premium">Premium</a>
+                    <a href="/login">Login</a>
+                    <a href="/">Sobre nós</a> 
+                    <a href="/tipoNutri">Como escolher o profissional ideal?</a>
+                </section>
           
               <section class="footer-social">
                   <p>Conecte-se com os melhores nutricionistas e encontre o profissional ideal para você.</p>
                 <h3>Siga-nos</h3>
-                <section class="social-icons">
-                  <a href="https://www.instagram.com/nutriweb_oficial/"><i class="fab fa-instagram"></i></a>
-                </section>
+                    <section class="social-icons">
+                    <a href="https://www.instagram.com/nutriweb_oficial/"><i class="fab fa-instagram"></i></a>
+                    </section>
               </section>
             </section>
             
@@ -162,7 +298,10 @@
               <p>&copy; 2024 NutriWeb. Todos os direitos reservados.</p>
             </section>
         </footer>
+        
     </body>
     <script src="js/indexMenu.js"></script>
     <script src="js/validacaotemporeal.js"></script>
+    <script src="js/form-card.js"></script>
+    <script src="js/uploadimage.js"></script>
 </html>
