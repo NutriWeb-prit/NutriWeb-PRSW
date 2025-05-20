@@ -33,12 +33,22 @@ router.post(
     
     function (req, res) {
         const listaErros = validationResult(req);
+        let cardSucesso = false;
         if (listaErros.isEmpty()) {
-            return res.redirect("/")
-        }else {
-            console.log(listaErros);
-            return res.render("pages/indexCadastroCliente", {retorno: null, valores: {email: req.body.email, senha: req.body.senha}, listaErros:listaErros});
+            cardSucesso = true;
         }
+
+        return res.render("pages/indexCadastroCliente", {
+            cardSucesso: cardSucesso,
+            valores: {
+                nome: req.body.nome,
+                telefone: req.body.telefone,
+                email: req.body.email,
+                senha: req.body.senha,
+                area: req.body.area,
+            },
+            listaErros: listaErros.isEmpty() ? null : listaErros
+        });
     }
 );
 

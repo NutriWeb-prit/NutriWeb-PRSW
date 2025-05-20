@@ -42,7 +42,7 @@
         let card1 = "";
         let card2 = "";
         let barra = "";
-        if (typeof card1Sucesso !== "undefined" && card1Sucesso) {
+        if (typeof cardSucesso !== "undefined" && cardSucesso) {
             card1 = "hidden";
             card2 = "active";
             barra = "ativo"
@@ -88,7 +88,7 @@
                     <span class="notification3"><%= msgErro.email %></span>
                     <span class="notification4"><%= msgErro.senha %></span>
                     <span class="notification5"><%= msgErro.area %></span>
-                    <form action="/card1" method="post" class="cadastro-form" id="card">
+                    <form action="/cadastrarcliente" method="post" class="cadastro-form" id="card">
                         <h2><strong class="strong-cad">Cadastre-se,</strong><br> e comece sua jornada!</h2>
                         <section class="campo-form">
                             <input type="text" id="nome" name="nome" value="<%= valores.nome %>" class="<%= erroValidacao.nome %>" placeholder="Nome Completo">
@@ -188,10 +188,8 @@
 
         <section class="container">
             <section class="card-others <%= card2 %>" id="card-two">
-                <section class="conteudo-form">
-                    
-                        
-                    <form action="" method="post" class="cadastro-form" id="card-two">
+                <section class="conteudo-form"> 
+                    <form action="/" method="get" class="cadastro-form" id="card-two">
                         <h2><strong class="strong-cad">Personalizando</strong><br> seu perfil</h2>
 
                         <h1>Adicione uma Foto de Perfil</h1>
@@ -226,7 +224,7 @@
                             <input type="file"  name="input-banner" id="input-banner" class="input-banner" accept="image/*" />
                         </div>
                 
-                        <button type="button" class="btn-cadastrar continuar">
+                        <button type="button" onclick="irLogin()" class="btn-cadastrar continuar">
                             Continuar <i class="fas fa-arrow-right seta"></i>
                         </button>
                     </form>

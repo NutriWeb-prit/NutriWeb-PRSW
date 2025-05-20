@@ -717,6 +717,7 @@ main{
     margin-top: 10%;
     position: relative;
     z-index: 2;
+    object-fit: cover;
 }
 
 #infrmacoes_nutri {
