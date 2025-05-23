@@ -135,18 +135,18 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 50vh;
+    height: 40vh;
     text-align: center;
 }
 .title {
     font-size: 3rem;
-    margin-top: 7rem;
+    margin: 7rem 0 0 0;
     font-weight: bold;
     color: rgb(5, 92, 5)
 }
 .subtitle {
     font-size: 1.5rem;
-    margin-top: 1rem;
+    margin: 1rem 0 0 0;
     color: #555;
 }
 

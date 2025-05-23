@@ -242,7 +242,7 @@ body {
     flex-direction: column;
     align-items: left;
     align-self: flex-end;
-    top: 77%;
+    top: 97%;
     background-color: white;
     box-shadow: #1c1c1c 0px 0px 20px;
     border-radius: 10px;
@@ -260,7 +260,6 @@ body {
     border-radius: 15px;
     font-size: 18px;
     cursor: pointer;
-    margin-top: 20px;
     align-self: flex-end;
     margin-right: 40px;
 }
@@ -293,11 +292,13 @@ body {
 .nutricionista h1{
     color: green;
     font-size: 50px;
+    margin: 100px 0 0 0
 }
 
 .nutricionista h2{
     color: gray;
     font-size: 23px;
+    margin: 15px 0;
 }
 
 .carousel-prev, .carousel-next {
@@ -363,7 +364,7 @@ body {
 
 .card-nutri {
     background-color: #fff;
-    border: 3px solid rgb(1, 86, 1);
+    border: 3px solid #ffa97b;
     flex: 0 0 200px;
     scroll-snap-align: center;
     border-radius: 40px;
@@ -394,7 +395,7 @@ body {
 }
 
 .avaliacao_nutri{
-    color: green;
+    color: #FFBE12;
 }
 
 .titulos-publicacao{
@@ -404,11 +405,13 @@ body {
 .titulos-publicacao h1{
     color: green;
     font-size: 50px;
+    margin: 100px 0 0 0;
 }
 
 .titulos-publicacao h2{
     color: gray;
     font-size: 23px;
+    margin: 15px 0 35px 0;
 }
 
 .cards-container {

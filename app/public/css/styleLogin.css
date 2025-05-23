@@ -256,7 +256,7 @@ body {
 
 .btn-entrar {
     padding: 10px;
-    background-color: #2B8B1E;
+    background-color: #FF5B00;
     color: #fff;
     border: none;
     border-radius: 40px;
@@ -282,7 +282,7 @@ body {
     align-items: center;
     background-color: white;
     border-style: solid;
-    border-color: green;
+    border-color: #FFBE12;
     padding: 10px;
     border-radius: 10px;
     cursor: pointer;
