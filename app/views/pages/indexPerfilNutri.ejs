@@ -138,6 +138,7 @@
                         <h4>Informações de Contato</h4>
                         <section class="divisao"></section>
                     </section>
+                    
                     <section id="rede_sociais">
              
                         <p class="contato">
@@ -176,10 +177,73 @@
                 </section>
 
                 <section id="publi">
-                    <a href="/publicar" id="novapublicacao">
-                        <span class="material-symbols-outlined">add</span>
-                        <span>Nova Publicação</span>
-                    </a>
+
+                <a href="#" id="novapublicacao">
+                    <span class="material-symbols-outlined">add</span>
+                    <span>Nova Publicação</span>
+                </a>
+
+                <div class="modal" id="modal">
+                    <div class="modal-content">
+                        
+                        <div class="modal-left">
+                            <div class="upload-area">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="110" height="110" fill="none" stroke="#444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                    <path d="M21 15l-5-5L5 21"></path>
+                                </svg>
+                                <p>Adicione sua imagem ou vídeo</p>
+                            </div>
+                        </div>
+
+                        <div class="modal-right">
+                            <div>
+                                <h3>Legenda</h3>
+                                <!-- <div class="editor-toolbar">
+                                    <span>T</span>
+                                    <span><b>B</b></span>
+                                    <span><i>I</i></span>
+                                    <span><u>U</u></span>
+                                    <span>•</span>
+                                    <span>1.</span>
+                                    <span>↔</span>
+                                    <span>↕</span>
+                                    <span>❌</span>
+                                </div> -->
+                                <textarea class="editor" placeholder="Digite uma legenda para seu post..."></textarea>
+                            </div>
+
+                            <div>
+                                <h3>Categoria</h3>
+
+                                <label class="label-categoria">
+                                    <input type="radio" name="categoria" value="dica">
+                                    <span>Dica</span>
+                                </label>
+
+                                <label class="label-categoria">
+                                    <input type="radio" name="categoria" value="receita">
+                                    <span>Receita</span>
+                                </label>
+                            </div>
+
+                            <div class="input-icon-wrapper">
+                                <label for="localizacao">Localização</label>
+                                <span class="icon-location">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#444" viewBox="0 0 16 16">
+                                    <path d="M8 0a5.53 5.53 0 0 0-5.5 5.5c0 3.25 5.5 10.5 5.5 10.5s5.5-7.25 5.5-10.5A5.53 5.53 0 0 0 8 0Zm0 8.25a2.75 2.75 0 1 1 0-5.5 2.75 2.75 0 0 1 0 5.5Z"/>
+                                    </svg>
+                                </span>
+                                <input type="text" class="has-icon" id="localizacao" placeholder="Digite a localização..." />
+                            </div>
+
+                            <button class="publicar">Publicar</button>
+                        </div>
+                            <span class="close" id="fecharModal">&times;</span>
+                        </div>
+                    </div>
+
                     <section class="grid-publicacoes">
                         <article class="img">
                             <img src="imagens/img-post-estrogonofe.jpg" alt="" class="post_img" data-img="imagens/img-post-estrogonofe.jpg">
@@ -330,6 +394,7 @@
     </body>
     <script src="js/scriptPerfil.js"></script>
     <script src="js/postModal.js"></script>
+    <script src="js/modalPublicacao.js"></script>
     <script src="js/rating.js"></script>
     <script src="js/indexMenu.js"></script>
     <script src="js/listanutricionistas.js"></script>
