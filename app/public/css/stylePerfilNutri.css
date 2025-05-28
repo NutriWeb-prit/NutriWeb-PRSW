@@ -219,7 +219,7 @@ main{
     font-weight: bold;
     color: #333;
     white-space: nowrap; 
-    margin-left: 25px; 
+    margin-left: 17px; 
 }
 
 
@@ -230,7 +230,7 @@ main{
     object-fit: cover; 
     border: 2px solid #ccc;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
-    margin: 20px;
+    margin: 20px 20px 20px 8px;
 }
 
 .perfil-avaliar #legenda-avaliar {
@@ -802,11 +802,10 @@ main{
 
 .avaliacao{
     width: 250px;
-    background-color: white;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15), 0 2px 5px rgba(0, 0, 0, 0.1);
     border: none;
+    border-bottom: 2px solid black;
     overflow: hidden;
-    margin: 0 auto 2em auto;;
+    margin: 0 auto 2em auto;
 }
 
 .nome_avaliador{
@@ -841,7 +840,7 @@ main{
 }
 
 .comentario{
-    margin: 10px 10px;
+    margin: 10px 10px 25px;
     font-size: large;
 }
 
