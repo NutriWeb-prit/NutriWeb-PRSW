@@ -659,6 +659,8 @@ main{
     font-size: 14px;
     resize: none;
     outline: none;
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px;
     width: 97%;
 }
 
@@ -753,12 +755,14 @@ main{
   border: 1px solid #000;
   border-radius: 5px;
   box-sizing: border-box;
+  font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 16px;
 }
 
 .icon-location {
   position: absolute;
   left: 12px;
-  top: 60%;
+  top: 61%;
   pointer-events: none;
   display: flex;
   align-items: center;
@@ -767,10 +771,14 @@ main{
 
 .publicar {
     align-self: flex-end;
-    background-color: #e53935;
+    background-color: #FF5B00;
     color: white;
     padding: 10px 20px;
     font-weight: bold;
+    font-family: "Poppins", "Segoe UI", Roboto, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px; 
     border: none;
     border-radius: 4px;
     cursor: pointer;
