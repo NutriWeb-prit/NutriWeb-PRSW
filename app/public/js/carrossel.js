@@ -32,11 +32,21 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
+        if (!isMobile) {
+            indicators.forEach((indicator, i) => {
+                indicator.classList.remove('active');
+                if (i === index) {
+                    indicator.classList.add('active');
+                }
+            });
+        }
+
         indicators.forEach((indicator, i) => {
-            indicator.classList.remove('active');
-            if (i === index) {
-                indicator.classList.add('active');
-            }
+            indicator.addEventListener('click', () => {
+                currentIndex = i;
+                updateCarousel(carouselItems, thirdImageButton, currentIndex);
+                resetAutoPlay();
+            });
         });
     }
 

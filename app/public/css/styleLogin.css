@@ -185,7 +185,7 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: 450px;
     height: 70vh;
-    padding: 0 20px 20px 20px;
+    padding: 0 20px 0px 20px;
     text-align: center;
     display: flex;
     flex-direction: column;
@@ -249,16 +249,16 @@ body {
 .login-card input {
     padding: 10px;
     border: none;
-    border-bottom: 1px solid green;
+    border-bottom: 1px solid #FFBE12;
     border-radius: 5px;
     outline: none;
 }
 
 .btn-entrar {
     padding: 10px;
-    background-color: #FF5B00;
+    background-color: #008000;
     color: #fff;
-    border: none;
+    border: none !important;
     border-radius: 40px;
     cursor: pointer;
     margin: 15px auto 15px auto;
@@ -319,8 +319,7 @@ body {
 }
 
 .side-image.right {
-    height: auto; 
-    max-height: 100%; 
+    height: 70vh; 
     position: relative;
     right: 25px;
     overflow: hidden; 

@@ -17,13 +17,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const filterbutton = document.querySelector('.filter-button');
     const filterbuttonmobile = document.getElementById('filter-mobile');
     const listafiltrar = document.querySelector('.listafiltrar');
+    const listafiltrarmobile = document.querySelector('.listafiltrarmobile')
 
     filterbutton.addEventListener('click', function() {
         listafiltrar.classList.toggle('hidden');
     });
 
     filterbuttonmobile.addEventListener('click', function() {
-        listafiltrar.classList.toggle('hidden');
+        listafiltrarmobile.classList.toggle('hidden');
     });
 });
 

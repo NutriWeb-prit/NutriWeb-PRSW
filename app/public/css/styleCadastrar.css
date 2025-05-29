@@ -167,8 +167,8 @@ body {
 }
 
 .right-card {
-    background-color: #04410F;
-    border: none;
+    background-color: #fff;
+    border: 3px solid #FF5B00;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     padding: 0px 50px 50px 50px;
@@ -186,13 +186,13 @@ body {
 .right-card h2 {
     margin-bottom: 70px;
     font-size: 40px;
-    color: rgb(255, 255, 255);
+    color: #04410F;
 }
 
 .right-card p {
     margin-bottom: 30px;
     font-size: 20px;
-    color: rgb(255, 255, 255);
+    color: #04410F;
     font-size: 25px;
 }
 
@@ -204,11 +204,11 @@ body {
 }
 
 .btn {
-    background-color: #04410F;
-    color: #ffffff;
-    border: 2px solid rgb(255, 255, 255);
+    background-color: #fff;
+    color: #04410F;
+    border: 3px solid #FF5B00;
     padding: 15px;
-    font-size: 18px;
+    font-size: 22px;
     cursor: pointer;
     width: 100%;
     border-radius: 10px;

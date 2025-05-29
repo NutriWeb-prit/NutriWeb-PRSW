@@ -115,14 +115,14 @@ body {
     text-align: center;
 }
 
-.header-content {
+.header-content a {
     display: flex;
-    align-items: left;
+    align-items: center;
     justify-content: left;
     margin-bottom: 20px;
     padding: 20px;
+    text-decoration: none;
 }
-
 .arrow-icon {
     font-size: 36px;
     color: green;
@@ -134,8 +134,7 @@ body {
 }
 
 .header-text {
-    font-size: 36px;
-    margin-left: 10px;
+    font-size: 25px;
     color: #333;
 }
 
@@ -175,7 +174,7 @@ body {
 
 .card {
     background-color: #fff;
-    border: 3px solid rgb(1, 86, 1);
+    border: 3px solid #ffa97b;
     border-radius: 20px;
     width: 200px;
     text-align: left;
@@ -204,7 +203,7 @@ body {
 }
 
 .avaliacao_nutri{
-    color: green;
+    color: #FFBE12;
 }
 
 footer {

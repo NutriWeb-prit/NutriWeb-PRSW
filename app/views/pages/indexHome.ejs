@@ -39,213 +39,353 @@
         
             <section class="carousel">
                 <section class="carousel-item active">
-                    <img src="imagens/banner1.jpg" alt="Imagem 1">
+                    <img src="imagens/banner1.png" alt="Imagem 1">
                 </section>
                 <section class="carousel-item">
-                    <img src="imagens/banner2.png" alt="Imagem 2">
+                    <img src="imagens/banner2.jpg" alt="Imagem 2">
                 </section>
                 <section class="carousel-item">
-                    <img src="imagens/banner3.jpeg" alt="Imagem 3">
+                    <img src="imagens/banner3.png" alt="Imagem 3">
                     <button id="btn-sabeMais" onclick="irPagina()" class="hidden">Saber agora!</button>
                 </section>
-
-                <div class="carousel-indicators">
-                    <span class="indicator active"></span>
-                    <span class="indicator"></span>
-                    <span class="indicator"></span>
-                </div>
+                <section class="carousel-item">
+                    <img src="imagens/banner4.png" alt="Imagem 4">
+                </section>
 
                 <img src="imagens/setaesquerda.svg" class="carousel-control-prev">
                 <img src="imagens/setadireita.svg" class="carousel-control-next">
             </section>
+
+            <section class="carousel-indicators">
+                <span class="indicator active"></span>
+                <span class="indicator"></span>
+                <span class="indicator"></span>
+                <span class="indicator"></span> 
+            </section>
             
         </section>
 
-        <form class="listafiltrar hidden" action="">
-            <section class="conteudofiltrar">
-                <input type="checkbox" name="esportiva" id="esportiva">
-                <label for="esportiva">Nutrição Esportiva</label>
+        <section class="nutricionista-wrapper">
+            <section class="nutricionista-header">
+                <section class="left-space"></section>
+                <h1>Nutricionistas qualificados</h1>
+                <form class="listafiltrar hidden" action="">
+                    <section class="conteudofiltrar">
+                        <input type="checkbox" name="esportiva" id="esportiva">
+                        <label for="esportiva">Nutrição Esportiva</label>
+                    </section>
+                    <section class="conteudofiltrar">
+                        <input type="checkbox" name="estetica" id="estetica">
+                        <label for="estetica">Nutrição Estética</label>
+                    </section>
+                    <section class="conteudofiltrar">
+                        <input type="checkbox" name="clinica" id="clinica">
+                        <label for="clinica">Nutrição Clínica</label>
+                    </section>
+                    <section class="conteudofiltrar">
+                        <input type="checkbox" name="vegetariana" id="vegetariana">
+                        <label for="vegetariana">Nutrição Vegetariana</label>
+                    </section>
+                    <section class="conteudofiltrar">
+                        <input type="checkbox" name="maternoinfantil" id="maternoinfantil">
+                        <label for="maternoinfantil">Nutrição Materno-Infantil</label>
+                    </section>
+                    <section class="conteudofiltrar">
+                        <input type="checkbox" name="geriatrica" id="geriatrica">
+                        <label for="geriatrica">Nutrição Geriátrica</label>
+                    </section>
+                    <section class="conteudofiltrar">
+                        <input type="checkbox" name="preventiva" id="preventiva">
+                        <label for="preventiva">Nutrição Preventiva</label>
+                    </section>
+                    <section class="conteudofiltrar">
+                        <input type="checkbox" name="balanceada" id="balanceada">
+                        <label for="balanceada">Nutrição Balanceada</label>
+                    </section>
+                    <section class="conteudofiltrar">
+                        <input type="checkbox" name="funcional" id="funcional">
+                        <label for="funcional">Nutrição Funcional</label>
+                    </section>
+                </form>
+                <button class="filter-button" id="filter-desktop">
+                    Filtrar
+                    <span class="material-icons md-24" id="filter-icon">tune</span>
+                </button>
             </section>
-            <section class="conteudofiltrar">
-                <input type="checkbox" name="estetica" id="estetica">
-                <label for="estetica">Nutrição Estética</label>
-            </section>
-            <section class="conteudofiltrar">
-                <input type="checkbox" name="clinica" id="clinica">
-                <label for="clinica">Nutrição Clínica</label>
-            </section>
-            <section class="conteudofiltrar">
-                <input type="checkbox" name="vegetariana" id="vegetariana">
-                <label for="vegetariana">Nutrição Vegetariana</label>
-            </section>
-            <section class="conteudofiltrar">
-                <input type="checkbox" name="maternoinfantil" id="maternoinfantil">
-                <label for="maternoinfantil">Nutrição Materno-Infantil</label>
-            </section>
-            <section class="conteudofiltrar">
-                <input type="checkbox" name="geriatrica" id="geriatrica">
-                <label for="geriatrica">Nutrição Geriátrica</label>
-            </section>
-            <section class="conteudofiltrar">
-                <input type="checkbox" name="preventiva" id="preventiva">
-                <label for="preventiva">Nutrição Preventiva</label>
-            </section>
-            <section class="conteudofiltrar">
-                <input type="checkbox" name="balanceada" id="balanceada">
-                <label for="balanceada">Nutrição Balanceada</label>
-            </section>
-            <section class="conteudofiltrar">
-                <input type="checkbox" name="funcional" id="funcional">
-                <label for="funcional">Nutrição Funcional</label>
-            </section>
-        </form>
-
-        <section class="nutricionista">
-            <h1>Nutricionistas qualificados</h1>
             <h2>Para te ajudar no seu propósito</h2>
         </section>
 
-        <button class="filter-button" id="filter-desktop">
-            Filtrar
-            <span class="material-icons md-24" id="filter-icon">tune</span>
-        </button>
+        
+
+        
 
         <section class="desktop-cards-container">
-            <button class="carousel-prev">&lt;</button>
-        <section class="cards-container-profissional desktop-profissional" id="cards-desktop">
-            <a href="/perfilnutri?id=1">
-                <section class="card-nutri">
-                        <img src="imagens/profissional1.png" alt="Profissional 1" class="card-image">
-                        <section class="card-info">
-                            <h3 class="card-name">Julia Barros</h3>
-                            <p class="card-specialty">Nutrição Esportiva</p>
-                            <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
-                        </section>
+            <section class="desktop-cards-wrapper">
+                <section class="arrow-container">
+                    <button class="carousel-prev">&lt;</button>
                 </section>
-            </a>
 
-            <a href="/perfilnutri?id=2">
-                <section class="card-nutri">
-                        <img src="imagens/profissional2.png" alt="Profissional 1" class="card-image">
-                        <section class="card-info">
-                            <h3 class="card-name">Roberta Santos</h3>
-                            <p class="card-specialty">Nutrição Clínica</p>
-                            <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
-                        </section>
-                </section>
-            </a>
+                <section class="scroll-wrapper">
+                    <section class="cards-container-profissional desktop-profissional" id="cards-desktop">
+                        <a href="/perfilnutri?id=1">
+                            <section class="card-nutri">
+                                    <img src="imagens/profissional1.png" alt="Profissional 1" class="card-image">
+                                    <section class="card-info">
+                                        <h3 class="card-name">Julia Barros</h3>
+                                        <p class="card-specialty">Nutrição Esportiva</p>
+                                        <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
+                                    </section>
+                            </section>
+                        </a>
+            
+                        <a href="/perfilnutri?id=2">
+                            <section class="card-nutri">
+                                    <img src="imagens/profissional2.png" alt="Profissional 2" class="card-image">
+                                    <section class="card-info">
+                                        <h3 class="card-name">Roberta Santos</h3>
+                                        <p class="card-specialty">Nutrição Clínica</p>
+                                        <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
+                                    </section>
+                            </section>
+                        </a>
+            
+                        <a href="/perfilnutri?id=3">
+                            <section class="card-nutri">
+                                    <img src="imagens/profissional3.png" alt="Profissional 3" class="card-image">
+                                    <section class="card-info">
+                                        <h3 class="card-name">Flávia Flins</h3>
+                                        <p class="card-specialty">Nutrição Estética</p>
+                                        <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
+                                    </section>
+                            </section>
+                        </a>
+            
+                        <a href="/perfilnutri?id=4">
+                            <section class="card-nutri">
+                                    <img src="imagens/profissional4.png" alt="Profissional 4" class="card-image">
+                                    <section class="card-info">
+                                        <h3 class="card-name">Pablo Parron</h3>
+                                        <p class="card-specialty">Nutrição Clínica</p>
+                                        <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
+                                    </section>
+                            </section>
+                        </a>
+            
+                        <a href="/perfilnutri?id=5">
+                            <section class="card-nutri">
+                                    <img src="imagens/profissional5.png" alt="Profissional 5" class="card-image">
+                                    <section class="card-info">
+                                        <h3 class="card-name">Sophia Silva</h3>
+                                        <p class="card-specialty">Nutrição Estética</p>
+                                        <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
+                                    </section>
+                            </section>
+                        </a>
+            
+                        <a href="/perfilnutri?id=6">
+                            <section class="card-nutri">
+                                    <img src="imagens/profissional6.png" alt="Profissional 6" class="card-image">
+                                    <section class="card-info">
+                                        <h3 class="card-name">Camila Ocanã</h3>
+                                        <p class="card-specialty">Nutrição Estética</p>
+                                        <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
+                                    </section>
+                            </section>
+                        </a>
+            
+                        <a href="/perfilnutri?id=7">
+                            <section class="card-nutri">
+                                    <img src="imagens/profissional7.png" alt="Profissional 7" class="card-image">
+                                    <section class="card-info">
+                                        <h3 class="card-name">Agatha Matos</h3>
+                                        <p class="card-specialty">Nutrição Estética</p>
+                                        <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
+                                    </section>
+                            </section>
+                        </a>
+            
+                        <a href="/perfilnutri?id=8">
+                            <section class="card-nutri">
+                                    <img src="imagens/profissional8.jpg" alt="Profissional 8" class="card-image">
+                                    <section class="card-info">
+                                        <h3 class="card-name">Roberto Carlos</h3>
+                                        <p class="card-specialty">Nutrição Esportiva</p>
+                                        <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
+                                    </section>
+                            </section>
+                        </a>
+            
+                        <a href="/perfilnutri?id=9">
+                            <section class="card-nutri">
+                                    <img src="imagens/profissional9.png" alt="Profissional 9" class="card-image">
+                                    <section class="card-info">
+                                        <h3 class="card-name">Mariana Alves</h3>
+                                        <p class="card-specialty">Nutrição Esportiva</p>
+                                        <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
+                                    </section>
+                            </section>
+                        </a>
+            
+                        <a href="/perfilnutri?id=10">
+                            <section class="card-nutri">
+                                    <img src="imagens/profissional10.png" alt="Profissional 10" class="card-image">
+                                    <section class="card-info">
+                                        <h3 class="card-name">Lucas Mendes</h3>
+                                        <p class="card-specialty">Nutrição Clínica</p>
+                                        <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
+                                    </section>
+                            </section>
+                        </a>
+            
+                        <a href="/perfilnutri?id=11">
+                            <section class="card-nutri">
+                                    <img src="imagens/profissional11.png" alt="Profissional 1" class="card-image">
+                                    <section class="card-info">
+                                        <h3 class="card-name">Carla Souza</h3>
+                                        <p class="card-specialty">Nutrição Clínica</p>
+                                        <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
+                                    </section>
+                            </section>
+                        </a>
+            
+                        <a href="/perfilnutri?id=12">
+                            <section class="card-nutri">
+                                    <img src="imagens/profissional12.png" alt="Profissional 12" class="card-image">
+                                    <section class="card-info">
+                                        <h3 class="card-name">Renata Dias</h3>
+                                        <p class="card-specialty">Nutrição Esportiva</p>
+                                        <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
+                                    </section>
+                            </section>
+                        </a>
 
-            <a href="/perfilnutri?id=3">
-                <section class="card-nutri">
-                        <img src="imagens/profissional3.png" alt="Profissional 1" class="card-image">
-                        <section class="card-info">
-                            <h3 class="card-name">Flávia Flins</h3>
-                            <p class="card-specialty">Nutrição Estética</p>
-                            <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
-                        </section>
-                </section>
-            </a>
+                        <a href="/perfilnutri?id=13">
+                            <section class="card-nutri">
+                                    <img src="imagens/profissional13.png" alt="Profissional 13" class="card-image">
+                                    <section class="card-info">
+                                        <h3 class="card-name">Bruno Teixeira</h3>
+                                        <p class="card-specialty">Nutrição Esportiva</p>
+                                        <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
+                                    </section>
+                            </section>
+                        </a>
 
-            <a href="/perfilnutri?id=4">
-                <section class="card-nutri">
-                        <img src="imagens/profissional4.png" alt="Profissional 1" class="card-image">
-                        <section class="card-info">
-                            <h3 class="card-name">Pablo Parron</h3>
-                            <p class="card-specialty">Nutrição Clínica</p>
-                            <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
-                        </section>
-                </section>
-            </a>
+                        <a href="/perfilnutri?id=14">
+                            <section class="card-nutri">
+                                    <img src="imagens/profissional14.png" alt="Profissional 14" class="card-image">
+                                    <section class="card-info">
+                                        <h3 class="card-name">Larissa Monteiro</h3>
+                                        <p class="card-specialty">Nutrição Estética</p>
+                                        <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
+                                    </section>
+                            </section>
+                        </a>
 
-            <a href="/perfilnutri?id=5">
-                <section class="card-nutri">
-                        <img src="imagens/profissional5.png" alt="Profissional 1" class="card-image">
-                        <section class="card-info">
-                            <h3 class="card-name">Sophia Silva</h3>
-                            <p class="card-specialty">Nutrição Estética</p>
-                            <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
-                        </section>
-                </section>
-            </a>
+                        <a href="/perfilnutri?id=15">
+                            <section class="card-nutri">
+                                    <img src="imagens/profissional15.png" alt="Profissional 15" class="card-image">
+                                    <section class="card-info">
+                                        <h3 class="card-name">Daniela Castro</h3>
+                                        <p class="card-specialty">Nutrição Clínica</p>
+                                        <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
+                                    </section>
+                            </section>
+                        </a>
 
-            <a href="/perfilnutri?id=6">
-                <section class="card-nutri">
-                        <img src="imagens/profissional6.png" alt="Profissional 1" class="card-image">
-                        <section class="card-info">
-                            <h3 class="card-name">Camila Ocanã</h3>
-                            <p class="card-specialty">Nutrição Estética</p>
-                            <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
-                        </section>
-                </section>
-            </a>
+                        <a href="/perfilnutri?id=16">
+                            <section class="card-nutri">
+                                    <img src="imagens/profissional16.png" alt="Profissional 16" class="card-image">
+                                    <section class="card-info">
+                                        <h3 class="card-name">Henrique Lopes</h3>
+                                        <p class="card-specialty">Nutrição Vegetariana</p>
+                                        <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
+                                    </section>
+                            </section>
+                        </a>
 
-            <a href="/perfilnutri?id=7">
-                <section class="card-nutri">
-                        <img src="imagens/profissional7.png" alt="Profissional 1" class="card-image">
-                        <section class="card-info">
-                            <h3 class="card-name">Agatha Matos</h3>
-                            <p class="card-specialty">Nutrição Estética</p>
-                            <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
-                        </section>
-                </section>
-            </a>
+                        <a href="/perfilnutri?id=17">
+                            <section class="card-nutri">
+                                    <img src="imagens/profissional17.png" alt="Profissional 17" class="card-image">
+                                    <section class="card-info">
+                                        <h3 class="card-name">Mirella Cunha</h3>
+                                        <p class="card-specialty">Nutrição Materno-Infantil</p>
+                                        <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
+                                    </section>
+                            </section>
+                        </a>
 
-            <a href="/perfilnutri?id=8">
-                <section class="card-nutri">
-                        <img src="imagens/profissional8.jpg" alt="Profissional 1" class="card-image">
-                        <section class="card-info">
-                            <h3 class="card-name">Roberto Carlos</h3>
-                            <p class="card-specialty">Nutrição Esportiva</p>
-                            <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
-                        </section>
-                </section>
-            </a>
+                        <a href="/perfilnutri?id=18">
+                            <section class="card-nutri">
+                                    <img src="imagens/profissional18.png" alt="Profissional 18" class="card-image">
+                                    <section class="card-info">
+                                        <h3 class="card-name">Gustavo Ribeiro</h3>
+                                        <p class="card-specialty">Nutrição Geriátrica</p>
+                                        <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
+                                    </section>
+                            </section>
+                        </a>
 
-            <a href="/perfilnutri?id=9">
-                <section class="card-nutri">
-                        <img src="imagens/profissional9.png" alt="Profissional 1" class="card-image">
-                        <section class="card-info">
-                            <h3 class="card-name">Mariana Alves</h3>
-                            <p class="card-specialty">Nutrição Esportiva</p>
-                            <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
-                        </section>
-                </section>
-            </a>
+                        <a href="/perfilnutri?id=19">
+                            <section class="card-nutri">
+                                    <img src="imagens/profissional19.png" alt="Profissional 19" class="card-image">
+                                    <section class="card-info">
+                                        <h3 class="card-name">Tatiane Moura</h3>
+                                        <p class="card-specialty">Nutrição Preventiva</p>
+                                        <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
+                                    </section>
+                            </section>
+                        </a>
 
-            <a href="/perfilnutri?id=10">
-                <section class="card-nutri">
-                        <img src="imagens/profissional10.png" alt="Profissional 1" class="card-image">
-                        <section class="card-info">
-                            <h3 class="card-name">Lucas Mendes</h3>
-                            <p class="card-specialty">Nutrição Clínica</p>
-                            <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
-                        </section>
-                </section>
-            </a>
+                        <a href="/perfilnutri?id=20">
+                            <section class="card-nutri">
+                                    <img src="imagens/profissional20.png" alt="Profissional 20" class="card-image">
+                                    <section class="card-info">
+                                        <h3 class="card-name">Eduardo Lima</h3>
+                                        <p class="card-specialty">Nutrição Balanceada</p>
+                                        <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
+                                    </section>
+                            </section>
+                        </a>
 
-            <a href="/perfilnutri?id=11">
-                <section class="card-nutri">
-                        <img src="imagens/profissional11.png" alt="Profissional 1" class="card-image">
-                        <section class="card-info">
-                            <h3 class="card-name">Carla Souza</h3>
-                            <p class="card-specialty">Nutrição Clínica</p>
-                            <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
-                        </section>
-                </section>
-            </a>
+                        <a href="/perfilnutri?id=21">
+                            <section class="card-nutri">
+                                    <img src="imagens/profissional21.png" alt="Profissional 21" class="card-image">
+                                    <section class="card-info">
+                                        <h3 class="card-name">Amanda Torres</h3>
+                                        <p class="card-specialty">Nutrição Funcional</p>
+                                        <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
+                                    </section>
+                            </section>
+                        </a>
 
-            <a href="/perfilnutri?id=12">
-                <section class="card-nutri">
-                        <img src="imagens/profissional12.png" alt="Profissional 1" class="card-image">
-                        <section class="card-info">
-                            <h3 class="card-name">Renata Dias</h3>
-                            <p class="card-specialty">Nutrição Esportiva</p>
-                            <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
-                        </section>
+                        <a href="/perfilnutri?id=22">
+                            <section class="card-nutri">
+                                    <img src="imagens/profissional22.png" alt="Profissional 22" class="card-image">
+                                    <section class="card-info">
+                                        <h3 class="card-name">Fernando Paiva</h3>
+                                        <p class="card-specialty">Nutrição Preventiva</p>
+                                        <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
+                                    </section>
+                            </section>
+                        </a>
+
+                        <a href="/perfilnutri?id=23">
+                            <section class="card-nutri">
+                                    <img src="imagens/profissional23.png" alt="Profissional 23" class="card-image">
+                                    <section class="card-info">
+                                        <h3 class="card-name">Isabela Martins</h3>
+                                        <p class="card-specialty">Nutrição Materno-Infantil</p>
+                                        <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
+                                    </section>
+                            </section>
+                        </a>
+                    </section>
                 </section>
-            </a>
-        </section>
-        <button class="carousel-next">&gt;</button>
+                
+                <section class="arrow-container">
+                    <button class="carousel-next">&gt;</button>
+                </section>
+            </section>
         </section>
 
         <section class="titulos-publicacao">
@@ -570,6 +710,11 @@
                 </section>
 
             </section>
+
+            <button class="btn-vermais">
+                Ver mais
+                <span>⌵</span>
+            </button>
         </section>
 
         <section id="modal" class="modal">
@@ -682,14 +827,17 @@
         
                 <section class="carousel">
                     <section class="carousel-item-mobile active">
-                        <img src="imagens/banner1.jpg" alt="Imagem 1">
+                        <img src="imagens/banner1.png" alt="Imagem 1">
                     </section>
                     <section class="carousel-item-mobile">
-                        <img src="imagens/banner2.png" alt="Imagem 2">
+                        <img src="imagens/banner2.jpg" alt="Imagem 2">
                     </section>
                     <section class="carousel-item-mobile">
-                        <img src="imagens/banner3.jpeg" alt="Imagem 3">
+                        <img src="imagens/banner3.png" alt="Imagem 3">
                         <button id="btn-sabeMais-mobile" onclick="irPagina()" class="hidden">Clique aqui</button>
+                    </section>
+                    <section class="carousel-item-mobile">
+                        <img src="imagens/banner4.png" alt="Imagem 3">
                     </section>
     
                     <button class="carousel-control-prev-mobile">&lt;</button>
@@ -699,14 +847,54 @@
             </section>            
 
             <section class="nutricionista-mobile">
-                <h1>Nutricionistas qualificados</h1>
+                <div class="nutricionista-mobile-header">
+                  <div class="left-space-mobile"></div>
+                  <h1>Nutricionistas qualificados</h1>
+                  <form class="listafiltrarmobile hidden" action="">
+                    <section class="conteudofiltrar">
+                        <input type="checkbox" name="esportiva" id="esportiva-mobile">
+                        <label for="esportiva-mobile">Nutrição Esportiva</label>
+                    </section>
+                    <section class="conteudofiltrar">
+                        <input type="checkbox" name="estetica" id="estetica-mobile">
+                        <label for="estetica-mobile">Nutrição Estética</label>
+                    </section>
+                    <section class="conteudofiltrar">
+                        <input type="checkbox" name="clinica" id="clinica-mobile">
+                        <label for="clinica-mobile">Nutrição Clínica</label>
+                    </section>
+                    <section class="conteudofiltrar">
+                        <input type="checkbox" name="vegetariana" id="vegetariana-mobile">
+                        <label for="vegetariana-mobile">Nutrição Vegetariana</label>
+                    </section>
+                    <section class="conteudofiltrar">
+                        <input type="checkbox" name="maternoinfantil" id="maternoinfantil-mobile">
+                        <label for="maternoinfantil-mobile">Nutrição Materno-Infantil</label>
+                    </section>
+                    <section class="conteudofiltrar">
+                        <input type="checkbox" name="geriatrica" id="geriatrica-mobile">
+                        <label for="geriatrica-mobile">Nutrição Geriátrica</label>
+                    </section>
+                    <section class="conteudofiltrar">
+                        <input type="checkbox" name="preventiva" id="preventiva-mobile">
+                        <label for="preventiva-mobile">Nutrição Preventiva</label>
+                    </section>
+                    <section class="conteudofiltrar">
+                        <input type="checkbox" name="balanceada" id="balanceada-mobile">
+                        <label for="balanceada-mobile">Nutrição Balanceada</label>
+                    </section>
+                    <section class="conteudofiltrar">
+                        <input type="checkbox" name="funcional" id="funcional-mobile">
+                        <label for="funcional-mobile">Nutrição Funcional</label>
+                    </section>
+                </form>
+                  <button class="filter-button" id="filter-mobile">
+                    Filtrar
+                    <span class="material-icons md-24" id="filter-icon-mobile">tune</span>
+                  </button>
+                </div>
                 <h2>Para te ajudar no seu propósito</h2>
-            </section>
-
-            <button class="filter-button" id="filter-mobile">
-                Filtrar
-                <span class="material-icons md-24" id="filter-icon-mobile">tune</span>
-            </button>
+              </section>
 
             <section class="cards-container-profissional">
 
@@ -723,7 +911,7 @@
     
                 <a href="/perfilnutri?id=2">
                     <section class="card-nutri">
-                            <img src="imagens/profissional2.png" alt="Profissional 1" class="card-image">
+                            <img src="imagens/profissional2.png" alt="Profissional 2" class="card-image">
                             <section class="card-info">
                                 <h3 class="card-name">Roberta Santos</h3>
                                 <p class="card-specialty">Nutrição Clínica</p>
@@ -734,7 +922,7 @@
     
                 <a href="/perfilnutri?id=3">
                     <section class="card-nutri">
-                            <img src="imagens/profissional3.png" alt="Profissional 1" class="card-image">
+                            <img src="imagens/profissional3.png" alt="Profissional 3" class="card-image">
                             <section class="card-info">
                                 <h3 class="card-name">Flávia Flins</h3>
                                 <p class="card-specialty">Nutrição Estética</p>
@@ -745,18 +933,18 @@
     
                 <a href="/perfilnutri?id=4">
                     <section class="card-nutri">
-                            <img src="imagens/profissional4.png" alt="Profissional 1" class="card-image">
+                            <img src="imagens/profissional4.png" alt="Profissional 4" class="card-image">
                             <section class="card-info">
                                 <h3 class="card-name">Pablo Parron</h3>
-                                <p class="card-specialty">Nutrição Materno</p>
+                                <p class="card-specialty">Nutrição Clínica</p>
                                 <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
                             </section>
                     </section>
                 </a>
-                
+    
                 <a href="/perfilnutri?id=5">
                     <section class="card-nutri">
-                            <img src="imagens/profissional5.png" alt="Profissional 1" class="card-image">
+                            <img src="imagens/profissional5.png" alt="Profissional 5" class="card-image">
                             <section class="card-info">
                                 <h3 class="card-name">Sophia Silva</h3>
                                 <p class="card-specialty">Nutrição Estética</p>
@@ -767,7 +955,7 @@
     
                 <a href="/perfilnutri?id=6">
                     <section class="card-nutri">
-                            <img src="imagens/profissional6.png" alt="Profissional 1" class="card-image">
+                            <img src="imagens/profissional6.png" alt="Profissional 6" class="card-image">
                             <section class="card-info">
                                 <h3 class="card-name">Camila Ocanã</h3>
                                 <p class="card-specialty">Nutrição Estética</p>
@@ -778,7 +966,7 @@
     
                 <a href="/perfilnutri?id=7">
                     <section class="card-nutri">
-                            <img src="imagens/profissional7.png" alt="Profissional 1" class="card-image">
+                            <img src="imagens/profissional7.png" alt="Profissional 7" class="card-image">
                             <section class="card-info">
                                 <h3 class="card-name">Agatha Matos</h3>
                                 <p class="card-specialty">Nutrição Estética</p>
@@ -789,7 +977,7 @@
     
                 <a href="/perfilnutri?id=8">
                     <section class="card-nutri">
-                            <img src="imagens/profissional8.jpg" alt="Profissional 1" class="card-image">
+                            <img src="imagens/profissional8.jpg" alt="Profissional 8" class="card-image">
                             <section class="card-info">
                                 <h3 class="card-name">Roberto Carlos</h3>
                                 <p class="card-specialty">Nutrição Esportiva</p>
@@ -800,7 +988,7 @@
     
                 <a href="/perfilnutri?id=9">
                     <section class="card-nutri">
-                            <img src="imagens/profissional9.png" alt="Profissional 1" class="card-image">
+                            <img src="imagens/profissional9.png" alt="Profissional 9" class="card-image">
                             <section class="card-info">
                                 <h3 class="card-name">Mariana Alves</h3>
                                 <p class="card-specialty">Nutrição Esportiva</p>
@@ -811,7 +999,7 @@
     
                 <a href="/perfilnutri?id=10">
                     <section class="card-nutri">
-                            <img src="imagens/profissional10.png" alt="Profissional 1" class="card-image">
+                            <img src="imagens/profissional10.png" alt="Profissional 10" class="card-image">
                             <section class="card-info">
                                 <h3 class="card-name">Lucas Mendes</h3>
                                 <p class="card-specialty">Nutrição Clínica</p>
@@ -822,7 +1010,7 @@
     
                 <a href="/perfilnutri?id=11">
                     <section class="card-nutri">
-                            <img src="imagens/profissional11.png" alt="Profissional 1" class="card-image">
+                            <img src="imagens/profissional11.png" alt="Profissional 11" class="card-image">
                             <section class="card-info">
                                 <h3 class="card-name">Carla Souza</h3>
                                 <p class="card-specialty">Nutrição Clínica</p>
@@ -833,13 +1021,135 @@
     
                 <a href="/perfilnutri?id=12">
                     <section class="card-nutri">
-                            <img src="imagens/profissional12.png" alt="Profissional 1" class="card-image">
+                            <img src="imagens/profissional12.png" alt="Profissional 12" class="card-image">
                             <section class="card-info">
                                 <h3 class="card-name">Renata Dias</h3>
                                 <p class="card-specialty">Nutrição Esportiva</p>
                                 <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
                             </section>
                     </section>
+                </a>
+
+                <a href="/perfilnutri?id=13">
+                    <section class="card-nutri">
+                            <img src="imagens/profissional13.png" alt="Profissional 13" class="card-image">
+                            <section class="card-info">
+                                <h3 class="card-name">Bruno Teixeira</h3>
+                                <p class="card-specialty">Nutrição Esportiva</p>
+                                <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
+                            </section>
+                    </section>
+                </a>
+
+                <a href="/perfilnutri?id=14">
+                    <section class="card-nutri">
+                            <img src="imagens/profissional14.png" alt="Profissional 14" class="card-image">
+                            <section class="card-info">
+                                <h3 class="card-name">Larissa Monteiro</h3>
+                                <p class="card-specialty">Nutrição Estética</p>
+                                <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
+                            </section>
+                    </section>
+                </a>
+
+                <a href="/perfilnutri?id=15">
+                    <section class="card-nutri">
+                            <img src="imagens/profissional15.png" alt="Profissional 15" class="card-image">
+                            <section class="card-info">
+                                <h3 class="card-name">Daniela Castro</h3>
+                                <p class="card-specialty">Nutrição Clínica</p>
+                                <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
+                            </section>
+                    </section>
+                </a>
+
+                <a href="/perfilnutri?id=16">
+                    <section class="card-nutri">
+                            <img src="imagens/profissional16.png" alt="Profissional 16" class="card-image">
+                            <section class="card-info">
+                                <h3 class="card-name">Henrique Lopes</h3>
+                                <p class="card-specialty">Nutrição Vegetariana</p>
+                                <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
+                            </section>
+                    </section>
+                </a>
+
+                <a href="/perfilnutri?id=17">
+                    <section class="card-nutri">
+                            <img src="imagens/profissional17.png" alt="Profissional 17" class="card-image">
+                            <section class="card-info">
+                                <h3 class="card-name">Mirella Cunha</h3>
+                                <p class="card-specialty">Nutrição Materno-Infantil</p>
+                                <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
+                            </section>
+                    </section>
+                </a>
+
+                <a href="/perfilnutri?id=18">
+                    <section class="card-nutri">
+                            <img src="imagens/profissional18.png" alt="Profissional 18" class="card-image">
+                            <section class="card-info">
+                                <h3 class="card-name">Gustavo Ribeiro</h3>
+                                <p class="card-specialty">Nutrição Geriátrica</p>
+                                <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
+                            </section>
+                    </section>
+                </a>
+
+                <a href="/perfilnutri?id=19">
+                    <section class="card-nutri">
+                            <img src="imagens/profissional19.png" alt="Profissional 19" class="card-image">
+                            <section class="card-info">
+                                <h3 class="card-name">Tatiane Moura</h3>
+                                <p class="card-specialty">Nutrição Preventiva</p>
+                                <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
+                            </section>
+                    </section>
+                </a>
+
+                <a href="/perfilnutri?id=20">
+                    <section class="card-nutri">
+                            <img src="imagens/profissional20.png" alt="Profissional 20" class="card-image">
+                            <section class="card-info">
+                                <h3 class="card-name">Eduardo Lima</h3>
+                                <p class="card-specialty">Nutrição Balanceada</p>
+                                <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
+                            </section>
+                    </section>
+                </a>
+
+                <a href="/perfilnutri?id=21">
+                    <section class="card-nutri">
+                            <img src="imagens/profissional21.png" alt="Profissional 21" class="card-image">
+                            <section class="card-info">
+                                <h3 class="card-name">Amanda Torres</h3>
+                                <p class="card-specialty">Nutrição Funcional</p>
+                                <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
+                            </section>
+                    </section>
+                </a>
+
+                <a href="/perfilnutri?id=22">
+                    <section class="card-nutri">
+                            <img src="imagens/profissional22.png" alt="Profissional 22" class="card-image">
+                            <section class="card-info">
+                                <h3 class="card-name">Fernando Paiva</h3>
+                                <p class="card-specialty">Nutrição Preventiva</p>
+                                <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
+                            </section>
+                    </section>
+                </a>
+
+                <a href="/perfilnutri?id=23">
+                    <section class="card-nutri">
+                            <img src="imagens/profissional23.png" alt="Profissional 23" class="card-image">
+                            <section class="card-info">
+                                <h3 class="card-name">Isabela Martins</h3>
+                                <p class="card-specialty">Nutrição Materno-Infantil</p>
+                                <span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span><span class="material-icons avaliacao_nutri">star</span>
+                            </section>
+                    </section>
+                </a>
             </section>    
 
             <section class="titulos-publicacao-mobile">

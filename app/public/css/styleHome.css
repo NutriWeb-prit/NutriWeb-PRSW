@@ -69,13 +69,14 @@ body {
     border-radius: 15px;
     margin: 0 20px;
     overflow: hidden;
-    background-color: rgba(0, 0, 0, 0.268); 
+    background-color: #fff;
+    border: 2px solid #FF5B00;
 }
 
 .input-premium input {
     flex: 1;
     padding: 10px;
-    color: #fff;
+    color: black;
     border: none;
     font-size: 16px;
     outline: none;
@@ -85,7 +86,7 @@ body {
 .input-premium .search-icon {
     padding: 8px;
     background-color: none;
-    color: #fff;
+    color: #FF5B00 !important;
     cursor: pointer;
 }
 
@@ -110,13 +111,15 @@ body {
 }
 
 .img-header {
-    position: relative;
+    max-width: 1600px;
+    margin: 0 auto;
     width: 100%;
     height: 70vh;
     overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
 }
 
 .img-header img {
@@ -146,9 +149,10 @@ body {
 }
 
 #btn-sabeMais {
+    z-index: 2;
     position: absolute;
-    top: 70.8%;
-    left: 31%;
+    top: 65%;
+    left: 53.5%;
     transform: translate(-50%, -50%);
     padding: 15px 80px;
     background-color: green;
@@ -192,9 +196,9 @@ body {
 }
 
 .carousel-indicators {
-    position: absolute;
-    top: 93%;
-    left: 50%;
+    position: relative;
+    bottom: 5vh;
+    margin: 0 auto;
     border: none;
     padding: 10px;
 }
@@ -207,11 +211,13 @@ body {
     border-radius: 2px;
     background-color: white;
     transition: all 0.3s ease-in-out;
+    cursor: pointer;
 }
 
 .indicator.active {
     width: 50px;
-    background-color: #5da43b; /* Cor azul para o indicador ativo */
+    background-color: #5da43b;
+    cursor: default;
 }
 
 .img-text {
@@ -235,19 +241,50 @@ body {
     display: none;
 }
 
-.listafiltrar {
+.material-icons.md-24 {
+    font-size: 24px;
+    color: white;
+}
+
+.material-icons.md-24.menu-close {
+    font-size: 24px;
+    color: white;
+}
+
+.nutricionista-wrapper {
+    margin: 0 auto;
+    max-width: 1600px;
+    padding: 0 40px;
+}
+
+.nutricionista-header {
     display: flex;
-    position: absolute;
-    z-index: 2;
-    flex-direction: column;
-    align-items: left;
-    align-self: flex-end;
-    top: 97%;
-    background-color: white;
-    box-shadow: #1c1c1c 0px 0px 20px;
-    border-radius: 10px;
-    margin: 15px 15px 0px 0px;
-    padding: 20px;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 100px;
+    position: relative;
+    gap: 80px;
+}
+
+.nutricionista-header .left-space {
+    width: 118px;
+}
+
+.nutricionista-wrapper {
+    text-align: center;
+}
+
+.nutricionista-header h1 {
+    color: green;
+    font-size: 50px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+.nutricionista-wrapper h2{
+    color: gray;
+    font-size: 23px;
+    margin: 15px 0;
 }
 
 .filter-button {
@@ -260,8 +297,7 @@ body {
     border-radius: 15px;
     font-size: 18px;
     cursor: pointer;
-    align-self: flex-end;
-    margin-right: 40px;
+    flex-shrink: 0;
 }
 
 
@@ -275,55 +311,27 @@ body {
     opacity: 0.8;
 }
 
-.material-icons.md-24 {
-    font-size: 24px;
-    color: white;
+.filter-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
 }
 
-.material-icons.md-24.menu-close {
-    font-size: 24px;
-    color: white;
-}
-
-.nutricionista{
-    text-align: center;
-}
-
-.nutricionista h1{
-    color: green;
-    font-size: 50px;
-    margin: 100px 0 0 0
-}
-
-.nutricionista h2{
-    color: gray;
-    font-size: 23px;
-    margin: 15px 0;
-}
-
-.carousel-prev, .carousel-next {
+.listafiltrar {
+    display: flex;
     position: absolute;
-    top: 115%;
-    transform: translateY(-50%);
-    background: none;
-    background-color: rgba(0, 0, 0, 0.5);
-    color: #fff;
-    border: none;
-    border-radius: 20px;
-    font-size: 2rem;
-    cursor: pointer;
-    padding: 10px;
-    z-index: 1;
-}
-
-.carousel-prev {
-    left: 15%;
-    margin-left: -10px;
-}
-
-.carousel-next {
-    right: 15%;
-    margin-right: -10px;
+    z-index: 2;
+    flex-direction: column;
+    align-items: flex-start;
+    top: 97%;
+    right: 0;
+    background-color: white;
+    box-shadow: #1c1c1c 0px 0px 20px;
+    border-radius: 10px;
+    margin: 15px 15px 0px 0px;
+    padding: 20px;
+    min-width: 200px;
 }
 
 @media (max-width: 1400px) {
@@ -338,11 +346,34 @@ body {
     }
 }
 
+.desktop-cards-container {
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+.desktop-cards-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 40px auto;
+    max-width: 1200px;
+    width: 100%;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+.scroll-wrapper {
+    overflow: hidden;
+    flex: 1;
+}
+
 .cards-container-profissional {
     display: flex;
     position: relative;
     overflow: hidden; 
     scroll-behavior: smooth; 
+    scrollbar-width: none;
     gap: 30px;
     margin-top: 50px;
     margin-bottom: 30px;
@@ -351,6 +382,7 @@ body {
     max-width: 900px;
     width: 100%;
     margin: 0 auto;
+    flex: 1;
 }
 
 .cards-container-profissional::-webkit-scrollbar {
@@ -362,12 +394,40 @@ body {
     text-decoration: none;
 }
 
+.arrow-container {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.carousel-prev, .carousel-next {
+    background: none;
+    color: green;
+    border: none;
+    border-radius: 20px;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 10px;
+    flex-shrink: 0;
+}
+
+.carousel-prev {
+    left: 15%;
+    margin-left: -10px;
+}
+
+.carousel-next {
+    right: 15%;
+    margin-right: -10px;
+}
+
 .card-nutri {
     background-color: #fff;
     border: 3px solid #ffa97b;
     flex: 0 0 200px;
     scroll-snap-align: center;
-    border-radius: 40px;
+    border-radius: 20px;
     width: 200px;
     text-align: left;
     padding: 20px;
@@ -375,9 +435,10 @@ body {
 }
 
 .card-image {
-    width: 100%;
-    height: auto;
+    width: 154px;
+    height: 154px;
     border-radius: 50%;
+    object-fit: cover;
 }
 
 .card-info {
@@ -386,12 +447,12 @@ body {
 }
 
 .card-name {
-    font-size: 20px;
+    font-size: 19px;
     margin: 10px 0 5px;
 }
 
 .card-specialty {
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .avaliacao_nutri{
@@ -418,8 +479,27 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
     margin-top: 20px;
     position: relative;
+}
+
+.btn-vermais {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    border: 2px solid #FF5B00;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 5px 30px;
+    cursor: pointer;
+}
+
+.btn-vermais span {
+    font-size: 18px;
+    margin-left: 30px;
 }
 
 .cards-wrapper {
@@ -480,7 +560,6 @@ body {
 .content-img {
     width: 100%;
     height: 300px; 
-    border-radius: 10%;
     object-fit: cover;
 }
 
@@ -624,6 +703,7 @@ footer {
     background-color: #144b0d;
     color: #ffffff;
     font-family: 'Arial', sans-serif;
+    margin-top: 120px;
 }
   
 .footer-container {
@@ -775,13 +855,7 @@ footer {
         outline: none;
     }
     
-    .filter-button {
-        display: flex;
-        position: absolute;
-        top: 50%;
-        left: 80%;
-        transform: translate(-50%, -50%);
-    }
+    
 
     .home-mobile {
         width: 100%;
@@ -906,15 +980,6 @@ footer {
         right: 10px;
     }
 
-    #filter-desktop {
-        display: none;
-    }
-
-    #filter-icon-mobile {
-        font-size: 24px;
-        color: white;
-    }
-
     .material-icons.md-24 {
         font-size: 40px; 
         color: green; 
@@ -1021,11 +1086,7 @@ footer {
         display: none;
     }
 
-    .nutricionista{
-        display: none;
-    }
-
-    .desktop-profissional{
+    .desktop-cards-container{
         display: none;
     }
 
@@ -1033,25 +1094,79 @@ footer {
         display: none; 
     }
 
-    .listafiltrar {
-        top: 55%;
+    .nutricionista-wrapper{
+        display: none;
     }
 
-    .nutricionista-mobile{
+    .nutricionista-mobile {
         text-align: center;
-        margin-top: 400px;
-        text-decoration: none;
-        outline: none;
+        margin-top: 150px;
+        padding: 0 20px;
     }
 
-    .nutricionista-mobile h1{
+    .nutricionista-mobile-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        gap: 30px;
+    }
+
+    .left-space-mobile {
+        width: 100px;
+    }
+
+    .nutricionista-mobile h1 {
         color: green;
         font-size: 25px;
+        margin: 0;
+        flex: 1;
+        text-align: center;
     }
     
     .nutricionista-mobile h2{
         color: gray;
         font-size: 20px;
+    }
+
+    .listafiltrarmobile {
+        display: flex;
+        position: absolute;
+        z-index: 2;
+        flex-direction: column;
+        align-items: flex-start;
+        top: 59%;
+        right: 0;
+        background-color: white;
+        box-shadow: #1c1c1c 0px 0px 20px;
+        border-radius: 10px;
+        margin: 15px 15px 0px 0px;
+        padding: 20px;
+        min-width: 200px;
+    }
+
+    #filter-mobile {
+        background-color: green;
+        color: white;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 12px;
+        font-size: 16px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        min-width: 100px;
+        z-index: 2;
+    }
+      
+    #filter-icon-mobile {
+        margin-left: 6px;
+        font-size: 22px;
+        color: white;
+    }
+      
+    #filter-desktop {
+        display: none;
     }
 
     .titulos-publicacao-mobile{
