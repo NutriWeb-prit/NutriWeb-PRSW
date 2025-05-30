@@ -70,13 +70,14 @@ body {
     border-radius: 15px;
     margin: 0 20px;
     overflow: hidden;
-    background-color: rgba(0, 0, 0, 0.268); 
+    background-color: #fff;
+    border: 2px solid #FF5B00;
 }
 
 .input-premium input {
     flex: 1;
     padding: 10px;
-    color: #fff;
+    color: black;
     border: none;
     font-size: 16px;
     outline: none;
@@ -86,7 +87,7 @@ body {
 .input-premium .search-icon {
     padding: 8px;
     background-color: none;
-    color: #fff;
+    color: #FF5B00 !important;
     cursor: pointer;
 }
 

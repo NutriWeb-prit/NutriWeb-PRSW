@@ -183,27 +183,31 @@
                     <span>Nova Publicação</span>
                 </a>
 
-                <div class="modal" id="modal">
-                    <div class="modal-content">
+                <section class="modal" id="modal">
+                    <section class="modal-content">
                         
-                        <div class="modal-left">
-                            <div class="upload-area">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="110" height="110" fill="none" stroke="#444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                                    <path d="M21 15l-5-5L5 21"></path>
-                                </svg>
-                                <p>Adicione sua imagem ou vídeo</p>
-                            </div>
-                        </div>
+                        <section class="modal-left">
+                            <input type="file" id="input-imagem" accept="image/png, image/jpeg">
+                            <label for="input-imagem" class="upload-wrapper">
+                                <img id="preview-image" src="" alt="Preview">
+                                <section class="upload-area">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="110" height="110" fill="none" stroke="#444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                        <path d="M21 15l-5-5L5 21"></path>
+                                    </svg>
+                                    <span class="btn-upload">Adicione sua imagem ou vídeo</span>
+                                </section>
+                            </label>
+                        </section>
 
-                        <div class="modal-right">
-                            <div>
+                        <section class="modal-right">
+                            <section>
                                 <h3>Legenda</h3>
                                 <textarea class="editor" placeholder="Digite uma legenda para seu post..."></textarea>
-                            </div>
+                            </section>
 
-                            <div>
+                            <section>
                                 <h3>Categoria</h3>
 
                                 <label class="label-categoria">
@@ -215,9 +219,9 @@
                                     <input type="radio" name="categoria" value="receita">
                                     <span>Receita</span>
                                 </label>
-                            </div>
+                            </section>
 
-                            <div class="input-icon-wrapper">
+                            <section class="input-icon-wrapper">
                                 <label for="localizacao">Localização</label>
                                 <span class="icon-location">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#444" viewBox="0 0 16 16">
@@ -225,35 +229,148 @@
                                     </svg>
                                 </span>
                                 <input type="text" class="has-icon" id="localizacao" placeholder="Digite a localização..." />
-                            </div>
+                            </section>
 
                             <button class="publicar">Publicar</button>
-                        </div>
+                        </section>
                             <span class="close" id="fecharModal">&times;</span>
-                        </div>
-                    </div>
+                        </section>
+                    </section>
 
                     <section class="grid-publicacoes">
-                        <article class="img">
-                            <img src="imagens/img-post-estrogonofe.jpg" alt="" class="post_img" data-img="imagens/img-post-estrogonofe.jpg">
+                        <article class="img-post">
+                            <img src="imagens/img-post-lasanha.jpg" alt="" class="post_img"
+                            data-id=""
+                            data-nome=""
+                            data-profissao=""
+                            data-imgperfil=""
+                            data-imgconteudo="imagens/img-post-lasanha.jpg"
+                            data-titulo="LASANHA FIT: É POSSÍVEL?"
+                            data-conteudo1="A versão saudável da lasanha é possível com ingredientes mais nutritivos e leves, sem abrir mão do sabor."
+                            data-subtitulo1="SUBSTITUIÇÕES INTELIGENTES"
+                            data-conteudo2="Troque a massa tradicional por fatias de abobrinha ou massa integral e use ricota no lugar de queijos mais gordurosos."
+                            data-subtitulo2="IDEAL PARA O DIA A DIA"
+                            data-conteudo3="Além de saborosa, a lasanha fit pode ser incluída em dietas esportivas, promovendo saciedade e energia com equilíbrio.">
                         </article>
-                        <article class="img">
-                            <img src="imagens/img-post-frutas.jfif" alt="" class="post_img" data-img="imagens/img-post-frutas.jfif">
+                        <article class="img-post">
+                            <img src="imagens/img-post-frutas.jfif" alt="" class="post_img" 
+                            data-id=""
+                            data-nome=""
+                            data-profissao=""
+                            data-imgperfil=""
+                            data-imgconteudo="imagens/img-post-frutas.jfif"
+                            data-titulo="FRUTAS PARA UMA PELE MAIS BONITA"
+                            data-conteudo1="Algumas frutas possuem antioxidantes, vitaminas e minerais que ajudam a manter a pele hidratada, firme e protegida contra o envelhecimento precoce."
+                            data-subtitulo1="HIDRATAÇÃO NATURAL"
+                            data-conteudo2="Frutas como melancia e laranja têm alto teor de água, ajudando a manter a pele hidratada de forma natural."
+                            data-subtitulo2="BRILHO E FIRMEZA"
+                            data-conteudo3="A vitamina C presente em frutas cítricas estimula a produção de colágeno, essencial para firmeza e elasticidade da pele.">
                         </article>
-                        <article class="img">
-                            <img src="imagens/img-post-kiwi.jpg" alt="" class="post_img" data-img="imagens/img-post-kiwi.jpg">
+                        <article class="img-post">
+                            <img src="imagens/img-post-kiwi.jpg" alt="" class="post_img" 
+                            data-id=""
+                            data-nome=""
+                            data-profissao=""
+                            data-imgperfil=""
+                            data-imgconteudo="imagens/img-post-kiwi.jpg"
+                            data-titulo="BENEFÍCIOS DO KIWI PARA A SAÚDE"
+                            data-conteudo1="O kiwi é uma excelente fonte de vitamina C, contribuindo para a imunidade e a saúde da pele."
+                            data-subtitulo1="SAÚDE EM DIA"
+                            data-conteudo2="Contém fibras que auxiliam no funcionamento do intestino e no controle do colesterol."
+                            data-subtitulo2="DIGESTÃO REGULADA"
+                            data-conteudo3="Ideal para lanches saudáveis, o kiwi ainda tem ação antioxidante e anti-inflamatória.">
                         </article>
-                        <article class="img">
-                            <img src="imagens/img-post-whey.jpg" alt="" class="post_img" data-img="imagens/img-post-whey.jpg">
+                        <article class="img-post">
+                            <img src="imagens/img-post-whey.jpg" alt="" class="post_img" 
+                            data-id=""
+                            data-nome=""
+                            data-profissao=""
+                            data-imgperfil=""
+                            data-imgconteudo="imagens/img-post-whey.jpg"
+                            data-titulo="O USO DO WHEY NA ALIMENTAÇÃO"
+                            data-conteudo1="O whey protein é uma proteína de alto valor biológico, ideal para recuperação muscular."
+                            data-subtitulo1="SUPLEMENTAÇÃO EFICIENTE"
+                            data-conteudo2="Pode ser utilizado por praticantes de atividade física e também como complemento proteico na rotina alimentar."
+                            data-subtitulo2="VERSATILIDADE"
+                            data-conteudo3="Consulte um nutricionista para orientações sobre a dose adequada às suas necessidades.">
                         </article>
-                        <article class="img">
-                            <img src="imagens/img-post-saudavel.jfif" alt="" class="post_img" data-img="imagens/img-post-saudavel.jfif">
+                        <article class="img-post">
+                            <img src="imagens/img-post-macarronada.jpg" alt="" class="post_img"
+                            data-id=""
+                            data-nome=""
+                            data-profissao=""
+                            data-imgperfil=""
+                            data-imgconteudo="imagens/img-post-macarronada.jpg"
+                            data-titulo="MACARRONADA PODE SER SAUDÁVEL?"
+                            data-conteudo1="Com os ingredientes certos, a macarronada pode sim fazer parte de uma alimentação equilibrada, principalmente para quem pratica esportes."
+                            data-subtitulo1="ENERGIA PARA O TREINO"
+                            data-conteudo2="O macarrão integral, combinado com vegetais e proteínas magras, fornece energia e nutrientes essenciais para o desempenho físico."
+                            data-subtitulo2="CONTROLE NAS PORÇÕES"
+                            data-conteudo3="A chave está na moderação e no equilíbrio: a quantidade e os acompanhamentos fazem toda a diferença para manter a refeição saudável.">
                         </article>
-                        <article class="img">
-                            <img src="imagens/img-post-frango.jfif" alt="" class="post_img" data-img="imagens/img-post-frango.jfif">
+                        <article class="img-post">
+                            <img src="imagens/img-post-saladaDeFrutas.jpg" alt="" class="post_img"
+                            data-id=""
+                            data-nome=""
+                            data-profissao=""
+                            data-imgperfil=""
+                            data-imgconteudo="imagens/img-post-saladaDeFrutas.jpg"
+                            data-titulo="SALADA DE FRUTAS: SAÚDE E SABOR"
+                            data-conteudo1="A salada de frutas é uma excelente forma de consumir diferentes vitaminas e fibras em uma única refeição leve e nutritiva."
+                            data-subtitulo1="VARIEDADE DE NUTRIENTES"
+                            data-conteudo2="Combinar frutas diversas potencializa a ingestão de antioxidantes, contribuindo para o fortalecimento do sistema imunológico."
+                            data-subtitulo2="OPÇÃO REFRESCANTE"
+                            data-conteudo3="Ideal para lanches saudáveis, a salada de frutas é prática, saborosa e promove saciedade sem exageros.">
                         </article>
                     </section>
                 </section>
+
+                <section id="modal-publicacao" class="modal-publicacao">
+                    <section class="modal-content-publicacao">
+        
+                        <section class="modal-image-publicacao">
+                            <img src="imagens/img-login.jpg" alt="Content Image" id="modal-img">
+                        </section>
+        
+                        <section class="modal-card-publicacao">
+                            <a href="/perfilnutri?id=1" class="card-perfil card-perfil-modal">
+                                <section class="card-header card-header-modal-publicacao">
+                                    <img src="imagens/profissional1.png" alt="Profile" id="modal-profile">
+                                    <section>
+                                        <section class="name" id="modal-name">Julia</section>
+                                        <section class="profession">Nutricionista</section>
+                                    </section>
+                                </section>
+                            </a>
+        
+                            <section class="modal-description-publicacao">
+                                <h2>QUAIS SÃO OS BENEFÍCIOS DO MAMÃO?</h2>
+                                <p>Além de ser considerado um alimento com efeito calmante natural, o mamão fornece em vitaminas A, C, cálcio, ferro, potássio, licopeno e fibras, entre outros nutrientes.</p>
+                                <h3>XÔ ENVELHECIMENTO PRECOCE</h3>
+                                <p>Ele possui betacaroteno e outras substâncias com ação antioxidante que afastam os danos causados à pele pela ação dos radicais livres. Por conter vitaminas C, A e E, também contribui para uma maior firmeza da pele.</p>
+                                <h3>AÇÃO DETOXIFICANTE</h3>
+                                <p>Os antioxidantes presentes na fruta também ajudam no processo natural de eliminação das toxinas pelo fígado.</p>
+                            </section>
+        
+                            <section class="btn-favorite-comment">
+                                <span class="material-icons btn-favorite">favorite</span>
+                                <span class="material-icons btn-comment">chat</span>
+                            </section>
+        
+                            <div class="container-comentarios">
+                                <span class="material-icons">account_circle</span>
+                                <input type="text" placeholder="Adicione um comentário...">
+                                <button class="btn-enviar">
+                                    <span class="material-icons">send</span>
+                                </button>
+                            </div>                    
+                        </section>
+        
+                        <!-- <span class="material-icons more-modal">more_vert</span> -->
+                        <span class="close-modal md-24" id="close-modal">&times;</span>
+        
+                    </section>
+                </section>  
                 
                 <section id="avaliar_nutri">
                     <span id="tituloavaliacao">Minhas Avaliações</span>
@@ -376,15 +493,16 @@
                     </footer>
          </section>
 
-         <div id="imageModal" class="image-modal">
+         <section id="imageModal" class="image-modal">
             <span class="close-modal">&times;</span>
             <img class="modal-content" id="modalImage">
-        </div>
+        </section>
     </body>
     <script src="js/scriptPerfil.js"></script>
-    <script src="js/postModal.js"></script>
     <script src="js/modalPublicacao.js"></script>
     <script src="js/rating.js"></script>
     <script src="js/indexMenu.js"></script>
     <script src="js/listanutricionistas.js"></script>
+    <script src="js/uploadimage.js"></script>
+    <script src="js/modalHome.js"></script>
 </html>

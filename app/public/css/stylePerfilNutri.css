@@ -71,13 +71,14 @@ body {
     border-radius: 15px;
     margin: 0 20px;
     overflow: hidden;
-    background-color: rgba(0, 0, 0, 0.268); 
+    background-color: #fff;
+    border: 2px solid #FF5B00;
 }
 
 .input-premium input {
     flex: 1;
     padding: 10px;
-    color: #fff;
+    color: black;
     border: none;
     font-size: 16px;
     outline: none;
@@ -87,7 +88,7 @@ body {
 .input-premium .search-icon {
     padding: 8px;
     background-color: none;
-    color: #fff;
+    color: #FF5B00 !important;
     cursor: pointer;
 }
 
@@ -306,7 +307,7 @@ main{
     cursor: pointer;
 }
 
-.img{
+.img-post {
     width: 200px;
     height: 200px;
     overflow: hidden;
@@ -428,6 +429,62 @@ main{
     padding-right: 20px;
 }
 
+.modal-left input {
+    display: none;
+}
+
+.modal-publicacao {
+    position: fixed;
+    display: none; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+    z-index: 3;
+}
+
+.modal-content-publicacao {
+    background: white;
+    width: 80%;
+    max-width: 1200px;
+    display: flex;
+    border-radius: 10px;
+    position: relative;
+}
+
+.modal-image-publicacao {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    padding-right: 20px;
+}
+
+.modal-image-publicacao img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px 0px 0px 10px;
+}
+
+.modal-card-publicacao {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-header-modal-publicacao {
+    display: flex;
+    align-items: center;
+    padding: 0;
+    padding-top: 20px;
+    width: 30%;
+    background-color: transparent;
+}
+
 .btn-favorite{
     margin-left: auto;
     color: transparent;
@@ -479,6 +536,66 @@ main{
 
 .btn-enviar:hover {
     color: #0056b3;
+}
+
+.modal-description-publicacao h2,
+.modal-description-publicacao h3 {
+    color: green;
+    margin-top: 20px;
+}
+
+.modal-description-publicacao p {
+    margin-top: 10px;
+}
+
+.close-modal {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    color: green;
+}
+.close-modal.md-24{
+    font-size: 45px;
+}
+
+.btn-favorite{
+    margin-left: auto;
+    color: transparent;
+    -webkit-text-stroke: 2px black; 
+    cursor: pointer;
+    margin-right: 8px;
+}
+
+.btn-comment{
+    cursor: pointer;
+}
+
+.container-comentarios {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    padding: 8px 12px;
+    /* margin: 20px auto;  */
+    margin-right: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+}
+
+.container-comentarios .material-icons {
+    font-size: 24px;
+    color: #555;
+    margin-right: 8px;
+}
+
+.container-comentarios input {
+    border: none;
+    outline: none;
+    flex: 1;
+    font-size: 14px;
+    background: transparent;
 }
 
 .modal-description h2,
@@ -611,6 +728,28 @@ main{
     border-right: 1px solid #ccc;
 }
 
+.upload-wrapper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+#preview-image {
+    display: none;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
 .upload-area {
     display: flex;
     flex-direction: column;
@@ -619,6 +758,8 @@ main{
     height: 100%;
     text-align: center;
     gap: 20px;
+    z-index: 2;
+    position: relative;
 }
 
 .upload-area img {
@@ -626,7 +767,17 @@ main{
     opacity: 0.6;
 }
 
-.upload-area p {
+.upload-area svg {
+    cursor: pointer;
+}
+
+#preview-image {
+    display: none;
+    height: 100%;
+    width: auto;
+}
+
+.btn-upload {
     background-color: #0057ff;
     color: white;
     padding: 10px 20px;
@@ -1278,17 +1429,16 @@ footer {
         border-radius: 5px;
     }
 
-    .img{
-        width: 130px;
-        height: 130px;
+    .img-post{
+        width: 100%;
+        height: 100%;
         overflow: hidden;
     }
     
-    #publi{
-        display: grid;    
-        grid-template-columns: 100px 100px;
-        column-gap: 4em;
-        row-gap: 1em;
+
+    .grid-publicacoes {
+        grid-template-columns: repeat( auto-fit, minmax(150px, 1fr) );
+        gap: 1.5em 1.5em;
     }
 
     #avaliar_nutri{

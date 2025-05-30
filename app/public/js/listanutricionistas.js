@@ -351,6 +351,14 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('instagram').textContent = nutri.contato.instagram;
         document.getElementById('email').textContent = nutri.contato.email;
         document.getElementById('sobremim').textContent = nutri.contato.sobre;
+
+        const postImages = document.querySelectorAll('.post_img');
+        postImages.forEach(img => {
+            img.dataset.id = id;
+            img.dataset.nome = nutri.nome;
+            img.dataset.profissao = nutri.especialidade;
+            img.dataset.imgperfil = nutri.imagem;
+        });
     } else {
         document.getElementById('info_perfil').innerHTML = '<p>Nutricionista não encontrado.</p>';
     };

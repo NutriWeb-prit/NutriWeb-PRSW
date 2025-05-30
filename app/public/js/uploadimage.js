@@ -12,14 +12,21 @@ function handleImageUpload(event, imageElement) {
     }
 }
 
-const foto = document.getElementById('placeholder-foto');
-const fotoUpload = document.getElementById('input-imagem');
+document.getElementById('input-imagem').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    const previewImage = document.getElementById('preview-image');
+    const uploadArea = document.querySelector('.upload-area');
 
-if (foto && fotoUpload) {
-    fotoUpload.addEventListener('change', function(event) {
-        handleImageUpload(event, foto);
-    });
-}
+    if (file && file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            previewImage.src = e.target.result;
+            previewImage.style.display = 'block';
+            uploadArea.style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+    }
+});
 
 const banner = document.getElementById('placeholder-banner');
 const bannerUpload = document.getElementById('input-banner');
