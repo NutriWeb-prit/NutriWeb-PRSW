@@ -112,7 +112,7 @@ body {
 
 .img-header {
     max-width: 1600px;
-    margin: 0 auto;
+    margin: 76px auto 0 auto;
     width: 100%;
     height: 70vh;
     overflow: hidden;
@@ -940,6 +940,7 @@ footer {
     }
 
     #btn-sabeMais-mobile {
+        z-index: 2;
         position: absolute;
         top: 35%;
         left: 55%;
@@ -1016,34 +1017,38 @@ footer {
     .mobile-menu {
         display: flex;
         flex-direction: column;
-        align-items: left;
-        background-color: #f7f7f7;
+        align-items: flex-end;
+        background-color: white;
         position: fixed;
         border-radius: 20px;
-        left: 51%;
-        width: 40%;
+        width: 100%;
         height: 100%;
-        z-index: 2;
+        z-index: 3;
         padding: 20px;
-        border-left: 3px solid green;
     }
     
     .mobile-menu ul {
         list-style: none;
         padding: 0;
-        margin: 0;
-        text-align: center;
+        margin: 0 20vw;
+        text-align: right;
         margin-top: 100px;
+        width: 60vw;
     }
     
     .mobile-menu ul li {
+        width: 100%;
         margin: 20px 0;
+        border-bottom: 2px solid rgba(0, 0, 0, 0.15)
     }
     
     .mobile-menu ul li a {
+        display: inline-block;
         text-decoration: none;
         color: black;
         font-size: 24px;
+        font-weight: bold;
+        width: 100%;
     }
     
     .mobile-menu.hidden {
@@ -1058,10 +1063,6 @@ footer {
         display: none;
         font-size: 30px;
         color: green;
-    }
-    
-    .menu {
-        z-index: 3;
     }
 
     .modal-content {

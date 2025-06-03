@@ -112,15 +112,15 @@
                         
                         <section class="campo-form">
                             <label for="telefone">Telefone:</label>
-                            <div class="campo-telefone-container">
-                                <div class="campo-ddd">
+                            <section class="campo-telefone-container">
+                                <section class="campo-ddd">
                                     <label for="ddd">DDD:</label>
                                     <input type="number" id="ddd" name="ddd" maxlength="2">
-                                </div>
-                                <div class="campo-telefone">
+                                </section>
+                                <section class="campo-telefone">
                                     <input type="number" id="telefone-numero" name="telefone" value="<%= valores.telefone %>" class="<%= erroValidacao.telefone %>">
-                                </div>
-                            </div>
+                                </section>
+                            </section>
                         </section>
                         
                         
@@ -194,7 +194,7 @@
 
                         <h1>Adicione uma Foto de Perfil</h1>
 
-                        <div class="campo-imagem">
+                        <section class="campo-imagem">
                             <label for="input-imagem">
                                 <img class="placeholder-foto" id="placeholder-foto" src="imagens/placeholderFoto.png">
                             </label>
@@ -202,7 +202,7 @@
 
                             <span class="material-icons icone-ajuda" onclick="toggleInfo()">question_mark</span>
 
-                            <div id="informacao" class="informacao" style="display: none;">
+                            <section id="informacao" class="informacao" style="display: none;">
                                 <p>Para escolher uma boa foto de perfil, prefira uma imagem 
                                 com fundo claro e sem distrações, deixando o foco em você.</p>
 
@@ -211,18 +211,18 @@
                                 
                                 <p>Uma expressão natural e simpática ajuda a passar confiança. 
                                 Se possível, use luz natural — ela valoriza sua imagem de forma leve e real.</p>
-                            </div>
-                        </div>
+                            </section>
+                        </section>
                         
                         <h1>Adicione um banner</h1>
 
-                        <div class="adiciona-banner">
+                        <section class="adiciona-banner">
                             <label for="input-banner">
                                 <img class="placeholder-banner" id="placeholder-banner" src="imagens/placeholderBanner.png">
                             </label>
 
                             <input type="file"  name="input-banner" id="input-banner" class="input-banner" accept="image/*" />
-                        </div>
+                        </section>
                 
                         <button type="button" onclick="irLogin()" class="btn-cadastrar continuar">
                             Continuar <i class="fas fa-arrow-right seta"></i>
@@ -234,12 +234,12 @@
             </section>
         </section>
 
-        <div class="barra-progresso">
+        <section class="barra-progresso">
             <span class="progresso ativo"></span>
             <span class="progresso <%= barra %>"></span>
             <!-- <span class="progresso"></span> -->
             <!-- <span class="progresso"></span> -->
-        </div>
+        </section>
 
         <section class="mobile">
 

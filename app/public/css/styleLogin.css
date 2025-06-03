@@ -419,8 +419,6 @@ footer {
 
     .mobile {
         display: flex;
-        align-items: center;
-        justify-content: space-between;
         background-color: rgba(0, 0, 0, 0.599);
         width: 100%;
         box-sizing: border-box;
@@ -442,7 +440,7 @@ footer {
     }
 
     .menu {
-        z-index: 1;
+        z-index: 99;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -458,33 +456,38 @@ footer {
     .mobile-menu {
         display: flex;
         flex-direction: column;
-        align-items: left;
-        background-color: #f7f7f7;
+        align-items: flex-end;
+        background-color: white;
         position: fixed;
-        top: 11.7%;
-        left: 50%;
-        width: 40%;
+        border-radius: 20px;
+        width: 100%;
         height: 100%;
-        z-index: 2;
+        z-index: 3;
         padding: 20px;
-        border-left: 3px solid green;
     }
     
     .mobile-menu ul {
         list-style: none;
         padding: 0;
-        margin: 0;
-        text-align: center;
+        margin: 0 20vw;
+        text-align: right;
+        margin-top: 100px;
+        width: 60vw;
     }
     
     .mobile-menu ul li {
+        width: 100%;
         margin: 20px 0;
+        border-bottom: 2px solid rgba(0, 0, 0, 0.15)
     }
     
     .mobile-menu ul li a {
+        display: inline-block;
         text-decoration: none;
         color: black;
         font-size: 24px;
+        font-weight: bold;
+        width: 100%;
     }
     
     .mobile-menu.hidden {
