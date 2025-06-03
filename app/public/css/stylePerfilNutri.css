@@ -686,7 +686,7 @@ main{
     border: none;
     padding: 10px 10px;
     margin-bottom: 50px;
-    border-radius: 15px;
+    border-radius: 5px;
     font-size: 20px;
     cursor: pointer;
 }
@@ -1341,7 +1341,7 @@ footer {
     }
 
     .menu .logo {
-        height: 50px;
+        height: 40px;
     }
     
     .right-section .search-icon {
@@ -1365,6 +1365,7 @@ footer {
         background:none;
         margin: -25px;
         display: block;
+        box-shadow: none;
     }
 
     #container_foto{
@@ -1400,9 +1401,8 @@ footer {
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: 1em;
         margin: 2em;
-        height: 1.4em;
+        height: 2em;
         text-align: center;
         border: 1px solid green;
         border-radius: 5px;
@@ -1412,21 +1412,28 @@ footer {
     #avaliacao_selecionar p{
         margin: 2px;
     }
+
     #publi_selecionar p{
         margin: 2px;
     }
 
     #avaliacao_selecionar{
+        display: flex;
+        align-items: center;
+        justify-content: center;
         width: 50%;
-        height: 1.4em;
+        height: 2em;
         border-radius: 5px;
     }
 
     #publi_selecionar{
+        display: flex;
+        align-items: center;
+        justify-content: center;
         background: green;
         color: #fff;
         width: 50%;
-        height: 1.4em;
+        height: 2em;
         border-radius: 5px;
     }
 
@@ -1450,7 +1457,7 @@ footer {
     #tituloavaliacao {
         top: 1050px; 
         left: 48%;
-        width: 0;
+        width: 80%;
         font-size: 30px;
         text-align: center; 
     }
@@ -1460,8 +1467,14 @@ footer {
         margin-left: -13px;
     }
 
+    #publi {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
     #titulopubli{
-        width: 0;
+        width: 80%;
         font-size: 30px;
         top: 950px; 
         left: 48%;
@@ -1469,11 +1482,10 @@ footer {
     }
 
     #novapublicacao {
-        width: 80%; 
-        font-size: 20px;
-        top: 1000px;
-        left: 7%;
+        width: 60%; 
+        font-size: 16px;
         margin-top: 20px;
+        padding: 5px 10px;
     }
 
     .container-avaliar {

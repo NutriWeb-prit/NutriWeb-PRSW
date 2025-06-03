@@ -140,15 +140,16 @@ body {
     text-align: center;
 }
 .title {
-    font-size: 3rem;
+    font-size: 35px;
     margin: 7rem 0 0 0;
     font-weight: bold;
     color: rgb(5, 92, 5)
 }
 .subtitle {
-    font-size: 1.5rem;
-    margin: 1rem 0 0 0;
+    font-size: 20px;
+    margin: 6px 0 0 0;
     color: #555;
+    max-width: 85%;
 }
 
 
@@ -474,7 +475,7 @@ footer {
     }
 
     .menu .logo {
-        height: 50px;
+        height: 40px;
     }
     
     .right-section .search-icon {

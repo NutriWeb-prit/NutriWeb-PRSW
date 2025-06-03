@@ -865,7 +865,7 @@ footer {
     }
 
     .menu .logo {
-        height: 50px;
+        height: 40px;
     }
     
     .right-section .search-icon {
@@ -882,7 +882,7 @@ footer {
         padding: 10px 20px;
         background-color: white;
         border-bottom: 3px solid green;
-        width: 100%;
+        width: 100vw;
         box-sizing: border-box;
         position: fixed; 
         top: 0;
@@ -891,10 +891,6 @@ footer {
     .left-section, .right-section {
         display: flex;
         align-items: center;
-    }
-    
-    .menu .logo {
-        height: 40px;
     }
     
     .right-section .search-icon {
@@ -1242,7 +1238,7 @@ footer {
     }
 }
 
-@media (min-height: 760px) {
+@media (min-height: 1px) {
 
 .nutricionista-mobile{
         margin-top: 450px;

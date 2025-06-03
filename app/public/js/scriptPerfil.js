@@ -24,5 +24,5 @@ function clicarDois(){
     publiSelector.style.color = "white";
 
     avaliacoes.style.display = 'none';
-    publicacoes.style.display = 'grid';
+    publicacoes.style.display = 'flex';
 }

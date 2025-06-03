@@ -215,7 +215,7 @@ table {
 }
 
 th, td {
-    border-bottom: 3px solid #0b3800;
+    border-bottom: 2px solid #0b3800;
 }
 
 table tr:last-child td {
@@ -453,7 +453,7 @@ footer {
     }
     
     .menu .logo {
-        height: 50px;
+        height: 40px;
     }
     
     .right-section .search-icon {
@@ -474,6 +474,15 @@ footer {
         width: 100%;
         height: auto;
         object-fit: cover;
+    }
+
+    .ranking-content {
+        flex-direction: column;
+    }
+
+    .img-ranking {
+        max-width: 500px !important;
+        margin-bottom: 50px;
     }
 
     .ranking-section {

@@ -261,7 +261,6 @@ main{
 
 #info_perfil{
     border: none;
-    /* background-color: white; */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2), 0 2px 5px rgba(0, 0, 0, 0.1);
     width: 270px;
     position: relative;
@@ -513,7 +512,7 @@ footer {
     }
 
     .menu .logo {
-        height: 50px;
+        height: 40px;
     }
     
     .right-section .search-icon {
@@ -537,6 +536,7 @@ footer {
         background:none;
         margin: -25px;
         display: block;
+        box-shadow: none;
     }
 
     #container_foto{
@@ -580,9 +580,8 @@ footer {
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: 1em;
         margin: 2em;
-        height: 1.4em;
+        height: 2em;
         text-align: center;
         border: 1px solid green;
         border-radius: 5px;
@@ -597,8 +596,11 @@ footer {
     }
 
     #avaliacao_selecionar{
+        display: flex;
+        align-items: center;
+        justify-content: center;
         width: 50%;
-        height: 1.4em;
+        height: 2em;
         border-radius: 5px;
     }
 
@@ -608,8 +610,14 @@ footer {
         margin-left: -13px;
     }
 
+    #publi {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
     #titulopubli{
-        width: 0;
+        width: 80%;
         font-size: 30px;
         top: 1030px; 
         left: 48%;
@@ -617,10 +625,13 @@ footer {
     }
 
     #publi_selecionar{
+        display: flex;
+        align-items: center;
+        justify-content: center;
         background: green;
         color: #fff;
         width: 50%;
-        height: 1.4em;
+        height: 2em;
         border-radius: 5px;
     }
 

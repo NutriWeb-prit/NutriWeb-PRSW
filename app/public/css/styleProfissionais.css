@@ -149,14 +149,15 @@ body {
 
 .tipo-nutrição h1{
     color: black;
-    font-size: 35px;
+    font-size: 28px;
     margin: 35px 0 0 0;
 }
 
 .tipo-nutrição h2{
     color: rgb(67, 64, 64);
-    font-size: 25px;
-    margin: 10px 0 0 0;
+    font-size: 18px;
+    margin: 10px auto 0 auto;
+    max-width: 80%;
 }
 
 .cards-container {
@@ -371,7 +372,7 @@ footer {
     }
     
     .menu .logo {
-        height: 50px;
+        height: 40px;
     }
     
     .right-section .search-icon {
