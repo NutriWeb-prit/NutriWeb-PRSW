@@ -1,26 +1,28 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const continuar = document.querySelectorAll('.continuar');
-    const cards = [
-        document.getElementById('card-two'),
-        document.getElementById('card-three'),
-        document.getElementById('card-four')
-    ];
+document.addEventListener('DOMContentLoaded', function () {
+    const etapaAtual = parseInt(document.querySelector('input[name="etapa"]').value);
+
+    // Seleciona todos os cards e esconde todos
+    const todosOsCards = document.querySelectorAll('.card, .card-others');
+    todosOsCards.forEach(card => card.style.display = 'none');
+
+    // Mostra apenas o card da etapa atual
+    if (etapaAtual === 1) {
+        document.getElementById('card').style.display = 'block';
+    } else if (etapaAtual === 2) {
+        document.getElementById('card-two').style.display = 'block';
+    } else if (etapaAtual === 3) {
+        document.getElementById('card-three').style.display = 'block';
+    } else if (etapaAtual === 4) {
+        document.getElementById('card-four').style.display = 'block';
+    }
+
+    // Atualiza barra de progresso (se existir)
     const barraProgresso = document.querySelectorAll('.barra-progresso .progresso');
-
-    let currentIndex = 0;
-
-    continuar.forEach(function(barra, index) {
-        barra.addEventListener('click', function() {
-            cards[currentIndex].style.display = 'none';
-
-            currentIndex++;
-
-            if (cards[currentIndex]) {
-                cards[currentIndex].style.display = 'block';
-                barraProgresso[currentIndex+1].classList.add('ativo');
-            }
-        });
-    });
+    for (let i = 0; i < etapaAtual; i++) {
+        if (barraProgresso[i]) {
+            barraProgresso[i].classList.add('ativo');
+        }
+    }
 });
 
 function toggleInfo() {

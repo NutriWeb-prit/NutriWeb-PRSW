@@ -2,11 +2,13 @@ var express = require("express");
 var router = express.Router();
 const { body, validationResult } = require("express-validator");
 
+const NWController = require("../controllers/NWController");
+const NWModel = require("../models/NWModel");
+
 router.post(
     "/entrar", 
     
-    body("email").isEmail().withMessage("Insira um Email válido!"),
-    body("senha").isLength({min:5}).withMessage("A senha deve conter 5 ou mais caracteres!"),
+    NWController.validacaoLogin,
     
     function (req, res) {
         const listaErros = validationResult(req);
@@ -20,72 +22,145 @@ router.post(
 );
 
 router.post(
-    "/cadastrarcliente", 
-    
-    body("nome").isLength({min:2}).withMessage("O nome deve conter 2 ou mais caracteres!"),
-    body("email").isEmail().withMessage("Insira um Email válido!"),
-    body("senha")
-        .isLength({min:5}).withMessage("Insira uma senha válida!")
-        .matches(/[A-Z]/).withMessage("Insira uma senha válida!")
-        .matches(/[a-z]/).withMessage("Insira uma senha válida!")
-        .matches(/\d/).withMessage("Insira uma senha válida!")
-        .matches(/[\W_]/).withMessage("Insira uma senha válida!"),
-    
-    function (req, res) {
+    "/cadastrarcliente",
+    NWController.validacaoCadCliente,
+    async function (req, res) {
+        const etapa = req.body.etapa;
         const listaErros = validationResult(req);
-        let cardSucesso = false;
-        if (listaErros.isEmpty()) {
-            cardSucesso = true;
+
+        const dadosCliente = {
+            nome: req.body.nome,
+            email: req.body.email,
+            senha: req.body.senha,
+            ddd: req.body.ddd,
+            telefone: req.body.telefone,
+        };
+
+        if (etapa == "1") {
+
+            if (!listaErros.isEmpty()) {
+                console.log(listaErros);
+                return res.render("pages/indexCadastroCliente", {
+                    etapa: "1",
+                    cardSucesso: false,
+                    valores: dadosCliente,
+                    listaErros: listaErros,
+                });
+            }
+
+            return res.render("pages/indexCadastroCliente", {
+                etapa: "2",
+                cardSucesso: true,
+                valores: dadosCliente,
+                listaErros: null,
+            });
         }
 
-        return res.render("pages/indexCadastroCliente", {
-            cardSucesso: cardSucesso,
-            valores: {
-                nome: req.body.nome,
-                telefone: req.body.telefone,
-                email: req.body.email,
-                senha: req.body.senha,
-                area: req.body.area,
-            },
-            listaErros: listaErros.isEmpty() ? null : listaErros
-        });
+        if (etapa == "2") {
+
+            if (!listaErros.isEmpty()) {
+                console.log(listaErros);
+                return res.render("pages/indexCadastroCliente", {
+                    etapa: "2",
+                    cardSucesso: true,
+                    valores: dadosCliente,
+                    listaErros: listaErros,
+                });
+            }
+
+            return await NWController.cadastrarCliente(req, res);
+        }
     }
 );
 
+
 router.post(
-    "/card1", 
-    
-    body("nome").isLength({min:2}).withMessage("O nome deve conter 2 ou mais caracteres!"),
-    body("telefone").isMobilePhone().withMessage("Insira um número de telefone válido!"),
-    body("email").isEmail().withMessage("Insira um Email válido!"),
-    body("senha")
-        .isLength({min:5}).withMessage("Insira uma senha válida!")
-        .matches(/[A-Z]/).withMessage("Insira uma senha válida!")
-        .matches(/[a-z]/).withMessage("Insira uma senha válida!")
-        .matches(/\d/).withMessage("Insira uma senha válida!")
-        .matches(/[\W_]/).withMessage("Insira uma senha válida!"),
-    body("area").isLength({min:2}).withMessage("Selecione no mínimo uma especialização!"),
-    body("crn").isLength({min:5}).withMessage("Insira um CRN válido!"),
-    
-    function (req, res) {
+    "/cadastrarnutricionista",
+    NWController.validacaoCadNutri1,
+    async function (req, res) {
+        const etapa = req.body.etapa;
         const listaErros = validationResult(req);
-        let card1Sucesso = false;
-        if (listaErros.isEmpty()) {
-            card1Sucesso = true;
+
+        const dadosNutri = {
+            nome: req.body.nome,
+            telefone: req.body.ddd + req.body.telefone,
+            email: req.body.email,
+            senha: req.body.senha,
+            area: req.body.area, // pode ser um array
+            crn: req.body.crn,
+            razaoSocial: req.body.razaoSocial,
+            // Se quiser manter foto/banner temporários, adicione aqui.
+        };
+
+        if (etapa === "1") {
+            if (!listaErros.isEmpty()) {
+                console.log(listaErros);
+                return res.render("pages/indexCadastrarNutri", {
+                    etapa: "1",
+                    card1Sucesso: false,
+                    valores: dadosNutri,
+                    listaErros: listaErros,
+                });
+            }
+
+            // Passa para a etapa 2
+            return res.render("pages/indexCadastrarNutri", {
+                etapa: "2",
+                card1Sucesso: true,
+                valores: dadosNutri,
+                listaErros: null
+            });
         }
 
-        return res.render("pages/indexCadastrarNutri", {
-            card1Sucesso: card1Sucesso,
-            valores: {
-                nome: req.body.nome,
-                telefone: req.body.telefone,
-                email: req.body.email,
-                senha: req.body.senha,
-                area: req.body.area,
-                crn: req.body.crn
-            },
-            listaErros: listaErros.isEmpty() ? null : listaErros
-        });
+        if (etapa === "2") {
+            // Salva imagem/banners no form? Apenas segue para etapa 3
+            return res.render("pages/indexCadastrarNutri", {
+                etapa: "3",
+                card1Sucesso: true,
+                valores: dadosNutri,
+                listaErros: listaErros,
+            });
+        }
+
+        if (etapa === "3") {
+            // Última tela antes de envio
+            return res.render("pages/indexCadastrarNutri", {
+                etapa: "4",
+                card1Sucesso: true,
+                valores: dadosNutri,
+                listaErros: listaErros,
+            });
+        }
+
+        if (etapa === "4") {
+            try {
+                const dadosUsuarios = {
+                    NomeCompleto: req.body.nome,
+                    Email: req.body.email,
+                    Senha: req.body.senha,
+                    Telefone: req.body.telefone,
+                    UsuarioTipo: 'N'
+                };
+
+                const dadosNutricionistas = {
+                    Crn: req.body.crn,
+                    RazaoSocial: req.body.razaoSocial
+                };
+
+                const especializacoes = Array.isArray(req.body.area)
+                    ? req.body.area
+                    : [req.body.area];
+
+                await NWModel.createNutricionista(dadosUsuarios, dadosNutricionistas, especializacoes)
+
+                return res.redirect("/");
+
+            } catch (err) {
+                console.log(listaErros);
+                console.error("Erro ao cadastrar nutricionista:", err.message);
+                return res.status(500).send("Erro ao cadastrar nutricionista");
+            }
+        }
     }
 );
 
@@ -110,11 +185,11 @@ router.get("/login", function (req, res) {
 });
 
 router.get("/cadastrocliente", function (req, res) {
-    res.render('pages/indexCadastroCliente', { retorno: null, valores: {nome:"", email:"", senha:""}, listaErros: null});
+    res.render('pages/indexCadastroCliente', { retorno: null, etapa:"1", valores: {nome:"", email:"", senha:"", telefone:"", ddd:""}, listaErros: null});
 });
 
 router.get("/cadastronutri", function (req, res) {
-    res.render('pages/indexCadastrarNutri', { retorno: null, valores: {nome:"", telefone:"", email:"", senha:"", area:"", crn:""}, listaErros: null});
+    res.render('pages/indexCadastrarNutri', { retorno: null, etapa:"1", valores: {nome:"", telefone:"", email:"", senha:"", area:"", crn:""}, listaErros: null});
 });
 
 router.get('/perfilnutri', function (req, res) {

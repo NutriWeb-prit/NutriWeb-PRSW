@@ -332,12 +332,17 @@ main{
     margin-right: 8px;
 }
 
-#editar-perfil{
-    width: 100%;
+#opcoes-perfil {
     display: none;
-    align-items: center;
-    margin: 10px 150px 30px ;
+    justify-content: center;
+}
+
+#opcoes-perfil .opc-perfil {
     cursor: pointer;
+}
+
+#opcoes-perfil .hidden {
+    display: none;
 }
 
 #publi_avaliacao{

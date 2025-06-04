@@ -89,6 +89,7 @@
                     <span class="notification4"><%= msgErro.senha %></span>
                     <span class="notification5"><%= msgErro.area %></span>
                     <form action="/cadastrarcliente" method="post" class="cadastro-form" id="card">
+                        <input type="hidden" name="etapa" value="<%= etapa %>">
                         <h2><strong class="strong-cad">Cadastre-se,</strong><br> e comece sua jornada!</h2>
                         <section class="campo-form">
                             <input type="text" id="nome" name="nome" value="<%= valores.nome %>" class="<%= erroValidacao.nome %>" placeholder="Nome Completo">
@@ -115,10 +116,10 @@
                             <section class="campo-telefone-container">
                                 <section class="campo-ddd">
                                     <label for="ddd">DDD:</label>
-                                    <input type="number" id="ddd" name="ddd" maxlength="2">
+                                    <input type="number" id="ddd" name="ddd" value="<%= valores.ddd %>" maxlength="2">
                                 </section>
                                 <section class="campo-telefone">
-                                    <input type="number" id="telefone-numero" name="telefone" value="<%= valores.telefone %>" class="<%= erroValidacao.telefone %>">
+                                    <input type="number" id="telefone-numero" name="telefone" value="<%= valores.telefone %>" class="<%= erroValidacao.telefone %>" maxlength="9">
                                 </section>
                             </section>
                         </section>
@@ -189,14 +190,20 @@
         <section class="container">
             <section class="card-others <%= card2 %>" id="card-two">
                 <section class="conteudo-form"> 
-                    <form action="/" method="get" class="cadastro-form" id="card-two">
+                    <form action="/cadastrarcliente" method="post" class="cadastro-form" id="card-two">
+                        <input type="hidden" name="nome" value="<%= valores.nome %>">
+                        <input type="hidden" name="email" value="<%= valores.email %>">
+                        <input type="hidden" name="senha" value="<%= valores.senha %>">
+                        <input type="hidden" name="ddd" value="<%= valores.ddd %>">
+                        <input type="hidden" name="telefone" value="<%= valores.telefone %>">
+                        <input type="hidden" name="etapa" value="2">
                         <h2><strong class="strong-cad">Personalizando</strong><br> seu perfil</h2>
 
                         <h1>Adicione uma Foto de Perfil</h1>
 
                         <section class="campo-imagem">
                             <label for="input-imagem">
-                                <img class="placeholder-foto" id="placeholder-foto" src="imagens/placeholderFoto.png">
+                                <img class="placeholder-foto" id="preview-image" src="imagens/placeholderFoto.png">
                             </label>
                             <input type="file" name="input-imagem" id="input-imagem" class="input-imagem" accept="image/*" />
 
@@ -224,7 +231,7 @@
                             <input type="file"  name="input-banner" id="input-banner" class="input-banner" accept="image/*" />
                         </section>
                 
-                        <button type="button" onclick="irLogin()" class="btn-cadastrar continuar">
+                        <button for="card-two" type="submit" class="btn-cadastrar continuar">
                             Continuar <i class="fas fa-arrow-right seta"></i>
                         </button>
                     </form>

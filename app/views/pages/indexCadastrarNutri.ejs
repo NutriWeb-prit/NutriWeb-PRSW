@@ -93,7 +93,8 @@
                     <span class="notification4"><%= msgErro.senha %></span>
                     <span class="notification5"><%= msgErro.area %></span>
                     <span class="notification6"><%= msgErro.crn %></span>
-                    <form action="/card1" method="post" class="cadastro-form" id="card">
+                    <form action="/cadastrarnutricionista" method="post" class="cadastro-form" id="card">
+                        <input type="hidden" name="etapa" value="<%= etapa %>">
                         <h2><strong class="strong-cad">Cadastre-se,</strong><br> e comece sua jornada!</h2>
                         <section class="campo-form">
                             <input type="text" id="nome" name="nome" value="<%= valores.nome %>" class="<%= erroValidacao.nome %>" placeholder="Nome Completo">
@@ -123,7 +124,7 @@
                                     <input type="number" id="ddd" name="ddd" maxlength="2">
                                 </section>
                                 <section class="campo-telefone">
-                                    <input type="number" id="telefone-numero" name="telefone" value="<%= valores.telefone %>" class="<%= erroValidacao.telefone %>">
+                                    <input type="number" id="telefone-numero" name="telefone" value="<%= valores.telefone %>" class="<%= erroValidacao.telefone %>" maxlength="9">
                                 </section>
                             </section>
                         </section>
@@ -135,54 +136,54 @@
                             
                             <section class="checkbox-group-container">
                                 <section class="checkbox-group">
-                                    <input type="checkbox" name="area" id="esportiva">
+                                    <input type="checkbox" name="area" id="esportiva" value="Esportiva">
                                     <label for="esportiva">Nutrição Esportiva</label>
                                 </section>
                                 
                                 <section class="checkbox-group">
-                                    <input type="checkbox" name="area" id="estetica">
+                                    <input type="checkbox" name="area" id="estetica" value="Estética">
                                     <label for="estetica">Nutrição Estética</label>
                                 </section>
                                 
                                 <section class="checkbox-group">
-                                    <input type="checkbox" name="area" id="clinica">
+                                    <input type="checkbox" name="area" id="clinica" value="Clínica">
                                     <label for="clinica">Nutrição Clínica</label>
                                 </section>
                                 
                                 <section class="checkbox-group">
-                                    <input type="checkbox" name="area" id="vegetariana">
+                                    <input type="checkbox" name="area" id="vegetariana" value="Vegetariana">
                                     <label for="vegetariana">Nutrição Vegetariana</label>
                                 </section>
                                 
                                 <section class="checkbox-group">
-                                    <input type="checkbox" name="area" id="maternoinfantil">
+                                    <input type="checkbox" name="area" id="maternoinfantil" value="Materno-Infantil">
                                     <label for="maternoinfantil">Nutrição Materno-Infantil</label>
                                 </section>
                                 
                                 <section class="checkbox-group">
-                                    <input type="checkbox" name="area" id="geriatrica">
+                                    <input type="checkbox" name="area" id="geriatrica" value="Geriátria">
                                     <label for="geriatrica">Nutrição Geriátrica</label>
                                 </section>
                                 
                                 <section class="checkbox-group">
-                                    <input type="checkbox" name="area" id="preventiva">
+                                    <input type="checkbox" name="area" id="preventiva" value="Preventiva">
                                     <label for="preventiva">Nutrição Preventiva</label>
                                 </section>
                                 
                                 <section class="checkbox-group">
-                                    <input type="checkbox" name="area" id="balanceada">
+                                    <input type="checkbox" name="area" id="balanceada" value="Balanceada">
                                     <label for="balanceada">Nutrição Balanceada</label>
                                 </section>
                                 
                                 <section class="checkbox-group">
-                                    <input type="checkbox" name="area" id="funcional">
+                                    <input type="checkbox" name="area" id="funcional" value="Funcional">
                                     <label for="funcional">Nutrição Funcional</label>
                                 </section>
                             </section>
                         </section>
                         
                         <section class="campo-form">
-                            <input type="text" id="crn" name="crn" value="<%= valores.crn %>" class="<%= erroValidacao.crn %>" placeholder="Número de CRN">
+                            <input type="text" id="crn" name="crn" value="<%= valores.crn %>" class="<%= erroValidacao.crn %>" placeholder="Número de CRN" maxlength="11">
                         </section>
 
                         <button  type="submit" class="btn-cadastrar">
@@ -200,7 +201,22 @@
                 <section class="conteudo-form">
                     
                         
-                    <form action="" method="post" class="cadastro-form" id="card-two">
+                    <form action="/cadastrarnutricionista" method="post" class="cadastro-form" id="card-two">
+                        <input type="hidden" name="etapa" value="<%= etapa %>">
+                        <% if (Array.isArray(valores.area)) { %>
+                            <% valores.area.forEach((esp) => { %>
+                              <input type="hidden" name="area" value="<%= esp %>">
+                            <% }) %>
+                          <% } else if (valores.area) { %>
+                            <input type="hidden" name="area" value="<%= valores.area %>">
+                          <% } 
+                        %>
+                        <input type="hidden" name="nome" value="<%= valores.nome %>">
+                        <input type="hidden" name="email" value="<%= valores.email %>">
+                        <input type="hidden" name="senha" value="<%= valores.senha %>">
+                        <input type="hidden" name="ddd" value="<%= valores.ddd %>">
+                        <input type="hidden" name="telefone" value="<%= valores.telefone %>">
+                        <input type="hidden" name="crn" value="<%= valores.crn %>">
                         <h2><strong class="strong-cad">Personalizando</strong><br> seu perfil</h2>
 
                         <h1>Adicione uma Foto de Perfil</h1>
@@ -236,11 +252,9 @@
                             <input type="file"  name="input-banner" id="input-banner" class="input-banner" accept="image/*" />
                         </section>
                 
-                        <button type="button" class="btn-cadastrar continuar">
+                        <button type="submit" class="btn-cadastrar continuar">
                             Continuar <i class="fas fa-arrow-right seta"></i>
                         </button>
-                    </form>
-                        
                     </form>
                 </section>          
                 
@@ -252,7 +266,22 @@
             <section class="card-others" id="card-three">
                 <section class="conteudo-form">
                         
-                    <form action="/card3" method="post" class="cadastro-form" id="card-three">
+                    <form action="/cadastrarnutricionista" method="post" class="cadastro-form" id="card-three">
+                        <input type="hidden" name="etapa" value="<%= etapa %>">
+                        <% if (Array.isArray(valores.area)) { %>
+                            <% valores.area.forEach((esp) => { %>
+                              <input type="hidden" name="area" value="<%= esp %>">
+                            <% }) %>
+                          <% } else if (valores.area) { %>
+                            <input type="hidden" name="area" value="<%= valores.area %>">
+                          <% } 
+                        %>
+                        <input type="hidden" name="nome" value="<%= valores.nome %>">
+                        <input type="hidden" name="email" value="<%= valores.email %>">
+                        <input type="hidden" name="senha" value="<%= valores.senha %>">
+                        <input type="hidden" name="ddd" value="<%= valores.ddd %>">
+                        <input type="hidden" name="telefone" value="<%= valores.telefone %>">
+                        <input type="hidden" name="crn" value="<%= valores.crn %>">
                         <h2><strong class="strong-cad">Personalizando</strong><br> seu perfil</h2>
 
                         <h1>Sobre você</h1>
@@ -261,7 +290,7 @@
                         
                         <textarea placeholder="Ex: Sou Roberta Santos, nutricionista especializada em nutrição esportiva. Meu objetivo é ajudar a alimentação para potencializar resultados e promover saúde. Cada atleta é único, e estou aqui para traçar uma jornada nutricional que faz a diferença no seu treino e na sua vida!" class="campo-texto"></textarea>
 
-                        <button type="button" form="card-three" class="btn-cadastrar continuar">
+                        <button type="submit" class="btn-cadastrar continuar">
                             Continuar <i class="fas fa-arrow-right seta"></i>
                         </button>
                     </form>
@@ -275,7 +304,22 @@
             <section class="card-others" id="card-four">
                 <section class="conteudo-form">
                     
-                    <form action="/login" class="cadastro-form" id="card-four">
+                    <form action="/cadastrarnutricionista" method="post" class="cadastro-form" id="card-four">
+                        <input type="hidden" name="etapa" value="<%= etapa %>">
+                        <% if (Array.isArray(valores.area)) { %>
+                            <% valores.area.forEach((esp) => { %>
+                              <input type="hidden" name="area" value="<%= esp %>">
+                            <% }) %>
+                          <% } else if (valores.area) { %>
+                            <input type="hidden" name="area" value="<%= valores.area %>">
+                          <% } 
+                        %>
+                        <input type="hidden" name="nome" value="<%= valores.nome %>">
+                        <input type="hidden" name="email" value="<%= valores.email %>">
+                        <input type="hidden" name="senha" value="<%= valores.senha %>">
+                        <input type="hidden" name="ddd" value="<%= valores.ddd %>">
+                        <input type="hidden" name="telefone" value="<%= valores.telefone %>">
+                        <input type="hidden" name="crn" value="<%= valores.crn %>">
                         <h2 class="title_cursos">Mostre onde estudou e quais cursos fez</h2>
 
                         <h1>Faculdade</h1>
@@ -283,7 +327,7 @@
                         <input type="text" id="faculdade" placeholder="Ex: Bacharelado em Nutrição" class="input-cad">
 
                         <label class="label-especialidade" for="faculdade">Organização:</label>
-                        <input type="text" id="faculdade" placeholder="Ex: Universidade de São Paulo (USP)" class="input-cad">
+                        <input type="text" id="faculdade-org" placeholder="Ex: Universidade de São Paulo (USP)" class="input-cad">
                                         
                         <button type="button" class="btn-upload">
                             <span class="material-icons icone-upload">cloud_upload</span>
@@ -296,10 +340,10 @@
 
                         <h1>Curso</h1>
                         <label class="label-especialidade" for="curso">Curso:</label>
-                        <input type="text" id="faculdade" placeholder="Ex: Especialização em Nutrição Estética" class="input-cad">
+                        <input type="text" id="faculdade-curso" placeholder="Ex: Especialização em Nutrição Estética" class="input-cad">
 
                         <label class="label-especialidade" for="faculdade">Organização:</label>
-                        <input type="text" id="faculdade" placeholder="Ex: Faculdade Metódo de São Paulo" class="input-cad">
+                        <input type="text" id="faculdade-curso-org" placeholder="Ex: Faculdade Metódo de São Paulo" class="input-cad">
                                         
                         <button type="button" class="btn-upload">
                             <span class="material-icons icone-upload">cloud_upload</span>
@@ -310,7 +354,7 @@
                             <span class="material-icons icone-add">add</span> Adicionar mais
                         </section>
 
-                        <button type="submit" onclick="irLogin()" form="card-four" class="btn-cadastrar">
+                        <button type="submit" class="btn-cadastrar">
                             Continuar <i class="fas fa-arrow-right seta"></i>
                         </button>
                     </form>
