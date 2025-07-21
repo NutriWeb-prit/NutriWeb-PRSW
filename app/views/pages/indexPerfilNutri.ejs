@@ -202,36 +202,28 @@
                         </section>
 
                         <section class="modal-right">
-                            <section>
+                            <section class="legenda-container">
                                 <h3>Legenda</h3>
-                                <textarea class="editor" placeholder="Digite uma legenda para seu post..."></textarea>
-                            </section>
-
-                            <section>
-                                <h3>Categoria</h3>
-
-                                <label class="label-categoria">
-                                    <input type="radio" name="categoria" value="dica">
-                                    <span>Dica</span>
-                                </label>
-
-                                <label class="label-categoria">
-                                    <input type="radio" name="categoria" value="receita">
-                                    <span>Receita</span>
-                                </label>
+                                <textarea class="editor" id="legenda" maxlength="2200" rows="5"></textarea>
+                                <div id="char-count">0 / 2.200</div>
                             </section>
 
                             <section class="input-icon-wrapper">
                                 <label for="localizacao">Localização</label>
                                 <span class="icon-location">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#444" viewBox="0 0 16 16">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#fff" viewBox="0 0 16 16">
                                     <path d="M8 0a5.53 5.53 0 0 0-5.5 5.5c0 3.25 5.5 10.5 5.5 10.5s5.5-7.25 5.5-10.5A5.53 5.53 0 0 0 8 0Zm0 8.25a2.75 2.75 0 1 1 0-5.5 2.75 2.75 0 0 1 0 5.5Z"/>
                                     </svg>
                                 </span>
-                                <input type="text" class="has-icon" id="localizacao" placeholder="Digite a localização..." />
+                                <input type="text" class="has-icon" id="localizacao"/>
                             </section>
 
-                            <button class="publicar">Publicar</button>
+                            <section>
+                                <h3>Hashtags</h3>
+                                <input type="text" class="input-hashtags" id="hashtags" />
+                            </section>
+
+                            <button class="btn-postar">Postar</button>
                         </section>
                             <span class="close" id="fecharModal">&times;</span>
                         </section>
@@ -499,6 +491,7 @@
         </section>
     </body>
     <script src="js/scriptPerfil.js"></script>
+    <script src="js/caracteres.js"></script>
     <script src="js/modalPublicacao.js"></script>
     <script src="js/rating.js"></script>
     <script src="js/indexMenu.js"></script>

@@ -711,16 +711,17 @@ main{
 .modal-content {
     display: flex;
     background: #fff;
-    width: 950px;
-    height: 520px;
+    width: 1000px;
+    height: 550px;
     border-radius: 8px;
+    margin: 90px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
     overflow: hidden;
     position: relative;
 }
 
 .modal-left {
-    flex: 1;
+    flex: 1.5;
     background-color: #f4f4f4;
     display: flex;
     justify-content: center;
@@ -778,7 +779,7 @@ main{
 }
 
 .btn-upload {
-    background-color: #0057ff;
+    background-color: #0496ff;
     color: white;
     padding: 10px 20px;
     border-radius: 5px;
@@ -800,14 +801,14 @@ main{
 
 .modal-right h3 {
     font-size: 22px;
-    color: #2e7d32;
-    margin-bottom: 15px;
+    color: #2b8b1e;
+    margin-bottom: 4px;
     font-weight: bold;
 }
 
 .modal-right .editor {
     border: none;
-    border-left: 4px solid #008000; 
+    border-left: 3px solid black; 
     padding: 10px;
     height: 120px;
     font-size: 14px;
@@ -816,6 +817,33 @@ main{
     font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     font-size: 16px;
     width: 97%;
+}
+
+.legenda-container {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+}
+
+#char-count {
+  text-align: right;
+  font-size: 12px;
+  color: #555;
+  margin-top: 4px;
+}
+
+.editor::-webkit-scrollbar {
+  width: 8px;
+}
+
+.editor::-webkit-scrollbar-thumb {
+  background-color: #a4d4a4;
+  border-radius: 4px;
+}
+
+.editor::-webkit-scrollbar-track {
+  background-color: #e0f2e0;
+  border-radius: 4px;
 }
 
 .editor-toolbar {
@@ -893,7 +921,7 @@ main{
   display: block;
   margin-bottom: 10px;
   font-weight: bold;
-  color: #2e7d32; 
+  color: #2b8b1e; 
   font-size: 21px;
 }
 
@@ -906,7 +934,9 @@ main{
   width: 100%;
   padding: 10px 12px 10px 38px; 
   font-size: 14px;
-  border: 1px solid #000;
+  border: none;
+  outline: none;
+  background-color: #c9e5bc;
   border-radius: 5px;
   box-sizing: border-box;
   font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -916,22 +946,38 @@ main{
 .icon-location {
   position: absolute;
   left: 12px;
-  top: 61%;
+  top: 60%;
+  color: #fff ;
   pointer-events: none;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.publicar {
+.input-hashtags {
+    width: 100%;
+    padding: 10px 12px 10px 38px; 
+    font-size: 14px;
+    border: none;
+    outline: none;
+    background-color: #c9e5bc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px;
+}
+
+.btn-postar {
     align-self: flex-end;
-    background-color: #FF5B00;
+    background-color: #f68141;
     color: white;
     padding: 10px 20px;
+    width: 100%;
+    margin-top: 50px;
     font-weight: bold;
     font-family: "Poppins", "Segoe UI", Roboto, sans-serif;
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 15px;
+    font-weight: 700;
     letter-spacing: 0.5px; 
     border: none;
     border-radius: 4px;
