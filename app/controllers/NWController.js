@@ -28,6 +28,55 @@ const NWController = {
                     return true;
                 }
             }),
+            body("cpf")
+                .custom(async (cpf) => {
+                    const cpfLimpo = cpf.replace(/\D/g, '');
+                    
+                    if (cpfLimpo.length !== 11) {
+                        throw new Error('O CPF deve conter exatamente 11 dígitos!');
+                    }
+                    
+                    function validarCPF(cpf) {
+                        if (/^(\d)\1{10}$/.test(cpf)) return false;
+                        
+                        let soma = 0;
+                        for (let i = 0; i < 9; i++) {
+                            soma += parseInt(cpf.charAt(i)) * (10 - i);
+                        }
+                        let resto = soma % 11;
+                        let digito1 = resto < 2 ? 0 : 11 - resto;
+                        
+                        if (parseInt(cpf.charAt(9)) !== digito1) return false;
+                        
+                        soma = 0;
+                        for (let i = 0; i < 10; i++) {
+                            soma += parseInt(cpf.charAt(i)) * (11 - i);
+                        }
+                        resto = soma % 11;
+                        let digito2 = resto < 2 ? 0 : 11 - resto;
+                        
+                        return parseInt(cpf.charAt(10)) === digito2;
+                    }
+                    
+                    if (!validarCPF(cpfLimpo)) {
+                        throw new Error('CPF inválido!');
+                    }
+                    
+                    try {
+                        const cpfExiste = await NWModel.verificarCPFExistente(cpfLimpo);
+                        if (cpfExiste) {
+                            throw new Error('Este CPF já está cadastrado!');
+                        }
+                        return true;
+                    } catch (error) {
+                        if (error.message === 'Este CPF já está cadastrado!') {
+                            throw error;
+                        }
+                        console.error('Erro na validação de CPF:', error.message);
+                        return true;
+                    }
+                }),
+        
         body("senha")
             .isLength({min:5}).withMessage("Insira uma senha válida!")
             .matches(/[A-Z]/).withMessage("Insira uma senha válida!")
@@ -183,6 +232,12 @@ const NWController = {
                 'banner'
             );
     
+            const cpfLimpo = req.body.cpf ? req.body.cpf.replace(/\D/g, '') : '';
+            
+            if (!cpfLimpo) {
+                throw new Error('CPF é obrigatório!');
+            }
+            
             const dadosUsuario = {
                 NomeCompleto: req.body.nome,
                 Email: req.body.email,
@@ -196,13 +251,14 @@ const NWController = {
                 (Array.isArray(req.body.area) ? req.body.area : [req.body.area]) : [];
     
             console.log('Dados do usuário preparados:', dadosUsuario);
+            console.log('CPF limpo (será salvo na tabela Clientes):', cpfLimpo); // 🔧 LOG DO CPF LIMPO
             console.log('Imagens:', {
                 perfil: imagemPerfil ? `${imagemPerfil.originalname} (${imagemPerfil.size} bytes)` : 'Não enviada',
                 banner: imagemBanner ? `${imagemBanner.originalname} (${imagemBanner.size} bytes)` : 'Não enviada'
             });
             console.log('Interesses selecionados:', interessesSelecionados);
     
-            const resultado = await NWModel.createCliente(dadosUsuario, imagemPerfil, imagemBanner, interessesSelecionados);
+            const resultado = await NWModel.createCliente(dadosUsuario, cpfLimpo, imagemPerfil, imagemBanner, interessesSelecionados);
     
             console.log('Cliente cadastrado com sucesso:', resultado);
     

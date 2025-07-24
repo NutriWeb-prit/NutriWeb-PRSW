@@ -32,7 +32,7 @@ const NWModel = {
     },
 
     // Criar um usuário Cliente
-    createCliente: async (dadosUsuario, imagemPerfil = null, imagemBanner = null, interessesSelecionados = []) => {
+    createCliente: async (dadosUsuario, cpfLimpo, imagemPerfil = null, imagemBanner = null, interessesSelecionados = []) => {
         let conn;
         
         try {
@@ -61,10 +61,10 @@ const NWModel = {
             // 2. Inserir cliente
             const [clienteResult] = await conn.query(
                 "INSERT INTO Clientes (UsuarioId, CPF) VALUES (?, ?)", 
-                [usuarioId, '00000000000'] // CPF temporário - ajuste conforme necessário
+                [usuarioId, cpfLimpo]
             );
             const clienteId = clienteResult.insertId;
-            console.log('Cliente inserido:', clienteId);
+            console.log('Cliente inserido:', clienteId, 'com CPF:', cpfLimpo);
     
             // 3. Inserir perfil com imagens (se houver)
             if (imagemPerfil || imagemBanner) {
@@ -73,7 +73,6 @@ const NWModel = {
                 };
     
                 if (imagemPerfil) {
-                    // Verificar se a imagem não é muito grande para MEDIUMBLOB (16MB)
                     if (imagemPerfil.buffer.length > 16 * 1024 * 1024) {
                         throw new Error('Foto de perfil muito grande. Máximo permitido: 16MB');
                     }
@@ -82,7 +81,6 @@ const NWModel = {
                 }
     
                 if (imagemBanner) {
-                    // Verificar se a imagem não é muito grande para MEDIUMBLOB (16MB)
                     if (imagemBanner.buffer.length > 16 * 1024 * 1024) {
                         throw new Error('Banner muito grande. Máximo permitido: 16MB');
                     }
@@ -101,7 +99,6 @@ const NWModel = {
     
             // 4. Processar interesses nutricionais
             if (interessesSelecionados && interessesSelecionados.length > 0) {
-                // Mapear nomes dos checkboxes para IDs da tabela InteressesNutricionais
                 const mapeamentoInteresses = {
                     'emagrecimento': 1,
                     'massaMuscular': 2,
@@ -134,6 +131,7 @@ const NWModel = {
             return { 
                 usuarioId, 
                 clienteId,
+                cpfSalvo: cpfLimpo, // 🔧 RETORNA O CPF LIMPO SALVO
                 temImagens: !!(imagemPerfil || imagemBanner),
                 interessesSalvos: interessesSelecionados.length
             };
@@ -362,6 +360,40 @@ const NWModel = {
             if (conn) {
                 conn.release();
                 console.log('Conexão liberada após verificação de CRN');
+            }
+        }
+    },
+
+    verificarCPFExistente: async (cpf) => {
+        let conn;
+        try {
+            cpf = cpf.replace(/[^\d]/g, '');
+            console.log('Verificando se CPF já existe:', cpf);
+            
+            conn = await Promise.race([
+                pool.getConnection(),
+                new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('Timeout ao obter conexão')), 10000)
+                )
+            ]);
+            
+            console.log('Conexão obtida para verificação de CPF');
+            
+            const [rows] = await conn.query(
+                "SELECT id FROM Clientes WHERE cpf = ? LIMIT 1",
+                [cpf]
+            );
+            
+            console.log('Resultado da verificação de CPF:', rows.length > 0 ? 'Existe' : 'Não existe');
+            return rows.length > 0;
+            
+        } catch (error) {
+            console.error("Erro ao verificar CPF:", error.message);
+            throw error;
+        } finally {
+            if (conn) {
+                conn.release();
+                console.log('Conexão liberada após verificação de CPF');
             }
         }
     },

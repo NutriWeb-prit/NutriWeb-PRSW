@@ -12,8 +12,8 @@
     <body>
         
         <%
-        let erroValidacao = {"nome" : "", "telefone":"", "email" : "", "senha" : "", "area":"", "ddd":""};
-        let msgErro = {"nome" : "", "telefone":"", "email" : "", "senha" : "", "area":"", "ddd":""};
+        let erroValidacao = {"nome" : "", "telefone":"", "cpf":"", "email" : "", "senha" : "", "area":"", "ddd":""};
+        let msgErro = {"nome" : "", "telefone":"", "cpf":"", "email" : "", "senha" : "", "area":"", "ddd":""};
         if(listaErros) {
             listaErros.errors.forEach( function(erro) {
                 if (erro.path == "nome") {
@@ -23,6 +23,10 @@
                 if (erro.path == "telefone") {
                     erroValidacao.telefone = "erro-form",
                     msgErro.telefone = erro.msg
+                }
+                if (erro.path == "cpf") {
+                    erroValidacao.cpf = "erro-form",
+                    msgErro.cpf = erro.msg
                 }
                 if (erro.path == "email") {
                     erroValidacao.email = "erro-form",
@@ -113,6 +117,19 @@
                             <% } %>
                         </section>
                         <section class="campo-form">
+                            <input type="text" 
+                                id="cpf" 
+                                name="cpf" 
+                                value="<%= valores.cpf %>" 
+                                class="<%= erroValidacao.cpf %>" 
+                                placeholder="CPF"
+                                maxlength="14"
+                                oninput="formatarCPF(this)">
+                            <% if (msgErro.cpf) { %>
+                                <span class="erro-mensagem"><%= msgErro.cpf %></span>
+                            <% } %>
+                        </section>
+                        <section class="campo-form">
                             <input type="password" 
                                 id="senha" 
                                 name="senha" 
@@ -167,7 +184,6 @@
                                 <span class="erro-mensagem"><%= msgErro.telefone %></span>
                             <% } %>
                         </section>
-                        
                         
                         <section class="campo-form" id="campo-form-checkbox">
                             <h1>Objetivo com a Nutrição</h1>
@@ -237,6 +253,7 @@
                     <form action="/cadastrarcliente" method="post" class="cadastro-form" id="card-two" enctype="multipart/form-data">
                         <input type="hidden" name="nome" value="<%= valores.nome %>">
                         <input type="hidden" name="email" value="<%= valores.email %>">
+                        <input type="hidden" name="cpf" value="<%= valores.cpf %>">
                         <input type="hidden" name="senha" value="<%= valores.senha %>">
                         <input type="hidden" name="ddd" value="<%= valores.ddd %>">
                         <input type="hidden" name="telefone" value="<%= valores.telefone %>">
@@ -361,4 +378,5 @@
     <script src="js/form-card.js"></script>
     <script src="js/uploadimage.js"></script>
     <script src="js/imagepreviewcadastro.js"></script>
+    <script src="js/formatarCPF.js"></script>
 </html>

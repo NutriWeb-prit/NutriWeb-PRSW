@@ -25,7 +25,6 @@ router.post(
 
 router.post(
     "/cadastrarcliente",
-    // Middleware para upload de múltiplos arquivos
     upload,
     NWController.validacaoCadCliente,
     async function (req, res) {
@@ -36,11 +35,13 @@ router.post(
             nome: req.body.nome,
             email: req.body.email,
             senha: req.body.senha,
+            cpf: req.body.cpf ? req.body.cpf.replace(/\D/g, '') : '', 
             ddd: req.body.ddd,
             telefone: req.body.telefone,
         };
 
         console.log('Etapa:', etapa);
+        console.log('CPF recebido:', req.body.cpf, '→ CPF limpo:', dadosCliente.cpf);
         console.log('Arquivos recebidos:', req.files);
 
         if (etapa == "1") {
@@ -72,7 +73,6 @@ router.post(
                 console.log('Imagem perfil:', imagemPerfil ? `${imagemPerfil.originalname} (${imagemPerfil.size} bytes)` : 'Não enviada');
                 console.log('Imagem banner:', imagemBanner ? `${imagemBanner.originalname} (${imagemBanner.size} bytes)` : 'Não enviada');
 
-                // Adicionar informações de imagem ao objeto de dados (se necessário para outras validações)
                 dadosCliente.imagemPerfil = imagemPerfil;
                 dadosCliente.imagemBanner = imagemBanner;
 
@@ -81,7 +81,6 @@ router.post(
             } catch (error) {
                 console.error('Erro no upload de arquivos:', error.message);
                 
-                // Determinar tipo de erro para mensagem adequada
                 let mensagemErro = 'Erro no upload das imagens. Tente novamente.';
                 
                 if (error.message.includes('arquivos de imagem')) {
@@ -200,7 +199,7 @@ router.get("/login", function (req, res) {
 });
 
 router.get("/cadastrocliente", function (req, res) {
-    res.render('pages/indexCadastroCliente', { retorno: null, etapa:"1", valores: {nome:"", email:"", senha:"", telefone:"", ddd:""}, listaErros: null});
+    res.render('pages/indexCadastroCliente', { retorno: null, etapa:"1", valores: {nome:"", email:"", cpf:"", senha:"", telefone:"", ddd:""}, listaErros: null});
 });
 
 router.get("/cadastronutri", function (req, res) {
