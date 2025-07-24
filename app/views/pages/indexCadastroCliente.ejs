@@ -10,9 +10,10 @@
     <title>Cadastro nutricionista - NutriWeb</title>
 </head>
     <body>
-        <% 
-        let erroValidacao = {"nome" : "", "telefone":"", "email" : "", "senha" : "", "area":""};
-        let msgErro = {"nome" : "", "telefone":"", "email" : "", "senha" : "", "area":""};
+        
+        <%
+        let erroValidacao = {"nome" : "", "telefone":"", "email" : "", "senha" : "", "area":"", "ddd":""};
+        let msgErro = {"nome" : "", "telefone":"", "email" : "", "senha" : "", "area":"", "ddd":""};
         if(listaErros) {
             listaErros.errors.forEach( function(erro) {
                 if (erro.path == "nome") {
@@ -31,12 +32,13 @@
                     erroValidacao.senha = "erro-form",
                     msgErro.senha = erro.msg
                 }
-                if (erro.path == "area") {
-                    erroValidacao.area = "erro-form",
-                    msgErro.area = erro.msg
+                if (erro.path == "ddd") {
+                    erroValidacao.ddd = "erro-form",
+                    msgErro.ddd = erro.msg
                 }
             });
-        }%>
+        }
+        %>
 
         <% 
         let card1 = "";
@@ -83,22 +85,44 @@
         <section class="container">
             <section class="card <%= card1 %>" id="card">
                 <section class="conteudo-form">
-                    <span class="notification"><%= msgErro.nome %></span>
-                    <span class="notification2"><%= msgErro.telefone %></span>
-                    <span class="notification3"><%= msgErro.email %></span>
-                    <span class="notification4"><%= msgErro.senha %></span>
-                    <span class="notification5"><%= msgErro.area %></span>
                     <form action="/cadastrarcliente" method="post" class="cadastro-form" id="card">
                         <input type="hidden" name="etapa" value="<%= etapa %>">
                         <h2><strong class="strong-cad">Cadastre-se,</strong><br> e comece sua jornada!</h2>
                         <section class="campo-form">
-                            <input type="text" id="nome" name="nome" value="<%= valores.nome %>" class="<%= erroValidacao.nome %>" placeholder="Nome Completo">
+                            <input type="text" 
+                                id="nome" 
+                                name="nome" 
+                                value="<%= valores.nome %>" 
+                                class="<%= erroValidacao.nome %>" 
+                                placeholder="Nome Completo"
+                                maxlength="125">
+                            <% if (msgErro.nome) { %>
+                                <span class="erro-mensagem"><%= msgErro.nome %></span>
+                            <% } %>
                         </section>
                         <section class="campo-form">
-                            <input type="text" id="email" name="email" value="<%= valores.email %>" class="<%= erroValidacao.email %>" placeholder="E-mail">
+                            <input type="text" 
+                                id="email" 
+                                name="email" 
+                                value="<%= valores.email %>" 
+                                class="<%= erroValidacao.email %>" 
+                                placeholder="E-mail"
+                                maxlength="50">
+                            <% if (msgErro.email) { %>
+                                <span class="erro-mensagem"><%= msgErro.email %></span>
+                            <% } %>
                         </section>
                         <section class="campo-form">
-                            <input type="password" id="senha" name="senha" value="<%= valores.senha %>" class="<%= erroValidacao.senha %>"placeholder="Crie uma senha">
+                            <input type="password" 
+                                id="senha" 
+                                name="senha" 
+                                value="<%= valores.senha %>" 
+                                class="<%= erroValidacao.senha %>"
+                                placeholder="Crie uma senha"
+                                maxlength="25">
+                            <% if (msgErro.senha) { %>
+                                <span class="erro-mensagem"><%= msgErro.senha %></span>
+                            <% } %>
                             <section id="password-requirements">
                                 <span>A senha deve conter:</span>
                                 <ul>
@@ -116,12 +140,32 @@
                             <section class="campo-telefone-container">
                                 <section class="campo-ddd">
                                     <label for="ddd">DDD:</label>
-                                    <input type="number" id="ddd" name="ddd" value="<%= valores.ddd %>" maxlength="2">
+                                    <input type="text" 
+                                        id="ddd" 
+                                        name="ddd" 
+                                        value="<%= valores.ddd %>"
+                                        class="<%= erroValidacao.ddd %>" 
+                                        maxlength="2"
+                                        pattern="[0-9]{2}"
+                                        oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                                 </section>
                                 <section class="campo-telefone">
-                                    <input type="number" id="telefone-numero" name="telefone" value="<%= valores.telefone %>" class="<%= erroValidacao.telefone %>" maxlength="9">
+                                    <input type="text" 
+                                        id="telefone-numero" 
+                                        name="telefone" 
+                                        value="<%= valores.telefone %>" 
+                                        class="<%= erroValidacao.telefone %>" 
+                                        maxlength="9"
+                                        pattern="[0-9]{8,9}"
+                                        oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                                 </section>
                             </section>
+                            <% if (msgErro.ddd) { %>
+                                <span class="erro-mensagem"><%= msgErro.ddd %></span>
+                            <% } %>
+                            <% if (msgErro.telefone) { %>
+                                <span class="erro-mensagem"><%= msgErro.telefone %></span>
+                            <% } %>
                         </section>
                         
                         
@@ -190,12 +234,21 @@
         <section class="container">
             <section class="card-others <%= card2 %>" id="card-two">
                 <section class="conteudo-form"> 
-                    <form action="/cadastrarcliente" method="post" class="cadastro-form" id="card-two">
+                    <form action="/cadastrarcliente" method="post" class="cadastro-form" id="card-two" enctype="multipart/form-data">
                         <input type="hidden" name="nome" value="<%= valores.nome %>">
                         <input type="hidden" name="email" value="<%= valores.email %>">
                         <input type="hidden" name="senha" value="<%= valores.senha %>">
                         <input type="hidden" name="ddd" value="<%= valores.ddd %>">
                         <input type="hidden" name="telefone" value="<%= valores.telefone %>">
+                        <% if (valores.area) { %>
+                            <% if (Array.isArray(valores.area)) { %>
+                                <% valores.area.forEach(function(interesse) { %>
+                                    <input type="hidden" name="area" value="<%= interesse %>">
+                                <% }); %>
+                            <% } else { %>
+                                <input type="hidden" name="area" value="<%= valores.area %>">
+                            <% } %>
+                        <% } %>
                         <input type="hidden" name="etapa" value="2">
                         <h2><strong class="strong-cad">Personalizando</strong><br> seu perfil</h2>
 
@@ -234,8 +287,6 @@
                         <button for="card-two" type="submit" class="btn-cadastrar continuar">
                             Continuar <i class="fas fa-arrow-right seta"></i>
                         </button>
-                    </form>
-                        
                     </form>
                 </section>          
             </section>
@@ -309,4 +360,5 @@
     <script src="js/validacaotemporeal.js"></script>
     <script src="js/form-card.js"></script>
     <script src="js/uploadimage.js"></script>
+    <script src="js/imagepreviewcadastro.js"></script>
 </html>

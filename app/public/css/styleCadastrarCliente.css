@@ -150,6 +150,18 @@ body {
     margin-top: 10px; 
 }
 
+.erro-mensagem {
+    color: #e74c3c;
+    font-size: 0.9em;
+    display: block;
+    font-weight: 500;
+}
+
+.erro-mensagem::before {
+    content: "* ";
+    font-weight: bold;
+}
+
 .erro-form {
     color: red !important;
     border: 1px solid red !important;
@@ -296,6 +308,7 @@ body {
     gap: 20px;
     width: calc(100% - 4px);
     margin-top: 10px;
+    margin-bottom: 5px
 }
 
 .campo-ddd,
@@ -691,7 +704,7 @@ input[type="password"] {
     width: calc(100% - 4px);
     padding: 12px;
     font-size: 20px;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
     border: none; 
     background-color: #d9d9d9; 
     border-radius: 5px;

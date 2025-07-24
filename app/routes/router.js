@@ -5,6 +5,8 @@ const { body, validationResult } = require("express-validator");
 const NWController = require("../controllers/NWController");
 const NWModel = require("../models/NWModel");
 
+const upload = require("../util/uploader.js");
+
 router.post(
     "/entrar", 
     
@@ -23,6 +25,8 @@ router.post(
 
 router.post(
     "/cadastrarcliente",
+    // Middleware para upload de múltiplos arquivos
+    upload,
     NWController.validacaoCadCliente,
     async function (req, res) {
         const etapa = req.body.etapa;
@@ -36,10 +40,12 @@ router.post(
             telefone: req.body.telefone,
         };
 
-        if (etapa == "1") {
+        console.log('Etapa:', etapa);
+        console.log('Arquivos recebidos:', req.files);
 
+        if (etapa == "1") {
             if (!listaErros.isEmpty()) {
-                console.log(listaErros);
+                console.log('Erros na etapa 1:', listaErros);
                 return res.render("pages/indexCadastroCliente", {
                     etapa: "1",
                     cardSucesso: false,
@@ -57,109 +63,118 @@ router.post(
         }
 
         if (etapa == "2") {
+            try {
+                console.log('Processando etapa 2 - cadastro final');
+                
+                const imagemPerfil = req.files && req.files['input-imagem'] ? req.files['input-imagem'][0] : null;
+                const imagemBanner = req.files && req.files['input-banner'] ? req.files['input-banner'][0] : null;
 
-            if (!listaErros.isEmpty()) {
-                console.log(listaErros);
+                console.log('Imagem perfil:', imagemPerfil ? `${imagemPerfil.originalname} (${imagemPerfil.size} bytes)` : 'Não enviada');
+                console.log('Imagem banner:', imagemBanner ? `${imagemBanner.originalname} (${imagemBanner.size} bytes)` : 'Não enviada');
+
+                // Adicionar informações de imagem ao objeto de dados (se necessário para outras validações)
+                dadosCliente.imagemPerfil = imagemPerfil;
+                dadosCliente.imagemBanner = imagemBanner;
+
+                return await NWController.cadastrarCliente(req, res);
+
+            } catch (error) {
+                console.error('Erro no upload de arquivos:', error.message);
+                
+                // Determinar tipo de erro para mensagem adequada
+                let mensagemErro = 'Erro no upload das imagens. Tente novamente.';
+                
+                if (error.message.includes('arquivos de imagem')) {
+                    mensagemErro = error.message;
+                } else if (error.message.includes('muito grande')) {
+                    mensagemErro = error.message;
+                } else if (error.message.includes('não suportado')) {
+                    mensagemErro = error.message;
+                } else if (error.code === 'LIMIT_FILE_SIZE') {
+                    mensagemErro = 'Arquivo muito grande. Tamanho máximo permitido: 5MB';
+                }
+                
                 return res.render("pages/indexCadastroCliente", {
                     etapa: "2",
                     cardSucesso: true,
                     valores: dadosCliente,
-                    listaErros: listaErros,
+                    listaErros: { 
+                        errors: [{ msg: mensagemErro }] 
+                    },
                 });
             }
-
-            return await NWController.cadastrarCliente(req, res);
         }
     }
 );
 
-
 router.post(
     "/cadastrarnutricionista",
+    upload, // Middleware de upload
     NWController.validacaoCadNutri1,
     async function (req, res) {
-        const etapa = req.body.etapa;
-        const listaErros = validationResult(req);
+        try {
+            const etapa = req.body.etapa;
+            const listaErros = validationResult(req);
 
-        const dadosNutri = {
-            nome: req.body.nome,
-            telefone: req.body.ddd + req.body.telefone,
-            email: req.body.email,
-            senha: req.body.senha,
-            area: req.body.area, // pode ser um array
-            crn: req.body.crn,
-            razaoSocial: req.body.razaoSocial,
-            // Se quiser manter foto/banner temporários, adicione aqui.
-        };
+            const dadosNutri = {
+                nome: req.body.nome || '',
+                telefone: req.body.telefone || '',
+                ddd: req.body.ddd || '',
+                email: req.body.email || '',
+                senha: req.body.senha || '',
+                area: req.body.area || [],
+                crn: req.body.crn || '',
+                sobreMim: req.body.sobreMim || '',
+                faculdade: req.body.faculdade || '',
+                faculdadeOrg: req.body.faculdadeOrg || '',
+                curso: req.body.curso || '',
+                cursoOrg: req.body.cursoOrg || ''
+            };
 
-        if (etapa === "1") {
-            if (!listaErros.isEmpty()) {
-                console.log(listaErros);
+            console.log('Etapa:', etapa, 'Dados:', dadosNutri);
+
+            if (etapa === "1") {
+                if (!listaErros.isEmpty()) {
+                    return res.render("pages/indexCadastrarNutri", {
+                        etapa: "1", card1: "", card2: "hidden", card3: "hidden", card4: "hidden",
+                        valores: dadosNutri, listaErros: listaErros
+                    });
+                }
                 return res.render("pages/indexCadastrarNutri", {
-                    etapa: "1",
-                    card1Sucesso: false,
-                    valores: dadosNutri,
-                    listaErros: listaErros,
+                    etapa: "2", card1: "hidden", card2: "", card3: "hidden", card4: "hidden",
+                    valores: dadosNutri, listaErros: null
                 });
             }
 
-            // Passa para a etapa 2
-            return res.render("pages/indexCadastrarNutri", {
-                etapa: "2",
-                card1Sucesso: true,
-                valores: dadosNutri,
-                listaErros: null
-            });
-        }
-
-        if (etapa === "2") {
-            // Salva imagem/banners no form? Apenas segue para etapa 3
-            return res.render("pages/indexCadastrarNutri", {
-                etapa: "3",
-                card1Sucesso: true,
-                valores: dadosNutri,
-                listaErros: listaErros,
-            });
-        }
-
-        if (etapa === "3") {
-            // Última tela antes de envio
-            return res.render("pages/indexCadastrarNutri", {
-                etapa: "4",
-                card1Sucesso: true,
-                valores: dadosNutri,
-                listaErros: listaErros,
-            });
-        }
-
-        if (etapa === "4") {
-            try {
-                const dadosUsuarios = {
-                    NomeCompleto: req.body.nome,
-                    Email: req.body.email,
-                    Senha: req.body.senha,
-                    Telefone: req.body.telefone,
-                    UsuarioTipo: 'N'
-                };
-
-                const dadosNutricionistas = {
-                    Crn: req.body.crn,
-                    RazaoSocial: req.body.razaoSocial
-                };
-
-                const especializacoes = Array.isArray(req.body.area)
-                    ? req.body.area
-                    : [req.body.area];
-
-                await NWModel.createNutricionista(dadosUsuarios, dadosNutricionistas, especializacoes)
-
-                return res.redirect("/");
-
-            } catch (err) {
-                console.log(listaErros);
-                console.error("Erro ao cadastrar nutricionista:", err.message);
-                return res.status(500).send("Erro ao cadastrar nutricionista");
+            if (etapa === "2") {
+                return res.render("pages/indexCadastrarNutri", {
+                    etapa: "3", card1: "hidden", card2: "hidden", card3: "", card4: "hidden",
+                    valores: dadosNutri, listaErros: null
+                });
             }
+
+            if (etapa === "3") {
+                return res.render("pages/indexCadastrarNutri", {
+                    etapa: "4", card1: "hidden", card2: "hidden", card3: "hidden", card4: "",
+                    valores: dadosNutri, listaErros: null
+                });
+            }
+
+            if (etapa === "4") {
+                const imagemPerfil = req.files && req.files['input-imagem'] ? req.files['input-imagem'][0] : null;
+                const imagemBanner = req.files && req.files['input-banner'] ? req.files['input-banner'][0] : null;
+                const certificadoFaculdade = req.files && req.files['certificadoFaculdade'] ? req.files['certificadoFaculdade'][0] : null;
+                const certificadoCurso = req.files && req.files['certificadoCurso'] ? req.files['certificadoCurso'][0] : null;
+
+                return await NWController.cadastrarNutricionista(req, res);
+            }
+
+        } catch (error) {
+            console.error('Erro no router:', error.message);
+            return res.render("pages/indexCadastrarNutri", {
+                etapa: req.body.etapa || "1", card1: "", card2: "hidden", card3: "hidden", card4: "hidden",
+                valores: req.body || {}, listaErros: { errors: [{ msg: 'Erro interno. Tente novamente.' }] }
+            });
         }
     }
 );

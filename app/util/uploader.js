@@ -1,75 +1,86 @@
-const multer = require("multer");
-const path = require("path");
+const multer = require('multer');
+const path = require('path');
 
-const fileFilter = (req, file, callBack) => {
-    const allowedExtensions = /jpeg|jpg|png|gif/;
-    const extname = allowedExtensions.test(
-        path.extname(file.originalname).toLowerCase()
-    );
-    const mimetype = allowedExtensions.test(file.mimetype);
+const storage = multer.memoryStorage();
+
+const fileFilter = (req, file, cb) => {
+    console.log('Validando arquivo:', file.originalname, 'Campo:', file.fieldname);
     
-    if (extname && mimetype) {
-        return callBack(null, true);
-    } else {
-        callBack(new Error("Apenas arquivos de imagem são permitidos!"));
-    }
-};
+    // Para imagens (perfil e banner)
+    if (file.fieldname === 'input-imagem' || file.fieldname === 'input-banner') {
+        const allowedTypes = /jpeg|jpg|png|gif|webp/;
+        const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+        const mimetype = allowedTypes.test(file.mimetype);
 
-module.exports = (caminho = null, tamanhoArq = 3) => {
-  if (caminho == null) {
-    // Versão com armazenamento em SGBD
-    const storage = multer.memoryStorage();
-    upload = multer({
-      storage: storage,
-      limits: { fileSize: tamanhoArq * 1024 * 1024 },
-      fileFilter: fileFilter,
-    });
-    } else {
-    // Versão com armazenamento em diretório
-    // Definindo o diretório de armazenamento das imagens
-    var storagePasta = multer.diskStorage({
-      destination: (req, file, callBack) => {
-        callBack(null, caminho); // diretório de destino
-      },
-      filename: (req, file, callBack) => {
-        //renomeando o arquivo para evitar duplicidade de nomes
-        callBack(
-          null,
-          file.fieldname + "-" + Date.now() + path.extname(file.originalname)
-        );
-      },
-    });
-    upload = multer({
-      storage: storagePasta,
-      limits: { fileSize: tamanhoArq * 1024 * 1024 },
-      fileFilter: fileFilter,
-    });
-  }
-  return (campoArquivo)=> {
-    return (req, res, next) => {
-        req.session.erroMulter = null;
-        upload.single(campoArquivo)(req, res, function (err) {
-        if (err instanceof multer.MulterError) {
-          req.session.erroMulter = {
-            value: '',
-            msg: err.message,
-            path: campoArquivo
-          }
-        } else if (err) {
-          req.session.erroMulter = {
-            value: '',
-            msg: err.message,
-            path: campoArquivo
-          }
-
+        if (mimetype && extname) {
+            return cb(null, true);
+        } else {
+            return cb(new Error('Apenas imagens são permitidas (JPEG, PNG, GIF, WEBP)'));
         }
-        next();
-      });
-    };
-  }
+    }
+    
+    // Para certificados
+    if (file.fieldname === 'certificadoFaculdade' || file.fieldname === 'certificadoCurso') {
+        const allowedTypes = /pdf|jpeg|jpg|png/;
+        const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+        const mimetype = /application\/pdf|image\/(jpeg|jpg|png)/.test(file.mimetype);
 
+        if (mimetype && extname) {
+            return cb(null, true);
+        } else {
+            return cb(new Error('Certificados devem ser PDF ou imagem (JPEG, PNG)'));
+        }
+    }
+    
+    cb(new Error('Campo de arquivo não reconhecido'));
 };
 
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 10 * 1024 * 1024, // 10MB para certificados PDF
+        files: 4, // Máximo 4 arquivos
+        fields: 30
+    },
+    fileFilter: fileFilter
+});
 
+const uploadWithErrorHandling = (req, res, next) => {
+    const uploadMiddleware = upload.fields([
+        { name: 'input-imagem', maxCount: 1 },
+        { name: 'input-banner', maxCount: 1 },
+        { name: 'certificadoFaculdade', maxCount: 1 },
+        { name: 'certificadoCurso', maxCount: 1 }
+    ]);
 
- 
+    uploadMiddleware(req, res, (err) => {
+        if (err) {
+            console.error('Erro no upload:', err.message);
+            
+            let mensagemErro = 'Erro no upload dos arquivos';
+            
+            if (err.code === 'LIMIT_FILE_SIZE') {
+                mensagemErro = 'Arquivo muito grande. Máximo: 10MB';
+            } else if (err.message.includes('Apenas imagens')) {
+                mensagemErro = err.message;
+            } else if (err.message.includes('Certificados devem')) {
+                mensagemErro = err.message;
+            }
+            
+            return res.render("pages/indexCadastrarNutri", {
+                etapa: req.body?.etapa || "1",
+                card1: req.body?.etapa === "1" ? "" : "hidden",
+                card2: req.body?.etapa === "2" ? "" : "hidden", 
+                card3: req.body?.etapa === "3" ? "" : "hidden",
+                card4: req.body?.etapa === "4" ? "" : "hidden",
+                valores: req.body || {},
+                listaErros: { errors: [{ msg: mensagemErro }] }
+            });
+        }
+        
+        console.log('Upload processado');
+        next();
+    });
+};
+
+module.exports = uploadWithErrorHandling;

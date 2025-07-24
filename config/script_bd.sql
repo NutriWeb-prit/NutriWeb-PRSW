@@ -56,11 +56,13 @@ CREATE TABLE `NutricionistaContatoSociais` (
 
 CREATE TABLE `Perfis` (
 	`id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-	`FotoPerfil` BLOB,
+	`FotoPerfil` MEDIUMBLOB,
+	`FotoBanner` MEDIUMBLOB,
 	`UsuarioId` INTEGER UNSIGNED NOT NULL,
 	PRIMARY KEY(`id`),
 	FOREIGN KEY (`UsuarioId`) REFERENCES `Usuarios`(`id`)
 );
+
 
 CREATE TABLE `Publicacoes` (
 	`id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
