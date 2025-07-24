@@ -33,29 +33,68 @@ const NWModel = {
 
     // Criar um usuário Cliente
     create: async (dadosForm) => {
+        let conn;
+        
         try {
-            const [linhas] = await pool.query(
+            console.log('Iniciando criação de usuário...');
+            
+            // Timeout para obter conexão (10 segundos)
+            conn = await Promise.race([
+                pool.getConnection(),
+                new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('Timeout ao obter conexão')), 10000)
+                )
+            ]);
+            
+            console.log('Conexão obtida do pool');
+            
+            const [linhas] = await conn.query(
                 "INSERT INTO Usuarios SET ?",
                 [dadosForm]
             );
+            
             console.log("Usuário inserido com sucesso:", linhas);
             return linhas;
+            
         } catch (error) {
             console.error("Erro ao inserir no banco:", error.message, error);
             throw error;
+            
+        } finally {
+            if (conn) {
+                try {
+                    conn.release();
+                    console.log('Conexão liberada para o pool');
+                } catch (releaseErr) {
+                    console.error('Erro ao liberar conexão:', releaseErr.message);
+                }
+            }
         }
     },
 
     // Criar um usuário Nutricionista
     createNutricionista: async (dadosUsuarios, dadosNutricionistas, especializacoes = []) => {
-        const conn = await pool.getConnection();
+        let conn;
+        
         try {
+            // Timeout para obter conexão (10 segundos)
+            conn = await Promise.race([
+                pool.getConnection(),
+                new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('Timeout ao obter conexão')), 10000)
+                )
+            ]);
+            
+            console.log('Conexão obtida do pool');
+            
             await conn.beginTransaction();
+            console.log('Transação iniciada');
     
             const [usuarioResult] = await conn.query(
                 "INSERT INTO Usuarios SET ?", [dadosUsuarios]
             );
             const usuarioId = usuarioResult.insertId;
+            console.log('Usuário inserido:', usuarioId);
     
             const [nutricionistaResult] = await conn.query(
                 "INSERT INTO Nutricionistas SET ?", [{
@@ -65,6 +104,7 @@ const NWModel = {
                 }]
             );
             const nutricionistaId = nutricionistaResult.insertId;
+            console.log('Nutricionista inserido:', nutricionistaId);
     
             if (Array.isArray(especializacoes) && especializacoes.length > 0) {
                 const nomes = especializacoes.map(() => '?').join(',');
@@ -80,17 +120,37 @@ const NWModel = {
                         [insertValues]
                     );
                 }
+                console.log('Especializações inseridas');
             }
     
             await conn.commit();
+            console.log('Transação commitada com sucesso');
+            
             return { usuarioId, nutricionistaId };
     
         } catch (err) {
-            await conn.rollback();
             console.error("Erro ao criar nutricionista:", err.message);
+            
+            if (conn) {
+                try {
+                    await conn.rollback();
+                    console.log('Rollback executado');
+                } catch (rollbackErr) {
+                    console.error('Erro no rollback:', rollbackErr.message);
+                }
+            }
+            
             throw err;
+            
         } finally {
-            conn.release();
+            if (conn) {
+                try {
+                    conn.release();
+                    console.log('Conexão liberada para o pool');
+                } catch (releaseErr) {
+                    console.error('Erro ao liberar conexão:', releaseErr.message);
+                }
+            }
         }
     },
     
