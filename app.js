@@ -8,8 +8,8 @@ app.use(express.static("app/public"));
 app.set("view engine", "ejs");
 app.set("views", "./app/views");
 
-app.use(express.json()); 
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '200mb' }));
+app.use(express.urlencoded({ limit: '200mb', extended: true }));
 
 var rotas = require("./app/routes/router");
 app.use("/", rotas);

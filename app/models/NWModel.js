@@ -37,6 +37,7 @@ const NWModel = {
         
         try {
             console.log('Iniciando criação de cliente...');
+            console.log('Interesses recebidos no model:', interessesSelecionados);
             
             conn = await Promise.race([
                 pool.getConnection(),
@@ -56,7 +57,7 @@ const NWModel = {
                 [dadosUsuario]
             );
             const usuarioId = usuarioResult.insertId;
-            console.log('Usuário inserido:', usuarioId);
+            console.log('Usuário inserido com ID:', usuarioId);
     
             // 2. Inserir cliente
             const [clienteResult] = await conn.query(
@@ -64,20 +65,18 @@ const NWModel = {
                 [usuarioId, cpfLimpo]
             );
             const clienteId = clienteResult.insertId;
-            console.log('Cliente inserido:', clienteId, 'com CPF:', cpfLimpo);
+            console.log('Cliente inserido com ID:', clienteId, 'e CPF:', cpfLimpo);
     
-            // 3. Inserir perfil com imagens (se houver)
+            // 3. Inserir perfil com imagens (mantido igual)
             if (imagemPerfil || imagemBanner) {
-                const dadosPerfil = {
-                    UsuarioId: usuarioId
-                };
+                const dadosPerfil = { UsuarioId: usuarioId };
     
                 if (imagemPerfil) {
                     if (imagemPerfil.buffer.length > 16 * 1024 * 1024) {
                         throw new Error('Foto de perfil muito grande. Máximo permitido: 16MB');
                     }
                     dadosPerfil.FotoPerfil = imagemPerfil.buffer;
-                    console.log('Foto de perfil adicionada:', imagemPerfil.originalname, `(${imagemPerfil.buffer.length} bytes)`);
+                    console.log('Foto de perfil adicionada:', imagemPerfil.originalname);
                 }
     
                 if (imagemBanner) {
@@ -85,20 +84,23 @@ const NWModel = {
                         throw new Error('Banner muito grande. Máximo permitido: 16MB');
                     }
                     dadosPerfil.FotoBanner = imagemBanner.buffer;
-                    console.log('Banner adicionado:', imagemBanner.originalname, `(${imagemBanner.buffer.length} bytes)`);
+                    console.log('Banner adicionado:', imagemBanner.originalname);
                 }
     
-                const [perfilResult] = await conn.query(
-                    "INSERT INTO Perfis SET ?", 
-                    [dadosPerfil]
-                );
+                const [perfilResult] = await conn.query("INSERT INTO Perfis SET ?", [dadosPerfil]);
                 console.log('Perfil inserido com ID:', perfilResult.insertId);
-            } else {
-                console.log('Nenhuma imagem fornecida - perfil criado sem fotos');
             }
     
-            // 4. Processar interesses nutricionais
-            if (interessesSelecionados && interessesSelecionados.length > 0) {
+            // 4. 🔧 PROCESSAR INTERESSES NUTRICIONAIS COM DEBUG DETALHADO
+            console.log('Iniciando processamento dos interesses...');
+            console.log('interessesSelecionados:', interessesSelecionados);
+            console.log('Length:', interessesSelecionados ? interessesSelecionados.length : 'undefined');
+            console.log('Tipo:', typeof interessesSelecionados);
+            
+            if (interessesSelecionados && Array.isArray(interessesSelecionados) && interessesSelecionados.length > 0) {
+                console.log('Processando', interessesSelecionados.length, 'interesses...');
+                
+                // Mapear nomes dos checkboxes para IDs da tabela InteressesNutricionais
                 const mapeamentoInteresses = {
                     'emagrecimento': 1,
                     'massaMuscular': 2,
@@ -110,19 +112,43 @@ const NWModel = {
                     'saudeIdoso': 8,
                     'alimentacaoSaudavel': 9
                 };
+                
+                console.log('Mapeamento disponível:', mapeamentoInteresses);
     
+                let interessesInseridos = 0;
+                
                 // Inserir na tabela ClientesInteresses
                 for (const interesse of interessesSelecionados) {
+                    console.log(`Processando interesse: "${interesse}"`);
+                    
                     const interesseId = mapeamentoInteresses[interesse];
+                    console.log(`ID mapeado: ${interesseId}`);
+                    
                     if (interesseId) {
-                        await conn.query(
-                            "INSERT INTO ClientesInteresses (ClienteId, InteresseId) VALUES (?, ?)",
-                            [clienteId, interesseId]
-                        );
+                        try {
+                            await conn.query(
+                                "INSERT INTO ClientesInteresses (ClienteId, InteresseId) VALUES (?, ?)",
+                                [clienteId, interesseId]
+                            );
+                            interessesInseridos++;
+                            console.log(`Interesse inserido: ${interesse} (ID: ${interesseId})`);
+                        } catch (insertError) {
+                            console.error(`Erro ao inserir interesse ${interesse}:`, insertError.message);
+                        }
+                    } else {
+                        console.log(`Interesse não mapeado: "${interesse}"`);
                     }
                 }
                 
-                console.log('Interesses nutricionais salvos:', interessesSelecionados);
+                console.log(`RESULTADO: ${interessesInseridos} interesses inseridos de ${interessesSelecionados.length} recebidos`);
+                
+            } else {
+                console.log('Nenhum interesse para processar:', {
+                    existe: !!interessesSelecionados,
+                    ehArray: Array.isArray(interessesSelecionados),
+                    length: interessesSelecionados ? interessesSelecionados.length : 'N/A',
+                    valor: interessesSelecionados
+                });
             }
     
             await conn.commit();
@@ -131,9 +157,9 @@ const NWModel = {
             return { 
                 usuarioId, 
                 clienteId,
-                cpfSalvo: cpfLimpo, // 🔧 RETORNA O CPF LIMPO SALVO
+                cpfSalvo: cpfLimpo,
                 temImagens: !!(imagemPerfil || imagemBanner),
-                interessesSalvos: interessesSelecionados.length
+                interessesSalvos: interessesSelecionados ? interessesSelecionados.length : 0
             };
     
         } catch (err) {
@@ -154,7 +180,7 @@ const NWModel = {
             if (conn) {
                 try {
                     conn.release();
-                    console.log('Conexão liberada para o pool');
+                    console.log('🔌 Conexão liberada para o pool');
                 } catch (releaseErr) {
                     console.error('Erro ao liberar conexão:', releaseErr.message);
                 }

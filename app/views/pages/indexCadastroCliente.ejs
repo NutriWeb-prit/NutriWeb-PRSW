@@ -191,47 +191,83 @@
                             
                             <section class="checkbox-group-container">
                                 <section class="checkbox-group">
-                                    <input type="checkbox" name="area" id="emagrecimento">
+                                    <input type="checkbox" 
+                                           name="area" 
+                                           id="emagrecimento" 
+                                           value="emagrecimento"
+                                           <%= valores.area && (Array.isArray(valores.area) ? valores.area.includes('emagrecimento') : valores.area === 'emagrecimento') ? 'checked' : '' %>>
                                     <label for="emagrecimento">Emagrecimento</label>
                                 </section>
                                 
                                 <section class="checkbox-group">
-                                    <input type="checkbox" name="area" id="massaMuscular">
+                                    <input type="checkbox" 
+                                           name="area" 
+                                           id="massaMuscular" 
+                                           value="massaMuscular"
+                                           <%= valores.area && (Array.isArray(valores.area) ? valores.area.includes('massaMuscular') : valores.area === 'massaMuscular') ? 'checked' : '' %>>
                                     <label for="massaMuscular">Ganho de Massa Muscular</label>
                                 </section>
                                 
                                 <section class="checkbox-group">
-                                    <input type="checkbox" name="area" id="Controle">
+                                    <input type="checkbox" 
+                                           name="area" 
+                                           id="Controle" 
+                                           value="Controle"
+                                           <%= valores.area && (Array.isArray(valores.area) ? valores.area.includes('Controle') : valores.area === 'Controle') ? 'checked' : '' %>>
                                     <label for="Controle">Controle de Doenças</label>
                                 </section>
                                 
                                 <section class="checkbox-group">
-                                    <input type="checkbox" name="area" id="estetica">
+                                    <input type="checkbox" 
+                                           name="area" 
+                                           id="estetica" 
+                                           value="estetica"
+                                           <%= valores.area && (Array.isArray(valores.area) ? valores.area.includes('estetica') : valores.area === 'estetica') ? 'checked' : '' %>>
                                     <label for="estetica">Estética Corporal</label>
                                 </section>
                                 
                                 <section class="checkbox-group">
-                                    <input type="checkbox" name="area" id="doençasCronicas">
+                                    <input type="checkbox" 
+                                           name="area" 
+                                           id="doençasCronicas" 
+                                           value="doençasCronicas"
+                                           <%= valores.area && (Array.isArray(valores.area) ? valores.area.includes('doençasCronicas') : valores.area === 'doençasCronicas') ? 'checked' : '' %>>
                                     <label for="doençasCronicas">Doenças Crônicas</label>
                                 </section>
                                 
                                 <section class="checkbox-group">
-                                    <input type="checkbox" name="area" id="dietaVegetariana">
+                                    <input type="checkbox" 
+                                           name="area" 
+                                           id="dietaVegetariana" 
+                                           value="dietaVegetariana"
+                                           <%= valores.area && (Array.isArray(valores.area) ? valores.area.includes('dietaVegetariana') : valores.area === 'dietaVegetariana') ? 'checked' : '' %>>
                                     <label for="dietaVegetariana">Dieta Vegetariana</label>
                                 </section>
                                 
                                 <section class="checkbox-group">
-                                    <input type="checkbox" name="area" id="gestantesCrianças">
+                                    <input type="checkbox" 
+                                           name="area" 
+                                           id="gestantesCrianças" 
+                                           value="gestantesCrianças"
+                                           <%= valores.area && (Array.isArray(valores.area) ? valores.area.includes('gestantesCrianças') : valores.area === 'gestantesCrianças') ? 'checked' : '' %>>
                                     <label for="gestantesCrianças">Gestantes/Crianças</label>
                                 </section>
                                 
                                 <section class="checkbox-group">
-                                    <input type="checkbox" name="area" id="saudeIdoso">
+                                    <input type="checkbox" 
+                                           name="area" 
+                                           id="saudeIdoso" 
+                                           value="saudeIdoso"
+                                           <%= valores.area && (Array.isArray(valores.area) ? valores.area.includes('saudeIdoso') : valores.area === 'saudeIdoso') ? 'checked' : '' %>>
                                     <label for="saudeIdoso">Saúde Idoso</label>
                                 </section>
                                 
                                 <section class="checkbox-group">
-                                    <input type="checkbox" name="area" id="alimentacaoSaudavel">
+                                    <input type="checkbox" 
+                                           name="area" 
+                                           id="alimentacaoSaudavel" 
+                                           value="alimentacaoSaudavel"
+                                           <%= valores.area && (Array.isArray(valores.area) ? valores.area.includes('alimentacaoSaudavel') : valores.area === 'alimentacaoSaudavel') ? 'checked' : '' %>>
                                     <label for="alimentacaoSaudavel">Alimentação Saudável</label>
                                 </section>
                             </section>
@@ -376,7 +412,6 @@
     <script src="js/indexMenu.js"></script>
     <script src="js/validacaotemporeal.js"></script>
     <script src="js/form-card.js"></script>
-    <script src="js/uploadimage.js"></script>
     <script src="js/imagepreviewcadastro.js"></script>
     <script src="js/formatarCPF.js"></script>
 </html>
