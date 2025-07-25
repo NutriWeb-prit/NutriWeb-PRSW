@@ -130,16 +130,17 @@ body {
 }
 
 .arrow-icon.md-24 {
-    font-size: 36px;
+    font-size: 30px;
     cursor: pointer;
+    font-weight: bolder;
 }
 
 .header-text {
-    font-size: 25px;
+    font-size: 24px;
     color: #333;
 }
 
-.tipo-nutrição{
+.tipo-nutricao{
     text-align: center;
     width: 99.8%;
     border-radius: 5px;
@@ -147,26 +148,44 @@ body {
     margin-bottom: 40px;
 }
 
-.tipo-nutrição h1{
-    color: black;
-    font-size: 28px;
+.tipo-nutricao h1{
+    color: #0F4D1E;
+    font-size: 40px;
     margin: 35px 0 0 0;
 }
 
-.tipo-nutrição h2{
-    color: rgb(67, 64, 64);
-    font-size: 18px;
+.tipo-nutricao h2{
+    color: #4F4F4F;
+    font-size: 19px;
     margin: 10px auto 0 auto;
     max-width: 80%;
+}
+
+.profissionais{
+    margin-bottom: 160px;
+}
+
+.tipo-nutricao .h1-profissionais {
+    font-size: 48px;
+}
+
+.tipo-nutricao .h2-profissionais {
+    font-size: 20px;
 }
 
 .cards-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    width: 90%;
+    margin: 20px auto;
+    max-width: 1250px;
+    background: #e3f0dd;
+    padding: 30px;
+    border-radius: 10px;
     align-items: center;
     margin-bottom: 100px;
-    gap: 20px;
+    gap: 40px;
 }
 
 .cards-container a{
