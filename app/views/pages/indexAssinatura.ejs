@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/styleAssinatura.css">
+    <link rel="icon" href="imagens/logo-icon.png" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Assinatura - NutriWeb</title>
+</head>
+<body>
+    <header class="header">
+            
+        <section class="left-section">
+            <a href="/"><img src="imagens/logo.png" alt="Logo" class="logo"></a>
+    
+            <a href="/ranking" class="ranking"><button class="ranking-button">Ranking</button></a>
+
+            <a href="/profissionais"><button class="profissionais-button">Profissionais</button></a>
+        </section>
+
+        <section class="center-section">
+            <section class="input-premium">
+                <span class="material-icons search-icon md-24">search</span>
+                <input type="text">
+            </section>
+        </section>
+        
+        <section class="right-section">
+            <a href="/perfilcliente"><button class="meuperfil-button">Meu Perfil</button></a>
+            <a href="/premium"><button class="premium-button">Premium</button></a>
+            <a href="/login"><button class="entrar-button">Entrar</button></a>
+        </section>
+        
+    </header>
+    
+    <section class="header-content">
+        <a href="/premium" class="back-button">
+            <span class="material-icons arrow-icon md-24">arrow_back_ios</span>
+            <span>Voltar</span>
+        </a>
+    </section>
+
+    <main class="main-content">
+        <section class="left-container">
+            <h1>Complete sua Assinatura</h1>
+            <h2>Todos os campos são obrigatórios</h2>
+            <form action="#" method="post" class="form-assinatura">
+                <section class="campo-form">
+                    <label for="nome">Nome Completo:</label>
+                    <input type="text" 
+                        name="nome" 
+                        id="nome" 
+                        maxlength="125"
+                        placeholder="Digite seu nome completo"
+                        oninput="this.value = this.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, '')">
+                </section>
+                
+                <section class="campo-form-conjunto">
+                    <section class="campo-form">
+                        <label for="email">Email:</label>
+                        <input type="email" 
+                            name="email" 
+                            id="email" 
+                            maxlength="50"
+                            placeholder="seu@email.com">
+                    </section>
+                    <section class="campo-form">
+                        <label for="telefone">Celular:</label>
+                        <input type="text" 
+                            name="telefone" 
+                            id="telefone" 
+                            maxlength="15"
+                            placeholder="(11) 99999-9999"
+                            oninput="formatarTelefone(this)">
+                    </section>
+                </section>
+                
+                <section class="campo-form-conjunto">
+                    <section class="campo-form">
+                        <label for="cpf">Digite seu CPF:</label>
+                        <input type="text" 
+                            name="cpf" 
+                            id="cpf" 
+                            maxlength="14"
+                            placeholder="000.000.000-00"
+                            oninput="formatarCPF(this)">
+                    </section>
+                    <section class="campo-form">
+                        <label for="tipoPlano">Plano de Assinatura:</label>
+                        <section class="custom-select">
+                            <select name="tipoPlano" id="tipoPlano" onchange="atualizarResumo()">
+                                <option value="mensal">Mensal</option>
+                                <option value="anual">Anual</option>
+                                <option value="semestral">Semestral</option>
+                            </select>
+                        </section>
+                    </section>
+                </section>
+
+                <section class="campo-payment">
+                    <h1>Métodos de pagamento</h1>
+                    <section class="payment-methods">
+                        <button type="button" class="payment-btn active" data-method="cartao" onclick="selecionarPagamento('cartao')">
+                            <section class="payment-icon"></svg></section>
+                            <span>Cartão</span>
+                        </button>
+                        <button type="button" class="payment-btn" data-method="pix" onclick="selecionarPagamento('pix')">
+                            <section class="payment-icon"></section>
+                            <span>Pix</span>
+                        </button>
+                        <button type="button" class="payment-btn" data-method="mercadopago" onclick="selecionarPagamento('mercadopago')">
+                            <section class="payment-icon"></section>
+                            <span>Mercado Pago</span>
+                        </button>
+                    </section>
+                </section>
+
+                <section class="campo-form cartao-form" id="cartaoForm">
+                    <section class="cartao-campos">
+                        <section class="campo-form">
+                            <label for="numeroCartao">Número do Cartão:</label>
+                            <input type="text" 
+                                name="numeroCartao" 
+                                id="numeroCartao" 
+                                maxlength="19"
+                                placeholder="0000 0000 0000 0000"
+                                oninput="formatarCartao(this)">
+                        </section>
+                        <section class="campo-form-conjunto">
+                            <section class="campo-form">
+                                <label for="validadeCartao">Validade:</label>
+                                <input type="text" 
+                                    name="validadeCartao" 
+                                    id="validadeCartao" 
+                                    maxlength="5"
+                                    placeholder="MM/AA"
+                                    oninput="formatarValidade(this)">
+                            </section>
+                            <section class="campo-form">
+                                <label for="cvvCartao">CVV:</label>
+                                <input type="text" 
+                                    name="cvvCartao" 
+                                    id="cvvCartao" 
+                                    maxlength="3"
+                                    placeholder="123"
+                                    oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                            </section>
+                        </section>
+                        <section class="campo-form">
+                            <label for="nomeCartao">Nome no Cartão:</label>
+                            <input type="text" 
+                                name="nomeCartao" 
+                                id="nomeCartao" 
+                                maxlength="50"
+                                placeholder="Nome como impresso no cartão"
+                                oninput="this.value = this.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, '')">
+                        </section>
+                    </section>
+                </section>
+            </form>
+        </section>
+        
+        <section class="right-container">
+            <h1>Resumo</h1>
+            <section class="resumo-content">
+                <section class="resumo-item">
+                    <span class="resumo-label" id="labelAssinatura">Assinatura (Mensal)</span>
+                    <span class="resumo-valor" id="valorAssinatura">R$ 29,90</span>
+                </section>
+                <section class="resumo-item cupom-item">
+                    <span class="resumo-label">
+                        Cupom 
+                        <span class="cupom-code">BEMVINDO</span>
+                        <span class="desconto-badge">-14%</span>
+                    </span>
+                    <span class="resumo-valor desconto" id="valorDesconto">R$ -4,19</span>
+                </section>
+                <hr class="resumo-divider">
+                <section class="resumo-total">
+                    <span class="total-label">TOTAL</span>
+                    <span class="total-valor" id="valorTotal">R$ 25,71</span>
+                </section>
+                
+                <section class="plano-destaque">
+                    <section class="plano-header">
+                        <span class="plano-tipo">Plano</span>
+                        <h3 class="plano-nome">Essencial</h3>
+                    </section>
+                    <ul class="plano-beneficios">
+                        <li>✓ Tudo do Plano Básico</li>
+                        <li>✓ Publicações ilimitadas</li>
+                        <li>✓ Participação em grupos exclusivos</li>
+                        <li>✓ Maior visibilidade no diretório (destaque no topo dos resultados)</li>
+                        <li>✓ Selo de verificação</li>
+                        <li>✓ Oportunidade de ser destaque nas redes sociais do NutriWeb</li>
+                    </ul>
+                </section>
+                
+                <button type="submit" class="confirmar-btn">
+                    CONFIRMAR PAGAMENTO
+                </button>
+            </section>
+        </section>
+    </main>
+
+    <section class="mobile">
+
+        <section class="menu">
+            <section class="left-section">
+                <a href="/"><img src="imagens/logo.png" alt="Logo" class="logo"></a>
+            </section>
+
+            <section class="right-section">
+                <span class="material-icons search-icon md-24 menu-icon">menu</span>
+            </section>
+        </section>
+
+        <section class="mobile-menu hidden">
+            <ul>
+                <li><a href="/perfilcliente">Meu Perfil</a></li>
+                <li><a href="/ranking">Ranking</a></li>
+                <li><a href="/profissionais">Profissionais</a></li>
+                <li><a href="/premium">Premium</a></li>
+                <li><a href="/login">Entrar</a></li>
+            </ul>
+        </section>
+
+    </section>
+
+    <footer>
+        <section class="footer-container">
+
+            <section class="footer-logo">
+                <a href="/"><img src="imagens/logo.png" alt="Logo" class="logo"></a>
+                <a href="/"><h3>NutriWeb</h3></a>
+            </section>
+
+            <section class="footer-informacao">
+                <a href="/">Página Inicial</a>
+                <a href="/ranking">Ranking</a>
+                <a href="/profissionais">Profissionais</a>
+                <a href="/premium">Premium</a>
+                <a href="/login">Login</a>
+                <a href="/">Sobre nós</a> 
+                <a href="/tipoNutri">Como escolher o profissional ideal?</a>
+            </section>
+      
+          <section class="footer-social">
+              <p>Conecte-se com os melhores nutricionistas e encontre o profissional ideal para você.</p>
+            <h3>Siga-nos</h3>
+                <section class="social-icons">
+                <a href="https://www.instagram.com/nutriweb_oficial/"><i class="fab fa-instagram"></i></a>
+                </section>
+          </section>
+        </section>
+        
+        <section class="footer-bottom">
+          <p>&copy; 2024 NutriWeb. Todos os direitos reservados.</p>
+        </section>
+    </footer>
+
+    <script src="js/formatarCPF.js"></script>
+    <script src="js/selectcustom.js"></script>
+    <script src="js/pagamento.js"></script>
+</body>
+</html>

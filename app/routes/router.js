@@ -160,6 +160,7 @@ router.post(
     }
 );
 
+
 router.post(
     "/cadastrarnutricionista",
     upload, // Middleware de upload
@@ -183,18 +184,8 @@ router.post(
             cursoOrg: req.body.cursoOrg || ''
         };
 
-        console.log('ROUTER DEBUG NUTRICIONISTA:');
-        console.log('- Etapa:', etapa);
-        console.log('- req.body.area:', req.body.area);
-        console.log('- Tipo area:', typeof req.body.area);
-        console.log('- dadosNutri.area:', dadosNutri.area);
-        console.log('- Arquivos recebidos:', req.files ? Object.keys(req.files) : 'Nenhum');
-
         if (etapa === "1") {
-            console.log('Processando ETAPA 1...');
-            
             if (!listaErros.isEmpty()) {
-                console.log('Erros na etapa 1:', listaErros.array());
                 return res.render("pages/indexCadastrarNutri", {
                     etapa: "1", 
                     card1: "", 
@@ -206,9 +197,6 @@ router.post(
                     listaErros: listaErros
                 });
             }
-
-            console.log('Etapa 1 validada, passando para etapa 2');
-            console.log('Dados preservados:', dadosNutri);
             
             return res.render("pages/indexCadastrarNutri", {
                 etapa: "2", 
@@ -223,19 +211,10 @@ router.post(
         }
 
         if (etapa === "2") {
-            console.log('Processando ETAPA 2 - upload de imagens');
-            console.log('Dados preservados na etapa 2:', dadosNutri);
-            
             try {
-                // Função para validar imagens (igual ao controller do cliente)
+                // Função para validar imagens
                 const validarImagem = (arquivo, tipo) => {
                     if (!arquivo) return null;
-                    
-                    console.log(`Validando ${tipo}:`, {
-                        nome: arquivo.originalname,
-                        tamanho: arquivo.size,
-                        tipo: arquivo.mimetype
-                    });
                     
                     if (arquivo.size > 5 * 1024 * 1024) {
                         throw new Error(`${tipo} muito grande. Máximo permitido: 5MB`);
@@ -250,7 +229,6 @@ router.post(
                         throw new Error(`Formato de ${tipo} não suportado. Use: JPEG, PNG, GIF ou WEBP`);
                     }
                     
-                    console.log(`${tipo} validada com sucesso:`, arquivo.originalname, `(${arquivo.size} bytes)`);
                     return arquivo;
                 };
 
@@ -264,14 +242,24 @@ router.post(
                     'banner'
                 );
 
-                console.log('Imagens:');
-                console.log('- Perfil:', imagemPerfil ? `${imagemPerfil.originalname} (${imagemPerfil.size} bytes)` : 'Não enviada');
-                console.log('- Banner:', imagemBanner ? `${imagemBanner.originalname} (${imagemBanner.size} bytes)` : 'Não enviada');
-
-                dadosNutri.imagemPerfil = imagemPerfil;
-                dadosNutri.imagemBanner = imagemBanner;
-
-                console.log('Todas as imagens validadas com sucesso, passando para etapa 3');
+                // Converter buffer para Base64 para armazenar no campo hidden
+                if (imagemPerfil) {
+                    dadosNutri.imagemPerfil = {
+                        originalname: imagemPerfil.originalname,
+                        mimetype: imagemPerfil.mimetype,
+                        size: imagemPerfil.size,
+                        buffer: imagemPerfil.buffer.toString('base64')
+                    };
+                }
+                
+                if (imagemBanner) {
+                    dadosNutri.imagemBanner = {
+                        originalname: imagemBanner.originalname,
+                        mimetype: imagemBanner.mimetype,
+                        size: imagemBanner.size,
+                        buffer: imagemBanner.buffer.toString('base64')
+                    };
+                }
                 
                 return res.render("pages/indexCadastrarNutri", {
                     etapa: "3", 
@@ -285,21 +273,15 @@ router.post(
                 });
 
             } catch (error) {
-                console.error('Erro na validação de imagens:', error.message);
-                
                 let mensagemErro = 'Erro no upload das imagens. Tente novamente.';
                 
                 if (error.message.includes('muito grande')) {
                     mensagemErro = error.message;
                 } else if (error.message.includes('não suportado')) {
                     mensagemErro = error.message;
-                } else if (error.message.includes('formato') || error.message.includes('inválido')) {
-                    mensagemErro = error.message;
                 } else if (error.code === 'LIMIT_FILE_SIZE') {
                     mensagemErro = 'Arquivo muito grande. Tamanho máximo permitido: 5MB';
                 }
-                
-                console.log('Retornando erro para etapa 2:', mensagemErro);
                 
                 return res.render("pages/indexCadastrarNutri", {
                     etapa: "2", 
@@ -317,21 +299,14 @@ router.post(
         }
 
         if (etapa === "3") {
-            console.log('Processando ETAPA 3...');
-            console.log('Dados preservados na etapa 3:', dadosNutri);
-            
-            // Recuperar imagens dos campos hidden (se existirem)
+            // Recuperar imagens dos campos hidden
             if (req.body.imagemPerfilData && req.body.imagemBannerData) {
-                console.log('Recuperando imagens dos campos hidden...');
-                
-                // Reconstruir objeto das imagens a partir dos dados hidden
                 dadosNutri.imagemPerfil = req.body.imagemPerfilData ? JSON.parse(req.body.imagemPerfilData) : null;
                 dadosNutri.imagemBanner = req.body.imagemBannerData ? JSON.parse(req.body.imagemBannerData) : null;
-                
-                console.log('Imagens recuperadas:');
-                console.log('- Perfil:', dadosNutri.imagemPerfil ? dadosNutri.imagemPerfil.originalname : 'Não enviada');
-                console.log('- Banner:', dadosNutri.imagemBanner ? dadosNutri.imagemBanner.originalname : 'Não enviada');
             }
+            
+            // Preservar dados de formação na etapa 3
+            dadosNutri.sobreMim = req.body.sobreMim || '';
             
             return res.render("pages/indexCadastrarNutri", {
                 etapa: "4", 
@@ -346,20 +321,11 @@ router.post(
         }
 
         if (etapa === "4") {
-            console.log('Processando ETAPA 4 - upload de certificados e cadastro final');
-            console.log('Dados recebidos na etapa 4:', dadosNutri);
-            
-            // Recuperar imagens dos campos hidden ou dos arquivos anteriores
+            // Recuperar imagens dos campos hidden
             if (req.body.imagemPerfilData || req.body.imagemBannerData) {
-                console.log('Recuperando imagens dos campos hidden...');
-                
                 try {
                     dadosNutri.imagemPerfil = req.body.imagemPerfilData ? JSON.parse(req.body.imagemPerfilData) : null;
                     dadosNutri.imagemBanner = req.body.imagemBannerData ? JSON.parse(req.body.imagemBannerData) : null;
-                    
-                    console.log('Imagens recuperadas dos campos hidden:');
-                    console.log('- Perfil:', dadosNutri.imagemPerfil ? dadosNutri.imagemPerfil.originalname : 'Não enviada');
-                    console.log('- Banner:', dadosNutri.imagemBanner ? dadosNutri.imagemBanner.originalname : 'Não enviada');
                 } catch (error) {
                     console.error('Erro ao recuperar imagens dos campos hidden:', error.message);
                     dadosNutri.imagemPerfil = null;
@@ -368,17 +334,11 @@ router.post(
             }
             
             try {
-                // Função para validar certificados (PDFs ou imagens)
+                // Função para validar certificados
                 const validarCertificado = (arquivo, tipo) => {
                     if (!arquivo) return null;
                     
-                    console.log(`Validando ${tipo}:`, {
-                        nome: arquivo.originalname,
-                        tamanho: arquivo.size,
-                        tipo: arquivo.mimetype
-                    });
-                    
-                    if (arquivo.size > 10 * 1024 * 1024) { // 10MB para certificados
+                    if (arquivo.size > 10 * 1024 * 1024) {
                         throw new Error(`${tipo} muito grande. Máximo permitido: 10MB`);
                     }
                     
@@ -394,7 +354,6 @@ router.post(
                         throw new Error(`Formato de ${tipo} não suportado. Use: PDF, JPEG, PNG, GIF ou WEBP`);
                     }
                     
-                    console.log(`${tipo} validado com sucesso:`, arquivo.originalname, `(${arquivo.size} bytes)`);
                     return arquivo;
                 };
 
@@ -408,39 +367,28 @@ router.post(
                     'certificado de curso'
                 );
 
-                console.log('Certificados:');
-                console.log('- Certificado Faculdade:', certificadoFaculdade ? `${certificadoFaculdade.originalname} (${certificadoFaculdade.size} bytes)` : 'Não enviado');
-                console.log('- Certificado Curso:', certificadoCurso ? `${certificadoCurso.originalname} (${certificadoCurso.size} bytes)` : 'Não enviado');
-
+                // Preparar dados de formação para o controller
                 dadosNutri.certificadoFaculdade = certificadoFaculdade;
                 dadosNutri.certificadoCurso = certificadoCurso;
-
-                console.log('DADOS FINAIS ANTES DO CONTROLLER:');
-                console.log('- req.body.area:', req.body.area);
-                console.log('- dadosNutri.area:', dadosNutri.area);
-                console.log('- Imagens finais:', {
-                    perfil: dadosNutri.imagemPerfil ? `${dadosNutri.imagemPerfil.originalname} (${dadosNutri.imagemPerfil.size} bytes)` : 'Não enviada',
-                    banner: dadosNutri.imagemBanner ? `${dadosNutri.imagemBanner.originalname} (${dadosNutri.imagemBanner.size} bytes)` : 'Não enviada'
-                });
+                
+                // Preservar dados de formação acadêmica
+                dadosNutri.faculdade = req.body.faculdade || '';
+                dadosNutri.faculdadeOrg = req.body.faculdadeOrg || '';
+                dadosNutri.curso = req.body.curso || '';
+                dadosNutri.cursoOrg = req.body.cursoOrg || '';
 
                 return await NWController.cadastrarNutricionista(req, res);
 
             } catch (error) {
-                console.error('Erro na validação de certificados:', error.message);
-                
                 let mensagemErro = 'Erro no upload dos certificados. Tente novamente.';
                 
                 if (error.message.includes('muito grande')) {
                     mensagemErro = error.message;
                 } else if (error.message.includes('não suportado')) {
                     mensagemErro = error.message;
-                } else if (error.message.includes('formato') || error.message.includes('inválido')) {
-                    mensagemErro = error.message;
                 } else if (error.code === 'LIMIT_FILE_SIZE') {
                     mensagemErro = 'Arquivo muito grande. Tamanho máximo permitido: 10MB';
                 }
-                
-                console.log('Retornando erro para etapa 4:', mensagemErro);
                 
                 return res.render("pages/indexCadastrarNutri", {
                     etapa: "4", 
@@ -457,7 +405,6 @@ router.post(
             }
         }
 
-        console.log('Etapa inválida:', etapa);
         return res.redirect('/cadastrarnutricionista');
     }
 );
@@ -524,6 +471,10 @@ router.get("/publicar", function (req, res) {
 
 router.get("/perfilcliente", function (req, res) {
     res.render('pages/indexPerfilCliente')
+});
+
+router.get("/assinatura", function (req, res) {
+    res.render('pages/indexAssinatura')
 });
 
 module.exports = router;

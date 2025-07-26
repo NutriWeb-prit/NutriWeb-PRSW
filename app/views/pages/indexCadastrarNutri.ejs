@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="css/styleCadastrarNutri.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <title>Cadastro nutricionista - NutriWeb</title>
+    <title>Cadastro Nutricionista - NutriWeb</title>
 </head>
     <body>
         <% 
@@ -101,7 +101,8 @@
                                 value="<%= valores.nome %>" 
                                 class="<%= erroValidacao.nome %>" 
                                 placeholder="Nome Completo"
-                                maxlength="125">
+                                maxlength="125"
+                                oninput="this.value = this.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, '')">
                             <% if (msgErro.nome) { %>
                                 <span class="erro-mensagem"><%= msgErro.nome %></span>
                             <% } %>
@@ -372,7 +373,10 @@
                         <h1>Sobre você</h1>
                         <p class="sobre-p">Conte um pouco sobre você e sua missão: o que te motiva, o que busca alcançar e como deseja impactar a vida das pessoas!</p>
                         
-                        <textarea name="sobreMim" placeholder="Ex: Sou Roberta Santos, nutricionista especializada em nutrição esportiva. Meu objetivo é ajudar na alimentação para potencializar resultados e promover saúde. Cada atleta é único, e estou aqui para traçar uma jornada nutricional que faz a diferença no seu treino e na sua vida!" class="campo-texto" maxlength="500"><%= valores.sobreMim || '' %></textarea>
+                        <textarea name="sobreMim" 
+                        placeholder="Ex: Sou Roberta Santos, nutricionista especializada em nutrição esportiva. Meu objetivo é ajudar na alimentação para potencializar resultados e promover saúde. Cada atleta é único, e estou aqui para traçar uma jornada nutricional que faz a diferença no seu treino e na sua vida!" 
+                        class="campo-texto" 
+                        maxlength="400"><%= valores.sobreMim || '' %></textarea>
         
                         <button type="submit" class="btn-cadastrar continuar">
                             Continuar <i class="fas fa-arrow-right seta"></i>
@@ -438,7 +442,7 @@
                         </button>
         
                         <button type="submit" class="btn-cadastrar">
-                            Finalizar Cadastro <i class="fas fa-check"></i>
+                            Finalizar Cadastro</i>
                         </button>
                     </form>
                 </section>

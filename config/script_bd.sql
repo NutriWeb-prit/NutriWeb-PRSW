@@ -6,7 +6,7 @@ CREATE TABLE `Usuarios` (
     `CEP` CHAR(8),
 	`DataNascimento` DATE,
 	`UsuarioTipo` ENUM('C', 'N', 'A') NOT NULL DEFAULT 'C',
-	`Senha` VARCHAR(25) NOT NULL,
+	`Senha` VARCHAR(255) NOT NULL,
 	`UsuarioStatus` INT NOT NULL DEFAULT '1',
 	PRIMARY KEY(`id`)
 );
@@ -33,7 +33,6 @@ CREATE TABLE `ContatoSociais` (
 	PRIMARY KEY(`id`)
 );
 
-
 CREATE TABLE `Nutricionistas` (
 	`id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
 	`UsuarioId` INTEGER UNSIGNED NOT NULL UNIQUE,
@@ -45,6 +44,19 @@ CREATE TABLE `Nutricionistas` (
 	FOREIGN KEY (`ContatoSociaisId`) REFERENCES `ContatoSociais`(`id`)
 );
 
+CREATE TABLE `NutricionistasFormacoes` (
+    `id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `NutricionistaId` INTEGER UNSIGNED NOT NULL,
+    `TipoFormacao` ENUM('graduacao', 'curso') NOT NULL,
+    `NomeFormacao` VARCHAR(255) NOT NULL,
+    `NomeInstituicao` VARCHAR(255) NOT NULL,
+    `CertificadoArquivo` LONGBLOB NULL,
+    `CertificadoNome` VARCHAR(255) NULL,
+    `CertificadoTipo` VARCHAR(100) NULL,
+    `CertificadoTamanho` INT NULL,
+    `DataCriacao` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (`NutricionistaId`) REFERENCES `Nutricionistas`(`id`) ON DELETE CASCADE
+);
 
 CREATE TABLE `NutricionistaContatoSociais` (
     `NutricionistaId` INTEGER UNSIGNED NOT NULL,
@@ -58,6 +70,7 @@ CREATE TABLE `Perfis` (
 	`id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
 	`FotoPerfil` MEDIUMBLOB,
 	`FotoBanner` MEDIUMBLOB,
+	`SobreMim` VARCHAR(400),
 	`UsuarioId` INTEGER UNSIGNED NOT NULL,
 	PRIMARY KEY(`id`),
 	FOREIGN KEY (`UsuarioId`) REFERENCES `Usuarios`(`id`)
@@ -202,9 +215,3 @@ CREATE TABLE `CurtidasPublicacoes` (
   FOREIGN KEY (ClienteId) REFERENCES Clientes(id),
   FOREIGN KEY (PublicacaoId) REFERENCES Publicacoes(id)
 );
- 
-
-
-
-
-

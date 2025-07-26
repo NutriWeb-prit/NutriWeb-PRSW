@@ -1,6 +1,8 @@
 const NWModel = require("../models/NWModel");
 const {body, validationResult} = require("express-validator");
 
+const bcrypt = require('bcryptjs');
+
 const NWController = {
 
     // validação login
@@ -181,16 +183,9 @@ const NWController = {
 
     cadastrarCliente: async (req, res) => {
         try {
-            console.log('Iniciando processo de cadastro de cliente...');
-            
-            console.log('req.body completo:', req.body);
-            console.log('req.body.area (interesses):', req.body.area);
-            console.log('Tipo de req.body.area:', typeof req.body.area);
-            
-            // Verificar erros de validação
+            // ver erros de validaçao
             const erros = validationResult(req);
             if (!erros.isEmpty()) {
-                console.log('Erros de validação encontrados:', erros.array());
                 return res.render('pages/indexCadastroCliente', {
                     etapa: "2",
                     cardSucesso: true,
@@ -199,9 +194,7 @@ const NWController = {
                 });
             }
     
-            console.log('Validações passaram, preparando dados...');
-    
-            // Função para validar imagens (mantida igual)
+            // validaçao de imagem
             const validarImagem = (arquivo, tipo) => {
                 if (!arquivo) return null;
                 if (arquivo.size > 5 * 1024 * 1024) {
@@ -214,11 +207,10 @@ const NWController = {
                 if (!tiposPermitidos.includes(arquivo.mimetype)) {
                     throw new Error(`Formato de ${tipo} não suportado. Use: JPEG, PNG, GIF ou WEBP`);
                 }
-                console.log(`${tipo} validada:`, arquivo.originalname, `(${arquivo.size} bytes)`);
                 return arquivo;
             };
     
-            // Validar imagens
+            // validaçao de imagem
             const imagemPerfil = validarImagem(
                 req.files && req.files['input-imagem'] ? req.files['input-imagem'][0] : null, 
                 'foto de perfil'
@@ -229,58 +221,39 @@ const NWController = {
                 'banner'
             );
     
-            // Limpar CPF
+            // deixar o cpf limpo
             const cpfLimpo = req.body.cpf ? req.body.cpf.replace(/\D/g, '') : '';
             if (!cpfLimpo) {
                 throw new Error('CPF é obrigatório!');
             }
+    
+            // criptografar a senha
+            const senhaHash = await bcrypt.hash(req.body.senha, 12);
             
             const dadosUsuario = {
                 NomeCompleto: req.body.nome,
                 Email: req.body.email,
-                Senha: req.body.senha,
+                Senha: senhaHash,
                 Telefone: req.body.ddd + req.body.telefone,
                 UsuarioTipo: 'C'
             };
     
+            // interessesa
             let interessesSelecionados = [];
-            
             if (req.body.area) {
-                console.log('🔍 Processando interesses...');
-                console.log('req.body.area recebido:', req.body.area);
-                
                 interessesSelecionados = Array.isArray(req.body.area) ? req.body.area : [req.body.area];
-                
-                console.log('Interesses após processamento:', interessesSelecionados);
-                console.log('Quantidade de interesses:', interessesSelecionados.length);
-                
                 interessesSelecionados = interessesSelecionados.filter(interesse => 
                     interesse && interesse.trim() !== '' && interesse !== 'on'
                 );
-                
-                console.log('Interesses após filtrar:', interessesSelecionados);
-            } else {
-                console.log('Nenhum interesse recebido (req.body.area está undefined/null)');
             }
-    
-            console.log('RESUMO DOS DADOS:');
-            console.log('- Usuário:', dadosUsuario);
-            console.log('- CPF limpo:', cpfLimpo);
-            console.log('- Interesses selecionados:', interessesSelecionados);
-            console.log('- Quantidade de interesses:', interessesSelecionados.length);
-            console.log('- Imagens:', {
-                perfil: imagemPerfil ? `${imagemPerfil.originalname} (${imagemPerfil.size} bytes)` : 'Não enviada',
-                banner: imagemBanner ? `${imagemBanner.originalname} (${imagemBanner.size} bytes)` : 'Não enviada'
-            });
     
             const resultado = await NWModel.createCliente(dadosUsuario, cpfLimpo, imagemPerfil, imagemBanner, interessesSelecionados);
     
-            console.log('Cliente cadastrado com sucesso:', resultado);
-    
+            console.log('Cliente cadastrado com sucesso - ID:', resultado.usuarioId);
             return res.redirect('/login?cadastro=sucesso');
     
         } catch (error) {
-            console.error('Erro no processo de cadastro:', error.message);
+            console.error('Erro no cadastro do cliente:', error.message);
             
             return res.render('pages/indexCadastroCliente', {
                 etapa: "2",
@@ -299,11 +272,8 @@ const NWController = {
 
     cadastrarNutricionista: async (req, res) => {
         try {
-            console.log('Iniciando cadastro de nutricionista no controller...');
-            
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
-                console.log('Erros de validação no controller:', errors.array());
                 return res.render('pages/indexCadastrarNutri', {
                     etapa: "4", 
                     card1: "hidden", 
@@ -315,26 +285,53 @@ const NWController = {
                 });
             }
     
-            console.log('req.body completo:', req.body);
-            console.log('req.body.area (especialidades):', req.body.area);
-            console.log('Tipo de req.body.area:', typeof req.body.area);
-    
-            const imagemPerfil = req.body.imagemPerfilData ? JSON.parse(req.body.imagemPerfilData) : null
-            const imagemBanner = req.body.imagemBannerData ? JSON.parse(req.body.imagemBannerData) : null
+            // Recuperar imagens dos campos hidden (Base64 → Buffer)
+            let imagemPerfil = null;
+            let imagemBanner = null;
             
+            if (req.body.imagemPerfilData) {
+                try {
+                    const dadosImagem = JSON.parse(req.body.imagemPerfilData);
+                    if (dadosImagem && dadosImagem.buffer) {
+                        imagemPerfil = {
+                            originalname: dadosImagem.originalname,
+                            mimetype: dadosImagem.mimetype,
+                            size: dadosImagem.size,
+                            buffer: Buffer.from(dadosImagem.buffer, 'base64')
+                        };
+                    }
+                } catch (error) {
+                    console.error('Erro ao recuperar imagem de perfil:', error.message);
+                }
+            }
+            
+            if (req.body.imagemBannerData) {
+                try {
+                    const dadosImagem = JSON.parse(req.body.imagemBannerData);
+                    if (dadosImagem && dadosImagem.buffer) {
+                        imagemBanner = {
+                            originalname: dadosImagem.originalname,
+                            mimetype: dadosImagem.mimetype,
+                            size: dadosImagem.size,
+                            buffer: Buffer.from(dadosImagem.buffer, 'base64')
+                        };
+                    }
+                } catch (error) {
+                    console.error('Erro ao recuperar banner:', error.message);
+                }
+            }
+            
+            // Certificados (recebidos diretamente do upload)
             const certificadoFaculdade = req.files && req.files['certificadoFaculdade'] ? req.files['certificadoFaculdade'][0] : null;
             const certificadoCurso = req.files && req.files['certificadoCurso'] ? req.files['certificadoCurso'][0] : null;
     
-            console.log('Arquivos recebidos no controller:');
-            console.log('- Perfil:', imagemPerfil ? `${imagemPerfil.originalname} (${imagemPerfil.size} bytes)` : 'Não enviada');
-            console.log('- Banner:', imagemBanner ? `${imagemBanner.originalname} (${imagemBanner.size} bytes)` : 'Não enviada');
-            console.log('- Cert. Faculdade:', certificadoFaculdade ? `${certificadoFaculdade.originalname} (${certificadoFaculdade.size} bytes)` : 'Não enviado');
-            console.log('- Cert. Curso:', certificadoCurso ? `${certificadoCurso.originalname} (${certificadoCurso.size} bytes)` : 'Não enviado');
+            // Criptografar senha
+            const senhaHash = await bcrypt.hash(req.body.senha, 12);
     
             const dadosUsuario = {
                 NomeCompleto: req.body.nome,
                 Email: req.body.email,
-                Senha: req.body.senha,
+                Senha: senhaHash,
                 Telefone: req.body.ddd + req.body.telefone,
                 UsuarioTipo: 'N'
             };
@@ -346,30 +343,25 @@ const NWController = {
             };
     
             const formacao = {
-                faculdade: req.body.faculdade,
-                faculdadeOrg: req.body.faculdadeOrg,
-                curso: req.body.curso,
-                cursoOrg: req.body.cursoOrg
+                graduacao: {
+                    nome: req.body.faculdade,
+                    instituicao: req.body.faculdadeOrg,
+                    certificado: certificadoFaculdade
+                },
+                curso: {
+                    nome: req.body.curso,
+                    instituicao: req.body.cursoOrg,
+                    certificado: certificadoCurso
+                }
             };
     
+            // Processar especialidades
             let especializacoesSelecionadas = [];
-            
             if (req.body.area) {
-                console.log('🔍 Processando especialidades...');
-                console.log('req.body.area recebido:', req.body.area);
-                
                 especializacoesSelecionadas = Array.isArray(req.body.area) ? req.body.area : [req.body.area];
-                
-                console.log('Especialidades após processamento:', especializacoesSelecionadas);
-                console.log('Quantidade de especialidades:', especializacoesSelecionadas.length);
-                
                 especializacoesSelecionadas = especializacoesSelecionadas.filter(especialidade => 
                     especialidade && especialidade.trim() !== '' && especialidade !== 'on'
                 );
-                
-                console.log('Especialidades após filtrar:', especializacoesSelecionadas);
-            } else {
-                console.log('Nenhuma especialidade recebida (req.body.area está undefined/null)');
             }
     
             const certificados = {
@@ -377,32 +369,20 @@ const NWController = {
                 curso: certificadoCurso
             };
     
-            console.log('RESUMO DOS DADOS:');
-            console.log('- Usuário:', dadosUsuario);
-            console.log('- Nutricionista:', dadosNutricionista);
-            console.log('- Formação:', formacao);
-            console.log('- Especialidades selecionadas:', especializacoesSelecionadas);
-            console.log('- Quantidade de especialidades:', especializacoesSelecionadas.length);
-            console.log('- Certificados:', {
-                faculdade: certificadoFaculdade ? `${certificadoFaculdade.originalname} (${certificadoFaculdade.size} bytes)` : 'Não enviado',
-                curso: certificadoCurso ? `${certificadoCurso.originalname} (${certificadoCurso.size} bytes)` : 'Não enviado'
-            });
-    
             const result = await NWModel.createNutricionista(
                 dadosUsuario,
                 dadosNutricionista,
                 especializacoesSelecionadas,
                 imagemPerfil,
                 imagemBanner,
-                formacao,
-                certificados
+                formacao
             );
     
-            console.log("Nutricionista cadastrado com sucesso:", result);
+            console.log("Nutricionista cadastrado com sucesso - ID:", result.usuarioId);
             return res.redirect("/login?cadastro=sucesso");
     
         } catch (error) {
-            console.error("Erro no processo de cadastro:", error.message);
+            console.error("Erro no cadastro do nutricionista:", error.message);
             
             return res.render('pages/indexCadastrarNutri', {
                 etapa: "4", 

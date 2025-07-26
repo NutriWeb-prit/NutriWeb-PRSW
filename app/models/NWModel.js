@@ -36,9 +36,6 @@ const NWModel = {
         let conn;
         
         try {
-            console.log('Iniciando criação de cliente...');
-            console.log('Interesses recebidos no model:', interessesSelecionados);
-            
             conn = await Promise.race([
                 pool.getConnection(),
                 new Promise((_, reject) => 
@@ -46,10 +43,7 @@ const NWModel = {
                 )
             ]);
             
-            console.log('Conexão obtida do pool');
-            
             await conn.beginTransaction();
-            console.log('Transação iniciada');
     
             // 1. Inserir usuário
             const [usuarioResult] = await conn.query(
@@ -57,7 +51,6 @@ const NWModel = {
                 [dadosUsuario]
             );
             const usuarioId = usuarioResult.insertId;
-            console.log('Usuário inserido com ID:', usuarioId);
     
             // 2. Inserir cliente
             const [clienteResult] = await conn.query(
@@ -65,9 +58,8 @@ const NWModel = {
                 [usuarioId, cpfLimpo]
             );
             const clienteId = clienteResult.insertId;
-            console.log('Cliente inserido com ID:', clienteId, 'e CPF:', cpfLimpo);
     
-            // 3. Inserir perfil com imagens (mantido igual)
+            // 3. Inserir perfil com imagens
             if (imagemPerfil || imagemBanner) {
                 const dadosPerfil = { UsuarioId: usuarioId };
     
@@ -76,7 +68,6 @@ const NWModel = {
                         throw new Error('Foto de perfil muito grande. Máximo permitido: 16MB');
                     }
                     dadosPerfil.FotoPerfil = imagemPerfil.buffer;
-                    console.log('Foto de perfil adicionada:', imagemPerfil.originalname);
                 }
     
                 if (imagemBanner) {
@@ -84,23 +75,13 @@ const NWModel = {
                         throw new Error('Banner muito grande. Máximo permitido: 16MB');
                     }
                     dadosPerfil.FotoBanner = imagemBanner.buffer;
-                    console.log('Banner adicionado:', imagemBanner.originalname);
                 }
     
-                const [perfilResult] = await conn.query("INSERT INTO Perfis SET ?", [dadosPerfil]);
-                console.log('Perfil inserido com ID:', perfilResult.insertId);
+                await conn.query("INSERT INTO Perfis SET ?", [dadosPerfil]);
             }
     
-            // 4. 🔧 PROCESSAR INTERESSES NUTRICIONAIS COM DEBUG DETALHADO
-            console.log('Iniciando processamento dos interesses...');
-            console.log('interessesSelecionados:', interessesSelecionados);
-            console.log('Length:', interessesSelecionados ? interessesSelecionados.length : 'undefined');
-            console.log('Tipo:', typeof interessesSelecionados);
-            
+            // 4. Processar interesses nutricionais
             if (interessesSelecionados && Array.isArray(interessesSelecionados) && interessesSelecionados.length > 0) {
-                console.log('Processando', interessesSelecionados.length, 'interesses...');
-                
-                // Mapear nomes dos checkboxes para IDs da tabela InteressesNutricionais
                 const mapeamentoInteresses = {
                     'emagrecimento': 1,
                     'massaMuscular': 2,
@@ -112,47 +93,24 @@ const NWModel = {
                     'saudeIdoso': 8,
                     'alimentacaoSaudavel': 9
                 };
-                
-                console.log('Mapeamento disponível:', mapeamentoInteresses);
     
-                let interessesInseridos = 0;
-                
                 // Inserir na tabela ClientesInteresses
                 for (const interesse of interessesSelecionados) {
-                    console.log(`Processando interesse: "${interesse}"`);
-                    
                     const interesseId = mapeamentoInteresses[interesse];
-                    console.log(`ID mapeado: ${interesseId}`);
-                    
                     if (interesseId) {
                         try {
                             await conn.query(
                                 "INSERT INTO ClientesInteresses (ClienteId, InteresseId) VALUES (?, ?)",
                                 [clienteId, interesseId]
                             );
-                            interessesInseridos++;
-                            console.log(`Interesse inserido: ${interesse} (ID: ${interesseId})`);
                         } catch (insertError) {
                             console.error(`Erro ao inserir interesse ${interesse}:`, insertError.message);
                         }
-                    } else {
-                        console.log(`Interesse não mapeado: "${interesse}"`);
                     }
                 }
-                
-                console.log(`RESULTADO: ${interessesInseridos} interesses inseridos de ${interessesSelecionados.length} recebidos`);
-                
-            } else {
-                console.log('Nenhum interesse para processar:', {
-                    existe: !!interessesSelecionados,
-                    ehArray: Array.isArray(interessesSelecionados),
-                    length: interessesSelecionados ? interessesSelecionados.length : 'N/A',
-                    valor: interessesSelecionados
-                });
             }
     
             await conn.commit();
-            console.log('Transação commitada com sucesso');
             
             return { 
                 usuarioId, 
@@ -168,7 +126,6 @@ const NWModel = {
             if (conn) {
                 try {
                     await conn.rollback();
-                    console.log('Rollback executado');
                 } catch (rollbackErr) {
                     console.error('Erro no rollback:', rollbackErr.message);
                 }
@@ -180,7 +137,6 @@ const NWModel = {
             if (conn) {
                 try {
                     conn.release();
-                    console.log('🔌 Conexão liberada para o pool');
                 } catch (releaseErr) {
                     console.error('Erro ao liberar conexão:', releaseErr.message);
                 }
@@ -189,7 +145,8 @@ const NWModel = {
     },
 
     // Criar um usuário Nutricionista
-    createNutricionista: async (dadosUsuario, dadosNutricionista, especializacoes = [], imagemPerfil = null, imagemBanner = null, formacao = {}, certificados = {}) => {
+    
+    createNutricionista: async (dadosUsuario, dadosNutricionista, especializacoes = [], imagemPerfil = null, imagemBanner = null, formacao = {}) => {
         let conn;
         
         try {
@@ -198,14 +155,12 @@ const NWModel = {
                 new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout ao obter conexão')), 10000))
             ]);
             
-            console.log('Conexão obtida');
             await conn.beginTransaction();
-    
+
             // 1. Inserir usuário
             const [usuarioResult] = await conn.query("INSERT INTO Usuarios SET ?", [dadosUsuario]);
             const usuarioId = usuarioResult.insertId;
-            console.log('Usuário inserido:', usuarioId);
-    
+
             // 2. Inserir nutricionista
             const [nutricionistaResult] = await conn.query("INSERT INTO Nutricionistas SET ?", [{
                 UsuarioId: usuarioId,
@@ -213,8 +168,7 @@ const NWModel = {
                 RazaoSocial: dadosNutricionista.RazaoSocial
             }]);
             const nutricionistaId = nutricionistaResult.insertId;
-            console.log('Nutricionista inserido:', nutricionistaId);
-    
+
             // 3. Inserir perfil com imagens
             if (imagemPerfil || imagemBanner || dadosNutricionista.SobreMim) {
                 const dadosPerfil = { UsuarioId: usuarioId };
@@ -232,11 +186,14 @@ const NWModel = {
                     }
                     dadosPerfil.FotoBanner = imagemBanner.buffer;
                 }
-    
+
+                if (dadosNutricionista.SobreMim) {
+                    dadosPerfil.SobreMim = dadosNutricionista.SobreMim;
+                }
+
                 await conn.query("INSERT INTO Perfis SET ?", [dadosPerfil]);
-                console.log('Perfil inserido');
             }
-    
+
             // 4. Inserir especializações
             if (especializacoes.length > 0) {
                 const placeholders = especializacoes.map(() => '?').join(',');
@@ -244,32 +201,72 @@ const NWModel = {
                     `SELECT id, Nome FROM Especializacoes WHERE Nome IN (${placeholders})`,
                     especializacoes
                 );
-    
+
                 if (rows.length > 0) {
                     const insertValues = rows.map(({ id }) => [nutricionistaId, id]);
                     await conn.query(
                         "INSERT INTO NutricionistasEspecializacoes (NutricionistaId, EspecializacaoId) VALUES ?",
                         [insertValues]
                     );
-                    console.log('Especializações inseridas:', rows.length);
                 }
             }
-    
-            // 5. TODO: Inserir formação acadêmica e certificados
-            // (Você pode criar tabelas específicas para isso)
-    
+
+            // 5. Inserir formações acadêmicas
+            if (formacao.graduacao || formacao.curso) {
+                if (formacao.graduacao && formacao.graduacao.nome && formacao.graduacao.instituicao) {
+                    const dadosGraduacao = {
+                        NutricionistaId: nutricionistaId,
+                        TipoFormacao: 'graduacao',
+                        NomeFormacao: formacao.graduacao.nome,
+                        NomeInstituicao: formacao.graduacao.instituicao
+                    };
+
+                    if (formacao.graduacao.certificado) {
+                        const cert = formacao.graduacao.certificado;
+                        if (cert.buffer.length > 16 * 1024 * 1024) {
+                            throw new Error('Certificado de graduação muito grande. Máximo: 16MB');
+                        }
+                        dadosGraduacao.CertificadoArquivo = cert.buffer;
+                        dadosGraduacao.CertificadoNome = cert.originalname;
+                        dadosGraduacao.CertificadoTipo = cert.mimetype;
+                        dadosGraduacao.CertificadoTamanho = cert.size;
+                    }
+
+                    await conn.query("INSERT INTO NutricionistasFormacoes SET ?", [dadosGraduacao]);
+                }
+
+                if (formacao.curso && formacao.curso.nome && formacao.curso.instituicao) {
+                    const dadosCurso = {
+                        NutricionistaId: nutricionistaId,
+                        TipoFormacao: 'curso',
+                        NomeFormacao: formacao.curso.nome,
+                        NomeInstituicao: formacao.curso.instituicao
+                    };
+
+                    if (formacao.curso.certificado) {
+                        const cert = formacao.curso.certificado;
+                        if (cert.buffer.length > 16 * 1024 * 1024) {
+                            throw new Error('Certificado de curso muito grande. Máximo: 16MB');
+                        }
+                        dadosCurso.CertificadoArquivo = cert.buffer;
+                        dadosCurso.CertificadoNome = cert.originalname;
+                        dadosCurso.CertificadoTipo = cert.mimetype;
+                        dadosCurso.CertificadoTamanho = cert.size;
+                    }
+
+                    await conn.query("INSERT INTO NutricionistasFormacoes SET ?", [dadosCurso]);
+                }
+            }
+
             await conn.commit();
-            console.log('Transação commitada');
-            
             return { usuarioId, nutricionistaId };
-    
+
         } catch (err) {
             console.error("Erro ao criar nutricionista:", err.message);
             
             if (conn) {
                 try {
                     await conn.rollback();
-                    console.log('Rollback executado');
                 } catch (rollbackErr) {
                     console.error('Erro no rollback:', rollbackErr.message);
                 }
@@ -281,7 +278,6 @@ const NWModel = {
             if (conn) {
                 try {
                     conn.release();
-                    console.log('Conexão liberada');
                 } catch (releaseErr) {
                     console.error('Erro ao liberar conexão:', releaseErr.message);
                 }
@@ -292,8 +288,6 @@ const NWModel = {
     verificarEmailExistente: async (email) => {
         let conn;
         try {
-            console.log('Verificando se email já existe:', email);
-            
             conn = await Promise.race([
                 pool.getConnection(),
                 new Promise((_, reject) => 
@@ -301,14 +295,11 @@ const NWModel = {
                 )
             ]);
             
-            console.log('Conexão obtida para verificação de email');
-            
             const [rows] = await conn.query(
                 "SELECT id FROM Usuarios WHERE email = ? LIMIT 1",
                 [email]
             );
             
-            console.log('Resultado da verificação de email:', rows.length > 0 ? 'Existe' : 'Não existe');
             return rows.length > 0;
             
         } catch (error) {
@@ -317,7 +308,6 @@ const NWModel = {
         } finally {
             if (conn) {
                 conn.release();
-                console.log('Conexão liberada após verificação de email');
             }
         }
     },
@@ -326,7 +316,6 @@ const NWModel = {
         let conn;
         try {
             const telefoneCompleto = ddd + telefone;
-            console.log('Verificando se telefone já existe:', telefoneCompleto);
             
             conn = await Promise.race([
                 pool.getConnection(),
@@ -335,14 +324,11 @@ const NWModel = {
                 )
             ]);
             
-            console.log('Conexão obtida para verificação de telefone');
-            
             const [rows] = await conn.query(
                 "SELECT id FROM Usuarios WHERE telefone = ? LIMIT 1",
                 [telefoneCompleto]
             );
             
-            console.log('Resultado da verificação de telefone:', rows.length > 0 ? 'Existe' : 'Não existe');
             return rows.length > 0;
             
         } catch (error) {
@@ -351,7 +337,6 @@ const NWModel = {
         } finally {
             if (conn) {
                 conn.release();
-                console.log('Conexão liberada após verificação de telefone');
             }
         }
     },
@@ -359,8 +344,6 @@ const NWModel = {
     verificarCrnExistente: async (crn) => {
         let conn;
         try {
-            console.log('Verificando se CRN já existe:', crn);
-            
             conn = await Promise.race([
                 pool.getConnection(),
                 new Promise((_, reject) => 
@@ -368,15 +351,11 @@ const NWModel = {
                 )
             ]);
             
-            console.log('Conexão obtida para verificação de CRN');
-            
-            // Busca na tabela Nutricionistas pelo CRN
             const [rows] = await conn.query(
                 "SELECT id FROM Nutricionistas WHERE Crn = ? LIMIT 1",
                 [crn]
             );
             
-            console.log('Resultado da verificação de CRN:', rows.length > 0 ? 'Existe' : 'Não existe');
             return rows.length > 0;
             
         } catch (error) {
@@ -385,7 +364,6 @@ const NWModel = {
         } finally {
             if (conn) {
                 conn.release();
-                console.log('Conexão liberada após verificação de CRN');
             }
         }
     },
@@ -394,7 +372,6 @@ const NWModel = {
         let conn;
         try {
             cpf = cpf.replace(/[^\d]/g, '');
-            console.log('Verificando se CPF já existe:', cpf);
             
             conn = await Promise.race([
                 pool.getConnection(),
@@ -403,14 +380,11 @@ const NWModel = {
                 )
             ]);
             
-            console.log('Conexão obtida para verificação de CPF');
-            
             const [rows] = await conn.query(
                 "SELECT id FROM Clientes WHERE cpf = ? LIMIT 1",
                 [cpf]
             );
             
-            console.log('Resultado da verificação de CPF:', rows.length > 0 ? 'Existe' : 'Não existe');
             return rows.length > 0;
             
         } catch (error) {
@@ -419,7 +393,6 @@ const NWModel = {
         } finally {
             if (conn) {
                 conn.release();
-                console.log('Conexão liberada após verificação de CPF');
             }
         }
     },
