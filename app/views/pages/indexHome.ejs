@@ -774,17 +774,23 @@
                         <span class="material-icons btn-comment">chat</span>
                     </section>
 
+                    <section class="comentarios-lista" id="comentarios-lista">
+                        <p class="sem-comentarios" id="sem-comentarios">Seja o primeiro a comentar!</p>
+                    </section>
+
                     <section class="container-comentarios">
                         <span class="material-icons">account_circle</span>
-                        <input type="text" placeholder="Adicione um comentário...">
-                        <button class="btn-enviar">
+                        <input type="text" id="input-comentario" placeholder="Adicione um comentário...">
+                        <button class="btn-enviar" id="btn-enviar">
                             <span class="material-icons">send</span>
                         </button>
-                    </section>                    
+                    </section>                  
                 </section>
 
-                <!-- <span class="material-icons more-modal">more_vert</span> -->
-                <span class="close-modal md-24" id="close-modal">&times;</span>
+                <div class="controle-modal">
+                    <span class="menu-pontos" id="menu-pontos">⋮</span>
+                    <span class="close-modal md-24" id="close-modal">&times;</span>
+                </div>
 
             </section>
         </section>  
@@ -1316,6 +1322,7 @@
         
     </body>
     <script src="js/indexMenu.js"></script>
+    <script src="js/comentarios.js"></script>
     <script src="js/carrossel.js"></script>
     <script src="js/carrosselperfis.js"></script>
     <script src="js/filtro.js"></script>
