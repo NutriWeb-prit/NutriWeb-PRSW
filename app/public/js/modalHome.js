@@ -146,3 +146,21 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
+const btnDenunciar = document.getElementById("denunciar-opcao");
+const modalDenuncia = document.getElementById("modal-denuncia");
+const fecharDenuncia = document.getElementById("close-denuncia");
+
+btnDenunciar.addEventListener("click", () => {
+    modalDenuncia.style.display = "flex";
+});
+
+fecharDenuncia.addEventListener("click", () => {
+    modalDenuncia.style.display = "none";
+});
+
+window.addEventListener("click", (event) => {
+    if (event.target === modalDenuncia) {
+        modalDenuncia.style.display = "none";
+    }
+});

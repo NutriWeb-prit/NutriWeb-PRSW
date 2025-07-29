@@ -795,9 +795,32 @@
 
                     <span class="close-modal md-24" id="close-modal">&times;</span>
                 </section>
-
             </section>
+            
         </section>  
+
+        <section id="modal-denuncia" class="modal" style="display: none;">
+            <section class="modal-content-denuncia">
+                <span class="close-denuncia" id="close-denuncia">&times;</span>
+                <h2>Denuncia</h2>
+                <p>O que esse comentário infringiu?</p>
+
+                <button class="btn-denuncia">Discurso de ódio ou preconceito</button>
+                <button class="btn-denuncia">Assédio ou bullying</button>
+                <button class="btn-denuncia">Linguagem ofensiva ou agressiva</button>
+                <button class="btn-denuncia">Spam ou conteúdo irrelevante</button>
+
+                <textarea placeholder="Outro motivo? Descreva aqui (opcional)..." rows="3"></textarea>
+
+                <button class="btn-enviar-denuncia">Enviar</button>
+            </section>
+
+            <div class="mensagem-confirmacao" style="display: none;">
+                <button class="fechar-msg" aria-label="Fechar">&times;</button>
+                <h2>Sua ajuda é muito importante!</h2>
+                <p>Iremos avaliar esse comentário.<br>Obrigado!</p>
+            </div>
+        </section>
         
         <footer>
             <section class="footer-container">
@@ -1330,5 +1353,6 @@
     <script src="js/carrossel.js"></script>
     <script src="js/carrosselperfis.js"></script>
     <script src="js/filtro.js"></script>
+    <script src="js/denuncia.js"></script>
     <script src="js/modalHome.js"></script>
 </html>

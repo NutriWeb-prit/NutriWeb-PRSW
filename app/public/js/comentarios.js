@@ -20,7 +20,7 @@ function enviarComentario() {
             </section>
             <section class="menu-denunciar-comentario">
                 <span class="menu-pontos-comentarios">⋮</span>
-                <div class="denunciar-comentario" style="display: none;">Denunciar</div>
+                <section class="denunciar-comentario" style="display: none;">Denunciar</section>
             </section>
         </section>
         <p class="texto-comentario">${texto}</p>
@@ -68,15 +68,27 @@ document.querySelectorAll('.menu-denunciar-comentario').forEach(menu => {
     });
 });
 
-function configurarMenuComentario(comentarioEl) {
-    const menuPontos = comentarioEl.querySelector('.menu-pontos-comentarios');
-    const denunciarOp = comentarioEl.querySelector('.denunciar-comentario');
+function configurarMenuComentario(comentario) {
+    const menuPontos = comentario.querySelector('.menu-pontos-comentarios');
+    const denunciarOp = comentario.querySelector('.denunciar-comentario');
 
-    if (menuPontos && denunciarOp) {
-      menuPontos.addEventListener('click', (e) => {
-        e.stopPropagation();
-        menuPontos.style.display = 'none';
-        denunciarOp.style.display = 'inline-block';
-      });
+      if (menuPontos && denunciarOp) {
+          menuPontos.addEventListener('click', (e) => {
+              e.stopPropagation();
+              menuPontos.style.display = 'none';
+              denunciarOp.style.display = 'inline-block';
+          });
+
+          denunciarOp.addEventListener('click', (e) => {
+      e.stopPropagation();
+
+      const modalDenuncia = document.getElementById('modal-denuncia');
+      if (modalDenuncia) {
+          modalDenuncia.style.display = 'flex';
+      }
+
+      menuPontos.style.display = 'inline-block';
+      denunciarOp.style.display = 'none';
+});
     }
 }
