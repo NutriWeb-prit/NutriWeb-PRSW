@@ -31,6 +31,203 @@ const NWModel = {
         }
     },
 
+    // Buscar usuário por email para login
+    findByEmail: async (email) => {
+        try {
+            const [linhas] = await pool.query(
+                "SELECT * FROM Usuarios WHERE Email = ? AND UsuarioStatus = 1",
+                [email]
+            );
+            console.log("Resultado da consulta:", linhas);
+            return linhas;
+        } catch (erro) {
+            console.log(erro);
+            return false;
+        }
+    },
+
+    // Atualizar dados de um usuário
+    update: async (dadosForm, id) => {
+        try {
+            const [linhas] = await pool.query(
+                "UPDATE Usuarios SET ? WHERE id = ?",
+                [dadosForm, id]
+            );
+            return linhas;
+        } catch (error) {
+            return error;
+        }
+    },
+
+    // Inativar um usuário (soft delete)
+    delete: async (id) => {
+        try {
+            const [linhas] = await pool.query(
+                "UPDATE Usuarios SET UsuarioStatus = 0 WHERE id = ?",
+                [id]
+            );
+            return linhas;
+        } catch (error) {
+            return error;
+        }
+    },
+
+    mostrarPerfilCliente: async (req, res) => {
+        try {
+            // Verificar se o usuário está logado
+            if (!req.session.usuario || req.session.usuario.tipo !== 'C') {
+                return res.redirect('/login?erro=acesso_negado');
+            }
+            
+            const usuarioId = req.session.usuario.id;
+            console.log("Carregando perfil do cliente ID:", usuarioId);
+            
+            // Buscar dados completos do cliente
+            const dadosCliente = await NWModel.findClienteCompleto(usuarioId);
+            
+            if (!dadosCliente || dadosCliente.length === 0) {
+                console.log("Cliente não encontrado");
+                return res.render("pages/indexPerfilCliente", {
+                    erro: "Dados do cliente não encontrados",
+                    cliente: null,
+                    publicacoesCurtidas: []
+                });
+            }
+            
+            const cliente = dadosCliente[0];
+
+            const publicacoesCurtidas = await NWModel.findPublicacoesCurtidas(usuarioId);
+            
+            const dadosProcessados = {
+                id: cliente.id,
+                nome: cliente.NomeCompleto,
+                email: cliente.Email,
+                telefone: cliente.Telefone ? 
+                    `(${cliente.Telefone.substring(0,2)}) ${cliente.Telefone.substring(2,7)}-${cliente.Telefone.substring(7)}` : 
+                    null,
+                cpf: cliente.CPF,
+                cep: cliente.CEP,
+                dataNascimento: cliente.DataNascimento,
+                objetivos: cliente.SobreMim || "Ainda não definiu seus objetivos nutricionais.",
+                interesses: cliente.InteressesNutricionais || "Nenhum interesse cadastrado",
+                
+                // Processar fotos
+                fotoPerfil: cliente.FotoPerfil ? 
+                    `data:image/jpeg;base64,${cliente.FotoPerfil.toString('base64')}` : 
+                    'imagens/foto_perfil.jpg',
+                
+                fotoBanner: cliente.FotoBanner ? 
+                    `data:image/jpeg;base64,${cliente.FotoBanner.toString('base64')}` : 
+                    null,
+                
+                publicacoes: publicacoesCurtidas.map(pub => ({
+                    id: pub.id,
+                    imagem: pub.FotoPublicacao ? 
+                        `data:image/jpeg;base64,${pub.FotoPublicacao.toString('base64')}` : 
+                        'imagens/placeholder-post.jpg',
+                    legenda: pub.Legenda,
+                    categoria: pub.Categoria,
+                    estrelas: pub.MediaEstrelas,
+                    dataCurtida: pub.DataCurtida
+                }))
+            };
+            
+            console.log("Dados processados para o cliente:", {
+                nome: dadosProcessados.nome,
+                email: dadosProcessados.email,
+                quantidadePublicacoes: dadosProcessados.publicacoes.length,
+                temFotoPerfil: !!cliente.FotoPerfil,
+                temObjetivos: !!cliente.SobreMim
+            });
+            
+            return res.render("pages/indexPerfilCliente", {
+                erro: null,
+                cliente: dadosProcessados,
+                publicacoesCurtidas: dadosProcessados.publicacoes
+            });
+            
+        } catch (erro) {
+            console.error("Erro ao carregar perfil do cliente:", erro);
+            return res.render("pages/indexPerfilCliente", {
+                erro: "Erro interno. Tente novamente mais tarde.",
+                cliente: null,
+                publicacoesCurtidas: []
+            });
+        }
+    },
+
+    findClienteCompleto: async (usuarioId) => {
+        try {
+            const [linhas] = await pool.query(
+                `SELECT 
+                    u.id,
+                    u.NomeCompleto,
+                    u.Email,
+                    u.Telefone,
+                    u.CEP,
+                    u.DataNascimento,
+                    c.CPF,
+                    p.FotoPerfil,
+                    p.FotoBanner,
+                    p.SobreMim,
+                    -- Buscar interesses do cliente
+                    GROUP_CONCAT(DISTINCT i.Nome SEPARATOR ', ') as InteressesNutricionais
+                FROM Usuarios u
+                INNER JOIN Clientes c ON u.id = c.UsuarioId
+                LEFT JOIN Perfis p ON u.id = p.UsuarioId
+                LEFT JOIN ClientesInteresses ci ON c.id = ci.ClienteId
+                LEFT JOIN InteressesNutricionais i ON ci.InteresseId = i.id
+                WHERE u.id = ? AND u.UsuarioStatus = 1
+                GROUP BY u.id`,
+                [usuarioId]
+            );
+            
+            console.log("Dados completos do cliente:", linhas);
+            return linhas;
+        } catch (erro) {
+            console.log("Erro ao buscar dados completos do cliente:", erro);
+            return false;
+        }
+    },
+    
+    // Função para buscar publicações curtidas pelo cliente
+    findPublicacoesCurtidas: async (usuarioId) => {
+        try {
+            const [clienteResult] = await pool.query(
+                "SELECT id FROM Clientes WHERE UsuarioId = ?",
+                [usuarioId]
+            );
+            
+            if (clienteResult.length === 0) {
+                return [];
+            }
+            
+            const clienteId = clienteResult[0].id;
+            
+            const [publicacoes] = await pool.query(
+                `SELECT 
+                    p.id,
+                    p.FotoPublicacao,
+                    p.Legenda,
+                    p.Categoria,
+                    p.MediaEstrelas,
+                    cp.DataCurtida
+                FROM Publicacoes p
+                INNER JOIN CurtidasPublicacoes cp ON p.id = cp.PublicacaoId
+                WHERE cp.ClienteId = ?
+                ORDER BY cp.DataCurtida DESC
+                LIMIT 12`,
+                [clienteId]
+            );
+            
+            console.log("Publicações curtidas encontradas:", publicacoes.length);
+            return publicacoes;
+        } catch (erro) {
+            console.log("Erro ao buscar publicações curtidas:", erro);
+            return [];
+        }
+    },
+
     // Criar um usuário Cliente
     createCliente: async (dadosUsuario, cpfLimpo, imagemPerfil = null, imagemBanner = null, interessesSelecionados = []) => {
         let conn;
@@ -395,33 +592,8 @@ const NWModel = {
                 conn.release();
             }
         }
-    },
-
-    // Atualizar dados de um usuário
-    update: async (dadosForm, id) => {
-        try {
-            const [linhas] = await pool.query(
-                "UPDATE Usuarios SET ? WHERE id = ?",
-                [dadosForm, id]
-            );
-            return linhas;
-        } catch (error) {
-            return error;
-        }
-    },
-
-    // Inativar um usuário (soft delete)
-    delete: async (id) => {
-        try {
-            const [linhas] = await pool.query(
-                "UPDATE Usuarios SET UsuarioStatus = 0 WHERE id = ?",
-                [id]
-            );
-            return linhas;
-        } catch (error) {
-            return error;
-        }
     }
+
 };
 
 module.exports = NWModel;

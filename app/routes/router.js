@@ -7,20 +7,23 @@ const NWModel = require("../models/NWModel");
 
 const upload = require("../util/uploader.js");
 
-router.post(
-    "/entrar", 
-    
-    NWController.validacaoLogin,
-    
-    function (req, res) {
-        const listaErros = validationResult(req);
-        if (listaErros.isEmpty()) {
-            return res.redirect('/');
-        }else {
-            console.log(listaErros);
-            return res.render("pages/indexLogin", {retorno: null, valores: {email: req.body.email, senha: req.body.senha}, listaErros:listaErros});
-        }
-    }
+const { verificarUsuAutenticado, processarLogin, verificarPermissao, logout } = require("../models/autenticador.js");
+
+router.use(verificarUsuAutenticado);
+
+router.get("/login", NWController.mostrarLogin);
+
+router.post("/entrar", 
+    NWController.validacaoLogin,    
+    processarLogin,                 
+    NWController.processarLogin
+);
+
+router.get("/logout", logout);
+
+router.get("/perfilcliente", 
+    verificarPermissao(['C']),
+    NWController.mostrarPerfilCliente 
 );
 
 router.post(
@@ -425,10 +428,6 @@ router.post(
     }
 );
 
-router.get("/login", function (req, res) {
-    res.render('pages/indexLogin', { retorno: null, valores: {email:"", senha:""}, listaErros: null});
-});
-
 router.get("/cadastrocliente", function (req, res) {
     res.render('pages/indexCadastroCliente', { retorno: null, etapa:"1", valores: {nome:"", email:"", cpf:"", senha:"", telefone:"", ddd:""}, listaErros: null});
 });
@@ -467,10 +466,6 @@ router.get("/tiponutri", function (req, res) {
 
 router.get("/publicar", function (req, res) {
     res.render('pages/indexPublicar')
-});
-
-router.get("/perfilcliente", function (req, res) {
-    res.render('pages/indexPerfilCliente')
 });
 
 router.get("/assinatura", function (req, res) {

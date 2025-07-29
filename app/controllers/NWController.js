@@ -6,9 +6,13 @@ const bcrypt = require('bcryptjs');
 const NWController = {
 
     // validação login
-    validacaoLogin : [
-        body("email").isEmail().withMessage("Insira um Email válido!"),
-            body("senha").isLength({min:5}).withMessage("A senha deve conter 5 ou mais caracteres!"),
+    validacaoLogin: [
+        body("email")
+            .isEmail()
+            .withMessage("Insira um email válido no formato: exemplo@dominio.com"),
+        body("senha")
+            .isLength({min: 5})
+            .withMessage("A senha deve conter pelo menos 5 caracteres")
     ],
 
     // validação cadastro cliente
@@ -181,9 +185,207 @@ const NWController = {
 
     /* --------------------------------------- MÉTODOS ------------------------------------ */
 
+    processarLogin: (req, res) => {
+        const erros = validationResult(req);
+        
+        // Se há erros de validação
+        if (!erros.isEmpty()) {
+            console.log("Erros de validação no login:", erros.array());
+            return res.render("pages/indexLogin", {
+                retorno: null, 
+                valores: { email: req.body.email, senha: "" },
+                listaErros: erros
+            });
+        }
+    
+        if (req.loginError) {
+            console.log("Erro no login:", req.loginError);
+            
+            const erroPersonalizado = {
+                errors: []
+            };
+            
+            if (req.loginError.includes("Email") || req.loginError.includes("não encontrado")) {
+                erroPersonalizado.errors.push({
+                    path: "email",
+                    msg: req.loginError
+                });
+            } else if (req.loginError.includes("senha") || req.loginError.includes("incorretos")) {
+                erroPersonalizado.errors.push({
+                    path: "senha", 
+                    msg: req.loginError
+                });
+            } else {
+                erroPersonalizado.errors.push({
+                    path: "email",
+                    msg: req.loginError
+                });
+                erroPersonalizado.errors.push({
+                    path: "senha",
+                    msg: req.loginError
+                });
+            }
+            
+            return res.render("pages/indexLogin", {
+                retorno: null,
+                valores: { email: req.body.email, senha: "" },
+                listaErros: erroPersonalizado
+            });
+        }
+    
+        if (req.loginSucesso) {
+            console.log("Login bem-sucedido, redirecionando...");
+            
+            if (req.session.usuario.tipo === 'C') {
+                return res.redirect("/perfilcliente?login=sucesso");
+            } else if (req.session.usuario.tipo === 'N') {
+                return res.redirect("/perfilnutri?login=sucesso");
+            } else {
+                return res.redirect("/?login=sucesso");
+            }
+        }
+    
+        console.log("Estado inesperado no processamento do login");
+        const erroInesperado = {
+            errors: [
+                {
+                    path: "email",
+                    msg: "Erro inesperado. Tente novamente."
+                },
+                {
+                    path: "senha",
+                    msg: "Erro inesperado. Tente novamente."
+                }
+            ]
+        };
+        
+        return res.render("pages/indexLogin", {
+            retorno: null,
+            valores: { email: req.body.email, senha: "" },
+            listaErros: erroInesperado
+        });
+    },
+
+    mostrarLogin: (req, res) => {
+        if (req.session.usuario && req.session.usuario.logado) {
+            console.log(`Usuário ${req.session.usuario.nome} já está logado, redirecionando...`);
+            
+            if (req.session.usuario.tipo === 'C') {
+                return res.redirect('/perfilcliente');
+            } else if (req.session.usuario.tipo === 'N') {
+                return res.redirect('/perfilnutri');
+            } else {
+                return res.redirect('/');
+            }
+        }
+    
+        let retorno = null;
+        
+        // Verifica mensagens na URL
+        if (req.query.cadastro === "sucesso") {
+            retorno = { tipo: "sucesso", mensagem: "Cadastro realizado com sucesso! Faça seu login." };
+        } else if (req.query.logout === "sucesso") {
+            retorno = { tipo: "sucesso", mensagem: "Logout realizado com sucesso!" };
+        } else if (req.query.erro === "acesso_negado") {
+            retorno = { tipo: "erro", mensagem: "Você precisa fazer login para acessar esta página." };
+        } else if (req.query.erro === "sem_permissao") {
+            retorno = { tipo: "erro", mensagem: "Você não tem permissão para acessar esta página." };
+        }
+    
+        res.render('pages/indexLogin', { 
+            retorno: retorno, 
+            valores: { email: "", senha: "" }, 
+            listaErros: null
+        });
+    },
+
+    mostrarPerfilCliente: async (req, res) => {
+        try {
+            if (!req.session.usuario || req.session.usuario.tipo !== 'C') {
+                return res.redirect('/login?erro=acesso_negado');
+            }
+            
+            const usuarioId = req.session.usuario.id;
+            console.log("Carregando perfil do cliente ID:", usuarioId);
+            
+            // Buscar dados completos do cliente
+            const dadosCliente = await NWModel.findClienteCompleto(usuarioId);
+            
+            if (!dadosCliente || dadosCliente.length === 0) {
+                console.log("Cliente não encontrado");
+                return res.render("pages/indexPerfilCliente", {
+                    erro: "Dados do cliente não encontrados",
+                    cliente: null,
+                    publicacoesCurtidas: []
+                });
+            }
+            
+            const cliente = dadosCliente[0];
+            
+            const publicacoesCurtidas = await NWModel.findPublicacoesCurtidas(usuarioId);
+            
+            // Processar dados para a view
+            const dadosProcessados = {
+                id: cliente.id,
+                nome: cliente.NomeCompleto,
+                email: cliente.Email,
+                telefone: cliente.Telefone ? 
+                    `(${cliente.Telefone.substring(0,2)}) ${cliente.Telefone.substring(2,7)}-${cliente.Telefone.substring(7)}` : 
+                    null,
+                cpf: cliente.CPF,
+                cep: cliente.CEP,
+                dataNascimento: cliente.DataNascimento,
+                objetivos: cliente.SobreMim || "Ainda não definiu seus objetivos nutricionais.",
+                interesses: cliente.InteressesNutricionais || "Nenhum interesse cadastrado",
+                
+                // Processar fotos
+                fotoPerfil: cliente.FotoPerfil ? 
+                    `data:image/jpeg;base64,${cliente.FotoPerfil.toString('base64')}` : 
+                    'imagens/foto_perfil.jpg', 
+                
+                fotoBanner: cliente.FotoBanner ? 
+                    `data:image/jpeg;base64,${cliente.FotoBanner.toString('base64')}` : 
+                    null,
+                
+                // Processar publicações curtidas
+                publicacoes: publicacoesCurtidas.map(pub => ({
+                    id: pub.id,
+                    imagem: pub.FotoPublicacao ? 
+                        `data:image/jpeg;base64,${pub.FotoPublicacao.toString('base64')}` : 
+                        'imagens/placeholder-post.jpg',
+                    legenda: pub.Legenda,
+                    categoria: pub.Categoria,
+                    estrelas: pub.MediaEstrelas,
+                    dataCurtida: pub.DataCurtida
+                }))
+            };
+            
+            console.log("Dados processados para o cliente:", {
+                nome: dadosProcessados.nome,
+                email: dadosProcessados.email,
+                quantidadePublicacoes: dadosProcessados.publicacoes.length,
+                temFotoPerfil: !!cliente.FotoPerfil,
+                temObjetivos: !!cliente.SobreMim
+            });
+            
+            return res.render("pages/indexPerfilCliente", {
+                erro: null,
+                cliente: dadosProcessados,
+                publicacoesCurtidas: dadosProcessados.publicacoes
+            });
+            
+        } catch (erro) {
+            console.error("Erro ao carregar perfil do cliente:", erro);
+            return res.render("pages/indexPerfilCliente", {
+                erro: "Erro interno. Tente novamente mais tarde.",
+                cliente: null,
+                publicacoesCurtidas: []
+            });
+        }
+    },
+
     cadastrarCliente: async (req, res) => {
         try {
-            // ver erros de validaçao
             const erros = validationResult(req);
             if (!erros.isEmpty()) {
                 return res.render('pages/indexCadastroCliente', {

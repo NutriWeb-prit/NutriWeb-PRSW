@@ -70,21 +70,27 @@
                 <section id="info_perfil">
                     <section id="container_foto">
                         <section class="foto_perfil">
-                            <img src="imagens/foto_perfil.jpg" alt="" class="foto_perfil" id="foto-perfil">
+                            <img src="<%= cliente ? cliente.fotoPerfil : 'imagens/foto_perfil.jpg' %>" 
+                                 alt="Foto de perfil" class="foto_perfil" id="foto-perfil">
                         </section>
                     </section><br>
-
+        
                     <section id="infrmacoes_nutri">
-                        <h1 id="nomenutri"></h1>
-                        <p class="tipo-nutri" id="tipo-nutri"></p>
-
-                        <h1 id="nomeCliente">Carlos Oliveira</h1>
-                        <p class="tipo-nutri" id="tipo-nutri"></p>
-
-                        <h1>Objetivo:</h1>
-                        <span id="sobremim">Tenho 32 anos e meu principal objetivo é perder 10kg em três meses para melhorar minha 
-                            saúde e autoestima. Além do emagrecimento, quero aprender a me alimentar melhor para manter os resultados 
-                            a longo prazo e ter mais disposição no dia a dia.</span>
+                        <% if (cliente) { %>
+                            <h1 id="nomeCliente"><%= cliente.nome %></h1>
+                            <p class="tipo-nutri" id="tipo-nutri">Cliente</p>
+        
+                            <h1>Objetivo:</h1>
+                            <span id="sobremim"><%= cliente.objetivos %></span>
+                            
+                            <% if (cliente.interesses && cliente.interesses !== 'Nenhum interesse cadastrado') { %>
+                                <h3>Interesses Nutricionais:</h3>
+                                <span id="interesses"><%= cliente.interesses %></span>
+                            <% } %>
+                        <% } else { %>
+                            <h1 id="nomeCliente">Dados não encontrados</h1>
+                            <p class="tipo-nutri">Erro ao carregar perfil</p>
+                        <% } %>
                     </section>
                     
                     <section id="opcoes-perfil">
@@ -92,31 +98,30 @@
                         <span class="material-symbols-outlined opc-perfil hidden">visibility</span>
                         <span class="material-symbols-outlined opc-perfil">visibility_off</span>
                     </section>
-
+        
                     <section id="info_contato">
                         <h4>Informações de Contato</h4>
                         <section class="divisao"></section>
                     </section>
-
+        
                     <section id="rede_sociais">
+                        <% if (cliente && cliente.telefone) { %>
+                            <p class="contato">
+                                <img src="imagens/contato-whatsapp.png" alt="" class="icone_contato">
+                                <span id="whatsapp"><%= cliente.telefone %></span>
+                            </p>
+                        <% } %>
              
-                        <p class="contato">
-                            <img src="imagens/contato-whatsapp.png" alt="" class="icone_contato">
-                            <span id="whatsapp">(11) 94567-2384</span>
-                        </p>
-             
-                        <p class="contato">
-                            <img src="imagens/contato-instagram.png" alt="" class="icone_contato">
-                            <span id="instagram">@carlos_oliveira93</span>
-                        </p>
-             
-                        <p class="contato">
-                            <img src="imagens/contato-email.png" alt="" class="icone_contato">
-                            <span id="email"> carlos.oliveira93@email.com</span>
-                        </p>
+                        <% if (cliente && cliente.email) { %>
+                            <p class="contato">
+                                <img src="imagens/contato-email.png" alt="" class="icone_contato">
+                                <span id="email"><%= cliente.email %></span>
+                            </p>
+                        <% } %>
                     </section>
              
                 </section>
+                
                 <section id="publi_avaliacao">
                     <section id="publi_selecionar" onclick="clicarDois()">
                         <p>Publicações</p>
@@ -125,31 +130,32 @@
                         <p>Avaliações</p>
                     </section>
                 </section>
-
+        
                 <section id="publi">
-
                     <span id="titulopubli">Publicações Curtidas</span>
-
+        
                     <section class="grid-publicacoes">
-                        <article class="img">
-                        <img src="imagens/img-post-prato.jpg" alt="" class="post_img">
-                    </article>
-             
-                    <article class="img">
-                        <img src="imagens/img-post-frutas.jfif" alt="" class="post_img">
-                    </article>
-                    <article class="img">
-                        <img src="imagens/img-post-kiwi.jpg" alt=""  class="post_img">
-                    </article>
-                    <article class="img">
-                        <img src="imagens/img-post-whey.jpg" alt=""  class="post_img">
-                    </article>
-                    <article class="img">
-                        <img src="imagens/img-post-saudavel.jfif" alt=""  class="post_img">
-                    </article>
-                    <article class="img">
-                        <img src="imagens/img-post-frango.jfif" alt=""  class="post_img">
-                    </article>
+                        <% if (publicacoesCurtidas && publicacoesCurtidas.length > 0) { %>
+                            <% publicacoesCurtidas.forEach(function(publicacao) { %>
+                                <article class="img" title="<%= publicacao.legenda %>">
+                                    <img src="<%= publicacao.imagem %>" 
+                                         alt="<%= publicacao.categoria %>" 
+                                         class="post_img"
+                                         data-id="<%= publicacao.id %>">
+                                    <section class="post-info">
+                                        <span class="categoria"><%= publicacao.categoria %></span>
+                                        <% if (publicacao.estrelas > 0) { %>
+                                            <span class="estrelas">⭐ <%= publicacao.estrelas %></span>
+                                        <% } %>
+                                    </section>
+                                </article>
+                            <% }); %>
+                        <% } else { %>
+                            <section class="sem-publicacoes">
+                                <p>Nenhuma publicação curtida ainda.</p>
+                                <p>Explore nosso feed para descobrir conteúdos interessantes!</p>
+                            </section>
+                        <% } %>
                     </section>
                 </section>
                 
@@ -229,6 +235,12 @@
                         </p>
                     </article>
                 </section>
+
+                <% if (erro) { %>
+                    <script>
+                        console.error('Erro no perfil:', '<%= erro %>');
+                    </script>
+                <% } %>
                      </main>
 
                      <footer class="footer">

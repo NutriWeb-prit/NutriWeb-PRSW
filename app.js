@@ -3,6 +3,18 @@ const app = express();
 const port = 3000;
 const env = require("dotenv").config();
 
+const session = require('express-session');
+
+app.use(session({
+    secret: 'sua-chave-super-secreta-aqui', 
+    resave: false,
+    saveUninitialized: false,
+    cookie: { 
+        secure: false, 
+        maxAge: 1000 * 60 * 60 * 24
+    }
+}));
+
 app.use(express.static("app/public"));
 
 app.set("view engine", "ejs");
