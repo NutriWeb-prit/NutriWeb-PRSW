@@ -156,9 +156,9 @@ const NWModel = {
         }
     },
 
-    findClienteCompleto: async (usuarioId) => {
+    findPerfilCompleto: async (usuarioId) => {
         try {
-            const [linhas] = await pool.query(
+            const [clienteResult] = await pool.query(
                 `SELECT 
                     u.id,
                     u.NomeCompleto,
@@ -166,65 +166,196 @@ const NWModel = {
                     u.Telefone,
                     u.CEP,
                     u.DataNascimento,
+                    c.id as ClienteId,
                     c.CPF,
-                    p.FotoPerfil,
-                    p.FotoBanner,
+                    -- Verificar SE existe foto, mas não carregar os dados
+                    CASE WHEN p.FotoPerfil IS NOT NULL THEN 1 ELSE 0 END as FotoPerfil,
+                    CASE WHEN p.FotoBanner IS NOT NULL THEN 1 ELSE 0 END as FotoBanner,
                     p.SobreMim,
-                    -- Buscar interesses do cliente
-                    GROUP_CONCAT(DISTINCT i.Nome SEPARATOR ', ') as InteressesNutricionais
+                    -- Otimizar GROUP_CONCAT com LIMIT
+                    (SELECT GROUP_CONCAT(i.Nome SEPARATOR ', ') 
+                     FROM ClientesInteresses ci 
+                     INNER JOIN InteressesNutricionais i ON ci.InteresseId = i.id 
+                     WHERE ci.ClienteId = c.id 
+                     LIMIT 10) as InteressesNutricionais
                 FROM Usuarios u
                 INNER JOIN Clientes c ON u.id = c.UsuarioId
                 LEFT JOIN Perfis p ON u.id = p.UsuarioId
-                LEFT JOIN ClientesInteresses ci ON c.id = ci.ClienteId
-                LEFT JOIN InteressesNutricionais i ON ci.InteresseId = i.id
-                WHERE u.id = ? AND u.UsuarioStatus = 1
-                GROUP BY u.id`,
-                [usuarioId]
-            );
-            
-            console.log("Dados completos do cliente:", linhas);
-            return linhas;
-        } catch (erro) {
-            console.log("Erro ao buscar dados completos do cliente:", erro);
-            return false;
-        }
-    },
-    
-    // Função para buscar publicações curtidas pelo cliente
-    findPublicacoesCurtidas: async (usuarioId) => {
-        try {
-            const [clienteResult] = await pool.query(
-                "SELECT id FROM Clientes WHERE UsuarioId = ?",
+                WHERE u.id = ? AND u.UsuarioStatus = 1`,
                 [usuarioId]
             );
             
             if (clienteResult.length === 0) {
-                return [];
+                return { cliente: null, publicacoes: [] };
             }
             
-            const clienteId = clienteResult[0].id;
+            const cliente = clienteResult[0];
             
             const [publicacoes] = await pool.query(
                 `SELECT 
-                    p.id,
-                    p.FotoPublicacao,
+                    p.id as PublicacaoId,
                     p.Legenda,
                     p.Categoria,
                     p.MediaEstrelas,
-                    cp.DataCurtida
+                    cp.DataCurtida,
+                    -- Verificar SE existe foto, mas não carregar os dados
+                    CASE WHEN p.FotoPublicacao IS NOT NULL THEN 1 ELSE 0 END as FotoPublicacao
                 FROM Publicacoes p
                 INNER JOIN CurtidasPublicacoes cp ON p.id = cp.PublicacaoId
                 WHERE cp.ClienteId = ?
                 ORDER BY cp.DataCurtida DESC
                 LIMIT 12`,
-                [clienteId]
+                [cliente.ClienteId]
             );
             
-            console.log("Publicações curtidas encontradas:", publicacoes.length);
-            return publicacoes;
+            console.log("Perfil carregado otimizado:", {
+                clienteId: cliente.id,
+                publicacoesCurtidas: publicacoes.length
+            });
+            
+            return {
+                cliente: cliente,
+                publicacoes: publicacoes
+            };
+            
         } catch (erro) {
-            console.log("Erro ao buscar publicações curtidas:", erro);
-            return [];
+            console.log("Erro ao buscar perfil otimizado:", erro);
+            return { cliente: null, publicacoes: [] };
+        }
+    },
+    
+    findImagemPerfil: async (usuarioId) => {
+        try {
+            const [result] = await pool.query(
+                "SELECT FotoPerfil FROM Perfis WHERE UsuarioId = ?",
+                [usuarioId]
+            );
+            
+            return result.length > 0 ? result[0].FotoPerfil : null;
+        } catch (erro) {
+            console.log("Erro ao buscar imagem de perfil:", erro);
+            return null;
+        }
+    },
+    
+    findImagemBanner: async (usuarioId) => {
+        try {
+            const [result] = await pool.query(
+                "SELECT FotoBanner FROM Perfis WHERE UsuarioId = ?",
+                [usuarioId]
+            );
+            
+            return result.length > 0 ? result[0].FotoBanner : null;
+        } catch (erro) {
+            console.log("Erro ao buscar imagem de banner:", erro);
+            return null;
+        }
+    },
+    
+    findImagemPublicacao: async (publicacaoId) => {
+        try {
+            const [result] = await pool.query(
+                "SELECT FotoPublicacao FROM Publicacoes WHERE id = ?",
+                [publicacaoId]
+            );
+            
+            return result.length > 0 ? result[0].FotoPublicacao : null;
+        } catch (erro) {
+            console.log("Erro ao buscar imagem da publicação:", erro);
+            return null;
+        }
+    },
+
+    findPerfilNutri: async (usuarioId) => {
+        try {
+            const [nutricionistaResult] = await pool.query(
+                `SELECT 
+                    u.id,
+                    u.NomeCompleto,
+                    u.Email,
+                    u.Telefone,
+                    n.id as NutricionistaId,
+                    n.Crn,
+                    -- Verificar se existe foto, mas não carregar os dados
+                    CASE WHEN p.FotoPerfil IS NOT NULL THEN 1 ELSE 0 END as FotoPerfil,
+                    p.SobreMim,
+                    -- Buscar especializações
+                    (SELECT GROUP_CONCAT(e.Nome SEPARATOR ', ') 
+                     FROM NutricionistasEspecializacoes ne 
+                     INNER JOIN Especializacoes e ON ne.EspecializacaoId = e.id 
+                     WHERE ne.NutricionistaId = n.id 
+                     LIMIT 10) as Especializacoes
+                FROM Usuarios u
+                INNER JOIN Nutricionistas n ON u.id = n.UsuarioId
+                LEFT JOIN Perfis p ON u.id = p.UsuarioId
+                WHERE u.id = ? AND u.UsuarioStatus = 1`,
+                [usuarioId]
+            );
+            
+            if (nutricionistaResult.length === 0) {
+                return { nutricionista: null, formacoes: [], contatosSociais: [] };
+            }
+            
+            const nutricionista = nutricionistaResult[0];
+            
+            const [formacoes] = await pool.query(
+                `SELECT 
+                    id,
+                    TipoFormacao,
+                    NomeFormacao,
+                    NomeInstituicao,
+                    CASE WHEN CertificadoArquivo IS NOT NULL THEN 1 ELSE 0 END as CertificadoArquivo
+                FROM NutricionistasFormacoes
+                WHERE NutricionistaId = ?
+                ORDER BY TipoFormacao DESC, DataCriacao DESC`,
+                [nutricionista.NutricionistaId]
+            );
+            
+            const [contatosSociais] = await pool.query(
+                `SELECT 
+                    cs.Tipo,
+                    cs.Link
+                FROM ContatoSociais cs
+                INNER JOIN NutricionistaContatoSociais ncs ON cs.id = ncs.ContatoSociaisId
+                WHERE ncs.NutricionistaId = ?`,
+                [nutricionista.NutricionistaId]
+            );
+            
+            console.log("Perfil básico carregado:", {
+                nutricionistaId: nutricionista.id,
+                formacoes: formacoes.length,
+                contatosSociais: contatosSociais.length
+            });
+            
+            return {
+                nutricionista: nutricionista,
+                formacoes: formacoes,
+                contatosSociais: contatosSociais
+            };
+            
+        } catch (erro) {
+            console.log("Erro ao buscar perfil básico do nutricionista:", erro);
+            return { nutricionista: null, formacoes: [], contatosSociais: [] };
+        }
+    },
+    
+    // Função para servir certificados (mantida igual)
+    findCertificado: async (formacaoId) => {
+        try {
+            const [result] = await pool.query(
+                `SELECT 
+                    CertificadoArquivo,
+                    CertificadoNome,
+                    CertificadoTipo
+                FROM NutricionistasFormacoes 
+                WHERE id = ?`,
+                [formacaoId]
+            );
+            
+            return result.length > 0 ? result[0] : null;
+        } catch (erro) {
+            console.log("Erro ao buscar certificado:", erro);
+            return null;
         }
     },
 

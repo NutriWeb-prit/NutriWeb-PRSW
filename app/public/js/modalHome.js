@@ -6,16 +6,19 @@ document.addEventListener('DOMContentLoaded', function() {
     cards.forEach(card => {
         card.addEventListener('click', () => {
             modal.style.display = 'flex'; 
+            document.body.classList.add("body-no-scroll");
         });
     });
 
     closeButton.addEventListener('click', () => {
         modal.style.display = 'none';
+        document.body.classList.remove("body-no-scroll");
     });
 
     window.addEventListener('click', (event) => {
         if (event.target === modal) {
             modal.style.display = 'none';
+            document.body.classList.remove("body-no-scroll");
         }
     });
 });
@@ -27,17 +30,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
     posts.forEach(posts => {
         posts.addEventListener('click', () => {
-            modal.style.display = 'flex'; 
+            modal.style.display = 'flex';
+            document.body.classList.add("body-no-scroll");
         });
     });
 
     closeButton.addEventListener('click', () => {
         modal.style.display = 'none';
+        document.body.classList.remove("body-no-scroll");
     });
 
     window.addEventListener('click', (event) => {
         if (event.target === modal) {
             modal.style.display = 'none';
+            document.body.classList.remove("body-no-scroll");
         }
     });
 });

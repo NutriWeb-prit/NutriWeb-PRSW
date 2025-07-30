@@ -12,28 +12,13 @@
     <title>Perfil Do Nutricionista - NutriWeb</title>
 </head>
     <body class="body">
-        <% 
-        let erroValidacao = {"avaliacao" : ""};
-        let msgErro = {"avaliacao" : ""};
-        if(listaErros) {
-            listaErros.errors.forEach( function(erro) {
-                if (erro.path == "avaliacao") {
-                    erroValidacao.avaliacao = "erro-form",
-                    msgErro.avaliacao = erro.msg
-                }
-            });
-        } 
-        %>
         <header class="header">
-            
             <section class="left-section">
                 <a href="/"><img src="imagens/logo.png" alt="Logo" class="logo"></a>
-        
                 <a href="/ranking" class="ranking"><button class="ranking-button">Ranking</button></a>
-
                 <a href="/profissionais"><button class="profissionais-button">Profissionais</button></a>
             </section>
-
+        
             <section class="center-section">
                 <section class="input-premium">
                     <span class="material-icons search-icon md-24">search</span>
@@ -42,36 +27,25 @@
             </section>
             
             <section class="right-section">
-                <a href="/perfilcliente"><button class="meuperfil-button">Meu Perfil</button></a>
-                <a href="/premium"><button class="premium-button">Premium</button></a>
-                <a href="/login"><button class="entrar-button">Entrar</button></a>
+                <% if (headerUsuario.estaLogado) { %>
+                    <a href="/premium"><button class="premium-button">Premium</button></a>
+                    
+                    <a href="<%= headerUsuario.urlPerfil %>" class="perfil-usuario-link">
+                        <section class="perfil-usuario">
+                            <img src="<%= headerUsuario.fotoPerfil %>" 
+                                 alt="Foto de perfil" 
+                                 class="foto-perfil-header"
+                                 onerror="this.src='imagens/foto_perfil.jpg'">
+                            <span class="nome-usuario-header"><%= headerUsuario.nome %></span>
+                        </section>
+                    </a>
+                <% } else { %>
+                    <a href="/perfilcliente"><button class="meuperfil-button">Meu Perfil</button></a>
+                    <a href="/premium"><button class="premium-button">Premium</button></a>
+                    <a href="/login"><button class="entrar-button">Entrar</button></a>
+                <% } %>
             </section>
-            
         </header>
-            
-        <section class="home-mobile">
-
-            <section class="menu">
-                <section class="left-section">
-                    <a href="/"><img src="imagens/logo.png" alt="Logo" class="logo"></a>
-                </section>
-
-                <section class="right-section">
-                    <span class="material-icons search-icon md-24 menu-icon">menu</span>
-                </section>
-            </section>
-            
-            <section class="mobile-menu hidden">
-                <ul>
-                    <li><a href="/perfilcliente">Meu Perfil</a></li>
-                    <li><a href="/ranking">Ranking</a></li>
-                    <li><a href="/profissionais">Profissionais</a></li>
-                    <li><a href="/premium">Premium</a></li>
-                    <li><a href="/login">Entrar</a></li>
-                </ul>
-            </section>
-
-        </section>
 
         <!-- Conteudo do site -->
 
@@ -88,7 +62,7 @@
                             </section>
                         </a>
                         <section class="content-avaliar">
-                            <span class="notification"><%= msgErro.avaliacao %></span>
+                            <span class="notification"></span>
                             <section id="rating">
                                 <span class="star" data-value="1">★</span>
                                 <span class="star" data-value="2">★</span>
@@ -96,8 +70,8 @@
                                 <span class="star" data-value="4">★</span>
                                 <span class="star" data-value="5">★</span>
                             </section>
-                            <form action="/publicaravaliacao" method="post">
-                                <textarea id="avaliacao" name="avaliacao" value="<%= valores.avaliacao %>" class="<%= erroValidacao.nome %>" rows="15" cols="70" placeholder="Faça sua avaliação deste profissional"></textarea>
+                            <form action="" method="post">
+                                <textarea id="avaliacao" name="avaliacao" value="" class="" rows="15" cols="70" placeholder="Faça sua avaliação deste profissional"></textarea>
                                 <section class="buttons-avaliar">
                                     <button type="button" onclick="fecharMenu()" class="cancelar">Cancelar</button>
                                     <button type="submit" id="postar">Postar</button>
@@ -109,53 +83,134 @@
             </section>
             <section id="imagem_de_fundo"></section>
             <main class="conteudo">
-                        <section id="info_perfil">
-                            <section id="container_foto">
-                                <section class="foto_perfil">
-                                    <img src="#" alt="" class="foto_perfil" id="foto-perfil">
+                <% if (erro) { %>
+                    <section class="erro-mensagem">
+                        <p><%= erro %></p>
+                    </section>
+                <% } else if (nutricionista) { %>
+                    <!-- PERFIL DO NUTRICIONISTA -->
+                    <section id="info_perfil">
+                        <section id="container_foto">
+                            <section class="foto_perfil">
+                                <img src="<%= nutricionista.fotoPerfil %>" 
+                                     alt="Foto de perfil" 
+                                     class="foto_perfil" 
+                                     id="foto-perfil"
+                                     onerror="this.src='imagens/foto_perfil.jpg'">
                             </section>
                         </section>
-
-                    <section id="infrmacoes_nutri">
-                        <h1 id="nomenutri"></h1>
-                        <p class="tipo-nutri" id="tipo-nutri"></p>
-
-                        <h1>Sobre:</h1>
-                        <span id="sobremim"></span>
-
-                        <h1>Faculdade:</h1>
-                        <span id="faculdade">Bacharelado em Nutrição <br> Universidade de São Paulo (USP)</span>
-
-                        <img src="imagens/phpublicacao.png" alt="" class="perfil-imagem">
-
-                        <h1>Curso:</h1>
-                        <span id="faculdade">Especialidade em Nutrição <br> Estética (FAMESP)</span>
-
-                        <img src="imagens/phpublicacao.png" alt="" class="perfil-imagem">
+            
+                        <section id="infrmacoes_nutri">
+                            <h1 id="nomenutri"><%= nutricionista.nome %></h1>
+                            <p class="tipo-nutri" id="tipo-nutri">
+                                CRN: <%= nutricionista.crn %>
+                                <% if (nutricionista.especializacoes) { %>
+                                    <br><span class="especializacoes"><%= nutricionista.especializacoes %></span>
+                                <% } %>
+                            </p>
+            
+                            <h1>Sobre:</h1>
+                            <span id="sobremim"><%= nutricionista.sobreMim %></span>
+            
+                            <!-- FORMAÇÕES DINÂMICAS -->
+                            <% if (formacoes && formacoes.length > 0) { %>
+                                <% formacoes.forEach(function(formacao) { %>
+                                    <% if (formacao.tipo === 'graduacao') { %>
+                                        <h1>Faculdade:</h1>
+                                    <% } else { %>
+                                        <h1>Curso:</h1>
+                                    <% } %>
+            
+                                    <span class="formacao-item">
+                                        <%= formacao.nome %> <br> 
+                                        <%= formacao.instituicao %>
+                                    </span>
+            
+                                    <% if (formacao.temCertificado) { %>
+                                        <a href="<%= formacao.urlCertificado %>" target="_blank">
+                                            <img src="imagens/phpublicacao.png" alt="Ver certificado" class="perfil-imagem">
+                                        </a>
+                                    <% } else { %>
+                                        <img src="imagens/phpublicacao.png" alt="Certificado" class="perfil-imagem">
+                                    <% } %>
+                                <% }); %>
+                            <% } else { %>
+                                <h1>Formação:</h1>
+                                <span>Informações de formação não disponíveis</span>
+                            <% } %>
+                        </section>
+            
+                        <section id="info_contato">
+                            <h4>Informações de Contato</h4>
+                            <section class="divisao"></section>
+                        </section>
+            
+                        <section id="rede_sociais">
+                            <!-- TELEFONE/WHATSAPP -->
+                            <% if (nutricionista.telefone) { %>
+                                <p class="contato">
+                                    <img src="imagens/contato-whatsapp.png" alt="" class="icone_contato">
+                                    <span id="whatsapp"><%= nutricionista.telefone %></span>
+                                </p>
+                            <% } else if (contatosSociais.whatsapp) { %>
+                                <p class="contato">
+                                    <img src="imagens/contato-whatsapp.png" alt="" class="icone_contato">
+                                    <span id="whatsapp"><%= contatosSociais.whatsapp %></span>
+                                </p>
+                            <% } %>
+            
+                            <!-- INSTAGRAM -->
+                            <% if (contatosSociais.instagram) { %>
+                                <p class="contato">
+                                    <img src="imagens/contato-instagram.png" alt="" class="icone_contato">
+                                    <span id="instagram">
+                                        <a href="<%= contatosSociais.instagram %>" target="_blank">Instagram</a>
+                                    </span>
+                                </p>
+                            <% } %>
+            
+                            <!-- EMAIL -->
+                            <p class="contato">
+                                <img src="imagens/contato-email.png" alt="" class="icone_contato">
+                                <span id="email"><%= nutricionista.email %></span>
+                            </p>
+            
+                            <!-- FACEBOOK -->
+                            <% if (contatosSociais.facebook) { %>
+                                <p class="contato">
+                                    <img src="imagens/contato-facebook.png" alt="" class="icone_contato">
+                                    <span>
+                                        <a href="<%= contatosSociais.facebook %>" target="_blank">Facebook</a>
+                                    </span>
+                                </p>
+                            <% } %>
+            
+                            <!-- YOUTUBE -->
+                            <% if (contatosSociais.youtube) { %>
+                                <p class="contato">
+                                    <img src="imagens/contato-youtube.png" alt="" class="icone_contato">
+                                    <span>
+                                        <a href="<%= contatosSociais.youtube %>" target="_blank">YouTube</a>
+                                    </span>
+                                </p>
+                            <% } %>
+                        </section>
+            
+                        <section id="editar-perfil">
+                            <span class="material-symbols-outlined caneta">
+                                edit
+                            </span>
+                            <p>Editar Perfil</p>
+                        </section>
                     </section>
-                    
-                    <section id="info_contato">
-                        <h4>Informações de Contato</h4>
-                        <section class="divisao"></section>
+            
+                <% } else { %>
+                    <!-- CASO NÃO ENCONTRE O NUTRICIONISTA -->
+                    <section class="erro-mensagem">
+                        <p>Perfil não encontrado.</p>
                     </section>
-                    
-                    <section id="rede_sociais">
-             
-                        <p class="contato">
-                            <img src="imagens/contato-whatsapp.png" alt="" class="icone_contato">
-                            <span id="whatsapp">(xx) xxxxx-xxxx</span>
-                        </p>
-             
-                        <p class="contato">
-                            <img src="imagens/contato-instagram.png" alt="" class="icone_contato">
-                            <span id="instagram">(xx) xxxxx-xxxx</span>
-                        </p>
-             
-                        <p class="contato">
-                            <img src="imagens/contato-email.png" alt="" class="icone_contato">
-                            <span id="email">(xx) xxxxx-xxxx</span>
-                        </p>
-                    </section>
+                <% } %>
+            
                     <section id="editar-perfil">
              
                         <span class="material-symbols-outlined caneta">
@@ -166,7 +221,7 @@
                         </p>
                     </section>
              
-                </section>
+                
                 <section id="publi_avaliacao">
                     <section id="publi_selecionar" onclick="clicarDois()">
                         <p>Publicações</p>
@@ -233,9 +288,9 @@
                         <article class="img-post">
                             <img src="imagens/img-post-lasanha.jpg" alt="" class="post_img"
                             data-id=""
-                            data-nome=""
-                            data-profissao=""
-                            data-imgperfil=""
+                            data-nome="<%= nutricionista.nome %>"
+                            data-profissao="Nutrição <%= nutricionista.especializacoes %>"
+                            data-imgperfil="<%= nutricionista.fotoPerfil %>"
                             data-imgconteudo="imagens/img-post-lasanha.jpg"
                             data-titulo="LASANHA FIT: É POSSÍVEL?"
                             data-conteudo1="A versão saudável da lasanha é possível com ingredientes mais nutritivos e leves, sem abrir mão do sabor."
@@ -247,9 +302,9 @@
                         <article class="img-post">
                             <img src="imagens/img-post-frutas.jfif" alt="" class="post_img" 
                             data-id=""
-                            data-nome=""
-                            data-profissao=""
-                            data-imgperfil=""
+                            data-nome="<%= nutricionista.nome %>"
+                            data-profissao="Nutrição <%= nutricionista.especializacoes %>"
+                            data-imgperfil="<%= nutricionista.fotoPerfil %>"
                             data-imgconteudo="imagens/img-post-frutas.jfif"
                             data-titulo="FRUTAS PARA UMA PELE MAIS BONITA"
                             data-conteudo1="Algumas frutas possuem antioxidantes, vitaminas e minerais que ajudam a manter a pele hidratada, firme e protegida contra o envelhecimento precoce."
@@ -261,9 +316,9 @@
                         <article class="img-post">
                             <img src="imagens/img-post-kiwi.jpg" alt="" class="post_img" 
                             data-id=""
-                            data-nome=""
-                            data-profissao=""
-                            data-imgperfil=""
+                            data-nome="<%= nutricionista.nome %>"
+                            data-profissao="Nutrição <%= nutricionista.especializacoes %>"
+                            data-imgperfil="<%= nutricionista.fotoPerfil %>"
                             data-imgconteudo="imagens/img-post-kiwi.jpg"
                             data-titulo="BENEFÍCIOS DO KIWI PARA A SAÚDE"
                             data-conteudo1="O kiwi é uma excelente fonte de vitamina C, contribuindo para a imunidade e a saúde da pele."
@@ -275,9 +330,9 @@
                         <article class="img-post">
                             <img src="imagens/img-post-whey.jpg" alt="" class="post_img" 
                             data-id=""
-                            data-nome=""
-                            data-profissao=""
-                            data-imgperfil=""
+                            data-nome="<%= nutricionista.nome %>"
+                            data-profissao="Nutrição <%= nutricionista.especializacoes %>"
+                            data-imgperfil="<%= nutricionista.fotoPerfil %>"
                             data-imgconteudo="imagens/img-post-whey.jpg"
                             data-titulo="O USO DO WHEY NA ALIMENTAÇÃO"
                             data-conteudo1="O whey protein é uma proteína de alto valor biológico, ideal para recuperação muscular."
@@ -289,9 +344,9 @@
                         <article class="img-post">
                             <img src="imagens/img-post-macarronada.jpg" alt="" class="post_img"
                             data-id=""
-                            data-nome=""
-                            data-profissao=""
-                            data-imgperfil=""
+                            data-nome="<%= nutricionista.nome %>"
+                            data-profissao="Nutrição <%= nutricionista.especializacoes %>"
+                            data-imgperfil="<%= nutricionista.fotoPerfil %>"
                             data-imgconteudo="imagens/img-post-macarronada.jpg"
                             data-titulo="MACARRONADA PODE SER SAUDÁVEL?"
                             data-conteudo1="Com os ingredientes certos, a macarronada pode sim fazer parte de uma alimentação equilibrada, principalmente para quem pratica esportes."
@@ -303,9 +358,9 @@
                         <article class="img-post">
                             <img src="imagens/img-post-saladaDeFrutas.jpg" alt="" class="post_img"
                             data-id=""
-                            data-nome=""
-                            data-profissao=""
-                            data-imgperfil=""
+                            data-nome="<%= nutricionista.nome %>"
+                            data-profissao="Nutrição <%= nutricionista.especializacoes %>"
+                            data-imgperfil="<%= nutricionista.fotoPerfil %>"
                             data-imgconteudo="imagens/img-post-saladaDeFrutas.jpg"
                             data-titulo="SALADA DE FRUTAS: SAÚDE E SABOR"
                             data-conteudo1="A salada de frutas é uma excelente forma de consumir diferentes vitaminas e fibras em uma única refeição leve e nutritiva."
@@ -327,7 +382,9 @@
                         <section class="modal-card-publicacao">
                             <a href="/perfilnutri?id=1" class="card-perfil card-perfil-modal">
                                 <section class="card-header card-header-modal-publicacao">
-                                    <img src="imagens/profissional1.png" alt="Profile" id="modal-profile">
+                                    <section class="card-header-img">
+                                        <img src="imagens/profissional1.png" alt="Profile" id="modal-profile">
+                                    </section>
                                     <section>
                                         <section class="name" id="modal-name">Julia</section>
                                         <section class="profession">Nutricionista</section>
@@ -450,7 +507,7 @@
                         <p class="text">Avalie</p>
                       </button>
                 </section>
-                     </main>
+            </main>
 
                      <footer class="footer">
                         <section class="footer-container">
@@ -495,7 +552,6 @@
     <script src="js/modalPublicacao.js"></script>
     <script src="js/rating.js"></script>
     <script src="js/indexMenu.js"></script>
-    <script src="js/listanutricionistas.js"></script>
     <script src="js/uploadimage.js"></script>
     <script src="js/modalHome.js"></script>
 </html>

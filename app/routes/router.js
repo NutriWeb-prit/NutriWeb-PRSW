@@ -26,6 +26,127 @@ router.get("/perfilcliente",
     NWController.mostrarPerfilCliente 
 );
 
+router.get("/perfilnutri", 
+    verificarPermissao(['N']),
+    NWController.mostrarPerfilNutricionista 
+);
+
+router.get("/imagem/perfil/:usuarioId", 
+    verificarPermissao(['C', 'N']),
+    async (req, res) => {
+        try {
+            const usuarioId = req.params.usuarioId;
+            
+            if (req.session.usuario.id !== parseInt(usuarioId) && req.session.usuario.tipo !== 'N') {
+                return res.status(403).send('Acesso negado');
+            }
+            
+            const imagem = await NWModel.findImagemPerfil(usuarioId);
+            
+            if (!imagem) {
+                return res.status(404).send('Imagem não encontrada');
+            }
+            
+            res.set({
+                'Content-Type': 'image/jpeg',
+                'Cache-Control': 'public, max-age=3600',
+                'ETag': `perfil-${usuarioId}`
+            });
+            
+            res.send(imagem);
+            
+        } catch (erro) {
+            console.error("Erro ao servir imagem de perfil:", erro);
+            res.status(500).send('Erro interno');
+        }
+    }
+);
+
+router.get("/imagem/banner/:usuarioId", 
+    verificarPermissao(['C', 'N']),
+    async (req, res) => {
+        try {
+            const usuarioId = req.params.usuarioId;
+            
+            if (req.session.usuario.id !== parseInt(usuarioId) && req.session.usuario.tipo !== 'N') {
+                return res.status(403).send('Acesso negado');
+            }
+            
+            const imagem = await NWModel.findImagemBanner(usuarioId);
+            
+            if (!imagem) {
+                return res.status(404).send('Imagem não encontrada');
+            }
+            
+            res.set({
+                'Content-Type': 'image/jpeg',
+                'Cache-Control': 'public, max-age=3600',
+                'ETag': `banner-${usuarioId}`
+            });
+            
+            res.send(imagem);
+            
+        } catch (erro) {
+            console.error("Erro ao servir imagem de banner:", erro);
+            res.status(500).send('Erro interno');
+        }
+    }
+);
+
+router.get("/certificado/:formacaoId", 
+    verificarPermissao(['N', 'C']),
+    async (req, res) => {
+        try {
+            const formacaoId = req.params.formacaoId;
+            
+            const certificado = await NWModel.findCertificado(formacaoId);
+            
+            if (!certificado || !certificado.CertificadoArquivo) {
+                return res.status(404).send('Certificado não encontrado');
+            }
+            
+            let contentType = 'application/octet-stream';
+            if (certificado.CertificadoTipo) {
+                contentType = certificado.CertificadoTipo;
+            } else {
+                const extensao = certificado.CertificadoNome ? 
+                    certificado.CertificadoNome.split('.').pop().toLowerCase() : '';
+                
+                switch (extensao) {
+                    case 'pdf':
+                        contentType = 'application/pdf';
+                        break;
+                    case 'jpg':
+                    case 'jpeg':
+                        contentType = 'image/jpeg';
+                        break;
+                    case 'png':
+                        contentType = 'image/png';
+                        break;
+                    case 'doc':
+                        contentType = 'application/msword';
+                        break;
+                    case 'docx':
+                        contentType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+                        break;
+                }
+            }
+        
+            res.set({
+                'Content-Type': contentType,
+                'Content-Disposition': `inline; filename="${certificado.CertificadoNome || 'certificado'}"`,
+                'Cache-Control': 'public, max-age=3600'
+            });
+            
+            res.send(certificado.CertificadoArquivo);
+            
+        } catch (erro) {
+            console.error("Erro ao servir certificado:", erro);
+            res.status(500).send('Erro interno');
+        }
+    }
+);
+
 router.post(
     "/cadastrarcliente",
     upload,
@@ -412,32 +533,12 @@ router.post(
     }
 );
 
-router.post(
-    "/publicaravaliacao", 
-    
-    body("avaliacao").isLength({min:1}).withMessage("Preencha a avaliação!"),
-    
-    function (req, res) {
-        const listaErros = validationResult(req);
-        if (listaErros.isEmpty()) {
-            return res.redirect('/');
-        }else {
-            console.log(listaErros);
-            return res.render("pages/indexPerfilNutri", {retorno: null, valores: {avaliacao: req.body.avaliacao}, listaErros:listaErros});
-        }
-    }
-);
-
 router.get("/cadastrocliente", function (req, res) {
     res.render('pages/indexCadastroCliente', { retorno: null, etapa:"1", valores: {nome:"", email:"", cpf:"", senha:"", telefone:"", ddd:""}, listaErros: null});
 });
 
 router.get("/cadastronutri", function (req, res) {
     res.render('pages/indexCadastrarNutri', { retorno: null, etapa:"1", valores: {nome:"", telefone:"", email:"", senha:"", area:"", crn:""}, listaErros: null});
-});
-
-router.get('/perfilnutri', function (req, res) {
-    res.render('pages/indexPerfilNutri', { retorno: null, valores: {avaliacao:""}, listaErros: null});
 });
 
 router.get("/", function (req, res) {

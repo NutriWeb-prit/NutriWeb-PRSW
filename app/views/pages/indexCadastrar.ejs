@@ -12,15 +12,12 @@
     <body>
 
         <header class="header">
-            
             <section class="left-section">
                 <a href="/"><img src="imagens/logo.png" alt="Logo" class="logo"></a>
-        
                 <a href="/ranking" class="ranking"><button class="ranking-button">Ranking</button></a>
-
                 <a href="/profissionais"><button class="profissionais-button">Profissionais</button></a>
             </section>
-
+        
             <section class="center-section">
                 <section class="input-premium">
                     <span class="material-icons search-icon md-24">search</span>
@@ -29,11 +26,24 @@
             </section>
             
             <section class="right-section">
-                <a href="/perfilcliente"><button class="meuperfil-button">Meu Perfil</button></a>
-                <a href="/premium"><button class="premium-button">Premium</button></a>
-                <a href="/login"><button class="entrar-button">Entrar</button></a>
+                <% if (headerUsuario.estaLogado) { %>
+                    <a href="/premium"><button class="premium-button">Premium</button></a>
+                    
+                    <a href="<%= headerUsuario.urlPerfil %>" class="perfil-usuario-link">
+                        <div class="perfil-usuario">
+                            <img src="<%= headerUsuario.fotoPerfil %>" 
+                                 alt="Foto de perfil" 
+                                 class="foto-perfil-header"
+                                 onerror="this.src='imagens/foto_perfil.jpg'">
+                            <span class="nome-usuario-header"><%= headerUsuario.nome %></span>
+                        </div>
+                    </a>
+                <% } else { %>
+                    <a href="/perfilcliente"><button class="meuperfil-button">Meu Perfil</button></a>
+                    <a href="/premium"><button class="premium-button">Premium</button></a>
+                    <a href="/login"><button class="entrar-button">Entrar</button></a>
+                <% } %>
             </section>
-            
         </header>
         
         <section class="header-content">

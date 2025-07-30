@@ -124,6 +124,54 @@ body {
     padding: 20px;
     text-decoration: none;
 }
+
+.perfil-usuario-link {
+    text-decoration: none;
+    color: inherit;
+    margin-left: 40px;
+    transition: opacity 0.2s ease;
+}
+
+.perfil-usuario-link:hover {
+    opacity: 0.8;
+}
+
+.perfil-usuario {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    border-radius: 25px;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.perfil-usuario:hover {
+    background-color: #e9ecef;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.foto-perfil-header {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #28a745;
+    background-color: #f8f9fa;
+}
+
+.nome-usuario-header {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .arrow-icon {
     font-size: 36px;
     color: green;

@@ -12,7 +12,6 @@ const processarLogin = async (req, res, next) => {
     try {
         console.log("Tentativa de login para:", req.body.email);
         
-        // Busca o usuário no banco
         const usuarios = await NWModel.findByEmail(req.body.email);
         
         if (!usuarios || usuarios.length === 0) {
@@ -31,14 +30,12 @@ const processarLogin = async (req, res, next) => {
             temSenha: !!usuario.Senha
         });
 
-        // Verificar se a senha existe
         if (!usuario.Senha) {
             console.log("ERRO: Usuário sem senha no banco!");
             req.loginError = "Conta com problemas de configuração. Contate o administrador";
             return next();
         }
 
-        // Verificar a senha
         const senhaCorreta = bcrypt.compareSync(req.body.senha, usuario.Senha);
         
         if (!senhaCorreta) {
@@ -49,11 +46,6 @@ const processarLogin = async (req, res, next) => {
 
         console.log("Login bem-sucedido para:", req.body.email);
 
-        // Buscar dados completos para a sessão
-        const dadosCompletos = await NWModel.findClienteCompleto(usuario.id);
-        const usuarioCompleto = dadosCompletos && dadosCompletos.length > 0 ? dadosCompletos[0] : usuario;
-
-        // Criar sessão
         req.session.usuario = {
             id: usuario.id,
             nome: usuario.NomeCompleto,
@@ -61,8 +53,6 @@ const processarLogin = async (req, res, next) => {
             tipo: usuario.UsuarioTipo,
             tipoDescricao: usuario.TipoDescricao || (usuario.UsuarioTipo === 'C' ? 'Cliente' : 'Nutricionista'),
             documento: usuario.ClienteCPF || usuario.NutricionistaCRN,
-            fotoPerfil: usuarioCompleto.FotoPerfil ? 
-                `data:image/jpeg;base64,${usuarioCompleto.FotoPerfil.toString('base64')}` : null,
             logado: true,
             dataLogin: new Date()
         };
@@ -82,14 +72,33 @@ const verificarUsuAutenticado = (req, res, next) => {
         res.locals.usuarioLogado = req.session.usuario;
         res.locals.isCliente = req.session.usuario.tipo === 'C';
         res.locals.isNutricionista = req.session.usuario.tipo === 'N';
+        
+        res.locals.headerUsuario = {
+            id: req.session.usuario.id,
+            nome: req.session.usuario.nome,
+            tipo: req.session.usuario.tipo,
+            estaLogado: true,
+            urlPerfil: req.session.usuario.tipo === 'C' ? '/perfilcliente' : '/perfilnutri',
+            fotoPerfil: `/imagem/perfil/${req.session.usuario.id}`
+        };
+        
+        console.log("Usuário autenticado:", {
+            id: req.session.usuario.id,
+            nome: req.session.usuario.nome,
+            tipo: req.session.usuario.tipo
+        });
+        
     } else {
         res.locals.usuarioLogado = null;
         res.locals.isCliente = false;
         res.locals.isNutricionista = false;
+        
+        res.locals.headerUsuario = {
+            estaLogado: false
+        };
     }
     next();
 };
-
 
 const verificarPermissao = (tiposPermitidos = [], paginaRedirecionamento = "/login") => {
     return (req, res, next) => {

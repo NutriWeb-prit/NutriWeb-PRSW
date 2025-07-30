@@ -308,10 +308,10 @@ const NWController = {
             const usuarioId = req.session.usuario.id;
             console.log("Carregando perfil do cliente ID:", usuarioId);
             
-            // Buscar dados completos do cliente
-            const dadosCliente = await NWModel.findClienteCompleto(usuarioId);
+            // 1. OTIMIZAÇÃO: Buscar todos os dados em uma única consulta
+            const dadosCompletos = await NWModel.findPerfilCompleto(usuarioId);
             
-            if (!dadosCliente || dadosCliente.length === 0) {
+            if (!dadosCompletos.cliente) {
                 console.log("Cliente não encontrado");
                 return res.render("pages/indexPerfilCliente", {
                     erro: "Dados do cliente não encontrados",
@@ -320,11 +320,9 @@ const NWController = {
                 });
             }
             
-            const cliente = dadosCliente[0];
+            const { cliente, publicacoes } = dadosCompletos;
             
-            const publicacoesCurtidas = await NWModel.findPublicacoesCurtidas(usuarioId);
-            
-            // Processar dados para a view
+            // 2. OTIMIZAÇÃO: Processar dados de forma mais eficiente
             const dadosProcessados = {
                 id: cliente.id,
                 nome: cliente.NomeCompleto,
@@ -338,21 +336,14 @@ const NWController = {
                 objetivos: cliente.SobreMim || "Ainda não definiu seus objetivos nutricionais.",
                 interesses: cliente.InteressesNutricionais || "Nenhum interesse cadastrado",
                 
-                // Processar fotos
-                fotoPerfil: cliente.FotoPerfil ? 
-                    `data:image/jpeg;base64,${cliente.FotoPerfil.toString('base64')}` : 
-                    'imagens/foto_perfil.jpg', 
+                // 3. OTIMIZAÇÃO: URLs ao invés de Base64
+                fotoPerfil: cliente.FotoPerfil ? `/imagem/perfil/${usuarioId}` : 'imagens/foto_perfil.jpg',
+                fotoBanner: cliente.FotoBanner ? `/imagem/banner/${usuarioId}` : null,
                 
-                fotoBanner: cliente.FotoBanner ? 
-                    `data:image/jpeg;base64,${cliente.FotoBanner.toString('base64')}` : 
-                    null,
-                
-                // Processar publicações curtidas
-                publicacoes: publicacoesCurtidas.map(pub => ({
-                    id: pub.id,
-                    imagem: pub.FotoPublicacao ? 
-                        `data:image/jpeg;base64,${pub.FotoPublicacao.toString('base64')}` : 
-                        'imagens/placeholder-post.jpg',
+                // 4. OTIMIZAÇÃO: Processar publicações mais eficientemente
+                publicacoes: publicacoes.map(pub => ({
+                    id: pub.PublicacaoId,
+                    imagem: pub.FotoPublicacao ? `/imagem/publicacao/${pub.PublicacaoId}` : 'imagens/placeholder-post.jpg',
                     legenda: pub.Legenda,
                     categoria: pub.Categoria,
                     estrelas: pub.MediaEstrelas,
@@ -380,6 +371,84 @@ const NWController = {
                 erro: "Erro interno. Tente novamente mais tarde.",
                 cliente: null,
                 publicacoesCurtidas: []
+            });
+        }
+    },
+
+    mostrarPerfilNutricionista: async (req, res) => {
+        try {
+            if (!req.session.usuario || req.session.usuario.tipo !== 'N') {
+                return res.redirect('/login?erro=acesso_negado');
+            }
+    
+            const usuarioId = req.session.usuario.id;
+            console.log("Carregando perfil básico do nutricionista ID:", usuarioId);
+    
+            const dadosBasicos = await NWModel.findPerfilNutri(usuarioId);
+    
+            if (!dadosBasicos || !dadosBasicos.nutricionista || !dadosBasicos.nutricionista.id) {
+                console.log("Nutricionista não encontrado ou dados inválidos:", dadosBasicos);
+                return res.render("pages/indexPerfilNutri", {
+                    erro: "Dados do nutricionista não encontrados",
+                    nutricionista: null,
+                    formacoes: [],
+                    contatosSociais: []
+                });
+            }
+    
+            const { nutricionista, formacoes, contatosSociais } = dadosBasicos;
+    
+            const dadosProcessados = {
+                id: nutricionista.id,
+                nome: nutricionista.NomeCompleto,
+                email: nutricionista.Email,
+                telefone: nutricionista.Telefone ? 
+                    `(${nutricionista.Telefone.substring(0,2)}) ${nutricionista.Telefone.substring(2,7)}-${nutricionista.Telefone.substring(7)}` : 
+                    null,
+                crn: nutricionista.Crn,
+                sobreMim: nutricionista.SobreMim || "Este nutricionista ainda não adicionou uma descrição.",
+                especializacoes: nutricionista.Especializacoes || "Nenhuma especialização cadastrada",
+    
+                fotoPerfil: nutricionista.FotoPerfil ? 
+                    `/imagem/perfil/${usuarioId}` : 
+                    'imagens/foto_perfil.jpg'
+            };
+    
+            const formacoesProcessadas = formacoes.map(formacao => ({
+                id: formacao.id,
+                tipo: formacao.TipoFormacao,
+                nome: formacao.NomeFormacao,
+                instituicao: formacao.NomeInstituicao,
+                temCertificado: !!formacao.CertificadoArquivo,
+                urlCertificado: formacao.CertificadoArquivo ? `/certificado/${formacao.id}` : null
+            }));
+    
+            const contatosProcessados = contatosSociais.reduce((acc, contato) => {
+                acc[contato.Tipo.toLowerCase()] = contato.Link;
+                return acc;
+            }, {});
+    
+            console.log("Dados básicos processados:", {
+                nome: dadosProcessados.nome,
+                crn: dadosProcessados.crn,
+                quantidadeFormacoes: formacoesProcessadas.length,
+                temFotoPerfil: !!nutricionista.FotoPerfil
+            });
+    
+            return res.render("pages/indexPerfilNutri", {
+                erro: null,
+                nutricionista: dadosProcessados,
+                formacoes: formacoesProcessadas,
+                contatosSociais: contatosProcessados
+            });
+    
+        } catch (erro) {
+            console.error("Erro ao carregar perfil básico do nutricionista:", erro);
+            return res.render("pages/indexPerfilNutri", {
+                erro: "Erro interno. Tente novamente mais tarde.",
+                nutricionista: null,
+                formacoes: [],
+                contatosSociais: []
             });
         }
     },

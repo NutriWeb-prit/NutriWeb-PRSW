@@ -37,3 +37,4 @@ function toggleInfo() {
 function irLogin() {
     window.location.href = '/login';
 }
+

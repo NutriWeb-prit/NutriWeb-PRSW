@@ -128,6 +128,76 @@ body {
     background-image: url("../imagens/bannerperfilnutri.png");
 }
 
+.perfil-usuario-link {
+    text-decoration: none;
+    color: inherit;
+    margin-left: 40px;
+    transition: opacity 0.2s ease;
+}
+
+.perfil-usuario-link:hover {
+    opacity: 0.8;
+}
+
+.perfil-usuario {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    border-radius: 25px;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.perfil-usuario:hover {
+    background-color: #e9ecef;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.foto-perfil-header {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #28a745;
+    background-color: #f8f9fa;
+}
+
+.nome-usuario-header {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.foto-perfil-header {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="30" fill="%23f0f0f0"/><path d="M50 35a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-15 35a15 15 0 0 1 30 0z" fill="%23ccc"/></svg>');
+    background-size: cover;
+}
+
+.img-header {
+    max-width: 1600px;
+    margin: 76px auto 0 auto;
+    width: 100%;
+    height: 85vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.img-header img {
+    width: 100%;
+    height: auto;
+    object-fit: cover; 
+}
+
 
 /* CONTEUDO */
 
