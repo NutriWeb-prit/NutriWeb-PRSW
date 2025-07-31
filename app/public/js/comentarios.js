@@ -4,7 +4,7 @@ const listaComentarios = document.getElementById('comentarios-lista');
 const textoSemComentarios = document.getElementById('sem-comentarios');
 
 function enviarComentario() {
-  const texto = inputComentario.value.trim();
+    const texto = inputComentario.value.trim();
 
     if (texto !== '') {
       textoSemComentarios.style.display = 'none';
@@ -29,6 +29,9 @@ function enviarComentario() {
       listaComentarios.appendChild(novoComentario);
       configurarMenuComentario(novoComentario); 
       inputComentario.value = '';
+
+      listaComentarios.style.display = 'block';
+      comentariosVisiveis = true;
   }
 }
 
@@ -92,3 +95,17 @@ function configurarMenuComentario(comentario) {
 });
     }
 }
+
+const btnFavorite = document.querySelector('.btn-favorite');
+const btnComment = document.querySelector('.btn-comment');
+
+btnFavorite.addEventListener('click', () => {
+    btnFavorite.classList.toggle('ativo');
+});
+
+let comentariosVisiveis = false;
+
+btnComment.addEventListener('click', () => {
+    comentariosVisiveis = !comentariosVisiveis;
+    listaComentarios.style.display = comentariosVisiveis ? 'block' : 'none';
+});

@@ -726,7 +726,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .modal-content {
     background: white;
-    width: 80%;
+    width: 90%;
     max-width: 1200px;
     display: flex;
     border-radius: 10px;
@@ -773,6 +773,10 @@ h1, h2, h3, h4, h5, h6 {
     -webkit-text-stroke: 2px black; 
     cursor: pointer;
     margin-right: 8px;
+}
+
+.btn-favorite.ativo {
+    color: red;
 }
 
 .btn-comment{
@@ -858,7 +862,7 @@ h1, h2, h3, h4, h5, h6 {
 #comentarios-lista {
     max-height: 90px;
     overflow-y: auto;
-    display: flex;
+    display: none;
     flex-direction: column;
     gap: 10px;
     margin-right: 10px;
