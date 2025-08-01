@@ -33,7 +33,16 @@ textarea.addEventListener('focus', () => {
     botoes.forEach(b => b.classList.remove('selected'));
 });
 
-btnEnviarDenuncia.addEventListener('click', () => {
+btnEnviarDenuncia.addEventListener('click', enviarDenuncia);
+
+denunciaModal.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+        event.preventDefault(); 
+        enviarDenuncia();
+    }
+});
+
+function enviarDenuncia() {
     const texto = textarea.value.trim();
     const algumSelecionado = [...botoes].some(btn => btn.classList.contains('selected'));
 
@@ -46,7 +55,7 @@ btnEnviarDenuncia.addEventListener('click', () => {
     } else {
         // alert('Por favor, selecione um motivo ou escreva um.');
     }
-});
+}
 
 function fecharModalDenuncia() {
     textarea.value = '';
