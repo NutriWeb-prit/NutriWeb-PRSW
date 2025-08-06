@@ -1343,6 +1343,14 @@ footer {
         color: green;
         cursor: pointer;
     }
+
+    .titulo-parceiros-desktop{
+        display: none;
+    }
+
+    .faixa-parceiros-desktop{
+        display: none;
+    }
     
     .menu {
         z-index: 99;
