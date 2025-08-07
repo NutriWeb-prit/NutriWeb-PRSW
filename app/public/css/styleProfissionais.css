@@ -174,7 +174,7 @@ body {
 
 .arrow-icon {
     font-size: 36px;
-    color: green;
+    color: #99cd80;
 }
 
 .arrow-icon.md-24 {
@@ -185,7 +185,7 @@ body {
 
 .header-text {
     font-size: 24px;
-    color: #333;
+    color: #555755;
 }
 
 .tipo-nutricao{
@@ -198,12 +198,12 @@ body {
 
 .tipo-nutricao h1{
     color: #0F4D1E;
-    font-size: 40px;
+    font-size: 38px;
     margin: 35px 0 0 0;
 }
 
 .tipo-nutricao h2{
-    color: #4F4F4F;
+    color: #555755;
     font-size: 19px;
     margin: 10px auto 0 auto;
     max-width: 80%;
@@ -498,10 +498,13 @@ footer {
         scroll-behavior: smooth; 
         gap: 20px; 
         margin-top: 20px;
-        padding: 20px; 
+        padding-left: calc(50vw - 100px); 
+        padding-right: calc(50vw - 100px); 
         width: 100%; 
         height: 480px;
         box-sizing: border-box; 
+        margin-bottom: 30px;
+        scroll-snap-type: x mandatory;
     }
 
     .card.active {
@@ -527,6 +530,28 @@ footer {
     .card-specialty {
         font-size: 16px;
         color: black;
+    }
+
+    .indicators {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+        gap: 8px;
+        margin-bottom: 70px;
+    }
+
+    .dot {
+        width: 30px; 
+        height: 9px;
+        background-color: #ccc;
+        border-radius: 10px; 
+        transition: background-color 0.3s ease;
+        cursor: pointer;
+        margin: 0 4px; 
+    }
+
+    .dot.active {
+        background-color: #99cd80; 
     }
 
     .mobile-menu {
@@ -576,6 +601,7 @@ footer {
 
     footer {
         text-align: center;
+        margin-top: 110px;
     }
 
     .footer-container {
@@ -590,7 +616,7 @@ footer {
     }
 
     .footer-logo img {
-        max-width: 90px;
+        max-width: 70px;
         margin-top: 10px;
     }
 
