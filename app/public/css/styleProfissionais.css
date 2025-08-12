@@ -223,7 +223,6 @@ body {
 
 .cards-container {
     display: flex;
-    flex-wrap: wrap;
     justify-content: center;
     width: 90%;
     margin: 20px auto;
@@ -233,7 +232,8 @@ body {
     border-radius: 10px;
     align-items: center;
     margin-bottom: 100px;
-    gap: 40px;
+    gap: 25px;
+
 }
 
 .cards-container a{
@@ -393,10 +393,6 @@ footer {
     .cards-container::-webkit-scrollbar {
         display: none;
     }
-    
-    /* footer{
-        display: none;
-    } */
 
     #hidden {
         display: none;
@@ -412,7 +408,7 @@ footer {
     }
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1080px) {
 
     .header{
         display: none;
@@ -537,7 +533,7 @@ footer {
         justify-content: center;
         margin-top: 20px;
         gap: 8px;
-        margin-bottom: 70px;
+        margin-bottom: 50px;
     }
 
     .dot {
@@ -601,7 +597,6 @@ footer {
 
     footer {
         text-align: center;
-        margin-top: 110px;
     }
 
     .footer-container {
