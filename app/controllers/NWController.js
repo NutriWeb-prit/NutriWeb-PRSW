@@ -377,43 +377,68 @@ const NWController = {
 
     mostrarPerfilNutricionista: async (req, res) => {
         try {
-            if (!req.session.usuario || req.session.usuario.tipo !== 'N') {
-                return res.redirect('/login?erro=acesso_negado');
+            let usuarioId = null;
+            let isOwner = false;
+            
+            const usuarioLogado = req.session.usuario && req.session.usuario.logado;
+            
+            if (req.query.id) {
+                const nutricionistaIdPublico = parseInt(req.query.id);
+                
+                if (isNaN(nutricionistaIdPublico) || nutricionistaIdPublico < 1) {
+                    return res.redirect('/?erro=nutricionista_nao_encontrado');
+                }
+                
+                usuarioId = await NWModel.findUsuarioIdByNutricionistaId(nutricionistaIdPublico);
+                
+                if (!usuarioId) {
+                    return res.redirect('/?erro=nutricionista_nao_encontrado');
+                }
+                
+                isOwner = false;
+                
+                if (usuarioLogado && req.session.usuario.tipo === 'N' && req.session.usuario.id === usuarioId) {
+                    isOwner = true;
+                    console.log("É o dono do perfil");
+                }
+            } 
+            else {
+                if (!usuarioLogado || req.session.usuario.tipo !== 'N') {
+                    return res.redirect('/login?erro=acesso_negado');
+                }
+                usuarioId = req.session.usuario.id;
+                isOwner = true;
             }
-    
-            const usuarioId = req.session.usuario.id;
-            console.log("Carregando perfil básico do nutricionista ID:", usuarioId);
-    
+            
+            
             const dadosBasicos = await NWModel.findPerfilNutri(usuarioId);
-    
+            
             if (!dadosBasicos || !dadosBasicos.nutricionista || !dadosBasicos.nutricionista.id) {
-                console.log("Nutricionista não encontrado ou dados inválidos:", dadosBasicos);
-                return res.render("pages/indexPerfilNutri", {
-                    erro: "Dados do nutricionista não encontrados",
-                    nutricionista: null,
-                    formacoes: [],
-                    contatosSociais: []
-                });
+                return res.redirect('/?erro=nutricionista_sem_dados');
             }
-    
+            
             const { nutricionista, formacoes, contatosSociais } = dadosBasicos;
-    
+
             const dadosProcessados = {
                 id: nutricionista.id,
                 nome: nutricionista.NomeCompleto,
                 email: nutricionista.Email,
                 telefone: nutricionista.Telefone ? 
-                    `(${nutricionista.Telefone.substring(0,2)}) ${nutricionista.Telefone.substring(2,7)}-${nutricionista.Telefone.substring(7)}` : 
+                    `(${nutricionista.Telefone.substring(0,2)}) ${nutricionista.Telefone.substring(2,7)}-${nutricionista.Telefone.substring(7)}` :
                     null,
                 crn: nutricionista.Crn,
                 sobreMim: nutricionista.SobreMim || "Este nutricionista ainda não adicionou uma descrição.",
                 especializacoes: nutricionista.Especializacoes || "Nenhuma especialização cadastrada",
-    
+                
                 fotoPerfil: nutricionista.FotoPerfil ? 
                     `/imagem/perfil/${usuarioId}` : 
-                    'imagens/foto_perfil.jpg'
+                    '/imagens/foto_perfil.jpg',
+                
+                fotoBanner: nutricionista.FotoBanner ? 
+                    `/imagem/banner/${usuarioId}` : 
+                    '/imagens/bannerperfilnutri.png'
             };
-    
+            
             const formacoesProcessadas = formacoes.map(formacao => ({
                 id: formacao.id,
                 tipo: formacao.TipoFormacao,
@@ -422,34 +447,44 @@ const NWController = {
                 temCertificado: !!formacao.CertificadoArquivo,
                 urlCertificado: formacao.CertificadoArquivo ? `/certificado/${formacao.id}` : null
             }));
-    
+            
             const contatosProcessados = contatosSociais.reduce((acc, contato) => {
                 acc[contato.Tipo.toLowerCase()] = contato.Link;
                 return acc;
             }, {});
-    
-            console.log("Dados básicos processados:", {
-                nome: dadosProcessados.nome,
-                crn: dadosProcessados.crn,
-                quantidadeFormacoes: formacoesProcessadas.length,
-                temFotoPerfil: !!nutricionista.FotoPerfil
-            });
-    
+            
             return res.render("pages/indexPerfilNutri", {
                 erro: null,
                 nutricionista: dadosProcessados,
                 formacoes: formacoesProcessadas,
-                contatosSociais: contatosProcessados
+                contatosSociais: contatosProcessados,
+                isOwner: isOwner,
+                usuarioLogado: usuarioLogado
             });
-    
+            
         } catch (erro) {
-            console.error("Erro ao carregar perfil básico do nutricionista:", erro);
-            return res.render("pages/indexPerfilNutri", {
-                erro: "Erro interno. Tente novamente mais tarde.",
-                nutricionista: null,
-                formacoes: [],
-                contatosSociais: []
-            });
+            return res.redirect('/?erro=erro_interno');
+        }
+    },
+
+    redirecionarParaMeuPerfil: async (req, res) => {
+        try {
+            if (!req.session.usuario || !req.session.usuario.logado || req.session.usuario.tipo !== 'N') {
+                return res.redirect('/login?erro=acesso_negado');
+            }
+            
+            const usuarioId = req.session.usuario.id;
+            
+            const nutricionistaId = await NWModel.findNutricionistaIdByUsuarioId(usuarioId);
+            
+            if (!nutricionistaId) {
+                return res.redirect('/?erro=perfil_nao_encontrado');
+            }
+            
+            return res.redirect(`/perfilnutri?id=${nutricionistaId}`);
+            
+        } catch (erro) {
+            return res.redirect('/?erro=erro_interno');
         }
     },
 

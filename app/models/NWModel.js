@@ -240,11 +240,13 @@ const NWModel = {
     
     findImagemBanner: async (usuarioId) => {
         try {
+            console.log("Buscando banner para usuarioId:", usuarioId);
             const [result] = await pool.query(
-                "SELECT FotoBanner FROM Perfis WHERE UsuarioId = ?",
+                'SELECT FotoBanner FROM Perfis WHERE UsuarioId = ? AND FotoBanner IS NOT NULL',
                 [usuarioId]
             );
             
+            console.log("Resultado da query banner:", result.length > 0 ? "Encontrado" : "Não encontrado");
             return result.length > 0 ? result[0].FotoBanner : null;
         } catch (erro) {
             console.log("Erro ao buscar imagem de banner:", erro);
@@ -276,10 +278,9 @@ const NWModel = {
                     u.Telefone,
                     n.id as NutricionistaId,
                     n.Crn,
-                    -- Verificar se existe foto, mas não carregar os dados
                     CASE WHEN p.FotoPerfil IS NOT NULL THEN 1 ELSE 0 END as FotoPerfil,
+                    CASE WHEN p.FotoBanner IS NOT NULL THEN 1 ELSE 0 END as FotoBanner,
                     p.SobreMim,
-                    -- Buscar especializações
                     (SELECT GROUP_CONCAT(e.Nome SEPARATOR ', ') 
                      FROM NutricionistasEspecializacoes ne 
                      INNER JOIN Especializacoes e ON ne.EspecializacaoId = e.id 
@@ -339,6 +340,34 @@ const NWModel = {
         }
     },
     
+    findUsuarioIdByNutricionistaId: async (nutricionistaId) => {
+        try {
+            const [result] = await pool.query(
+                'SELECT UsuarioId FROM Nutricionistas WHERE id = ? AND EXISTS (SELECT 1 FROM Usuarios WHERE id = Nutricionistas.UsuarioId AND UsuarioStatus = 1)',
+                [nutricionistaId]
+            );
+            
+            return result.length > 0 ? result[0].UsuarioId : null;
+        } catch (erro) {
+            console.log("Erro ao buscar UsuarioId por NutricionistaId:", erro);
+            return null;
+        }
+    },
+    
+    findNutricionistaIdByUsuarioId: async (usuarioId) => {
+        try {
+            const [result] = await pool.query(
+                'SELECT id FROM Nutricionistas WHERE UsuarioId = ? AND EXISTS (SELECT 1 FROM Usuarios WHERE id = ? AND UsuarioStatus = 1)',
+                [usuarioId, usuarioId]
+            );
+            
+            return result.length > 0 ? result[0].id : null;
+        } catch (erro) {
+            console.log("Erro ao buscar NutricionistaId por UsuarioId:", erro);
+            return null;
+        }
+    },
+
     // Função para servir certificados (mantida igual)
     findCertificado: async (formacaoId) => {
         try {

@@ -116,15 +116,38 @@ body {
     display: none;
 }
 
-#imagem_de_fundo{
-    margin-top: 70px;
-    height: 250px;
+#imagem_de_fundo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 400px;
     background-size: cover;
     background-position: center;
+    background-repeat: no-repeat;
+    z-index: 0;
+    background-color: #f0f0f0;
+}
+
+#imagem_de_fundo::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.4));
     z-index: 1;
+}
+
+.conteudo {
     position: relative;
-    background-image: url("../imagens/bannerperfilnutri.png");
+    z-index: 2;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .perfil-usuario-link {
@@ -176,32 +199,22 @@ body {
 
 /* CONTEUDO */
 
+#conteudo-completo {
+    position: relative;
+    min-height: 100vh;
+}
+
 main{
     z-index: 1;
     margin: -40px 40px 60px 40px;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .hidden {
     display: none !important;
-}
-
-.notification {
-    position: fixed;
-    top: 15%;
-    right: 40%;
-    background-color: red;
-    color: white;
-    padding: 10px;
-    border-radius: 5px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    transition: opacity 0.5s ease;
-    z-index: 1000;
-}
-
-.notification:empty {
-    display:none
 }
 
 .overlay {
@@ -257,18 +270,20 @@ main{
 }
 
 #nome img {
-    flex-shrink: 0; 
-    display: block;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #e9ecef;
+    margin: 0;
 }
 
 .nome-escrito {
     font-size: 16px;
-    font-weight: bold;
-    color: #333;
-    white-space: nowrap; 
-    margin-left: 17px; 
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0;
 }
-
 
 #nome img {
     width: 40px; 
@@ -277,7 +292,6 @@ main{
     object-fit: cover; 
     border: 2px solid #ccc;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
-    margin: 20px 20px 20px 8px;
 }
 
 .perfil-avaliar #legenda-avaliar {
@@ -303,16 +317,15 @@ main{
 }
 
 .star.active {
-    color: gold; /* Cor das estrelas quando ativas (amarelas) */
+    color: gold;
 }
 
-/* Adiciona hover a todas as estrelas até a que o mouse está sobre */
 .star.hovered {
-    color: gold; /* A estrela atual e as da esquerda ficam amarelas */
+    color: gold; 
 }
 
 .star.hovered ~ .star {
-    color: lightgray; /* As estrelas à direita ficam cinza */
+    color: lightgray;
 }
 
 .content-avaliar #avaliacao {
@@ -354,10 +367,14 @@ main{
 }
 
 .img-post {
-    width: 200px;
-    height: 200px;
+    width: 100%;
+    height: 250px;
+    border-radius: 15px;
     overflow: hidden;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
+
 
 .card {
     background-color: none;
@@ -681,11 +698,42 @@ main{
     margin-top: 60px;
 }
 
-.grid-publicacoes{
-    display: grid;    
-    grid-template-columns: 200px 200px;
-    grid-template-rows: 230px 230px 230px;
-    column-gap: 2em;
+#avaliar_nutri {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 1200px;
+    margin: 60px auto;
+    padding: 0 20px;
+}
+
+#container-avaliacoes {
+    display: flex;
+    gap: 15px;
+}
+
+#publi {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.titulopubli {
+    font-size: 32px;
+    font-weight: 700;
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 40px;
+    position: relative;
+}
+
+.grid-publicacoes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
 }
 
 .image-modal {
@@ -725,12 +773,12 @@ main{
 }
 
 #tituloavaliacao {
-    display: block;
+    font-size: 32px;
+    font-weight: 700;
+    color: #2c3e50;
     text-align: center;
-    color: black;
-    padding: 10px 10px;
-    margin-bottom: 50px;
-    font-size: 35px;
+    margin-bottom: 40px;
+    position: relative;
 }
 
 #novapublicacao {
@@ -1062,24 +1110,30 @@ main{
     cursor: pointer;
 }
 
-.post_img{
+.post_img {
     width: 100%;
     height: 100%;
-    border-radius: 10px;
-}   
+    object-fit: cover;
+    border-radius: 15px;
+} 
 
-.avaliacao{
-    width: 250px;
-    border: none;
-    border-bottom: 2px solid black;
-    overflow: hidden;
-    margin: 0 auto 2em auto;
+.avaliacao {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto 30px auto;
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
 }
 
-.nome_avaliador{
-    width: 100%;
-    height: 50%;
-    border-radius: 10px;
+.nome_avaliador {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
 }
 
 .icone_conta{
@@ -1088,44 +1142,49 @@ main{
     margin: 13px 15px;
 }
 
-#nome{
-    display: grid;
-    column-gap: 25px;
-    grid-template-columns: 20px 20px;
+#nome {
+    display: flex;
+    align-items: center;
+    gap: 15px;
 }
 
-#container-estrela{
-    width: 100%;
+#container-estrela {
     display: flex;
-    justify-content: flex-end;
-    margin: -20px;
-    padding-bottom: 25px;
-    gap: 5px;
+    align-self: center;
+    gap: 3px;
+    margin: 15px 0 0 0;
+    padding: 0;
+}
+
+#container-estrela img {
+    width: 20px;
+    height: 20px;
 }
 
 .stay-desativada {
     filter: brightness(0) saturate(100%) invert(75%) sepia(0%) saturate(300%) hue-rotate(0deg);
 }
 
-.comentario{
-    margin: 10px 10px 25px;
-    font-size: large;
+.comentario {
+    font-size: 15px;
+    line-height: 1.5;
+    color: #555;
+    margin: 0;
+    font-style: italic;
 }
 
 .bookmarkBtn {
-    position: absolute;
-    right: 3%;
-    width: 100px;
-    height: 40px;
-    border-radius: 40px;
-    border: 1px solid rgba(255, 255, 255, 0.349);
-    background-color: rgb(12, 12, 12);
-    display: flex;
-    align-items: center;
+    display: inline-flex;
     justify-content: center;
+    width: 230px;
+    background-color: green;
+    text-decoration: none;
+    color: white;
+    border: none;
+    padding: 10px 10px;
+    border-radius: 5px;
+    font-size: 18px;
     cursor: pointer;
-    transition-duration: 0.3s;
-    overflow: hidden;
 }
   
 .IconContainer {
@@ -1174,65 +1233,107 @@ main{
     transition-duration: 0.3s;
 }
 
-#info_perfil{
-    border: none;
-    /* background-color: white; */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2), 0 2px 5px rgba(0, 0, 0, 0.1);
-    width: 270px;
+#info_perfil {
+    display: flex;
+    width: 100%;
+    max-width: 1200px;
+    margin-top: 320px;
+    padding: 40px;
+    gap: 40px;
     position: relative;
-    bottom: 60px;
 }
 
-#container_foto{
-    height: 100px;
+.conteudo_perfil {
+    display: flex;
     width: 100%;
+    gap: 40px;
+    align-items: flex-start;
+    margin-top: 60px;
+}
+
+#container_foto {
     display: flex;
     justify-content: center;
-    margin-bottom: 1em;
+    align-items: flex-start;
+    flex-shrink: 0;
+    margin-top: -58px;
 }
 
-.foto_perfil{
-    background: none;
-    height: 130px;
-    width: 130px;
-    border-radius: 100%;
-    margin-top: 10%;
-    position: relative;
-    z-index: 2;
+.foto_perfil {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
     object-fit: cover;
+    border: 2px solid white;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    background-color: #f0f0f0;
 }
 
 #infrmacoes_nutri {
-    padding: 30px;
-    border-radius: 10px;
-    max-width: 800px; 
-    margin: 20px auto;
+    flex: 1.5;
+    margin-right: 20px;
+    margin-left: 20px;
+}
+
+#infrmacoes_nutri h1 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0 0 5px 0;
+    padding-bottom: 8px;
+}
+
+.nome_perfil {
+    flex: 1;
+    min-width: 250px;
+    margin-left: 0;
+}
+
+#infrmacoes_nutri {
+    width: 40%;
+}
+
+#rede_sociais {
+    flex: 1;
 }
 
 #nomenutri {
-    font-size: 32px;
-    font-weight: bold;
-    color: #333;
-    text-align: center;
-    margin-bottom: 10px;
+    font-size: 26px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0 0 8px 0;
+    line-height: 1.2;
 }
 
 .tipo-nutri {
-    font-size: 18px;
-    font-weight: 500;
-    color: #777;
-    text-align: center;
-    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: 600;
+    color: #7f8c8d;
+    margin: 0 0 20px 0;
 }
 
-#sobremim, #faculdade {
+#rede_sociais h4 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0 0 5px 0;
+    text-align: center;
+}
+
+
+#sobremim {
+    font-size: 16px;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    text-align: justify;
+}   
+
+#faculdade {
     font-size: 16px;
     color: #555;
     line-height: 1.5;
     margin-bottom: 15px;
-}
-
-#faculdade {
     font-weight: bold;
     color: #333;
 }
@@ -1247,39 +1348,32 @@ main{
     margin-right: auto;
 }
 
-#info_contato{
-    text-align: center;
-    color: #047502;
-}
-
-.divisao{
-    width: 100%;
-    height: 2px;
-    background: green;
-    margin-top: -10px;
-}
-
-#rede_sociais{
-    padding: 10px;
-}
-
-.contato{
-    color: #000;
+.contato {
     display: flex;
     align-items: center;
+    margin-bottom: 15px;    
 }
 
-.icone_contato{
-    width: 20px;
-    margin-right: 8px;
+.contato span, .contato a {
+    font-size: 14px;
+    color: #2c3e50;
+    text-decoration: none;
+    font-weight: 500;
 }
 
-#editar-perfil{
-    width: 100%;
+.contato a:hover {
+    color: #2ecc71;
+}
+
+.icone_contato {
+    width: 24px;
+    height: auto;
+    margin-right: 12px;
+    flex-shrink: 0;
+}
+
+#editar-perfil {
     display: none;
-    align-items: center;
-    margin: 10px 150px 30px ;
-    cursor: pointer;
 }
 
 #publi_avaliacao{

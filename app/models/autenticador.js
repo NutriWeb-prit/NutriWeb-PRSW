@@ -78,7 +78,7 @@ const verificarUsuAutenticado = (req, res, next) => {
             nome: req.session.usuario.nome,
             tipo: req.session.usuario.tipo,
             estaLogado: true,
-            urlPerfil: req.session.usuario.tipo === 'C' ? '/perfilcliente' : '/perfilnutri',
+            urlPerfil: req.session.usuario.tipo === 'C' ? '/perfilcliente' : '/indexPerfilNutri',
             fotoPerfil: `/imagem/perfil/${req.session.usuario.id}`
         };
         

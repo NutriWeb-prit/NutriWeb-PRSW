@@ -81,7 +81,7 @@
                     </section>
                 </section>
             </section>
-            <section id="imagem_de_fundo"></section>
+            <section id="imagem_de_fundo" style="background-image: url('<%= nutricionista.fotoBanner %>')"></section>
             <main class="conteudo">
                 <% if (erro) { %>
                     <section class="erro-mensagem">
@@ -91,109 +91,79 @@
                     <!-- PERFIL DO NUTRICIONISTA -->
                     <section id="info_perfil">
                         <section id="container_foto">
-                            <section class="foto_perfil">
-                                <img src="<%= nutricionista.fotoPerfil %>" 
+                            <img src="<%= nutricionista.fotoPerfil %>" 
                                      alt="Foto de perfil" 
                                      class="foto_perfil" 
                                      id="foto-perfil"
                                      onerror="this.src='imagens/foto_perfil.jpg'">
+                        </section>
+
+                        <section class="conteudo_perfil">
+                            <section class="nome_perfil">
+                                <h1 id="nomenutri"><%= nutricionista.nome %></h1>
+                                <p class="tipo-nutri" id="tipo-nutri">
+                                    <% if (nutricionista.especializacoes) { %>
+                                        <span class="especializacoes">Nutrição <%= nutricionista.especializacoes %></span>
+                                    <% } %>
+                                </p>
                             </section>
-                        </section>
-            
-                        <section id="infrmacoes_nutri">
-                            <h1 id="nomenutri"><%= nutricionista.nome %></h1>
-                            <p class="tipo-nutri" id="tipo-nutri">
-                                CRN: <%= nutricionista.crn %>
-                                <% if (nutricionista.especializacoes) { %>
-                                    <br><span class="especializacoes"><%= nutricionista.especializacoes %></span>
+                
+                            <section id="infrmacoes_nutri">
+                                <h1>Sobre:</h1>
+                                <span id="sobremim"><%= nutricionista.sobreMim %></span>
+                            </section>
+                
+                            <section id="rede_sociais">
+                                <h4>Informações de Contato</h4>
+                                <!-- TELEFONE/WHATSAPP -->
+                                <% if (nutricionista.telefone) { %>
+                                    <p class="contato">
+                                        <img src="imagens/contato-whatsapp.png" alt="" class="icone_contato">
+                                        <span id="whatsapp"><%= nutricionista.telefone %></span>
+                                    </p>
+                                <% } else if (contatosSociais.whatsapp) { %>
+                                    <p class="contato">
+                                        <img src="imagens/contato-whatsapp.png" alt="" class="icone_contato">
+                                        <span id="whatsapp"><%= contatosSociais.whatsapp %></span>
+                                    </p>
                                 <% } %>
-                            </p>
-            
-                            <h1>Sobre:</h1>
-                            <span id="sobremim"><%= nutricionista.sobreMim %></span>
-            
-                            <!-- FORMAÇÕES DINÂMICAS -->
-                            <% if (formacoes && formacoes.length > 0) { %>
-                                <% formacoes.forEach(function(formacao) { %>
-                                    <% if (formacao.tipo === 'graduacao') { %>
-                                        <h1>Faculdade:</h1>
-                                    <% } else { %>
-                                        <h1>Curso:</h1>
-                                    <% } %>
-            
-                                    <span class="formacao-item">
-                                        <%= formacao.nome %> <br> 
-                                        <%= formacao.instituicao %>
-                                    </span>
-            
-                                    <% if (formacao.temCertificado) { %>
-                                        <a href="<%= formacao.urlCertificado %>" target="_blank">
-                                            <img src="imagens/phpublicacao.png" alt="Ver certificado" class="perfil-imagem">
-                                        </a>
-                                    <% } else { %>
-                                        <img src="imagens/phpublicacao.png" alt="Certificado" class="perfil-imagem">
-                                    <% } %>
-                                <% }); %>
-                            <% } else { %>
-                                <h1>Formação:</h1>
-                                <span>Informações de formação não disponíveis</span>
-                            <% } %>
-                        </section>
-            
-                        <section id="info_contato">
-                            <h4>Informações de Contato</h4>
-                            <section class="divisao"></section>
-                        </section>
-            
-                        <section id="rede_sociais">
-                            <!-- TELEFONE/WHATSAPP -->
-                            <% if (nutricionista.telefone) { %>
+                
+                                <!-- INSTAGRAM -->
+                                <% if (contatosSociais.instagram) { %>
+                                    <p class="contato">
+                                        <img src="imagens/contato-instagram.png" alt="" class="icone_contato">
+                                        <span id="instagram">
+                                            <a href="<%= contatosSociais.instagram %>" target="_blank">Instagram</a>
+                                        </span>
+                                    </p>
+                                <% } %>
+                
+                                <!-- EMAIL -->
                                 <p class="contato">
-                                    <img src="imagens/contato-whatsapp.png" alt="" class="icone_contato">
-                                    <span id="whatsapp"><%= nutricionista.telefone %></span>
+                                    <img src="imagens/contato-email.png" alt="" class="icone_contato">
+                                    <span id="email"><%= nutricionista.email %></span>
                                 </p>
-                            <% } else if (contatosSociais.whatsapp) { %>
-                                <p class="contato">
-                                    <img src="imagens/contato-whatsapp.png" alt="" class="icone_contato">
-                                    <span id="whatsapp"><%= contatosSociais.whatsapp %></span>
-                                </p>
-                            <% } %>
-            
-                            <!-- INSTAGRAM -->
-                            <% if (contatosSociais.instagram) { %>
-                                <p class="contato">
-                                    <img src="imagens/contato-instagram.png" alt="" class="icone_contato">
-                                    <span id="instagram">
-                                        <a href="<%= contatosSociais.instagram %>" target="_blank">Instagram</a>
-                                    </span>
-                                </p>
-                            <% } %>
-            
-                            <!-- EMAIL -->
-                            <p class="contato">
-                                <img src="imagens/contato-email.png" alt="" class="icone_contato">
-                                <span id="email"><%= nutricionista.email %></span>
-                            </p>
-            
-                            <!-- FACEBOOK -->
-                            <% if (contatosSociais.facebook) { %>
-                                <p class="contato">
-                                    <img src="imagens/contato-facebook.png" alt="" class="icone_contato">
-                                    <span>
-                                        <a href="<%= contatosSociais.facebook %>" target="_blank">Facebook</a>
-                                    </span>
-                                </p>
-                            <% } %>
-            
-                            <!-- YOUTUBE -->
-                            <% if (contatosSociais.youtube) { %>
-                                <p class="contato">
-                                    <img src="imagens/contato-youtube.png" alt="" class="icone_contato">
-                                    <span>
-                                        <a href="<%= contatosSociais.youtube %>" target="_blank">YouTube</a>
-                                    </span>
-                                </p>
-                            <% } %>
+                
+                                <!-- FACEBOOK -->
+                                <% if (contatosSociais.facebook) { %>
+                                    <p class="contato">
+                                        <img src="imagens/contato-facebook.png" alt="" class="icone_contato">
+                                        <span>
+                                            <a href="<%= contatosSociais.facebook %>" target="_blank">Facebook</a>
+                                        </span>
+                                    </p>
+                                <% } %>
+                
+                                <!-- YOUTUBE -->
+                                <% if (contatosSociais.youtube) { %>
+                                    <p class="contato">
+                                        <img src="imagens/contato-youtube.png" alt="" class="icone_contato">
+                                        <span>
+                                            <a href="<%= contatosSociais.youtube %>" target="_blank">YouTube</a>
+                                        </span>
+                                    </p>
+                                <% } %>
+                            </section>
                         </section>
             
                         <section id="editar-perfil">
@@ -232,12 +202,15 @@
                 </section>
 
                 <section id="publi">
-
-                <a href="#" id="novapublicacao">
-                    <span class="material-symbols-outlined">add</span>
-                    <span>Nova Publicação</span>
-                </a>
-
+                
+                <h1 class="titulopubli">Publicações</h1>
+                
+                <% if (isOwner) { %>
+                    <a href="#" id="novapublicacao">
+                        <span class="material-symbols-outlined">add</span>
+                        <span>Nova Publicação</span>
+                    </a>
+                <% } %>
                 <section class="modal" id="modal">
                     <section class="modal-content">
                         
@@ -422,13 +395,18 @@
                 </section>  
                 
                 <section id="avaliar_nutri">
-                    <span id="tituloavaliacao">Minhas Avaliações</span>
-                    <article class="avaliacao">
-                        <section class="nome_avaliador">
-                            <section id="nome">
-                                <img src="imagens/foto_perfil.jpg" alt="avaliador">
-                                <p class="nome-escrito" id="nome1">Bruna</p>
+                    <h1 id="tituloavaliacao">Avaliações</h1>
+                    <section id="container-avaliacoes">
+                        <article class="avaliacao">
+                            <section class="nome_avaliador">
+                                <section id="nome">
+                                    <img src="imagens/foto_perfil.jpg" alt="avaliador">
+                                    <p class="nome-escrito" id="nome1">Bruna</p>
+                                </section>
                             </section>
+                            <p class="comentario" id="comentario1">
+                                Comentário sobre o nutricionista
+                            </p>
                             <section id="container-estrela">
                                 <img src="imagens/estrela-ativa.png" alt="">
                                 <img src="imagens/estrela-ativa.png" alt="">
@@ -436,18 +414,18 @@
                                 <img src="imagens/estrela-ativa.png" alt="">
                                 <img src="imagens/estrela.png" class="stay-desativada" alt="">
                             </section>
-                        </section>
-                        <p class="comentario" id="comentario1">
-                            Comentário sobre o nutricionista
-                        </p>
-                    </article>
-             
-                    <article class="avaliacao">
-                        <section class="nome_avaliador">
-                            <section id="nome">
-                                <img src="imagens/foto_perfil.jpg" alt="avaliador">
-                                <p class="nome-escrito" id="nome2">Bruna</p>
+                        </article>
+                 
+                        <article class="avaliacao">
+                            <section class="nome_avaliador">
+                                <section id="nome">
+                                    <img src="imagens/foto_perfil.jpg" alt="avaliador">
+                                    <p class="nome-escrito" id="nome2">Bruna</p>
+                                </section>
                             </section>
+                            <p class="comentario" id="comentario2">
+                                Comentário sobre o nutricionista
+                            </p>
                             <section id="container-estrela">
                                 <img src="imagens/estrela-ativa.png" alt="">
                                 <img src="imagens/estrela-ativa.png" alt="">
@@ -455,17 +433,17 @@
                                 <img src="imagens/estrela-ativa.png" alt="">
                                 <img src="imagens/estrela.png" class="stay-desativada" alt="">
                             </section>
-                        </section>
-                        <p class="comentario" id="comentario2">
-                            Comentário sobre o nutricionista
-                        </p>
-                    </article>
-                    <article class="avaliacao">
-                        <section class="nome_avaliador">
-                            <section id="nome">
-                                <img src="imagens/foto_perfil.jpg" alt="avaliador">
-                                <p class="nome-escrito" id="nome3">Bruna</p>
+                        </article>
+                        <article class="avaliacao">
+                            <section class="nome_avaliador">
+                                <section id="nome">
+                                    <img src="imagens/foto_perfil.jpg" alt="avaliador">
+                                    <p class="nome-escrito" id="nome3">Bruna</p>
+                                </section>
                             </section>
+                            <p class="comentario" id="comentario3">
+                                Comentário sobre o nutricionista
+                            </p>
                             <section id="container-estrela">
                                 <img src="imagens/estrela-ativa.png" alt="">
                                 <img src="imagens/estrela-ativa.png" alt="">
@@ -473,17 +451,17 @@
                                 <img src="imagens/estrela-ativa.png" alt="">
                                 <img src="imagens/estrela.png" class="stay-desativada" alt="">
                             </section>
-                        </section>
-                        <p class="comentario" id="comentario3">
-                            Comentário sobre o nutricionista
-                        </p>
-                    </article>
-                     <article class="avaliacao">
-                        <section class="nome_avaliador">
-                            <section id="nome">
-                                <img src="imagens/foto_perfil.jpg" alt="avaliador">
-                                <p class="nome-escrito" id="nome4">Bruna</p>
+                        </article>
+                         <article class="avaliacao">
+                            <section class="nome_avaliador">
+                                <section id="nome">
+                                    <img src="imagens/foto_perfil.jpg" alt="avaliador">
+                                    <p class="nome-escrito" id="nome4">Bruna</p>
+                                </section>
                             </section>
+                            <p class="comentario" id="comentario4">
+                                Comentário sobre o nutricionista
+                            </p>
                             <section id="container-estrela">
                                 <img src="imagens/estrela-ativa.png" alt="">
                                 <img src="imagens/estrela-ativa.png" alt="">
@@ -491,21 +469,12 @@
                                 <img src="imagens/estrela-ativa.png" alt="">
                                 <img src="imagens/estrela.png" class="stay-desativada" alt="">
                             </section>
-                        </section>
-                        <p class="comentario" id="comentario4">
-                            Comentário sobre o nutricionista
-                        </p>
-                    </article>
-                    <button class="bookmarkBtn">
-                        <span class="IconContainer">
-                          <svg viewBox="0 0 384 512" height="0.9em" class="icon">
-                            <path
-                              d="M0 48V487.7C0 501.1 10.9 512 24.3 512c5 0 9.9-1.5 14-4.4L192 400 345.7 507.6c4.1 2.9 9 4.4 14 4.4c13.4 0 24.3-10.9 24.3-24.3V48c0-26.5-21.5-48-48-48H48C21.5 0 0 21.5 0 48z"
-                            ></path>
-                          </svg>
-                        </span>
-                        <p class="text">Avalie</p>
-                      </button>
+                        </article>
+                    </section>
+
+                    <% if (!isOwner) { %>
+                        <button class="bookmarkBtn">Avaliar Profissional</button>
+                    <% } %>
                 </section>
             </main>
 
@@ -554,4 +523,5 @@
     <script src="js/indexMenu.js"></script>
     <script src="js/uploadimage.js"></script>
     <script src="js/modalHome.js"></script>
+    <script src="js/listanutricionistas.js"></script>
 </html>

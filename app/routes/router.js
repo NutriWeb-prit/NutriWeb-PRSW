@@ -26,9 +26,11 @@ router.get("/perfilcliente",
     NWController.mostrarPerfilCliente 
 );
 
-router.get("/perfilnutri", 
+router.get("/perfilnutri", NWController.mostrarPerfilNutricionista);
+
+router.get("/indexPerfilNutri", 
     verificarPermissao(['N']),
-    NWController.mostrarPerfilNutricionista 
+    NWController.redirecionarParaMeuPerfil
 );
 
 router.get("/imagem/perfil/:usuarioId", 
@@ -63,19 +65,14 @@ router.get("/imagem/perfil/:usuarioId",
 );
 
 router.get("/imagem/banner/:usuarioId", 
-    verificarPermissao(['C', 'N']),
     async (req, res) => {
         try {
             const usuarioId = req.params.usuarioId;
             
-            if (req.session.usuario.id !== parseInt(usuarioId) && req.session.usuario.tipo !== 'N') {
-                return res.status(403).send('Acesso negado');
-            }
-            
             const imagem = await NWModel.findImagemBanner(usuarioId);
             
             if (!imagem) {
-                return res.status(404).send('Imagem não encontrada');
+                return res.status(404).send('Banner não encontrado');
             }
             
             res.set({
