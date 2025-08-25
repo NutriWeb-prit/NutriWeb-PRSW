@@ -162,13 +162,6 @@ router.post(
             area: req.body.area || null 
         };
 
-        console.log('ROUTER DEBUG CLIENTE:');
-        console.log('- Etapa:', etapa);
-        console.log('- req.body.area:', req.body.area);
-        console.log('- Tipo area:', typeof req.body.area);
-        console.log('- dadosCliente.area:', dadosCliente.area);
-        console.log('- Arquivos recebidos:', req.files ? Object.keys(req.files) : 'Nenhum');
-
         if (etapa == "1") {
             console.log('Processando ETAPA 1...');
             

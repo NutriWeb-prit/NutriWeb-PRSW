@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (nutri) {
             document.getElementById('foto-perfil').src = nutri.imagem;
+            document.getElementById('img-post').dataset.imgperfil = nutri.imagem;
         }
     }
 });

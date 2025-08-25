@@ -16,6 +16,7 @@
     "express-session": "^1.18.1",
     "express-validator": "^7.2.0",
     "multer": "^2.0.1",
-    "mysql2": "^3.14.1"
+    "mysql2": "^3.14.1",
+    "simple-notify": "^1.0.6"
   }
 }

@@ -556,7 +556,7 @@ const NWController = {
             const resultado = await NWModel.createCliente(dadosUsuario, cpfLimpo, imagemPerfil, imagemBanner, interessesSelecionados);
     
             console.log('Cliente cadastrado com sucesso - ID:', resultado.usuarioId);
-            return res.redirect('/login?cadastro=sucesso');
+            return res.redirect('/login?login=cadastro_realizado');
     
         } catch (error) {
             console.error('Erro no cadastro do cliente:', error.message);
@@ -685,7 +685,7 @@ const NWController = {
             );
     
             console.log("Nutricionista cadastrado com sucesso - ID:", result.usuarioId);
-            return res.redirect("/login?cadastro=sucesso");
+            return res.redirect("/login?login=cadastro_realizado");
     
         } catch (error) {
             console.error("Erro no cadastro do nutricionista:", error.message);

@@ -124,7 +124,7 @@ const logout = (req, res, next) => {
         }
         
         console.log(`Logout realizado para: ${nomeUsuario}`);
-        res.redirect("/login?logout=sucesso");
+        res.redirect("/login?login=logout");
     });
 };
 
