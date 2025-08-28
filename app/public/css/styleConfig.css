@@ -256,6 +256,25 @@ body {
     margin: 0;
 }
 
+.config-section {
+    display: none;
+}
+
+.ativo {
+    display: block;
+}
+
+.active {
+    background-color: #ff8d50;
+}
+
+#form-imagens {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    margin-top: 50px;
+}
+
 .container-imagens {
     display: flex;
     justify-content: center;
@@ -268,30 +287,78 @@ body {
     align-items: center;
 }
 
+.image-preview-container {
+    position: relative;
+    display: inline-block;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
 .right-panel h2 {
     font-size: 20px;
     font-weight: 500;
     align-self: center;
 }
 
+.image-preview-container {
+    position: relative;
+    display: inline-block;
+    border-radius: 10px;
+    overflow: hidden;
+    height: 200px;
+}
+
 .foto-perfil {
     width: 200px;
     height: 200px;
-    border-radius: 50%;
     object-fit: cover;
-    border: 2px solid white;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-    background-color: #f0f0f0;
+    border-radius: 50%;
 }
 
 .foto-banner {
-    width: 500px;
+    width: 400px;
     height: 200px;
-    border-radius: 10px;
     object-fit: cover;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+    cursor: pointer;
+}
+
+.ovl-fotoperfil {
+    border-radius: 50%;;
+}
+
+.image-preview-container:hover .overlay {
+    opacity: 1;
+}
+
+.btn-upload {
+    color: white;
+    font-size: 14px;
+    text-align: center;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 5px;
+    background: transparent;
     border: 2px solid white;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-    background-color: #f0f0f0;
+    transition: all 0.3s;
+}
+
+.btn-upload:hover {
+    background: white;
+    color: #333;
 }
 
 .container-botoes {

@@ -46,19 +46,6 @@ const NWModel = {
         }
     },
 
-    // Atualizar dados de um usuário
-    update: async (dadosForm, id) => {
-        try {
-            const [linhas] = await pool.query(
-                "UPDATE Usuarios SET ? WHERE id = ?",
-                [dadosForm, id]
-            );
-            return linhas;
-        } catch (error) {
-            return error;
-        }
-    },
-
     // Inativar um usuário (soft delete)
     delete: async (id) => {
         try {
@@ -69,6 +56,136 @@ const NWModel = {
             return linhas;
         } catch (error) {
             return error;
+        }
+    },
+
+    atualizarImagensUsuario: async (usuarioId, fotoPerfil = null, fotoBanner = null) => {
+        let conn;
+        
+        try {
+            conn = await Promise.race([
+                pool.getConnection(),
+                new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('Timeout ao obter conexão')), 10000)
+                )
+            ]);
+            
+            await conn.beginTransaction();
+    
+            // Verificar se o usuário já tem um perfil
+            const [perfilExistente] = await conn.query(
+                "SELECT id FROM Perfis WHERE UsuarioId = ?",
+                [usuarioId]
+            );
+    
+            let dadosPerfil = {};
+            let temAtualizacao = false;
+    
+            // Preparar dados para atualização
+            if (fotoPerfil) {
+                if (fotoPerfil.buffer.length > 16 * 1024 * 1024) {
+                    throw new Error('Foto de perfil muito grande. Máximo permitido: 16MB');
+                }
+                dadosPerfil.FotoPerfil = fotoPerfil.buffer;
+                temAtualizacao = true;
+            }
+    
+            if (fotoBanner) {
+                if (fotoBanner.buffer.length > 16 * 1024 * 1024) {
+                    throw new Error('Banner muito grande. Máximo permitido: 16MB');
+                }
+                dadosPerfil.FotoBanner = fotoBanner.buffer;
+                temAtualizacao = true;
+            }
+    
+            if (!temAtualizacao) {
+                throw new Error('Nenhuma imagem válida foi fornecida para atualização');
+            }
+    
+            let resultado;
+    
+            if (perfilExistente.length > 0) {
+                console.log('Atualizando perfil existente, ID:', perfilExistente[0].id);
+                
+                // Atualizar perfil existente
+                const campos = [];
+                const valores = [];
+    
+                if (fotoPerfil) {
+                    campos.push('FotoPerfil = ?');
+                    valores.push(fotoPerfil.buffer);
+                    console.log('Adicionando foto de perfil, tamanho buffer:', fotoPerfil.buffer.length);
+                }
+    
+                if (fotoBanner) {
+                    campos.push('FotoBanner = ?');
+                    valores.push(fotoBanner.buffer);
+                    console.log('Adicionando foto de banner, tamanho buffer:', fotoBanner.buffer.length);
+                }
+    
+                valores.push(usuarioId);
+    
+                const queryUpdate = `UPDATE Perfis SET ${campos.join(', ')} WHERE UsuarioId = ?`;
+                console.log('Query de update:', queryUpdate);
+                console.log('Valores (sem buffers):', valores.length, 'valores');
+    
+                const [updateResult] = await conn.query(queryUpdate, valores);
+                console.log('Resultado do UPDATE:', updateResult);
+    
+                resultado = {
+                    perfilId: perfilExistente[0].id,
+                    operacao: 'atualizado',
+                    linhasAfetadas: updateResult.affectedRows
+                };
+    
+            } else {
+                // Criar novo perfil
+                dadosPerfil.UsuarioId = usuarioId;
+                
+                const [insertResult] = await conn.query(
+                    "INSERT INTO Perfis SET ?",
+                    [dadosPerfil]
+                );
+    
+                resultado = {
+                    perfilId: insertResult.insertId,
+                    operacao: 'criado',
+                    linhasAfetadas: insertResult.affectedRows
+                };
+            }
+    
+            await conn.commit();
+            
+            return {
+                usuarioId,
+                ...resultado,
+                imagensAtualizadas: {
+                    fotoPerfil: !!fotoPerfil,
+                    fotoBanner: !!fotoBanner
+                }
+            };
+    
+        } catch (err) {
+            console.error("Erro ao atualizar imagens do usuário:", err.message);
+            
+            if (conn) {
+                try {
+                    await conn.rollback();
+                } catch (rollbackErr) {
+                    console.error('Erro no rollback:', rollbackErr.message);
+                }
+            }
+            
+            throw err;
+            
+        } finally {
+            if (conn) {
+                try {
+                    conn.release();
+                } catch (releaseErr) {
+                    console.error('Erro ao liberar conexão:', releaseErr.message);
+                }
+            }
         }
     },
 

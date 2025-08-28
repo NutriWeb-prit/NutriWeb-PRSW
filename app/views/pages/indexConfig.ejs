@@ -57,33 +57,82 @@
                 <h1>Configurações</h1>
                 <nav>
                     <ul>
-                        <li>Foto de Perfil e Banner</li>
-                        <li>Dados Pessoais</li>
-                        <li>Links</li>
-                        <li>Suporte</li>
+                        <li id="menu-imagens" class="active">Foto de Perfil e Banner</li>
+                        <li id="menu-dados">Dados Pessoais</li>
+                        <li id="menu-links">Links</li>
+                        <li id="menu-suporte">Suporte</li>
                     </ul>
                 </nav>
             </section>
             <section class="right-panel">
-                <h1>Foto de Perfil e Banner</h1>
-                <section class="container-imagens">
-                    <section class="container-fotoPerfil">
-                        <img src="<%= headerUsuario.fotoPerfil %>" 
-                                 class="foto-perfil"
-                                 onerror="this.src='imagens/foto_perfil.jpg'">
-                        <h2>Foto de Perfil</h2>
-                    </section>
-                    <section class="container-fotoBanner">
-                        <img src="<%= headerUsuario.fotoBanner %>" 
-                                 class="foto-banner"
-                                 onerror="this.src='imagens/foto_perfil.jpg'">
-                        <h2>Banner</h2>
-                    </section>
+                <section id="secao-imagens" class="config-section ativo">
+                    <h1>Foto de Perfil e Banner</h1>
+                    <form id="form-imagens" action="/atualizar-imagens" method="POST" enctype="multipart/form-data">
+                        <section class="container-imagens">
+                            <section class="container-fotoPerfil">
+                                <section class="image-preview-container">
+                                    <img src="<%= headerUsuario.fotoPerfil %>"
+                                         id="preview-perfil"
+                                         class="foto-perfil"
+                                         onerror="this.src='/imagens/foto_perfil.jpg'">
+                                    <section class="overlay ovl-fotoperfil">
+                                        <label for="input-foto-perfil" class="btn-upload">
+                                            <i class="fas fa-camera"></i>
+                                            Alterar Foto
+                                        </label>
+                                    </section>
+                                </section>
+                                <input type="file" 
+                                       id="input-foto-perfil" 
+                                       name="fotoPerfil" 
+                                       accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+                                       style="display: none;">
+                                <h2>Foto de Perfil</h2>
+                                <p class="image-info">Formatos aceitos: JPEG, PNG, GIF, WEBP<br>Tamanho máximo: 5MB</p>
+                            </section>
+                            
+                            <section class="container-fotoBanner">
+                                <div class="image-preview-container">
+                                    <img src="<%= headerUsuario.fotoBanner %>"
+                                         id="preview-banner"
+                                         class="foto-banner"
+                                         onerror="this.src='/imagens/foto_perfil.jpg'">
+                                    <div class="overlay">
+                                        <label for="input-foto-banner" class="btn-upload">
+                                            <i class="fas fa-camera"></i>
+                                            Alterar Banner
+                                        </label>
+                                    </div>
+                                </div>
+                                <input type="file" 
+                                       id="input-foto-banner" 
+                                       name="fotoBanner" 
+                                       accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+                                       style="display: none;">
+                                <h2>Banner</h2>
+                                <p class="image-info">Formatos aceitos: JPEG, PNG, GIF, WEBP<br>Tamanho máximo: 5MB</p>
+                            </section>
+                        </section>
+                        
+                        <section class="container-botoes">
+                            <button type="button" class="botao cancel">Cancelar</button>
+                            <button type="submit" class="botao save">Salvar</button>
+                        </section>
+                    </form>
                 </section>
-                <section class="container-botoes">
-                    <button class="botao cancel">Cancelar</button>
-                    <button class="botao save">Salvar</button>
+
+                <section id="secao-dados" class="config-section">
+                    <h1>Dados Pessoais</h1>
                 </section>
+                
+                <section id="secao-links" class="config-section">
+                    <h1>Links</h1>
+                </section>
+                
+                <section id="secao-suporte" class="config-section">
+                    <h1>Suporte</h1>
+                </section>
+                
             </section>
         </section>
     </main>
@@ -142,5 +191,6 @@
     </footer>
 
     <script src="js/alerts.js"></script>
+    <script src="js/config.js"></script>
 </body>
 </html>

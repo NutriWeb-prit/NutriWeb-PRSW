@@ -32,7 +32,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 mensagens: {
                     'perfil_atualizado': 'Perfil atualizado com sucesso!',
                     'dados_salvos': 'Dados salvos com sucesso!',
-                    'operacao_concluida': 'Operação concluída com sucesso!'
+                    'operacao_concluida': 'Operação concluída com sucesso!',
+                    'imagens_atualizadas': 'Imagens atualizadas com sucesso!'
                 },
                 padrao: 'Operação realizada com sucesso!'
             }

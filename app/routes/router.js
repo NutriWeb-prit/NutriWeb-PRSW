@@ -37,6 +37,11 @@ router.get("/config", function (req, res) {
     res.render('pages/indexConfig')
 });
 
+router.post('/atualizar-imagens', 
+    upload.uploadImagens,
+    NWController.atualizarImagens
+);
+
 router.get("/imagem/perfil/:usuarioId", 
     verificarPermissao(['C', 'N']),
     async (req, res) => {

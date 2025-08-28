@@ -73,14 +73,16 @@ const verificarUsuAutenticado = (req, res, next) => {
         res.locals.isCliente = req.session.usuario.tipo === 'C';
         res.locals.isNutricionista = req.session.usuario.tipo === 'N';
         
+        const timestamp = Date.now();
+        
         res.locals.headerUsuario = {
             id: req.session.usuario.id,
             nome: req.session.usuario.nome,
             tipo: req.session.usuario.tipo,
             estaLogado: true,
             urlPerfil: req.session.usuario.tipo === 'C' ? '/perfilcliente' : '/indexPerfilNutri',
-            fotoPerfil: `/imagem/perfil/${req.session.usuario.id}`,
-            fotoBanner: `/imagem/banner/${req.session.usuario.id}`
+            fotoPerfil: `/imagem/perfil/${req.session.usuario.id}?t=${timestamp}`,
+            fotoBanner: `/imagem/banner/${req.session.usuario.id}?t=${timestamp}`
         };
         
         console.log("Usuário autenticado:", {

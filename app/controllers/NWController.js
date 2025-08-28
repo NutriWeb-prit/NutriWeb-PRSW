@@ -182,6 +182,94 @@ const NWController = {
             }),
     ],
 
+    /* --------------------------------------- UPDATE ------------------------------------ */
+
+    atualizarImagens: async (req, res) => {
+        try {
+            // Verificar se o usuário está logado
+            if (!req.session.usuario || !req.session.usuario.logado) {
+                console.log('ERRO: Usuário não autenticado');
+                return res.status(401).json({ 
+                    success: false, 
+                    message: 'Usuário não autenticado' 
+                });
+            }
+    
+            const usuarioId = req.session.usuario.id;
+            console.log('Usuario ID:', usuarioId);
+    
+            // Função de validação de imagem (reutilizada do cadastro)
+            const validarImagem = (arquivo, tipo) => {
+                console.log(`Validando ${tipo}:`, arquivo ? 'arquivo presente' : 'arquivo ausente');
+                if (!arquivo) return null;
+                
+                console.log(`${tipo} - Tamanho:`, arquivo.size, 'bytes');
+                console.log(`${tipo} - Tipo:`, arquivo.mimetype);
+                
+                if (arquivo.size > 5 * 1024 * 1024) {
+                    throw new Error(`${tipo} muito grande. Máximo permitido: 5MB`);
+                }
+                
+                if (arquivo.buffer && arquivo.buffer.length > 5 * 1024 * 1024) {
+                    throw new Error(`${tipo} muito grande após processamento. Máximo permitido: 5MB`);
+                }
+                
+                const tiposPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+                if (!tiposPermitidos.includes(arquivo.mimetype)) {
+                    throw new Error(`Formato de ${tipo} não suportado. Use: JPEG, PNG, GIF ou WEBP`);
+                }
+                
+                return arquivo;
+            };
+    
+            const fotoPerfil = validarImagem(
+                req.files && req.files['fotoPerfil'] ? req.files['fotoPerfil'][0] : null,
+                'foto de perfil'
+            );
+            
+            const fotoBanner = validarImagem(
+                req.files && req.files['fotoBanner'] ? req.files['fotoBanner'][0] : null,
+                'banner'
+            );
+
+            if (!fotoPerfil && !fotoBanner) {
+                console.log('ERRO: Nenhuma imagem foi enviada');
+                return res.status(400).json({
+                    success: false,
+                    message: 'Nenhuma imagem foi selecionada para atualização'
+                });
+            }
+
+            const resultado = await NWModel.atualizarImagensUsuario(usuarioId, fotoPerfil, fotoBanner);
+    
+            if (req.headers['accept'] && req.headers['accept'].includes('application/json')) {
+                return res.json({
+                    success: true,
+                    message: 'Imagens atualizadas com sucesso!',
+                    data: resultado
+                });
+            }
+    
+            return res.redirect('/config?sucesso=imagens_atualizadas');
+    
+        } catch (error) {
+            
+            if (req.headers['accept'] && req.headers['accept'].includes('application/json')) {
+                return res.status(500).json({
+                    success: false,
+                    message: error.message.includes('muito grande') || error.message.includes('não suportado')
+                        ? error.message
+                        : 'Erro interno do servidor. Tente novamente.'
+                });
+            }
+    
+            return res.redirect('/config?erro=' + encodeURIComponent(
+                error.message.includes('muito grande') || error.message.includes('não suportado')
+                    ? error.message
+                    : 'Erro interno do servidor. Tente novamente.'
+            ));
+        }
+    },
 
     /* --------------------------------------- MÉTODOS ------------------------------------ */
 
@@ -281,7 +369,6 @@ const NWController = {
     
         let retorno = null;
         
-        // Verifica mensagens na URL
         if (req.query.cadastro === "sucesso") {
             retorno = { tipo: "sucesso", mensagem: "Cadastro realizado com sucesso! Faça seu login." };
         } else if (req.query.logout === "sucesso") {
@@ -308,7 +395,6 @@ const NWController = {
             const usuarioId = req.session.usuario.id;
             console.log("Carregando perfil do cliente ID:", usuarioId);
             
-            // 1. OTIMIZAÇÃO: Buscar todos os dados em uma única consulta
             const dadosCompletos = await NWModel.findPerfilCompleto(usuarioId);
             
             if (!dadosCompletos.cliente) {
@@ -322,7 +408,6 @@ const NWController = {
             
             const { cliente, publicacoes } = dadosCompletos;
             
-            // 2. OTIMIZAÇÃO: Processar dados de forma mais eficiente
             const dadosProcessados = {
                 id: cliente.id,
                 nome: cliente.NomeCompleto,
@@ -336,11 +421,9 @@ const NWController = {
                 objetivos: cliente.SobreMim || "Ainda não definiu seus objetivos nutricionais.",
                 interesses: cliente.InteressesNutricionais || "Nenhum interesse cadastrado",
                 
-                // 3. OTIMIZAÇÃO: URLs ao invés de Base64
                 fotoPerfil: cliente.FotoPerfil ? `/imagem/perfil/${usuarioId}` : 'imagens/foto_perfil.jpg',
                 fotoBanner: cliente.FotoBanner ? `/imagem/banner/${usuarioId}` : null,
                 
-                // 4. OTIMIZAÇÃO: Processar publicações mais eficientemente
                 publicacoes: publicacoes.map(pub => ({
                     id: pub.PublicacaoId,
                     imagem: pub.FotoPublicacao ? `/imagem/publicacao/${pub.PublicacaoId}` : 'imagens/placeholder-post.jpg',
@@ -591,7 +674,6 @@ const NWController = {
                 });
             }
     
-            // Recuperar imagens dos campos hidden (Base64 → Buffer)
             let imagemPerfil = null;
             let imagemBanner = null;
             
@@ -627,11 +709,9 @@ const NWController = {
                 }
             }
             
-            // Certificados (recebidos diretamente do upload)
             const certificadoFaculdade = req.files && req.files['certificadoFaculdade'] ? req.files['certificadoFaculdade'][0] : null;
             const certificadoCurso = req.files && req.files['certificadoCurso'] ? req.files['certificadoCurso'][0] : null;
-    
-            // Criptografar senha
+
             const senhaHash = await bcrypt.hash(req.body.senha, 12);
     
             const dadosUsuario = {
@@ -661,7 +741,6 @@ const NWController = {
                 }
             };
     
-            // Processar especialidades
             let especializacoesSelecionadas = [];
             if (req.body.area) {
                 especializacoesSelecionadas = Array.isArray(req.body.area) ? req.body.area : [req.body.area];

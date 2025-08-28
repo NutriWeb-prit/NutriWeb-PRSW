@@ -81,7 +81,12 @@
                     </section>
                 </section>
             </section>
-            <section id="imagem_de_fundo" style="background-image: url('<%= nutricionista.fotoBanner %>')"></section>
+            <% if (isOwner) { %>
+                <section id="imagem_de_fundo" style="background-image: url('<%= headerUsuario.fotoBanner %>')"></section>
+            <% } %>
+            <% if (!isOwner) { %>
+                <section id="imagem_de_fundo" style="background-image: url('<%= nutricionista.fotoBanner %>')"></section>
+            <% } %>
             <main class="conteudo">
                 <% if (erro) { %>
                     <section class="erro-mensagem">
@@ -91,12 +96,22 @@
                     <!-- PERFIL DO NUTRICIONISTA -->
                     <section id="info_perfil">
                         <section id="container_foto">
-                            <img src="<%= nutricionista.fotoPerfil %>" 
+                            <% if (isOwner) { %>
+                            <img src="<%= headerUsuario.fotoPerfil %>" 
                                      alt="Foto de perfil" 
                                      class="foto_perfil" 
                                      id="foto-perfil"
                                      onerror="this.src='imagens/foto_perfil.jpg'">
                                      <a href="/config"><i class="fa-solid fa-gear"></i></a>
+                            <% } %>
+                            <% if (!isOwner) { %>
+                                <img src="<%= nutricionista.fotoPerfil %>" 
+                                         alt="Foto de perfil" 
+                                         class="foto_perfil" 
+                                         id="foto-perfil"
+                                         onerror="this.src='imagens/foto_perfil.jpg'">
+                                         <a href="/config"><i class="fa-solid fa-gear"></i></a>
+                                <% } %>
                         </section>
 
                         <section class="conteudo_perfil">
