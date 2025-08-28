@@ -33,6 +33,10 @@ router.get("/indexPerfilNutri",
     NWController.redirecionarParaMeuPerfil
 );
 
+router.get("/config", function (req, res) {
+    res.render('pages/indexConfig')
+});
+
 router.get("/imagem/perfil/:usuarioId", 
     verificarPermissao(['C', 'N']),
     async (req, res) => {

@@ -79,7 +79,8 @@ const verificarUsuAutenticado = (req, res, next) => {
             tipo: req.session.usuario.tipo,
             estaLogado: true,
             urlPerfil: req.session.usuario.tipo === 'C' ? '/perfilcliente' : '/indexPerfilNutri',
-            fotoPerfil: `/imagem/perfil/${req.session.usuario.id}`
+            fotoPerfil: `/imagem/perfil/${req.session.usuario.id}`,
+            fotoBanner: `/imagem/banner/${req.session.usuario.id}`
         };
         
         console.log("Usuário autenticado:", {

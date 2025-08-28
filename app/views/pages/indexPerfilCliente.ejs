@@ -41,7 +41,6 @@
                         </div>
                     </a>
                 <% } else { %>
-                    <a href="/perfilcliente"><button class="meuperfil-button">Meu Perfil</button></a>
                     <a href="/premium"><button class="premium-button">Premium</button></a>
                     <a href="/login"><button class="entrar-button">Entrar</button></a>
                 <% } %>
@@ -75,14 +74,14 @@
         <!-- Conteudo do site -->
 
         <section id="conteudo-completo">
-            <section id="imagem_de_fundo"></section>
+            <section id="imagem_de_fundo" style="background-image: url('<%= cliente.fotoBanner %>')"></section>
             <main class="conteudo">
                 <section id="info_perfil">
                     <section id="container_foto">
-                        <section class="foto_perfil">
-                            <img src="<%= cliente ? cliente.fotoPerfil : 'imagens/foto_perfil.jpg' %>" 
-                                 alt="Foto de perfil" class="foto_perfil" id="foto-perfil">
-                        </section>
+                        <img src="<%= cliente ? cliente.fotoPerfil : 'imagens/foto_perfil.jpg' %>" 
+                            alt="Foto de perfil" 
+                            class="foto_perfil" 
+                            id="foto-perfil">
                     </section><br>
         
                     <section id="infrmacoes_nutri">
@@ -109,12 +108,8 @@
                         <span class="material-symbols-outlined opc-perfil">visibility_off</span>
                     </section>
         
-                    <section id="info_contato">
-                        <h4>Informações de Contato</h4>
-                        <section class="divisao"></section>
-                    </section>
-        
                     <section id="rede_sociais">
+                        <h4>Informações de Contato</h4>
                         <% if (cliente && cliente.telefone) { %>
                             <p class="contato">
                                 <img src="imagens/contato-whatsapp.png" alt="" class="icone_contato">
@@ -171,12 +166,17 @@
                 
                 <section id="avaliar_nutri">
                     <span id="tituloavaliacao">Avaliações</span>
-                    <article class="avaliacao">
-                        <section class="nome_avaliador">
-                            <section id="nome">
-                                <img src="imagens/profissional4.png" alt="avaliador">
-                                <p class="nome-escrito" id="nome1">Pablo Parron</p>
+                    <section id="container-avaliacoes">
+                        <article class="avaliacao">
+                            <section class="nome_avaliador">
+                                <section id="nome">
+                                    <img src="imagens/profissional4.png" alt="avaliador">
+                                    <p class="nome-escrito" id="nome1">Pablo Parron</p>
+                                </section>
                             </section>
+                            <p class="comentario" id="comentario1">
+                                Pablo Parron: Ele é ótimo em resolver problemas rapidamente, mas poderia melhorar na comunicação.
+                            </p>
                             <section id="container-estrela">
                                 <img src="imagens/estrela-ativa.png" alt="">
                                 <img src="imagens/estrela-ativa.png" alt="">
@@ -184,18 +184,19 @@
                                 <img src="imagens/estrela-ativa.png" alt="">
                                 <img src="imagens/estrela.png" class="stay-desativada" alt="">
                             </section>
-                        </section>
-                        <p class="comentario" id="comentario1">
-                            Pablo Parron: Ele é ótimo em resolver problemas rapidamente, mas poderia melhorar na comunicação.
-                        </p>
-                    </article>
-             
-                    <article class="avaliacao">
-                        <section class="nome_avaliador">
-                            <section id="nome">
-                                <img src="imagens/profissional3.png" alt="avaliador">
-                                <p class="nome-escrito" id="nome2">Flávia Flins</p>
+                        </article>
+                 
+                        <article class="avaliacao">
+                            <section class="nome_avaliador">
+                                <section id="nome">
+                                    <img src="imagens/profissional3.png" alt="avaliador">
+                                    <p class="nome-escrito" id="nome2">Flávia Flins</p>
+                                </section>
+
                             </section>
+                            <p class="comentario" id="comentario2">
+                                Flávia Flins: Criativa e talentosa, sempre traz ideias novas para os projetos.
+                            </p>
                             <section id="container-estrela">
                                 <img src="imagens/estrela-ativa.png" alt="">
                                 <img src="imagens/estrela-ativa.png" alt="">
@@ -203,17 +204,17 @@
                                 <img src="imagens/estrela-ativa.png" alt="">
                                 <img src="imagens/estrela.png" class="stay-desativada" alt="">
                             </section>
-                        </section>
-                        <p class="comentario" id="comentario2">
-                            Flávia Flins: Criativa e talentosa, sempre traz ideias novas para os projetos.
-                        </p>
-                    </article>
-                    <article class="avaliacao">
-                        <section class="nome_avaliador">
-                            <section id="nome">
-                                <img src="imagens/profissional1.png" alt="avaliador">
-                                <p class="nome-escrito" id="nome3">Julia Barros</p>
+                        </article>
+                        <article class="avaliacao">
+                            <section class="nome_avaliador">
+                                <section id="nome">
+                                    <img src="imagens/profissional1.png" alt="avaliador">
+                                    <p class="nome-escrito" id="nome3">Julia Barros</p>
+                                </section>
                             </section>
+                            <p class="comentario" id="comentario3">
+                                Julia Barros: Sempre disposta a ajudar, tem uma energia incrível e é super dedicada.
+                            </p>
                             <section id="container-estrela">
                                 <img src="imagens/estrela-ativa.png" alt="">
                                 <img src="imagens/estrela-ativa.png" alt="">
@@ -221,17 +222,17 @@
                                 <img src="imagens/estrela-ativa.png" alt="">
                                 <img src="imagens/estrela.png" class="stay-desativada" alt="">
                             </section>
-                        </section>
-                        <p class="comentario" id="comentario3">
-                            Julia Barros: Sempre disposta a ajudar, tem uma energia incrível e é super dedicada.
-                        </p>
-                    </article>
-                     <article class="avaliacao">
-                        <section class="nome_avaliador">
-                            <section id="nome">
-                                <img src="imagens/profissional2.png" alt="avaliador">
-                                <p class="nome-escrito" id="nome4">Roberta Santos</p>
+                        </article>
+                         <article class="avaliacao">
+                            <section class="nome_avaliador">
+                                <section id="nome">
+                                    <img src="imagens/profissional2.png" alt="avaliador">
+                                    <p class="nome-escrito" id="nome4">Roberta Santos</p>
+                                </section>
                             </section>
+                            <p class="comentario" id="comentario4">
+                                Roberta Santos: Muito profissional, mas às vezes parece um pouco distante nas conversas.
+                            </p>
                             <section id="container-estrela">
                                 <img src="imagens/estrela-ativa.png" alt="">
                                 <img src="imagens/estrela-ativa.png" alt="">
@@ -239,11 +240,8 @@
                                 <img src="imagens/estrela-ativa.png" alt="">
                                 <img src="imagens/estrela.png" class="stay-desativada" alt="">
                             </section>
-                        </section>
-                        <p class="comentario" id="comentario4">
-                            Roberta Santos: Muito profissional, mas às vezes parece um pouco distante nas conversas.
-                        </p>
-                    </article>
+                        </article>
+                    </section>
                 </section>
 
                 <% if (erro) { %>

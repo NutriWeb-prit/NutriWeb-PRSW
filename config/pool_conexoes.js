@@ -8,19 +8,18 @@ try {
         database: process.env.DB_NAME,
         port: process.env.DB_PORT,
         waitForConnections: true,
-        connectionLimit: 3, // Reduzido para deixar margem de segurança
+        connectionLimit: 3,
         queueLimit: 0
     });
     
     console.log("Pool de conexões estabelecido!");
     
-    // Teste simples de conexão
     pool.getConnection((err, conn) => {
         if (err) {
             console.log("Erro ao conectar:", err);
         } else {
             console.log("Conectado ao SGBD!");
-            conn.release(); // Libera a conexão de volta para o pool
+            conn.release();
         }
     });
     

@@ -140,16 +140,6 @@ body {
     z-index: 1;
 }
 
-.conteudo {
-    position: relative;
-    z-index: 2;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
 .perfil-usuario-link {
     text-decoration: none;
     color: inherit;
@@ -198,6 +188,16 @@ body {
 }
 
 /* CONTEUDO */
+
+.conteudo {
+    position: relative;
+    z-index: 2;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
 #conteudo-completo {
     position: relative;
@@ -1255,9 +1255,19 @@ main{
     display: flex;
     justify-content: center;
     align-items: flex-start;
+    flex-direction: column;
     flex-shrink: 0;
     margin-top: -58px;
 }
+
+#container_foto a {
+    font-size: 25px;
+    margin-top: 15px;
+    align-self: center;
+    cursor: pointer;
+    text-decoration: none;
+    color: black;
+}   
 
 .foto_perfil {
     width: 200px;
@@ -1273,6 +1283,7 @@ main{
     flex: 1.5;
     margin-right: 20px;
     margin-left: 20px;
+    width: 40%;
 }
 
 #infrmacoes_nutri h1 {
@@ -1287,10 +1298,6 @@ main{
     flex: 1;
     min-width: 250px;
     margin-left: 0;
-}
-
-#infrmacoes_nutri {
-    width: 40%;
 }
 
 #rede_sociais {
@@ -1317,7 +1324,7 @@ main{
     font-weight: 600;
     color: #2c3e50;
     margin: 0 0 5px 0;
-    text-align: center;
+    text-align: left;
 }
 
 

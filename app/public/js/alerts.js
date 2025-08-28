@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 param: 'erro',
                 mensagens: {
                     'nutricionista_nao_encontrado': 'Nutricionista não encontrado.',
-                    'acesso_negado': 'Acesso negado. Faça login como nutricionista.',
+                    'acesso_negado': 'Acesso negado. Faça login.',
                     'nutricionista_sem_dados': 'Nutricionista não possui dados cadastrados.',
                     'erro_interno': 'Erro interno do servidor. Tente novamente.',
                     'login_necessario': 'É necessário fazer login para acessar esta página.',

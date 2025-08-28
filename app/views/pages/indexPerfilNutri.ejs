@@ -41,7 +41,6 @@
                         </section>
                     </a>
                 <% } else { %>
-                    <a href="/perfilcliente"><button class="meuperfil-button">Meu Perfil</button></a>
                     <a href="/premium"><button class="premium-button">Premium</button></a>
                     <a href="/login"><button class="entrar-button">Entrar</button></a>
                 <% } %>
@@ -55,10 +54,10 @@
                 <section class="container-avaliar">
                     <section class="barra-avaliar"></section>
                     <section class="avaliar">
-                        <a href="/perfilcliente" class="perfil-avaliar">
-                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdGIriHwMYbjKJI76jDDK8KzXXSZhiNKGs9g&s" id="img-avaliar">
+                        <a href="<%= headerUsuario.urlPerfil %>" class="perfil-avaliar">
+                            <img src="<%= headerUsuario.fotoPerfil %>" id="img-avaliar">
                             <section>
-                                <section id="nome-avaliar">Carlos Oliveira</section>
+                                <section id="nome-avaliar"><%= headerUsuario.nome %></section>
                                 <section id="legenda-avaliar">As postagens são públicas.</section>
                             </section>
                         </a>
@@ -97,6 +96,7 @@
                                      class="foto_perfil" 
                                      id="foto-perfil"
                                      onerror="this.src='imagens/foto_perfil.jpg'">
+                                     <a href="/config"><i class="fa-solid fa-gear"></i></a>
                         </section>
 
                         <section class="conteudo_perfil">
@@ -343,6 +343,34 @@
                             data-subtitulo2="OPÇÃO REFRESCANTE"
                             data-conteudo3="Ideal para lanches saudáveis, a salada de frutas é prática, saborosa e promove saciedade sem exageros.">
                         </article>
+                        <article class="img-post">
+                            <img src="imagens/img-post-prato.jpg" alt="" class="post_img"
+                            data-id="<%= nutricionista.id %>"
+                            data-nome="<%= nutricionista.nome %>"
+                            data-profissao="Nutrição <%= nutricionista.especializacoes %>"
+                            data-imgperfil="<%= nutricionista.fotoPerfil %>"
+                            data-imgconteudo="imagens/img-post-prato.jpg"
+                            data-titulo="PRATO COLORIDO: BELEZA DE DENTRO PARA FORA"
+                            data-conteudo1="Incluir uma variedade de cores no prato é essencial para garantir diferentes vitaminas e antioxidantes benéficos à saúde da pele."
+                            data-subtitulo1="VARIEDADE NUTRICIONAL"
+                            data-conteudo2="Vegetais roxos, verdes, vermelhos e alaranjados fornecem nutrientes que contribuem para uma pele mais jovem e protegida."
+                            data-subtitulo2="REFEIÇÕES FUNCIONAIS"
+                            data-conteudo3="Montar pratos coloridos diariamente auxilia na manutenção da beleza e vitalidade da pele, além de favorecer o bem-estar geral.">
+                        </article>
+                        <article class="img-post">
+                            <img src="imagens/img-post-sanduiche.jpg" alt="" class="post_img"
+                            data-id="<%= nutricionista.id %>"
+                            data-nome="<%= nutricionista.nome %>"
+                            data-profissao="Nutrição <%= nutricionista.especializacoes %>"
+                            data-imgperfil="<%= nutricionista.fotoPerfil %>"
+                            data-imgconteudo="imagens/img-post-sanduiche.jpg"
+                            data-titulo="SANDUÍCHE NATURAL É UMA BOA OPÇÃO?"
+                            data-conteudo1="O sanduíche natural é uma alternativa rápida e equilibrada para lanches, desde que os ingredientes sejam bem escolhidos."
+                            data-subtitulo1="PROTEÍNAS E FIBRAS"
+                            data-conteudo2="Incluir peito de frango, ovos ou atum com vegetais e pães integrais garante saciedade e equilíbrio nutricional."
+                            data-subtitulo2="CUIDADO COM MOLHOS"
+                            data-conteudo3="Evite maioneses industrializadas. Prefira pastas caseiras como homus, ricota ou guacamole para manter a refeição saudável.">
+                        </article>
                     </section>
                 </section>
 
@@ -421,7 +449,7 @@
                             <section class="nome_avaliador">
                                 <section id="nome">
                                     <img src="imagens/foto_perfil.jpg" alt="avaliador">
-                                    <p class="nome-escrito" id="nome2">Bruna</p>
+                                    <p class="nome-escrito" id="nome2">Jorge</p>
                                 </section>
                             </section>
                             <p class="comentario" id="comentario2">
@@ -439,7 +467,7 @@
                             <section class="nome_avaliador">
                                 <section id="nome">
                                     <img src="imagens/foto_perfil.jpg" alt="avaliador">
-                                    <p class="nome-escrito" id="nome3">Bruna</p>
+                                    <p class="nome-escrito" id="nome3">Moisés</p>
                                 </section>
                             </section>
                             <p class="comentario" id="comentario3">
@@ -457,7 +485,7 @@
                             <section class="nome_avaliador">
                                 <section id="nome">
                                     <img src="imagens/foto_perfil.jpg" alt="avaliador">
-                                    <p class="nome-escrito" id="nome4">Bruna</p>
+                                    <p class="nome-escrito" id="nome4">Diego</p>
                                 </section>
                             </section>
                             <p class="comentario" id="comentario4">
