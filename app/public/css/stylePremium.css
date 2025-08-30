@@ -32,14 +32,22 @@ body {
     top: 3%;
 }
 
+.arrow-icon.md-24 {
+    font-size: 30px;
+    cursor: pointer;
+    font-weight: bolder;
+    color: #99cd80;
+}
+
 .back-button {
     display: flex;
     top: 15%;
     align-items: center;
     text-decoration: none;
-    color: rgb(0, 0, 0);
-    font-size: 25px;
+    color: #555755;
+    font-size: 23px;
     margin-top: 100px;
+    margin-left: 10px;
 }
 
 .center-section {
@@ -105,6 +113,21 @@ body {
     background-color: none;
     color: #FF5B00 !important;
     cursor: pointer;
+}
+
+.beneficios-plano li {
+    list-style: none;
+    margin: 8px 0;
+    font-size: 16px;
+}
+
+.beneficios-plano i {
+    color: red; 
+    margin-right: 8px;
+}
+
+.beneficios-plano li .fa-check-circle {
+    color: #00ef6b; 
 }
 
 .entrar-button {
@@ -199,13 +222,12 @@ body {
     max-width: 85%;
 }
 
-
 .cards {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    gap: 25px;
+    gap: 40px;
     margin-top: 20px;
 }
 
@@ -213,7 +235,7 @@ body {
     border-top: 5px rgb(4, 160, 4) solid;
 }
 
-.btn-assinar-pro{
+.btn-assinar-pro {
     background-color: #fff;
     color: black;
     border: 1px solid black;
@@ -226,6 +248,12 @@ body {
     position: absolute; 
     bottom: 0;
     left: 0;
+    transition: all 0.3s ease; 
+}
+
+.btn-assinar-pro:hover {
+    color: #FF5B00;
+    border-color: #FF5B00;
 }
 
 article {
@@ -247,7 +275,7 @@ h2 {
 }
 
 .cards article p {
-    font-size: 20px;
+    font-size: 25px;
     font-style: italic;
 }
 
@@ -266,6 +294,7 @@ h2 {
 .card-planos {
     display: flex;
     flex-direction: column;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.25);
 }
 
 .card-premium{
@@ -287,7 +316,7 @@ h2 {
     padding: 10px;
     margin: 5px 0;
     border-radius: 5px;
-    font-size: 1rem;
+    font-size: 1.1rem;
     gap: 8px;
 }
 
@@ -422,12 +451,21 @@ footer {
         display: none;
     }
 
+    .center-content{
+        margin-top:  50px;
+        margin-bottom:  20px;
+    }
+
     .cards {
         grid-template-columns: repeat(3, 1fr);
     }
 
-    footer{
-        display: none;
+    .card-planos{
+        margin: 15px;
+    }
+
+    .card-premium{
+        margin-bottom: 60px;
     }
 }
 
@@ -531,7 +569,66 @@ footer {
         cursor: pointer;
     }
 
-    footer{
+    footer {
+        text-align: center;
+    }
+
+    .footer-container {
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+    }
+
+    .footer-logo {
+        margin: 20px 0;
+        flex: unset;
+    }
+
+    .footer-logo img {
+        max-width: 70px;
+        margin-top: 10px;
+    }
+
+    .footer-logo a h3 {
+        font-size: 24px;
+        margin-top: 10px;
+    }
+
+    .footer-informacao,
+    .footer-social {
+        margin: 20px 0;
+        padding: 0;
+        text-align: center;
+        flex: unset;
+    }
+
+    .footer-informacao a {
+        display: block;
+        font-size: 18px;
+        padding: 8px 0;
+    }
+
+    .footer-social p {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    .footer-social h3 {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+
+    .footer-social .social-icons a {
+        font-size: 28px;
+        margin: 0 10px;
+    }
+
+    .footer-bottom {
+        font-size: 14px;
+        padding: 20px 0;
+    }
+
+    #hidden {
         display: none;
     }
 }
