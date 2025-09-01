@@ -49,6 +49,33 @@
 
         <!-- Conteudo do site -->
 
+        <section class="home-mobile">
+            <section class="menu">
+                <section class="left-section">
+                    <a href="/"><img src="imagens/logo.png" alt="Logo" class="logo"></a>
+                </section>
+
+                <section class="right-section">
+                    <span class="material-icons search-icon md-24 menu-icon">menu</span>
+                </section>
+            </section>
+            
+            <section class="mobile-menu hidden">
+                <ul>
+                    <li><a href="/perfilcliente">Meu Perfil</a></li>
+                    <li><a href="/ranking">Ranking</a></li>
+                    <li><a href="/profissionais">Profissionais</a></li>
+                    <li><a href="/premium">Premium</a></li>
+                    <li><a href="/login">Entrar</a></li>
+                </ul>
+            </section>
+         </section>
+
+         <section id="imageModal" class="image-modal">
+            <span class="close-modal">&times;</span>
+            <img class="modal-content" id="modalImage">
+        </section>
+
         <section id="conteudo-completo">
             <section class="overlay hidden">
                 <section class="container-avaliar">
@@ -110,7 +137,6 @@
                                          class="foto_perfil" 
                                          id="foto-perfil"
                                          onerror="this.src='imagens/foto_perfil.jpg'">
-                                         <a href="/config"><i class="fa-solid fa-gear"></i></a>
                                 <% } %>
                         </section>
 
@@ -206,16 +232,6 @@
                             Editar Perfil
                         </p>
                     </section>
-             
-                
-                <section id="publi_avaliacao">
-                    <section id="publi_selecionar" onclick="clicarDois()">
-                        <p>Publicações</p>
-                    </section>
-                    <section id="avaliacao_selecionar" onclick="clicarUm()">
-                        <p>Avaliações</p>
-                    </section>
-                </section>
 
                 <section id="publi">
                 
@@ -554,13 +570,7 @@
                         </section>
                     </footer>
          </section>
-
-         <section id="imageModal" class="image-modal">
-            <span class="close-modal">&times;</span>
-            <img class="modal-content" id="modalImage">
-        </section>
     </body>
-    <script src="js/scriptPerfil.js"></script>
     <script src="js/caracteres.js"></script>
     <script src="js/modalPublicacao.js"></script>
     <script src="js/rating.js"></script>

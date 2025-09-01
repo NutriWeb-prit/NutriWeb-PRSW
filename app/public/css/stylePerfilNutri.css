@@ -189,6 +189,10 @@ body {
 
 /* CONTEUDO */
 
+.perfil-mobile {
+    display: none;
+}
+
 .conteudo {
     position: relative;
     z-index: 2;
@@ -1456,6 +1460,11 @@ footer {
 
 
 @media (max-width: 1100px) {
+    * {
+        overflow-x: hidden;
+    }
+    
+
     .header {
         display: none;
         flex-direction: column;
@@ -1475,10 +1484,9 @@ footer {
 
     .home-mobile {
         display: flex;
-        width: 100%;
-        display: flex;
         flex-direction: column;
         align-items: center;
+        width: 100vw;
     }
     
     .menu {
@@ -1519,7 +1527,7 @@ footer {
         border-radius: 20px;
         width: 100%;
         height: 100%;
-        z-index: 3;
+        z-index: 98;
         padding: 20px;
     }
     
@@ -1576,6 +1584,10 @@ footer {
         display: block;
     }
 
+    .conteudo_perfil {
+        flex-direction: column;
+    }
+
     #info_perfil{
         background:none;
         margin: -25px;
@@ -1584,10 +1596,17 @@ footer {
     }
 
     #container_foto{
-        justify-content: flex-start;
-        margin-bottom: 3em;
-        margin-left: 1em;
-        margin-top: 0;
+        max-width: 208px;
+        margin-top: 258px;
+    }
+
+    .foto_perfil {
+        box-shadow: 0 1px 9px rgba(0,0,0,0.15);
+    }
+
+    #infrmacoes_nutri {
+        width: 90%;
+        margin: 0;
     }
 
     #info_contato{
@@ -1660,21 +1679,19 @@ footer {
     
 
     .grid-publicacoes {
-        grid-template-columns: repeat( auto-fit, minmax(150px, 1fr) );
+        max-width: 100vw;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
         gap: 1.5em 1.5em;
     }
 
     #avaliar_nutri{
-        display: none;
+        display: flex;
+        flex-direction: column;
         margin-left: 2em;
     }
 
-    #tituloavaliacao {
-        top: 1050px; 
-        left: 48%;
-        width: 80%;
-        font-size: 30px;
-        text-align: center; 
+    #container-avaliacoes {
+        flex-direction: column;
     }
     .avaliacao{
         width: 100%;
@@ -1744,7 +1761,62 @@ footer {
         margin-bottom: 20%;
     }
 
-    footer{
-        display: none;
+    footer {
+        text-align: center;
+    }
+
+    .footer-container {
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+    }
+
+    .footer-logo {
+        margin: 20px 0;
+        flex: unset;
+    }
+
+    .footer-logo img {
+        max-width: 70px;
+        margin-top: 10px;
+    }
+
+    .footer-logo a h3 {
+        font-size: 24px;
+        margin-top: 10px;
+    }
+
+    .footer-informacao,
+    .footer-social {
+        margin: 20px 0;
+        padding: 0;
+        text-align: center;
+        flex: unset;
+    }
+
+    .footer-informacao a {
+        display: block;
+        font-size: 18px;
+        padding: 8px 0;
+    }
+
+    .footer-social p {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    .footer-social h3 {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+
+    .footer-social .social-icons a {
+        font-size: 28px;
+        margin: 0 10px;
+    }
+
+    .footer-bottom {
+        font-size: 14px;
+        padding: 20px 0;
     }
 }

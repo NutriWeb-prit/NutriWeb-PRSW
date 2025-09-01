@@ -7,7 +7,7 @@ body {
 }
 
 .header {
-    z-index: 1;
+    z-index: 2;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -112,17 +112,24 @@ body {
 }
 
 .content {
-    margin-top: 100px; 
+    margin-top: 77px; 
     text-align: center;
 }
 
 .header-content a {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: left;
     margin-bottom: 20px;
     padding: 20px;
     text-decoration: none;
+    z-index: 1;
+    background-color: white;
+    width: 110px;
+    height: 5px;
+    margin-top: 15px;
+    padding-left: 50px;
 }
 
 .perfil-usuario-link {
@@ -174,7 +181,7 @@ body {
 
 .arrow-icon {
     font-size: 36px;
-    color: #99cd80;
+    color: green;
 }
 
 .arrow-icon.md-24 {
@@ -185,7 +192,43 @@ body {
 
 .header-text {
     font-size: 24px;
-    color: #555755;
+    color: #000000;
+}
+
+.container-background {
+    position: relative;
+    width: 100%;
+    height: 650px;
+    background-image: url('../imagens/banner1.png');
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+}
+
+.container-background::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.151) 0%,
+        rgba(255, 255, 255, 0.8) 50%,
+        rgba(255, 255, 255, 1) 100%
+    );
+    z-index: 1;
+}
+
+.content-background {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    position: relative;
+    z-index: 1;
+    padding: 0 20px;
 }
 
 .tipo-nutricao{
@@ -209,16 +252,19 @@ body {
     max-width: 80%;
 }
 
-.profissionais{
+.profissionais {
+    max-width: 800px;
     margin-bottom: 160px;
 }
 
 .tipo-nutricao .h1-profissionais {
-    font-size: 48px;
+    color: #FF5B00;
+    font-size: 58px;
 }
 
 .tipo-nutricao .h2-profissionais {
-    font-size: 20px;
+    color: black;
+    font-size: 22px;
 }
 
 .cards-container {

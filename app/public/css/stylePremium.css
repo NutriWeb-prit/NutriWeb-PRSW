@@ -569,9 +569,9 @@ footer {
         cursor: pointer;
     }
 
-    footer {
+     {
         text-align: center;
-    }
+    }footer
 
     .footer-container {
         flex-direction: column;
