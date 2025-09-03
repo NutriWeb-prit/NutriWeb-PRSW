@@ -317,6 +317,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .home-mobile {
     display: none;
+    overflow-x: hidden;
 }
 
 .material-icons.md-24 {
@@ -645,10 +646,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .cards-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 25px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5em 1.5em;
     max-width: 1200px;
 }
 
@@ -1261,8 +1261,30 @@ footer {
         display: none;
     }
 
-    .cards-wrapper {
+    .cards-container-mobile {
+        display: flex;
         flex-direction: column;
+        align-items: center;
+        width: 100vw;
+        max-width: 100vw;
+        background-color: #e3f0dd;
+        padding: 40px;
+    }
+    
+    .cards-wrapper {
+        max-width: 100vw;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5em 0;
+    }
+
+    .banner-card-meio {
+        width: 90vw;
+    }
+      
+    .banner-card-meio img {
+        object-fit: cover;
+        max-width: 100%;
+        height: 220px;
     }
 
     .footer-desktop {
@@ -1469,6 +1491,45 @@ footer {
 
     .faixa-parceiros-desktop{
         display: none;
+    }
+
+    .parceiros-section {
+        position: relative;
+        z-index: 4;
+        width: 100vw;
+    }
+      
+    .titulo-parceiros {
+        color: #99cd80; 
+        font-size: 38px;
+    }
+      
+    .faixa-parceiros {
+        background-color: #e3f0dd;
+        padding: 40px 20px;
+        margin-top: 10px;
+    }
+      
+    .logos-parceiros {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 30px;
+        flex-wrap: wrap;
+    }
+      
+    .logos-parceiros img {
+        height: 90px;
+        cursor: pointer;
+        object-fit: cover;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        transition: transform 0.5s ease, box-shadow 0.5s ease;
+    }
+      
+    .logos-parceiros img:hover {
+        transform: scale(1.03);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
     }
     
     .menu {
@@ -1711,7 +1772,7 @@ footer {
     }
 
     .nutricionista-mobile h1 {
-        color: green;
+        color: #99cd80;
         font-size: 25px;
         margin: 0;
         flex: 1;
@@ -1719,14 +1780,14 @@ footer {
     }
     
     .nutricionista-mobile h2{
-        color: gray;
+        color: #868d85;
         font-size: 20px;
     }
 
     .listafiltrarmobile {
         display: flex;
         position: absolute;
-        z-index: 2;
+        z-index: 4;
         flex-direction: column;
         align-items: flex-start;
         top: 59%;
@@ -1768,12 +1829,12 @@ footer {
     }
     
     .titulos-publicacao-mobile h1{
-        color: green;
+        color: #99cd80;
         font-size: 30px;
     }
     
     .titulos-publicacao-mobile h2{
-        color: gray;
+        color: #868d85;
         font-size: 25px;
     }
 
@@ -1897,8 +1958,12 @@ footer {
 @media (min-height: 1px) {
 
 .nutricionista-mobile{
-        margin-top: 450px;
+        margin-top: 70px;
     }
+
+ .titulo-parceiros-mobile {
+    margin-top: 450px;
+ }
 
 }
 @media (min-height: 1000px) {
