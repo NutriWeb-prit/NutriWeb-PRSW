@@ -67,13 +67,47 @@ const processarLogin = async (req, res, next) => {
     }
 };
 
-const verificarUsuAutenticado = (req, res, next) => {
+const verificarUsuAutenticado = async (req, res, next) => {
     if (req.session.usuario && req.session.usuario.logado) {
         res.locals.usuarioLogado = req.session.usuario;
         res.locals.isCliente = req.session.usuario.tipo === 'C';
         res.locals.isNutricionista = req.session.usuario.tipo === 'N';
         
         const timestamp = Date.now();
+        
+        let dadosCompletos = null;
+        try {
+            if (req.session.usuario.tipo === 'N') {
+                const perfilNutri = await NWModel.findPerfilNutri(req.session.usuario.id);
+                if (perfilNutri.nutricionista) {
+                    dadosCompletos = {
+                        nome: perfilNutri.nutricionista.NomeCompleto,
+                        email: perfilNutri.nutricionista.Email,
+                        telefone: perfilNutri.nutricionista.Telefone ? perfilNutri.nutricionista.Telefone.slice(-9) : '',
+                        ddd: perfilNutri.nutricionista.Telefone ? perfilNutri.nutricionista.Telefone.slice(0, 2) : '',
+                        crn: perfilNutri.nutricionista.Crn || '',
+                        sobreMim: perfilNutri.nutricionista.SobreMim || '',
+                        area: perfilNutri.nutricionista.Especializacoes ? 
+                               perfilNutri.nutricionista.Especializacoes.split(', ') : [],
+                        senha: ''
+                    };
+                }
+            } else if (req.session.usuario.tipo === 'C') {
+                const perfilCliente = await NWModel.findPerfilCompleto(req.session.usuario.id);
+                if (perfilCliente.cliente) {
+                    dadosCompletos = {
+                        nome: perfilCliente.cliente.NomeCompleto,
+                        email: perfilCliente.cliente.Email,
+                        telefone: perfilCliente.cliente.Telefone ? perfilCliente.cliente.Telefone.slice(-9) : '',
+                        ddd: perfilCliente.cliente.Telefone ? perfilCliente.cliente.Telefone.slice(0, 2) : '',
+                        sobreMim: perfilCliente.cliente.SobreMim || '',
+                        senha: ''
+                    };
+                }
+            }
+        } catch (erro) {
+            console.error("Erro ao carregar dados completos:", erro.message);
+        }
         
         res.locals.headerUsuario = {
             id: req.session.usuario.id,
@@ -82,7 +116,9 @@ const verificarUsuAutenticado = (req, res, next) => {
             estaLogado: true,
             urlPerfil: req.session.usuario.tipo === 'C' ? '/perfilcliente' : '/indexPerfilNutri',
             fotoPerfil: `/imagem/perfil/${req.session.usuario.id}?t=${timestamp}`,
-            fotoBanner: `/imagem/banner/${req.session.usuario.id}?t=${timestamp}`
+            fotoBanner: `/imagem/banner/${req.session.usuario.id}?t=${timestamp}`,
+            // Dados completos para formulários
+            dadosCompletos: dadosCompletos
         };
         
         console.log("Usuário autenticado:", {

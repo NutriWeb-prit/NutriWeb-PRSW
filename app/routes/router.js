@@ -33,13 +33,114 @@ router.get("/indexPerfilNutri",
     NWController.redirecionarParaMeuPerfil
 );
 
-router.get("/config", function (req, res) {
-    res.render('pages/indexConfig')
+router.get("/config", async function (req, res) {
+    if (!req.session.usuario || !req.session.usuario.id || !req.session.usuario.tipo) {
+        return res.redirect('/login');
+    }
+    
+    try {
+        const usuarioId = req.session.usuario.id;
+        const tipoUsuario = req.session.usuario.UsuarioTipo; // 'N' para nutricionista, 'C' para cliente
+        
+        let dadosUsuario = {};
+        
+        if (tipoUsuario === 'N') {
+            const perfilNutri = await NWModel.findPerfilNutri(usuarioId);
+            if (perfilNutri.nutricionista) {
+                dadosUsuario = {
+                    nome: perfilNutri.nutricionista.NomeCompleto,
+                    email: perfilNutri.nutricionista.Email,
+                    telefone: perfilNutri.nutricionista.Telefone.slice(-9),
+                    ddd: perfilNutri.nutricionista.Telefone.slice(0, 2),
+                    crn: perfilNutri.nutricionista.Crn,
+                    area: perfilNutri.nutricionista.Especializacoes ? 
+                           perfilNutri.nutricionista.Especializacoes.split(', ') : [],
+                    senha: '' // Nunca mostrar senha
+                };
+            }
+        } else {
+            const perfilCliente = await NWModel.findPerfilCompleto(usuarioId);
+            if (perfilCliente.cliente) {
+                dadosUsuario = {
+                    nome: perfilCliente.cliente.NomeCompleto,
+                    email: perfilCliente.cliente.Email,
+                    telefone: perfilCliente.cliente.Telefone.slice(-9),
+                    ddd: perfilCliente.cliente.Telefone.slice(0, 2),
+                    senha: '' // Nunca mostrar senha
+                };
+            }
+        }
+        
+        return res.render("pages/indexConfig", {
+            tipoUsuario: tipoUsuario,
+            valores: dadosUsuario,
+            msgErro: {},
+            erroValidacao: {},
+            listaErros: null
+        });
+        
+    } catch (error) {
+        console.error("Erro ao carregar página de configuração:", error.message);
+        return res.render("pages/indexConfig", {
+            tipoUsuario: req.session.tipoUsuario || 'C',
+            valores: {},
+            msgErro: { geral: 'Erro ao carregar dados' },
+            erroValidacao: {},
+            listaErros: null
+        });
+    }
 });
 
 router.post('/atualizar-imagens', 
     upload.uploadImagens,
     NWController.atualizarImagens
+);
+
+router.post(
+    "/atualizar-dados",
+    NWController.validacaoAtualizarDados,
+    async function (req, res) {
+        if (!req.session.usuario || !req.session.usuario.id || !req.session.usuario.tipo) {
+            return res.redirect('/login');
+        }
+        
+        const listaErros = validationResult(req);
+        const usuarioId = req.session.usuario.id;
+        const tipoUsuario = req.session.usuario.tipo;
+        
+        const dadosFormulario = {
+            nome: req.body.nome || '',
+            telefone: req.body.telefone || '',
+            ddd: req.body.ddd || '',
+            email: req.body.email || '',
+            senha: req.body.senha || '',
+            area: req.body.area || [],
+            crn: req.body.crn || ''
+        };
+
+        if (!listaErros.isEmpty()) {
+            return res.render("pages/indexConfig", {
+                tipoUsuario: tipoUsuario,
+                valores: dadosFormulario,
+                msgErro: {},
+                erroValidacao: {},
+                listaErros: listaErros
+            });
+        }
+
+        try {
+            await NWController.atualizarDadosPessoais(req, res);
+        } catch (error) {
+            console.error("Erro na atualização dos dados:", error.message);
+            return res.render("pages/indexConfig", {
+                tipoUsuario: tipoUsuario,
+                valores: dadosFormulario,
+                msgErro: { geral: 'Erro interno do servidor. Tente novamente.' },
+                erroValidacao: {},
+                listaErros: null
+            });
+        }
+    }
 );
 
 router.get("/imagem/perfil/:usuarioId", 

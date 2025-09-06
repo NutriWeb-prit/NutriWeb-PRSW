@@ -59,6 +59,182 @@ const NWModel = {
         }
     },
 
+    atualizarDadosUsuario: async (usuarioId, dadosUsuario, dadosEspecificos = {}, dadosPerfil = {}, especializacoes = [], tipoUsuario) => {
+        let conn;
+        
+        try {
+            conn = await Promise.race([
+                pool.getConnection(),
+                new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout ao obter conexão')), 10000))
+            ]);
+            
+            await conn.beginTransaction();
+    
+            // 1. Atualizar dados básicos do usuário
+            const camposUsuario = [];
+            const valoresUsuario = [];
+            
+            Object.keys(dadosUsuario).forEach(campo => {
+                camposUsuario.push(`${campo} = ?`);
+                valoresUsuario.push(dadosUsuario[campo]);
+            });
+            
+            if (camposUsuario.length > 0) {
+                valoresUsuario.push(usuarioId);
+                await conn.query(
+                    `UPDATE Usuarios SET ${camposUsuario.join(', ')} WHERE id = ?`,
+                    valoresUsuario
+                );
+                console.log("Dados básicos do usuário atualizados");
+            }
+    
+            // 2. Atualizar ou inserir dados do perfil (SobreMim)
+            if (Object.keys(dadosPerfil).length > 0) {
+                // Verificar se já existe um perfil para este usuário
+                const [perfilExistente] = await conn.query(
+                    'SELECT id FROM Perfis WHERE UsuarioId = ?',
+                    [usuarioId]
+                );
+                
+                if (perfilExistente.length > 0) {
+                    // Atualizar perfil existente
+                    const camposPerfil = [];
+                    const valoresPerfil = [];
+                    
+                    Object.keys(dadosPerfil).forEach(campo => {
+                        camposPerfil.push(`${campo} = ?`);
+                        valoresPerfil.push(dadosPerfil[campo]);
+                    });
+                    
+                    valoresPerfil.push(usuarioId);
+                    await conn.query(
+                        `UPDATE Perfis SET ${camposPerfil.join(', ')} WHERE UsuarioId = ?`,
+                        valoresPerfil
+                    );
+                    console.log("Perfil existente atualizado");
+                } else {
+                    // Criar novo perfil
+                    const campos = ['UsuarioId', ...Object.keys(dadosPerfil)];
+                    const valores = [usuarioId, ...Object.values(dadosPerfil)];
+                    const placeholders = campos.map(() => '?').join(',');
+                    
+                    await conn.query(
+                        `INSERT INTO Perfis (${campos.join(', ')}) VALUES (${placeholders})`,
+                        valores
+                    );
+                    console.log("Novo perfil criado");
+                }
+            }
+    
+            // 3. Atualizar dados específicos baseado no tipo de usuário
+            if (tipoUsuario === 'N' && Object.keys(dadosEspecificos).length > 0) {
+                // Atualizar dados do nutricionista
+                const camposNutri = [];
+                const valoresNutri = [];
+                
+                Object.keys(dadosEspecificos).forEach(campo => {
+                    camposNutri.push(`${campo} = ?`);
+                    valoresNutri.push(dadosEspecificos[campo]);
+                });
+                
+                if (camposNutri.length > 0) {
+                    valoresNutri.push(usuarioId);
+                    await conn.query(
+                        `UPDATE Nutricionistas SET ${camposNutri.join(', ')} WHERE UsuarioId = ?`,
+                        valoresNutri
+                    );
+                    console.log("Dados específicos do nutricionista atualizados");
+                }
+    
+                // 4. Atualizar especializações do nutricionista
+                if (especializacoes.length >= 0) { // Permite array vazio para remover todas
+                    // Primeiro, buscar o ID do nutricionista
+                    const [nutriResult] = await conn.query(
+                        'SELECT id FROM Nutricionistas WHERE UsuarioId = ?',
+                        [usuarioId]
+                    );
+                    
+                    if (nutriResult.length > 0) {
+                        const nutricionistaId = nutriResult[0].id;
+                        
+                        // Remover especializações antigas
+                        await conn.query(
+                            'DELETE FROM NutricionistasEspecializacoes WHERE NutricionistaId = ?',
+                            [nutricionistaId]
+                        );
+                        console.log("Especializações antigas removidas");
+                        
+                        // Adicionar novas especializações (se houver)
+                        if (especializacoes.length > 0) {
+                            // Buscar IDs das especializações
+                            const placeholders = especializacoes.map(() => '?').join(',');
+                            const [especRows] = await conn.query(
+                                `SELECT id, Nome FROM Especializacoes WHERE Nome IN (${placeholders})`,
+                                especializacoes
+                            );
+                            
+                            if (especRows.length > 0) {
+                                const insertValues = especRows.map(({ id }) => [nutricionistaId, id]);
+                                await conn.query(
+                                    'INSERT INTO NutricionistasEspecializacoes (NutricionistaId, EspecializacaoId) VALUES ?',
+                                    [insertValues]
+                                );
+                                console.log(`${especRows.length} especializações adicionadas`);
+                            } else {
+                                console.warn("Nenhuma especialização válida encontrada para:", especializacoes);
+                            }
+                        }
+                    }
+                }
+            } else if (tipoUsuario === 'C' && Object.keys(dadosEspecificos).length > 0) {
+                // Atualizar dados específicos do cliente (se necessário no futuro)
+                const camposCliente = [];
+                const valoresCliente = [];
+                
+                Object.keys(dadosEspecificos).forEach(campo => {
+                    camposCliente.push(`${campo} = ?`);
+                    valoresCliente.push(dadosEspecificos[campo]);
+                });
+                
+                if (camposCliente.length > 0) {
+                    valoresCliente.push(usuarioId);
+                    await conn.query(
+                        `UPDATE Clientes SET ${camposCliente.join(', ')} WHERE UsuarioId = ?`,
+                        valoresCliente
+                    );
+                    console.log("Dados específicos do cliente atualizados");
+                }
+            }
+    
+            await conn.commit();
+            console.log("Transação commitada com sucesso");
+            return { usuarioId };
+    
+        } catch (err) {
+            console.error("Erro ao atualizar dados do usuário:", err.message);
+            
+            if (conn) {
+                try {
+                    await conn.rollback();
+                    console.log("Rollback executado");
+                } catch (rollbackErr) {
+                    console.error('Erro no rollback:', rollbackErr.message);
+                }
+            }
+            
+            throw err;
+            
+        } finally {
+            if (conn) {
+                try {
+                    conn.release();
+                } catch (releaseErr) {
+                    console.error('Erro ao liberar conexão:', releaseErr.message);
+                }
+            }
+        }
+    },
+
     atualizarImagensUsuario: async (usuarioId, fotoPerfil = null, fotoBanner = null) => {
         let conn;
         
@@ -186,6 +362,46 @@ const NWModel = {
                     console.error('Erro ao liberar conexão:', releaseErr.message);
                 }
             }
+        }
+    },
+
+    verificarTelefoneExistenteParaAtualizacao: async (ddd, telefone, usuarioId) => {
+        try {
+            const telefoneCompleto = ddd + telefone;
+            const [result] = await pool.query(
+                'SELECT id FROM Usuarios WHERE Telefone = ? AND id != ? AND UsuarioStatus = 1',
+                [telefoneCompleto, usuarioId]
+            );
+            return result.length > 0;
+        } catch (erro) {
+            console.log("Erro ao verificar telefone para atualização:", erro);
+            return false;
+        }
+    },
+
+    verificarEmailExistenteParaAtualizacao: async (email, usuarioId) => {
+        try {
+            const [result] = await pool.query(
+                'SELECT id FROM Usuarios WHERE Email = ? AND id != ? AND UsuarioStatus = 1',
+                [email, usuarioId]
+            );
+            return result.length > 0;
+        } catch (erro) {
+            console.log("Erro ao verificar email para atualização:", erro);
+            return false;
+        }
+    },
+    
+    verificarCrnExistenteParaAtualizacao: async (crn, usuarioId) => {
+        try {
+            const [result] = await pool.query(
+                'SELECT n.id FROM Nutricionistas n INNER JOIN Usuarios u ON n.UsuarioId = u.id WHERE n.Crn = ? AND n.UsuarioId != ? AND u.UsuarioStatus = 1',
+                [crn, usuarioId]
+            );
+            return result.length > 0;
+        } catch (erro) {
+            console.log("Erro ao verificar CRN para atualização:", erro);
+            return false;
         }
     },
 

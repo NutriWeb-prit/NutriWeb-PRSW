@@ -20,7 +20,7 @@
         <section class="center-section">
             <section class="input-premium">
                 <span class="material-icons search-icon md-24">search</span>
-                <input type="text">
+                <input>
             </section>
         </section>
         
@@ -52,6 +52,61 @@
     </section>
 
     <main>
+
+        <%
+        let erroValidacao = {
+            "nome": "", 
+            "telefone": "", 
+            "ddd": "",
+            "email": "", 
+            "senha": "", 
+            "area": "", 
+            "crn": ""
+        };
+        let msgErro = {
+            "nome": "", 
+            "telefone": "", 
+            "ddd": "",
+            "email": "", 
+            "senha": "", 
+            "area": "", 
+            "crn": ""
+        };
+        
+        if(listaErros) {
+            listaErros.errors.forEach(function(erro) {
+                if (erro.path == "nome") {
+                    erroValidacao.nome = "erro-form";
+                    msgErro.nome = erro.msg;
+                }
+                if (erro.path == "telefone") {
+                    erroValidacao.telefone = "erro-form";
+                    msgErro.telefone = erro.msg;
+                }
+                if (erro.path == "ddd") {
+                    erroValidacao.ddd = "erro-form";
+                    msgErro.ddd = erro.msg;
+                }
+                if (erro.path == "email") {
+                    erroValidacao.email = "erro-form";
+                    msgErro.email = erro.msg;
+                }
+                if (erro.path == "senha") {
+                    erroValidacao.senha = "erro-form";
+                    msgErro.senha = erro.msg;
+                }
+                if (erro.path == "area") {
+                    erroValidacao.area = "erro-form";
+                    msgErro.area = erro.msg;
+                }
+                if (erro.path == "crn") {
+                    erroValidacao.crn = "erro-form";
+                    msgErro.crn = erro.msg;
+                }
+            });
+        }
+        %>
+
         <section class="conteudo">
             <section class="left-panel">
                 <h1>Configurações</h1>
@@ -123,8 +178,218 @@
 
                 <section id="secao-dados" class="config-section">
                     <h1>Dados Pessoais</h1>
+                    <form id="form-dados" action="/atualizar-dados" method="POST">
+                        
+                        <section class="campo-form">
+                            <label for="nome">Nome Completo</label>
+                            <input type="text" 
+                                id="nome" 
+                                name="nome" 
+                                value="<%= valores && valores.nome ? valores.nome : (headerUsuario.dadosCompletos ? headerUsuario.dadosCompletos.nome : '') %>" 
+                                class="<%= erroValidacao.nome %>" 
+                                placeholder="Nome Completo"
+                                maxlength="125"
+                                oninput="this.value = this.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, '')">
+                            <% if (msgErro.nome) { %>
+                                <span class="erro-mensagem"><%= msgErro.nome %></span>
+                            <% } %>
+                        </section>
+                        
+                        <section class="campo-form">
+                            <label for="sobreMim">Sobre você</label>
+                            <textarea name="sobreMim"
+                            id="sobreMim" 
+                            placeholder="Ex: Sou Roberta Santos, nutricionista especializada em nutrição esportiva. Meu objetivo é ajudar na alimentação para potencializar resultados e promover saúde. Cada atleta é único, e estou aqui para traçar uma jornada nutricional que faz a diferença no seu treino e na sua vida!" 
+                            class="campo-texto" 
+                            maxlength="400"><%= valores && valores.sobreMim ? valores.sobreMim : (headerUsuario.dadosCompletos ? headerUsuario.dadosCompletos.sobreMim : '') %></textarea>
+                        </section>
+                        
+                        <section class="campo-form">
+                            <label for="email">E-mail</label>
+                            <input type="text" 
+                                id="email" 
+                                name="email" 
+                                value="<%= valores && valores.email ? valores.email : (headerUsuario.dadosCompletos ? headerUsuario.dadosCompletos.email : '') %>" 
+                                class="<%= erroValidacao.email %>" 
+                                placeholder="E-mail"
+                                maxlength="50">
+                            <% if (msgErro.email) { %>
+                                <span class="erro-mensagem"><%= msgErro.email %></span>
+                            <% } %>
+                        </section>
+                        
+                        <section class="container-tel-senha">
+                            <section class="campo-form campo-senha">
+                                <label for="senha">Senha</label>
+                                <input type="password" 
+                                    id="senha" 
+                                    name="senha" 
+                                    value="<%= valores && valores.senha ? valores.senha : '' %>" 
+                                    class="<%= erroValidacao.senha %>"
+                                    placeholder="Crie uma senha"
+                                    maxlength="25">
+                                <% if (msgErro.senha) { %>
+                                    <span class="erro-mensagem"><%= msgErro.senha %></span>
+                                <% } %>
+                                <section id="password-requirements">
+                                    <span>A senha deve conter:</span>
+                                    <ul>
+                                        <li id="length" class="invalid">Pelo menos 8 caracteres</li>
+                                        <li id="uppercase" class="invalid">Pelo menos uma letra maiúscula</li>
+                                        <li id="lowercase" class="invalid">Pelo menos uma letra minúscula</li>
+                                        <li id="number" class="invalid">Pelo menos um número</li>
+                                        <li id="special" class="invalid">Pelo menos um caractere especial</li>
+                                    </ul>
+                                </section>
+                            </section>
+                            
+                            <section class="campo-form">
+                                <label for="telefone">Telefone:</label>
+                                <section class="campo-telefone-container">
+                                    <section class="campo-ddd">
+                                        <label for="ddd">DDD:</label>
+                                        <input type="text" 
+                                            id="ddd" 
+                                            name="ddd" 
+                                            value="<%= valores && valores.ddd ? valores.ddd : (headerUsuario.dadosCompletos ? headerUsuario.dadosCompletos.ddd : '') %>"
+                                            class="<%= erroValidacao.ddd %>" 
+                                            maxlength="2"
+                                            pattern="[0-9]{2}"
+                                            oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                                    </section>
+                                    <section class="campo-telefone">
+                                        <input type="text" 
+                                            id="telefone-numero" 
+                                            name="telefone" 
+                                            value="<%= valores && valores.telefone ? valores.telefone : (headerUsuario.dadosCompletos ? headerUsuario.dadosCompletos.telefone : '') %>" 
+                                            class="<%= erroValidacao.telefone %>" 
+                                            maxlength="9"
+                                            pattern="[0-9]{8,9}"
+                                            oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                                    </section>
+                                </section>
+                                <% if (msgErro.ddd) { %>
+                                    <span class="erro-mensagem"><%= msgErro.ddd %></span>
+                                <% } %>
+                                <% if (msgErro.telefone) { %>
+                                    <span class="erro-mensagem"><%= msgErro.telefone %></span>
+                                <% } %>
+                            </section>
+                        </section>
+
+                        <section class="campo-form">
+                            <label for="crn">CRN</label>
+                            <input type="text" 
+                                id="crn" 
+                                name="crn"
+                                value="<%= valores && valores.crn ? valores.crn : (headerUsuario.dadosCompletos ? headerUsuario.dadosCompletos.crn : '') %>" 
+                                class="<%= erroValidacao.crn %>" 
+                                placeholder="Número de CRN" 
+                                maxlength="11"
+                                oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                            <% if (msgErro.crn) { %>
+                                <span class="erro-mensagem"><%= msgErro.crn %></span>
+                            <% } %>
+                        </section>
+
+                            <section class="campo-form" id="campo-form-checkbox">
+                                <h1>Especialidade</h1>
+                                <label for="area">Em qual área da nutrição você se sente mais familiarizado:</label>
+                                
+                                <section class="checkbox-group-container">
+                                    <section class="checkbox-group">
+                                        <input type="checkbox" 
+                                               name="area" 
+                                               id="esportiva" 
+                                               value="Esportiva"
+                                               <%= (valores && valores.area && (Array.isArray(valores.area) ? valores.area.includes('Esportiva') : valores.area === 'Esportiva')) || (headerUsuario.dadosCompletos && headerUsuario.dadosCompletos.area && headerUsuario.dadosCompletos.area.includes('Esportiva')) ? 'checked' : '' %>>
+                                        <label for="esportiva">Nutrição Esportiva</label>
+                                    </section>
+                                    
+                                    <section class="checkbox-group">
+                                        <input type="checkbox" 
+                                               name="area" 
+                                               id="estetica" 
+                                               value="Estética"
+                                               <%= (valores && valores.area && (Array.isArray(valores.area) ? valores.area.includes('Estética') : valores.area === 'Estética')) || (headerUsuario.dadosCompletos && headerUsuario.dadosCompletos.area && headerUsuario.dadosCompletos.area.includes('Estética')) ? 'checked' : '' %>>
+                                        <label for="estetica">Nutrição Estética</label>
+                                    </section>
+                                    
+                                    <section class="checkbox-group">
+                                        <input type="checkbox" 
+                                               name="area" 
+                                               id="clinica" 
+                                               value="Clínica"
+                                               <%= (valores && valores.area && (Array.isArray(valores.area) ? valores.area.includes('Clínica') : valores.area === 'Clínica')) || (headerUsuario.dadosCompletos && headerUsuario.dadosCompletos.area && headerUsuario.dadosCompletos.area.includes('Clínica')) ? 'checked' : '' %>>
+                                        <label for="clinica">Nutrição Clínica</label>
+                                    </section>
+                                    
+                                    <section class="checkbox-group">
+                                        <input type="checkbox" 
+                                               name="area" 
+                                               id="vegetariana" 
+                                               value="Vegetariana"
+                                               <%= (valores && valores.area && (Array.isArray(valores.area) ? valores.area.includes('Vegetariana') : valores.area === 'Vegetariana')) || (headerUsuario.dadosCompletos && headerUsuario.dadosCompletos.area && headerUsuario.dadosCompletos.area.includes('Vegetariana')) ? 'checked' : '' %>>
+                                        <label for="vegetariana">Nutrição Vegetariana</label>
+                                    </section>
+                                    
+                                    <section class="checkbox-group">
+                                        <input type="checkbox" 
+                                               name="area" 
+                                               id="maternoinfantil" 
+                                               value="Materno-Infantil"
+                                               <%= (valores && valores.area && (Array.isArray(valores.area) ? valores.area.includes('Materno-Infantil') : valores.area === 'Materno-Infantil')) || (headerUsuario.dadosCompletos && headerUsuario.dadosCompletos.area && headerUsuario.dadosCompletos.area.includes('Materno-Infantil')) ? 'checked' : '' %>>
+                                        <label for="maternoinfantil">Nutrição Materno-Infantil</label>
+                                    </section>
+                                    
+                                    <section class="checkbox-group">
+                                        <input type="checkbox" 
+                                               name="area" 
+                                               id="geriatrica" 
+                                               value="Geriátria"
+                                               <%= (valores && valores.area && (Array.isArray(valores.area) ? valores.area.includes('Geriátrica') : valores.area === 'Geriátrica')) || (headerUsuario.dadosCompletos && headerUsuario.dadosCompletos.area && headerUsuario.dadosCompletos.area.includes('Geriátrica')) ? 'checked' : '' %>>
+                                        <label for="geriatrica">Nutrição Geriátrica</label>
+                                    </section>
+                                    
+                                    <section class="checkbox-group">
+                                        <input type="checkbox" 
+                                               name="area" 
+                                               id="preventiva" 
+                                               value="Preventiva"
+                                               <%= (valores && valores.area && (Array.isArray(valores.area) ? valores.area.includes('Preventiva') : valores.area === 'Preventiva')) || (headerUsuario.dadosCompletos && headerUsuario.dadosCompletos.area && headerUsuario.dadosCompletos.area.includes('Preventiva')) ? 'checked' : '' %>>
+                                        <label for="preventiva">Nutrição Preventiva</label>
+                                    </section>
+                                    
+                                    <section class="checkbox-group">
+                                        <input type="checkbox" 
+                                               name="area" 
+                                               id="balanceada" 
+                                               value="Balanceada"
+                                               <%= (valores && valores.area && (Array.isArray(valores.area) ? valores.area.includes('Balanceada') : valores.area === 'Balanceada')) || (headerUsuario.dadosCompletos && headerUsuario.dadosCompletos.area && headerUsuario.dadosCompletos.area.includes('Balanceada')) ? 'checked' : '' %>>
+                                        <label for="balanceada">Nutrição Balanceada</label>
+                                    </section>
+                                    
+                                    <section class="checkbox-group">
+                                        <input type="checkbox" 
+                                               name="area" 
+                                               id="funcional" 
+                                               value="Funcional"
+                                               <%= (valores && valores.area && (Array.isArray(valores.area) ? valores.area.includes('Funcional') : valores.area === 'Funcional')) || (headerUsuario.dadosCompletos && headerUsuario.dadosCompletos.area && headerUsuario.dadosCompletos.area.includes('Funcional')) ? 'checked' : '' %>>
+                                        <label for="funcional">Nutrição Funcional</label>
+                                    </section>
+                                </section>
+                                <% if (msgErro.area) { %>
+                                    <span class="erro-mensagem"><%= msgErro.area %></span>
+                                <% } %>
+                            </section>
+
+                            <section class="container-botoes">
+                                <button type="button" class="botao cancel">Cancelar</button>
+                                <button type="submit" class="botao save">Salvar</button>
+                            </section>
+                    </form>
                 </section>
-                
+            
                 <section id="secao-links" class="config-section">
                     <h1>Links</h1>
                 </section>
@@ -190,7 +455,8 @@
         </section>
     </footer>
 
-    <script src="js/alerts.js"></script>
     <script src="js/config.js"></script>
+    <script src="js/validacaotemporeal.js"></script>
+    <script src="js/alerts.js"></script>
 </body>
 </html>

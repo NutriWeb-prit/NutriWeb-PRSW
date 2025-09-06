@@ -182,7 +182,324 @@ const NWController = {
             }),
     ],
 
+    validacaoAtualizarDados: [
+        body("nome").isLength({min:2}).withMessage("O nome deve conter 2 ou mais caracteres!"),
+        body("telefone")
+            .isMobilePhone().withMessage("Insira um número de telefone válido!")
+            .custom(async (telefone, { req }) => {
+                try {
+                    const ddd = req.body.ddd;
+                    const usuarioId = req.session.usuarioId;
+                    const telefoneExiste = await NWModel.verificarTelefoneExistenteParaAtualizacao(ddd, telefone, usuarioId);
+                    if (telefoneExiste) {
+                        throw new Error('Este telefone já está cadastrado!');
+                    }
+                    return true;
+                } catch (error) {
+                    if (error.message === 'Este telefone já está cadastrado!') {
+                        throw error;
+                    }
+                    console.error('Erro na validação de telefone:', error.message);
+                    return true;
+                }
+            }),
+        body("ddd").isLength({min:2}).withMessage("Insira um DDD válido!"),
+        body("email").isEmail().withMessage("Insira um Email válido!")
+            .custom(async (email, { req }) => {
+                try {
+                    const usuarioId = req.session.usuarioId;
+                    const emailExiste = await NWModel.verificarEmailExistenteParaAtualizacao(email, usuarioId);
+                    if (emailExiste) {
+                        throw new Error('Este email já está cadastrado!');
+                    }
+                    return true;
+                } catch (error) {
+                    if (error.message === 'Este email já está cadastrado!') {
+                        throw error;
+                    }
+                    console.error('Erro na validação de email:', error.message);
+                    return true;
+                }
+            }),
+        body("senha")
+            .optional({ checkFalsy: true }) // Senha opcional na atualização
+            .isLength({min:5}).withMessage("Insira uma senha válida!")
+            .matches(/[A-Z]/).withMessage("Insira uma senha válida!")
+            .matches(/[a-z]/).withMessage("Insira uma senha válida!")
+            .matches(/\d/).withMessage("Insira uma senha válida!")
+            .matches(/[\W_]/).withMessage("Insira uma senha válida!"),
+        body("area")
+            .if((value, { req }) => req.session.tipoUsuario === 'N') // Apenas para nutricionistas
+            .custom((value) => {
+              if (!value) return false;
+              if (Array.isArray(value)) {
+                return value.length >= 1;
+              }
+              return typeof value === "string" && value.length > 0;
+            })
+            .withMessage("Selecione no mínimo uma especialização!"),
+        body("crn")
+            .if((value, { req }) => req.session.tipoUsuario === 'N') // Apenas para nutricionistas
+            .isLength({min:5}).withMessage("Insira um CRN válido!")
+            .custom(async (crn, { req }) => {
+                try {
+                    const usuarioId = req.session.usuarioId;
+                    const crnExiste = await NWModel.verificarCrnExistenteParaAtualizacao(crn, usuarioId);
+                    if (crnExiste) {
+                        throw new Error('Este CRN já está cadastrado!');
+                    }
+                    return true;
+                } catch (error) {
+                    if (error.message === 'Este CRN já está cadastrado!') {
+                        throw error;
+                    }
+                    console.error('Erro na validação de CRN:', error.message);
+                    return true;
+                }
+            }),
+    ],
+
     /* --------------------------------------- UPDATE ------------------------------------ */
+
+    atualizarDadosPessoais: async (req, res) => {
+        if (!req.session.usuario || !req.session.usuario.id || !req.session.usuario.tipo) {
+            return res.redirect('/login');
+        }
+    
+        try {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                return res.render('pages/indexConfig', {
+                    tipoUsuario: req.session.usuario.tipo,
+                    valores: req.body,
+                    msgErro: {},
+                    erroValidacao: {},
+                    listaErros: errors
+                });
+            }
+    
+            const usuarioId = req.session.usuario.id;
+            const tipoUsuario = req.session.usuario.tipo;
+    
+            // Buscar dados atuais do usuário para comparação
+            let dadosAtuais = {};
+            if (tipoUsuario === 'N') {
+                const perfilNutri = await NWModel.findPerfilNutri(usuarioId);
+                if (perfilNutri.nutricionista) {
+                    dadosAtuais = {
+                        nome: perfilNutri.nutricionista.NomeCompleto,
+                        email: perfilNutri.nutricionista.Email,
+                        telefone: perfilNutri.nutricionista.Telefone,
+                        crn: perfilNutri.nutricionista.Crn,
+                        sobreMim: perfilNutri.nutricionista.SobreMim || '',
+                        especializacoes: perfilNutri.nutricionista.Especializacoes ? 
+                                       perfilNutri.nutricionista.Especializacoes.split(', ') : []
+                    };
+                }
+            } else {
+                const perfilCliente = await NWModel.findPerfilCompleto(usuarioId);
+                if (perfilCliente.cliente) {
+                    dadosAtuais = {
+                        nome: perfilCliente.cliente.NomeCompleto,
+                        email: perfilCliente.cliente.Email,
+                        telefone: perfilCliente.cliente.Telefone
+                    };
+                }
+            }
+    
+            // Preparar dados do formulário
+            const telefoneCompleto = req.body.ddd + req.body.telefone;
+            const especializacoesFormulario = req.body.area ? 
+                (Array.isArray(req.body.area) ? req.body.area : [req.body.area]).filter(especialidade => 
+                    especialidade && especialidade.trim() !== '' && especialidade !== 'on'
+                ) : [];
+    
+            // Verificar se houve mudanças nos dados principais
+            let houveAlteracao = false;
+            
+            if (dadosAtuais.nome !== req.body.nome) {
+                console.log("Nome mudou:", dadosAtuais.nome, "->", req.body.nome);
+                houveAlteracao = true;
+            }
+            
+            if (dadosAtuais.email !== req.body.email) {
+                console.log("Email mudou:", dadosAtuais.email, "->", req.body.email);
+                houveAlteracao = true;
+            }
+            
+            if (dadosAtuais.telefone !== telefoneCompleto) {
+                console.log("Telefone mudou:", dadosAtuais.telefone, "->", telefoneCompleto);
+                houveAlteracao = true;
+            }
+    
+            if (req.body.senha && req.body.senha.trim() !== '') {
+                console.log("Nova senha fornecida");
+                houveAlteracao = true;
+            }
+    
+            if (tipoUsuario === 'N') {
+                if (dadosAtuais.crn !== req.body.crn) {
+                    console.log("CRN mudou:", dadosAtuais.crn, "->", req.body.crn);
+                    houveAlteracao = true;
+                }
+                
+                if ((dadosAtuais.sobreMim || '') !== (req.body.sobreMim || '')) {
+                    console.log("Sobre mim mudou:", dadosAtuais.sobreMim, "->", req.body.sobreMim);
+                    houveAlteracao = true;
+                }
+                
+                const especializacoesAtuais = dadosAtuais.especializacoes.sort();
+                const especializacoesNovas = especializacoesFormulario.sort();
+                
+                if (JSON.stringify(especializacoesAtuais) !== JSON.stringify(especializacoesNovas)) {
+                    console.log("Especializações mudaram:", especializacoesAtuais, "->", especializacoesNovas);
+                    houveAlteracao = true;
+                }
+            }
+    
+            // Se não houve alteração, retornar sem fazer update
+            if (!houveAlteracao) {
+                console.log("Nenhuma alteração detectada - ignorando atualização");
+                
+                // Preparar dados para renderizar (valores atuais formatados)
+                let dadosParaExibir = {};
+                if (tipoUsuario === 'N') {
+                    dadosParaExibir = {
+                        nome: dadosAtuais.nome,
+                        email: dadosAtuais.email,
+                        telefone: dadosAtuais.telefone ? dadosAtuais.telefone.slice(-9) : '',
+                        ddd: dadosAtuais.telefone ? dadosAtuais.telefone.slice(0, 2) : '',
+                        crn: dadosAtuais.crn,
+                        sobreMim: dadosAtuais.sobreMim,
+                        area: dadosAtuais.especializacoes,
+                        senha: ''
+                    };
+                } else {
+                    dadosParaExibir = {
+                        nome: dadosAtuais.nome,
+                        email: dadosAtuais.email,
+                        telefone: dadosAtuais.telefone ? dadosAtuais.telefone.slice(-9) : '',
+                        ddd: dadosAtuais.telefone ? dadosAtuais.telefone.slice(0, 2) : '',
+                        senha: ''
+                    };
+                }
+    
+                return res.render('pages/indexConfig', {
+                    tipoUsuario: tipoUsuario,
+                    valores: dadosParaExibir,
+                    msgErro: { info: 'Nenhuma alteração foi detectada nos dados.' },
+                    erroValidacao: {},
+                    listaErros: null
+                });
+            }
+    
+            // Prosseguir com a atualização
+            console.log("Alterações detectadas - prosseguindo com atualização");
+    
+            // Hash da senha apenas se foi fornecida
+            let senhaHash = null;
+            if (req.body.senha && req.body.senha.trim() !== '') {
+                senhaHash = await bcrypt.hash(req.body.senha, 12);
+            }
+    
+            const dadosUsuario = {
+                NomeCompleto: req.body.nome,
+                Email: req.body.email,
+                Telefone: telefoneCompleto
+            };
+    
+            if (senhaHash) {
+                dadosUsuario.Senha = senhaHash;
+            }
+    
+            let dadosEspecificos = {};
+            let dadosPerfil = {
+                SobreMim: req.body.sobreMim || null
+            };
+            let especializacoesSelecionadas = especializacoesFormulario;
+    
+            if (tipoUsuario === 'N') {
+                dadosEspecificos = {
+                    Crn: req.body.crn
+                };
+            }
+    
+            const result = await NWModel.atualizarDadosUsuario(
+                usuarioId,
+                dadosUsuario,
+                dadosEspecificos,
+                dadosPerfil,
+                especializacoesSelecionadas,
+                tipoUsuario
+            );
+    
+            console.log("Dados atualizados com sucesso - ID:", usuarioId);
+            
+            // *** ATUALIZAR A SESSÃO COM OS NOVOS DADOS ***
+            req.session.usuario.nome = req.body.nome;
+            req.session.usuario.email = req.body.email;
+            
+            if (tipoUsuario === 'N' && req.body.crn) {
+                req.session.usuario.documento = req.body.crn;
+            }
+    
+            console.log("Sessão atualizada:", {
+                id: req.session.usuario.id,
+                nome: req.session.usuario.nome,
+                email: req.session.usuario.email,
+                tipo: req.session.usuario.tipo
+            });
+            
+            // Recarregar dados atualizados para exibir
+            let dadosAtualizados = {};
+            if (tipoUsuario === 'N') {
+                const perfilNutri = await NWModel.findPerfilNutri(usuarioId);
+                if (perfilNutri.nutricionista) {
+                    dadosAtualizados = {
+                        nome: perfilNutri.nutricionista.NomeCompleto,
+                        email: perfilNutri.nutricionista.Email,
+                        telefone: perfilNutri.nutricionista.Telefone.slice(-9),
+                        ddd: perfilNutri.nutricionista.Telefone.slice(0, 2),
+                        crn: perfilNutri.nutricionista.Crn,
+                        sobreMim: perfilNutri.nutricionista.SobreMim || '',
+                        area: perfilNutri.nutricionista.Especializacoes ? 
+                               perfilNutri.nutricionista.Especializacoes.split(', ') : [],
+                        senha: ''
+                    };
+                }
+            } else {
+                const perfilCliente = await NWModel.findPerfilCompleto(usuarioId);
+                if (perfilCliente.cliente) {
+                    dadosAtualizados = {
+                        nome: perfilCliente.cliente.NomeCompleto,
+                        email: perfilCliente.cliente.Email,
+                        telefone: perfilCliente.cliente.Telefone.slice(-9),
+                        ddd: perfilCliente.cliente.Telefone.slice(0, 2),
+                        senha: ''
+                    };
+                }
+            }
+    
+            return res.render('pages/indexConfig', {
+                tipoUsuario: tipoUsuario,
+                valores: dadosAtualizados,
+                msgErro: { sucesso: 'Dados atualizados com sucesso!' },
+                erroValidacao: {},
+                listaErros: null
+            });
+    
+        } catch (error) {
+            console.error("Erro na atualização dos dados:", error.message);
+            
+            return res.render('pages/indexConfig', {
+                tipoUsuario: req.session.usuario.tipo,
+                valores: req.body,
+                msgErro: { geral: 'Erro interno do servidor. Tente novamente.' },
+                erroValidacao: {},
+                listaErros: null
+            });
+        }
+    },
 
     atualizarImagens: async (req, res) => {
         try {
