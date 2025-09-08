@@ -14,7 +14,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     'erro_interno': 'Erro interno do servidor. Tente novamente.',
                     'login_necessario': 'É necessário fazer login para acessar esta página.',
                     'permissao_negada': 'Você não tem permissão para acessar este recurso.',
-                    'logout': 'Erro ao fazer logout.'
+                    'logout': 'Erro ao fazer logout.',
+                    'nenhuma_imagem': 'Nenhuma imagem foi selecionada.',
+                    'nenhum_dado_alterado': 'Nenhum dado foi alterado.'
                 },
                 padrao: 'Ocorreu um erro inesperado.'
             },
@@ -30,9 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
             sucesso: {
                 param: 'sucesso',
                 mensagens: {
-                    'perfil_atualizado': 'Perfil atualizado com sucesso!',
-                    'dados_salvos': 'Dados salvos com sucesso!',
-                    'operacao_concluida': 'Operação concluída com sucesso!',
+                    'dados_atualizados': 'Dados atualizados com sucesso!',
                     'imagens_atualizadas': 'Imagens atualizadas com sucesso!'
                 },
                 padrao: 'Operação realizada com sucesso!'

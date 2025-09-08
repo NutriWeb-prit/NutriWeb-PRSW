@@ -182,6 +182,9 @@
                         
                         <section class="campo-form">
                             <label for="nome">Nome Completo</label>
+                            <% if (msgErro.nome) { %>
+                                <span class="erro-mensagem"><%= msgErro.nome %></span>
+                            <% } %>
                             <input type="text" 
                                 id="nome" 
                                 name="nome" 
@@ -190,9 +193,6 @@
                                 placeholder="Nome Completo"
                                 maxlength="125"
                                 oninput="this.value = this.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, '')">
-                            <% if (msgErro.nome) { %>
-                                <span class="erro-mensagem"><%= msgErro.nome %></span>
-                            <% } %>
                         </section>
                         
                         <section class="campo-form">
@@ -206,6 +206,9 @@
                         
                         <section class="campo-form">
                             <label for="email">E-mail</label>
+                            <% if (msgErro.email) { %>
+                                <span class="erro-mensagem"><%= msgErro.email %></span>
+                            <% } %>
                             <input type="text" 
                                 id="email" 
                                 name="email" 
@@ -213,14 +216,14 @@
                                 class="<%= erroValidacao.email %>" 
                                 placeholder="E-mail"
                                 maxlength="50">
-                            <% if (msgErro.email) { %>
-                                <span class="erro-mensagem"><%= msgErro.email %></span>
-                            <% } %>
                         </section>
                         
                         <section class="container-tel-senha">
                             <section class="campo-form campo-senha">
                                 <label for="senha">Senha</label>
+                                <% if (msgErro.senha) { %>
+                                    <span class="erro-mensagem"><%= msgErro.senha %></span>
+                                <% } %>
                                 <input type="password" 
                                     id="senha" 
                                     name="senha" 
@@ -228,9 +231,6 @@
                                     class="<%= erroValidacao.senha %>"
                                     placeholder="Crie uma senha"
                                     maxlength="25">
-                                <% if (msgErro.senha) { %>
-                                    <span class="erro-mensagem"><%= msgErro.senha %></span>
-                                <% } %>
                                 <section id="password-requirements">
                                     <span>A senha deve conter:</span>
                                     <ul>
@@ -276,105 +276,108 @@
                                 <% } %>
                             </section>
                         </section>
+                        
+                        <% if (headerUsuario.tipo == 'N') { %>
+                            <section class="campo-form">
+                                <label for="crn">CRN</label>
+                                <% if (msgErro.crn) { %>
+                                    <span class="erro-mensagem"><%= msgErro.crn %></span>
+                                <% } %>
+                                <input type="text" 
+                                    id="crn" 
+                                    name="crn"
+                                    value="<%= valores && valores.crn ? valores.crn : (headerUsuario.dadosCompletos ? headerUsuario.dadosCompletos.crn : '') %>" 
+                                    class="<%= erroValidacao.crn %>" 
+                                    placeholder="Número de CRN" 
+                                    maxlength="11"
+                                    oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                            </section>
+                        <% } %>
 
-                        <section class="campo-form">
-                            <label for="crn">CRN</label>
-                            <input type="text" 
-                                id="crn" 
-                                name="crn"
-                                value="<%= valores && valores.crn ? valores.crn : (headerUsuario.dadosCompletos ? headerUsuario.dadosCompletos.crn : '') %>" 
-                                class="<%= erroValidacao.crn %>" 
-                                placeholder="Número de CRN" 
-                                maxlength="11"
-                                oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-                            <% if (msgErro.crn) { %>
-                                <span class="erro-mensagem"><%= msgErro.crn %></span>
-                            <% } %>
-                        </section>
-
+                        <% if (headerUsuario.tipo == 'N') { %>
                             <section class="campo-form" id="campo-form-checkbox">
                                 <h1>Especialidade</h1>
                                 <label for="area">Em qual área da nutrição você se sente mais familiarizado:</label>
-                                
+                                    
                                 <section class="checkbox-group-container">
                                     <section class="checkbox-group">
                                         <input type="checkbox" 
-                                               name="area" 
-                                               id="esportiva" 
-                                               value="Esportiva"
-                                               <%= (valores && valores.area && (Array.isArray(valores.area) ? valores.area.includes('Esportiva') : valores.area === 'Esportiva')) || (headerUsuario.dadosCompletos && headerUsuario.dadosCompletos.area && headerUsuario.dadosCompletos.area.includes('Esportiva')) ? 'checked' : '' %>>
+                                                name="area" 
+                                                id="esportiva" 
+                                                value="Esportiva"
+                                                <%= (valores && valores.area && (Array.isArray(valores.area) ? valores.area.includes('Esportiva') : valores.area === 'Esportiva')) || (headerUsuario.dadosCompletos && headerUsuario.dadosCompletos.area && headerUsuario.dadosCompletos.area.includes('Esportiva')) ? 'checked' : '' %>>
                                         <label for="esportiva">Nutrição Esportiva</label>
                                     </section>
-                                    
+                                        
                                     <section class="checkbox-group">
                                         <input type="checkbox" 
-                                               name="area" 
-                                               id="estetica" 
-                                               value="Estética"
-                                               <%= (valores && valores.area && (Array.isArray(valores.area) ? valores.area.includes('Estética') : valores.area === 'Estética')) || (headerUsuario.dadosCompletos && headerUsuario.dadosCompletos.area && headerUsuario.dadosCompletos.area.includes('Estética')) ? 'checked' : '' %>>
+                                                name="area" 
+                                                id="estetica" 
+                                                value="Estética"
+                                                <%= (valores && valores.area && (Array.isArray(valores.area) ? valores.area.includes('Estética') : valores.area === 'Estética')) || (headerUsuario.dadosCompletos && headerUsuario.dadosCompletos.area && headerUsuario.dadosCompletos.area.includes('Estética')) ? 'checked' : '' %>>
                                         <label for="estetica">Nutrição Estética</label>
                                     </section>
-                                    
+                                        
                                     <section class="checkbox-group">
                                         <input type="checkbox" 
-                                               name="area" 
-                                               id="clinica" 
-                                               value="Clínica"
-                                               <%= (valores && valores.area && (Array.isArray(valores.area) ? valores.area.includes('Clínica') : valores.area === 'Clínica')) || (headerUsuario.dadosCompletos && headerUsuario.dadosCompletos.area && headerUsuario.dadosCompletos.area.includes('Clínica')) ? 'checked' : '' %>>
+                                                name="area" 
+                                                id="clinica" 
+                                                value="Clínica"
+                                                <%= (valores && valores.area && (Array.isArray(valores.area) ? valores.area.includes('Clínica') : valores.area === 'Clínica')) || (headerUsuario.dadosCompletos && headerUsuario.dadosCompletos.area && headerUsuario.dadosCompletos.area.includes('Clínica')) ? 'checked' : '' %>>
                                         <label for="clinica">Nutrição Clínica</label>
                                     </section>
-                                    
+                                        
                                     <section class="checkbox-group">
                                         <input type="checkbox" 
-                                               name="area" 
-                                               id="vegetariana" 
-                                               value="Vegetariana"
-                                               <%= (valores && valores.area && (Array.isArray(valores.area) ? valores.area.includes('Vegetariana') : valores.area === 'Vegetariana')) || (headerUsuario.dadosCompletos && headerUsuario.dadosCompletos.area && headerUsuario.dadosCompletos.area.includes('Vegetariana')) ? 'checked' : '' %>>
+                                                name="area" 
+                                                id="vegetariana" 
+                                                value="Vegetariana"
+                                                <%= (valores && valores.area && (Array.isArray(valores.area) ? valores.area.includes('Vegetariana') : valores.area === 'Vegetariana')) || (headerUsuario.dadosCompletos && headerUsuario.dadosCompletos.area && headerUsuario.dadosCompletos.area.includes('Vegetariana')) ? 'checked' : '' %>>
                                         <label for="vegetariana">Nutrição Vegetariana</label>
                                     </section>
                                     
                                     <section class="checkbox-group">
                                         <input type="checkbox" 
-                                               name="area" 
-                                               id="maternoinfantil" 
-                                               value="Materno-Infantil"
-                                               <%= (valores && valores.area && (Array.isArray(valores.area) ? valores.area.includes('Materno-Infantil') : valores.area === 'Materno-Infantil')) || (headerUsuario.dadosCompletos && headerUsuario.dadosCompletos.area && headerUsuario.dadosCompletos.area.includes('Materno-Infantil')) ? 'checked' : '' %>>
+                                                name="area" 
+                                                id="maternoinfantil" 
+                                                value="Materno-Infantil"
+                                                <%= (valores && valores.area && (Array.isArray(valores.area) ? valores.area.includes('Materno-Infantil') : valores.area === 'Materno-Infantil')) || (headerUsuario.dadosCompletos && headerUsuario.dadosCompletos.area && headerUsuario.dadosCompletos.area.includes('Materno-Infantil')) ? 'checked' : '' %>>
                                         <label for="maternoinfantil">Nutrição Materno-Infantil</label>
                                     </section>
                                     
                                     <section class="checkbox-group">
                                         <input type="checkbox" 
-                                               name="area" 
-                                               id="geriatrica" 
-                                               value="Geriátria"
-                                               <%= (valores && valores.area && (Array.isArray(valores.area) ? valores.area.includes('Geriátrica') : valores.area === 'Geriátrica')) || (headerUsuario.dadosCompletos && headerUsuario.dadosCompletos.area && headerUsuario.dadosCompletos.area.includes('Geriátrica')) ? 'checked' : '' %>>
+                                                name="area" 
+                                                id="geriatrica" 
+                                                value="Geriátria"
+                                                <%= (valores && valores.area && (Array.isArray(valores.area) ? valores.area.includes('Geriátrica') : valores.area === 'Geriátrica')) || (headerUsuario.dadosCompletos && headerUsuario.dadosCompletos.area && headerUsuario.dadosCompletos.area.includes('Geriátrica')) ? 'checked' : '' %>>
                                         <label for="geriatrica">Nutrição Geriátrica</label>
                                     </section>
                                     
                                     <section class="checkbox-group">
                                         <input type="checkbox" 
-                                               name="area" 
-                                               id="preventiva" 
-                                               value="Preventiva"
-                                               <%= (valores && valores.area && (Array.isArray(valores.area) ? valores.area.includes('Preventiva') : valores.area === 'Preventiva')) || (headerUsuario.dadosCompletos && headerUsuario.dadosCompletos.area && headerUsuario.dadosCompletos.area.includes('Preventiva')) ? 'checked' : '' %>>
+                                                name="area" 
+                                                id="preventiva" 
+                                                value="Preventiva"
+                                                <%= (valores && valores.area && (Array.isArray(valores.area) ? valores.area.includes('Preventiva') : valores.area === 'Preventiva')) || (headerUsuario.dadosCompletos && headerUsuario.dadosCompletos.area && headerUsuario.dadosCompletos.area.includes('Preventiva')) ? 'checked' : '' %>>
                                         <label for="preventiva">Nutrição Preventiva</label>
                                     </section>
                                     
                                     <section class="checkbox-group">
                                         <input type="checkbox" 
-                                               name="area" 
-                                               id="balanceada" 
-                                               value="Balanceada"
-                                               <%= (valores && valores.area && (Array.isArray(valores.area) ? valores.area.includes('Balanceada') : valores.area === 'Balanceada')) || (headerUsuario.dadosCompletos && headerUsuario.dadosCompletos.area && headerUsuario.dadosCompletos.area.includes('Balanceada')) ? 'checked' : '' %>>
+                                                name="area" 
+                                                id="balanceada" 
+                                                value="Balanceada"
+                                                <%= (valores && valores.area && (Array.isArray(valores.area) ? valores.area.includes('Balanceada') : valores.area === 'Balanceada')) || (headerUsuario.dadosCompletos && headerUsuario.dadosCompletos.area && headerUsuario.dadosCompletos.area.includes('Balanceada')) ? 'checked' : '' %>>
                                         <label for="balanceada">Nutrição Balanceada</label>
                                     </section>
                                     
                                     <section class="checkbox-group">
                                         <input type="checkbox" 
-                                               name="area" 
-                                               id="funcional" 
-                                               value="Funcional"
-                                               <%= (valores && valores.area && (Array.isArray(valores.area) ? valores.area.includes('Funcional') : valores.area === 'Funcional')) || (headerUsuario.dadosCompletos && headerUsuario.dadosCompletos.area && headerUsuario.dadosCompletos.area.includes('Funcional')) ? 'checked' : '' %>>
+                                                name="area" 
+                                                id="funcional" 
+                                                value="Funcional"
+                                                <%= (valores && valores.area && (Array.isArray(valores.area) ? valores.area.includes('Funcional') : valores.area === 'Funcional')) || (headerUsuario.dadosCompletos && headerUsuario.dadosCompletos.area && headerUsuario.dadosCompletos.area.includes('Funcional')) ? 'checked' : '' %>>
                                         <label for="funcional">Nutrição Funcional</label>
                                     </section>
                                 </section>
@@ -382,11 +385,11 @@
                                     <span class="erro-mensagem"><%= msgErro.area %></span>
                                 <% } %>
                             </section>
-
-                            <section class="container-botoes">
-                                <button type="button" class="botao cancel">Cancelar</button>
-                                <button type="submit" class="botao save">Salvar</button>
-                            </section>
+                        <% } %>
+                        <section class="container-botoes">
+                            <button type="button" class="botao cancel">Cancelar</button>
+                            <button type="submit" class="botao save">Salvar</button>
+                        </section>
                     </form>
                 </section>
             

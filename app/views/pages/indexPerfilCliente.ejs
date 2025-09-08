@@ -74,28 +74,47 @@
         <!-- Conteudo do site -->
 
         <section id="conteudo-completo">
-            <section id="imagem_de_fundo" style="background-image: url('<%= cliente.fotoBanner %>')"></section>
+            <% if (isOwner) { %>
+                <section id="imagem_de_fundo" style="background-image: url('<%= headerUsuario.fotoBanner %>')"></section>
+            <% } %>
+            <% if (!isOwner) { %>
+                <section id="imagem_de_fundo" style="background-image: url('<%= cliente.fotoBanner %>')"></section>
+            <% } %>
             <main class="conteudo">
                 <section id="info_perfil">
                     <section id="container_foto">
-                        <img src="<%= cliente ? cliente.fotoPerfil : 'imagens/foto_perfil.jpg' %>" 
+                        <% if (isOwner) { %>
+                            <img src="<%= headerUsuario.fotoPerfil %>"
                             alt="Foto de perfil" 
                             class="foto_perfil" 
                             id="foto-perfil">
+                            <a href="/config"><i class="fa-solid fa-gear"></i></a>
+                        <% } %>
+
+                        <% if (!isOwner) { %>
+                            <img src="<%= cliente ? cliente.fotoPerfil : 'imagens/foto_perfil.jpg' %>" 
+                            alt="Foto de perfil" 
+                            class="foto_perfil" 
+                            id="foto-perfil">
+                        <% } %>
                     </section><br>
         
                     <section id="infrmacoes_nutri">
                         <% if (cliente) { %>
-                            <h1 id="nomeCliente"><%= cliente.nome %></h1>
-                            <p class="tipo-nutri" id="tipo-nutri">Cliente</p>
+                            <section class="nome_perfil">
+                                <h1 id="nomeCliente"><%= cliente.nome %></h1>
+                                <p class="tipo-nutri" id="tipo-nutri">Cliente</p>
+                            </section>
         
-                            <h1>Objetivo:</h1>
-                            <span id="sobremim"><%= cliente.objetivos %></span>
-                            
-                            <% if (cliente.interesses && cliente.interesses !== 'Nenhum interesse cadastrado') { %>
-                                <h3>Interesses Nutricionais:</h3>
-                                <span id="interesses"><%= cliente.interesses %></span>
-                            <% } %>
+                            <section class="objetivo_interesses_perfil">
+                                <h1>Objetivo:</h1>
+                                <span id="sobremim"><%= cliente.objetivos %></span>
+
+                                <% if (cliente.interesses && cliente.interesses !== 'Nenhum interesse cadastrado') { %>
+                                    <h3>Interesses Nutricionais:</h3>
+                                    <span id="interesses"><%= cliente.interesses %></span>
+                                <% } %>
+                            </section>
                         <% } else { %>
                             <h1 id="nomeCliente">Dados não encontrados</h1>
                             <p class="tipo-nutri">Erro ao carregar perfil</p>
@@ -125,15 +144,6 @@
                         <% } %>
                     </section>
              
-                </section>
-                
-                <section id="publi_avaliacao">
-                    <section id="publi_selecionar" onclick="clicarDois()">
-                        <p>Publicações</p>
-                    </section>
-                    <section id="avaliacao_selecionar" onclick="clicarUm()">
-                        <p>Avaliações</p>
-                    </section>
                 </section>
         
                 <section id="publi">
@@ -165,7 +175,7 @@
                 </section>
                 
                 <section id="avaliar_nutri">
-                    <span id="tituloavaliacao">Avaliações</span>
+                    <h1 id="tituloavaliacao">Avaliações</h1>
                     <section id="container-avaliacoes">
                         <article class="avaliacao">
                             <section class="nome_avaliador">

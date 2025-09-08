@@ -366,42 +366,85 @@ const NWModel = {
     },
 
     verificarTelefoneExistenteParaAtualizacao: async (ddd, telefone, usuarioId) => {
+        let conn;
         try {
             const telefoneCompleto = ddd + telefone;
-            const [result] = await pool.query(
-                'SELECT id FROM Usuarios WHERE Telefone = ? AND id != ? AND UsuarioStatus = 1',
+            
+            conn = await Promise.race([
+                pool.getConnection(),
+                new Promise((_, reject) =>
+                    setTimeout(() => reject(new Error('Timeout ao obter conexão')), 10000)
+                )
+            ]);
+            
+            const [rows] = await conn.query(
+                "SELECT id FROM Usuarios WHERE Telefone = ? AND id != ? AND UsuarioStatus = 1 LIMIT 1",
                 [telefoneCompleto, usuarioId]
             );
-            return result.length > 0;
-        } catch (erro) {
-            console.log("Erro ao verificar telefone para atualização:", erro);
-            return false;
+            
+            return rows.length > 0;
+            
+        } catch (error) {
+            console.error("Erro ao verificar telefone para atualização:", error.message);
+            throw error;
+        } finally {
+            if (conn) {
+                conn.release();
+            }
         }
     },
-
+    
     verificarEmailExistenteParaAtualizacao: async (email, usuarioId) => {
+        let conn;
         try {
-            const [result] = await pool.query(
-                'SELECT id FROM Usuarios WHERE Email = ? AND id != ? AND UsuarioStatus = 1',
+            conn = await Promise.race([
+                pool.getConnection(),
+                new Promise((_, reject) =>
+                    setTimeout(() => reject(new Error('Timeout ao obter conexão')), 10000)
+                )
+            ]);
+            
+            const [rows] = await conn.query(
+                "SELECT id FROM Usuarios WHERE Email = ? AND id != ? AND UsuarioStatus = 1 LIMIT 1",
                 [email, usuarioId]
             );
-            return result.length > 0;
-        } catch (erro) {
-            console.log("Erro ao verificar email para atualização:", erro);
-            return false;
+            
+            return rows.length > 0;
+            
+        } catch (error) {
+            console.error("Erro ao verificar email para atualização:", error.message);
+            throw error;
+        } finally {
+            if (conn) {
+                conn.release();
+            }
         }
     },
     
     verificarCrnExistenteParaAtualizacao: async (crn, usuarioId) => {
+        let conn;
         try {
-            const [result] = await pool.query(
-                'SELECT n.id FROM Nutricionistas n INNER JOIN Usuarios u ON n.UsuarioId = u.id WHERE n.Crn = ? AND n.UsuarioId != ? AND u.UsuarioStatus = 1',
+            conn = await Promise.race([
+                pool.getConnection(),
+                new Promise((_, reject) =>
+                    setTimeout(() => reject(new Error('Timeout ao obter conexão')), 10000)
+                )
+            ]);
+            
+            const [rows] = await conn.query(
+                "SELECT n.id FROM Nutricionistas n INNER JOIN Usuarios u ON n.UsuarioId = u.id WHERE n.Crn = ? AND n.UsuarioId != ? AND u.UsuarioStatus = 1 LIMIT 1",
                 [crn, usuarioId]
             );
-            return result.length > 0;
-        } catch (erro) {
-            console.log("Erro ao verificar CRN para atualização:", erro);
-            return false;
+            
+            return rows.length > 0;
+            
+        } catch (error) {
+            console.error("Erro ao verificar CRN para atualização:", error.message);
+            throw error;
+        } finally {
+            if (conn) {
+                conn.release();
+            }
         }
     },
 

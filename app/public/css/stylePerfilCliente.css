@@ -288,10 +288,11 @@ main{
 #titulopubli {
     display: block;
     text-align: center;
-    color: black;
+    color: #2c3e50;
     padding: 10px 10px;
     margin-bottom: 50px;
-    font-size: 35px;
+    font-size: 32px;
+    font-weight: 700;
 }
 
 #tituloavaliacao {
@@ -421,10 +422,19 @@ main{
     display: flex;
     justify-content: center;
     align-items: flex-start;
+    flex-direction: column;
     flex-shrink: 0;
-    margin-top: -120px;
+    margin-top: -200px;
 }
 
+#container_foto a {
+    font-size: 25px;
+    margin-top: 15px;
+    align-self: center;
+    cursor: pointer;
+    text-decoration: none;
+    color: black;
+} 
 
 .foto_perfil {
     width: 200px;
@@ -450,9 +460,10 @@ main{
     line-height: 1.2;
 }
 
-#infrmacoes_nutri h3{
-    font-size: 16px;
-    margin-bottom: 5px;
+#infrmacoes_nutri h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #2c3e50;
 }
 
 #sobremim {
@@ -484,6 +495,14 @@ main{
 #rede_sociais {
     flex: 1;
     width: 60%;
+}
+
+#nomeCliente {
+    font-size: 26px !important;
+    font-weight: 700 !important;
+    color: #2c3e50;
+    margin: 0 0 8px 0;
+    line-height: 1.2;
 }
 
 #rede_sociais h4 {
@@ -591,6 +610,10 @@ footer {
 
 
 @media (max-width: 1100px) {
+    * {
+        overflow-x: hidden;
+    }
+
     .header {
         flex-direction: column;
         align-items: center;
@@ -710,6 +733,23 @@ footer {
         display: block;
     }
 
+    #infrmacoes_nutri {
+        margin: 0;
+    }
+
+    #infrmacoes_nutri h1 {
+        font-size: 20px;
+        font-weight: 600;
+    }
+
+    .objetivo_interesses_perfil {
+        margin: 30px 0 45px 0;
+    }
+
+    #container-avaliacoes {
+        flex-direction: column;
+    }
+
     #info_perfil{
         background:none;
         margin: -25px;
@@ -718,10 +758,8 @@ footer {
     }
 
     #container_foto{
-        justify-content: flex-start;
-        margin-bottom: 3em;
-        margin-left: 1em;
-        margin-top: 3em;
+        max-width: 208px;
+        margin-top: 258px;
     }
 
     #info_contato{
@@ -747,10 +785,7 @@ footer {
     }
 
     #tituloavaliacao {
-        top: 1050px; 
-        left: 48%;
-        width: 0;
-        font-size: 30px;
+        font-size: 32px;
         text-align: center; 
     }
 
@@ -826,11 +861,6 @@ footer {
     .grid-publicacoes {
         grid-template-columns: repeat( auto-fit, minmax(150px, 1fr) );
         gap: 1.5em 1.5em;
-      }
-
-    #avaliar_nutri{
-        display: none;
-        margin-left: 2em;
     }
 
     footer{

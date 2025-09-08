@@ -384,13 +384,7 @@ const NWController = {
                     };
                 }
     
-                return res.render('pages/indexConfig', {
-                    tipoUsuario: tipoUsuario,
-                    valores: dadosParaExibir,
-                    msgErro: { info: 'Nenhuma alteração foi detectada nos dados.' },
-                    erroValidacao: {},
-                    listaErros: null
-                });
+                return res.redirect('/config?erro=nenhum_dado_alterado');
             }
     
             // Prosseguir com a atualização
@@ -480,24 +474,12 @@ const NWController = {
                 }
             }
     
-            return res.render('pages/indexConfig', {
-                tipoUsuario: tipoUsuario,
-                valores: dadosAtualizados,
-                msgErro: { sucesso: 'Dados atualizados com sucesso!' },
-                erroValidacao: {},
-                listaErros: null
-            });
+            return res.redirect('/config?sucesso=dados_atualizados');
     
         } catch (error) {
             console.error("Erro na atualização dos dados:", error.message);
             
-            return res.render('pages/indexConfig', {
-                tipoUsuario: req.session.usuario.tipo,
-                valores: req.body,
-                msgErro: { geral: 'Erro interno do servidor. Tente novamente.' },
-                erroValidacao: {},
-                listaErros: null
-            });
+            return res.redirect('/config?erro');
         }
     },
 
@@ -551,34 +533,12 @@ const NWController = {
 
             if (!fotoPerfil && !fotoBanner) {
                 console.log('ERRO: Nenhuma imagem foi enviada');
-                return res.status(400).json({
-                    success: false,
-                    message: 'Nenhuma imagem foi selecionada para atualização'
-                });
-            }
-
-            const resultado = await NWModel.atualizarImagensUsuario(usuarioId, fotoPerfil, fotoBanner);
-    
-            if (req.headers['accept'] && req.headers['accept'].includes('application/json')) {
-                return res.json({
-                    success: true,
-                    message: 'Imagens atualizadas com sucesso!',
-                    data: resultado
-                });
+                return res.redirect('/config?erro=nenhuma_imagem');
             }
     
             return res.redirect('/config?sucesso=imagens_atualizadas');
     
         } catch (error) {
-            
-            if (req.headers['accept'] && req.headers['accept'].includes('application/json')) {
-                return res.status(500).json({
-                    success: false,
-                    message: error.message.includes('muito grande') || error.message.includes('não suportado')
-                        ? error.message
-                        : 'Erro interno do servidor. Tente novamente.'
-                });
-            }
     
             return res.redirect('/config?erro=' + encodeURIComponent(
                 error.message.includes('muito grande') || error.message.includes('não suportado')
@@ -711,6 +671,14 @@ const NWController = {
             
             const usuarioId = req.session.usuario.id;
             console.log("Carregando perfil do cliente ID:", usuarioId);
+            let isOwner = false;
+
+            const usuarioLogado = req.session.usuario && req.session.usuario.logado;
+
+            if (usuarioLogado && req.session.usuario.tipo === 'C' && req.session.usuario.id === usuarioId) {
+                isOwner = true;
+                console.log("É o dono do perfil");
+            }
             
             const dadosCompletos = await NWModel.findPerfilCompleto(usuarioId);
             
@@ -762,7 +730,8 @@ const NWController = {
             return res.render("pages/indexPerfilCliente", {
                 erro: null,
                 cliente: dadosProcessados,
-                publicacoesCurtidas: dadosProcessados.publicacoes
+                publicacoesCurtidas: dadosProcessados.publicacoes,
+                isOwner: isOwner
             });
             
         } catch (erro) {
