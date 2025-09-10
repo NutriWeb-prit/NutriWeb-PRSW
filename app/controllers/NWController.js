@@ -485,7 +485,6 @@ const NWController = {
 
     atualizarImagens: async (req, res) => {
         try {
-            // Verificar se o usuário está logado
             if (!req.session.usuario || !req.session.usuario.logado) {
                 console.log('ERRO: Usuário não autenticado');
                 return res.status(401).json({ 
@@ -497,7 +496,6 @@ const NWController = {
             const usuarioId = req.session.usuario.id;
             console.log('Usuario ID:', usuarioId);
     
-            // Função de validação de imagem (reutilizada do cadastro)
             const validarImagem = (arquivo, tipo) => {
                 console.log(`Validando ${tipo}:`, arquivo ? 'arquivo presente' : 'arquivo ausente');
                 if (!arquivo) return null;
@@ -534,6 +532,16 @@ const NWController = {
             if (!fotoPerfil && !fotoBanner) {
                 console.log('ERRO: Nenhuma imagem foi enviada');
                 return res.redirect('/config?erro=nenhuma_imagem');
+            }
+
+            const resultado = await NWModel.atualizarImagensUsuario(usuarioId, fotoPerfil, fotoBanner);
+
+            if (req.headers['accept'] && req.headers['accept'].includes('application/json')) {
+                return res.json({
+                    success: true,
+                    message: 'Imagens atualizadas com sucesso!',
+                    data: resultado
+                });
             }
     
             return res.redirect('/config?sucesso=imagens_atualizadas');

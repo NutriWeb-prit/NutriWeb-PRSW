@@ -486,9 +486,8 @@ input[type="password"] {
     background-color: #d9d9d9;
 }
 
-.campo-texto::placeholder {
-    color: #888; 
-    font-style: italic; 
+.campo-texto:focus {
+    outline: none !important;
 }
 
 #campo-form-checkbox {
@@ -654,8 +653,59 @@ footer {
         margin-top: 0;
     }
 
-    footer{
-        display: none;
+    .footer-container {
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+    }
+
+    .footer-logo {
+        margin: 20px 0;
+        flex: unset;
+    }
+
+    .footer-logo img {
+        max-width: 70px;
+        margin-top: 10px;
+    }
+
+    .footer-logo a h3 {
+        font-size: 24px;
+        margin-top: 10px;
+    }
+
+    .footer-informacao,
+    .footer-social {
+        margin: 20px 0;
+        padding: 0;
+        text-align: center;
+        flex: unset;
+    }
+
+    .footer-informacao a {
+        display: block;
+        font-size: 18px;
+        padding: 8px 0;
+    }
+
+    .footer-social p {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    .footer-social h3 {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+
+    .footer-social .social-icons a {
+        font-size: 28px;
+        margin: 0 10px;
+    }
+
+    .footer-bottom {
+        font-size: 14px;
+        padding: 20px 0;
     }
 }
 
@@ -664,6 +714,9 @@ footer {
 }
 
 @media (max-width: 940px) {
+    * {
+        overflow-x: hidden;
+    }
 
     .main-content {
         flex-direction: column;
@@ -796,7 +849,103 @@ footer {
         border-radius: 10px;
     }
 
-    footer{
+    .conteudo {
+        width: 90vw;
+        flex-direction: column;
+        margin: 150px 0 100px 0;
+    }
+
+    .left-panel {
+        width: 100%;
+    }
+
+    .container-imagens {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    #form-imagens {
+        width: 100%;
+    }
+
+    .container-tel-senha {
+        flex-direction: column;
+    }
+
+    #secao-dados {
+        width: 100%;
+    }
+
+    .checkbox-group-container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .checkbox-group label {
+        font-size: 15px !important;
+    }
+
+    .btn-upload {
+        height: 200px;
+        width: 300px;
+    }
+
+    .footer-desktop {
         display: none;
+    }
+
+    .footer-container {
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+    }
+
+    .footer-logo {
+        margin: 20px 0;
+        flex: unset;
+    }
+
+    .footer-logo img {
+        max-width: 70px;
+        margin-top: 10px;
+    }
+
+    .footer-logo a h3 {
+        font-size: 24px;
+        margin-top: 10px;
+    }
+
+    .footer-informacao,
+    .footer-social {
+        margin: 20px 0;
+        padding: 0;
+        text-align: center;
+        flex: unset;
+    }
+
+    .footer-informacao a {
+        display: block;
+        font-size: 18px;
+        padding: 8px 0;
+    }
+
+    .footer-social p {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    .footer-social h3 {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+
+    .footer-social .social-icons a {
+        font-size: 28px;
+        margin: 0 10px;
+    }
+
+    .footer-bottom {
+        font-size: 14px;
+        padding: 20px 0;
     }
 }
