@@ -342,8 +342,17 @@ h1, h2, h3, h4, h5, h6 {
 
 .faixa-parceiros {
     background-color: #e3f0dd;
-    padding: 40px 20px;
-    margin-top: 10px;
+    width: 100vw;
+}
+
+.faixa-parceiros img {
+    max-width: 1600px;
+    height: 100%;
+}
+
+.faixa-parceiros a {
+    display: block;
+    height: 600px;
 }
 
 .logos-parceiros {
@@ -352,20 +361,6 @@ h1, h2, h3, h4, h5, h6 {
     align-items: center;
     gap: 30px;
     flex-wrap: wrap;
-}
-
-.logos-parceiros img {
-    height: 90px;
-    cursor: pointer;
-    object-fit: cover;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    transition: transform 0.5s ease, box-shadow 0.5s ease;
-}
-
-.logos-parceiros img:hover {
-    transform: scale(1.03);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
 .nutricionista-wrapper {
@@ -1507,8 +1502,7 @@ footer {
       
     .faixa-parceiros {
         background-color: #e3f0dd;
-        padding: 40px 20px;
-        margin-top: 10px;
+        width: 100vw;
     }
       
     .logos-parceiros {
@@ -1520,14 +1514,10 @@ footer {
     }
       
     .logos-parceiros img {
-        height: 90px;
-        cursor: pointer;
-        object-fit: cover;
-        border-radius: 10px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-        transition: transform 0.5s ease, box-shadow 0.5s ease;
+        width: 100vw;
+        height: 600px;
     }
-      
+
     .logos-parceiros img:hover {
         transform: scale(1.03);
         box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);

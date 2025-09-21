@@ -6,7 +6,7 @@ body {
     flex-direction: column;
     box-sizing: border-box;
     overflow-x: hidden;
-    /* background-color: #f5f5f5; */
+    background-color: #f5f5f5;
 }
 
 .header {
@@ -345,7 +345,6 @@ th, td {
 }
 
 tbody tr {
-    background-color: #fff;
     color: black;
 }
 
