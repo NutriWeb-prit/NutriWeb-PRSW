@@ -215,9 +215,9 @@ body {
     bottom: 0;
     background: linear-gradient(
         180deg,
-        rgba(255, 255, 255, 0.151) 0%,
-        rgba(255, 255, 255, 0.8) 50%,
-        rgba(255, 255, 255, 1) 100%
+        rgba(245, 245, 245, 0.151) 0%,
+        rgba(245, 245, 245, 0.8) 50%,
+        rgba(245, 245, 245, 1) 100%
     );
     z-index: 1;
 }
@@ -299,9 +299,10 @@ body {
 }
 
 .card-image {
-    width: 100%;
-    height: auto;
+    width: 154px;
+    height: 154px;
     border-radius: 50%;
+    object-fit: cover;
 }
 
 .card-info {
@@ -310,7 +311,7 @@ body {
 }
 
 .card-name {
-    font-size: 20px;
+    font-size: 19px;
     margin: 10px 0 5px;
 }
 

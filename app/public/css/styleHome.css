@@ -340,21 +340,6 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 38px;
 }
 
-.faixa-parceiros {
-    background-color: #e3f0dd;
-    width: 100vw;
-}
-
-.faixa-parceiros img {
-    max-width: 1600px;
-    height: 100%;
-}
-
-.faixa-parceiros a {
-    display: block;
-    height: 600px;
-}
-
 .logos-parceiros {
     display: flex;
     justify-content: center;
@@ -562,7 +547,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .card-name {
-    font-size: 19px;
+    font-size: 18.4px;
     margin: 10px 0 5px;
 }
 
@@ -1551,7 +1536,7 @@ footer {
     .img-header-mobile {
         position: absolute;
         width: 100%;
-        height: 1000px;
+        height: 1200px;
         margin-top: 87px;
         overflow: hidden;
         display: flex;
@@ -2012,7 +1997,7 @@ footer {
 @media (min-height: 1px) {
 
 .nutricionista-mobile{
-        margin-top: 70px;
+        margin-top: 750px;
     }
 
  .titulo-parceiros-mobile {

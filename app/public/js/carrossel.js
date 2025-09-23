@@ -1,114 +1,119 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const carouselItems = document.querySelectorAll('.carousel-item');
-    const carouselItemsMobile = document.querySelectorAll('.carousel-item-mobile');
-    const indicators = document.querySelectorAll('.indicator');
-    const nextButton = document.querySelector('.carousel-control-next');
-    const prevButton = document.querySelector('.carousel-control-prev');
-    const nextButtonMobile = document.querySelector('.carousel-control-next-mobile');
-    const prevButtonMobile = document.querySelector('.carousel-control-prev-mobile');
-    const thirdImageButton = document.getElementById('btn-sabeMais');
-    const thirdImageButtonMobile = document.getElementById('btn-sabeMais-mobile');
+    const elements = {
+        desktop: {
+            items: document.querySelectorAll('.carousel-item'),
+            next: document.querySelector('.carousel-control-next'),
+            prev: document.querySelector('.carousel-control-prev'),
+            button: document.getElementById('btn-sabeMais'),
+            fifthImage: document.querySelector('.carousel-item:nth-child(5) img')
+        },
+        mobile: {
+            items: document.querySelectorAll('.carousel-item-mobile'),
+            next: document.querySelector('.carousel-control-next-mobile'),
+            prev: document.querySelector('.carousel-control-prev-mobile'),
+            button: document.getElementById('btn-sabeMais-mobile'),
+            fifthImage: document.querySelector('.carousel-item-mobile:nth-child(5) img')
+        },
+        indicators: document.querySelectorAll('.indicator')
+    };
 
-    let currentIndex = 0;
-    let currentIndexMobile = 0;
-    let intervalId;
-    let intervalIdMobile;
+    const state = {
+        desktop: { currentIndex: 0, intervalId: null },
+        mobile: { currentIndex: 0, intervalId: null }
+    };
 
+    const AUTOPLAY_DELAY = 3000;
 
-    function updateCarousel(items, button, index, isMobile = false) {
-        items.forEach((item, i) => {
-            item.classList.remove('active');
-            if (i === index) {
-                item.classList.add('active');   
-                if (i === 2) { 
-                    if (isMobile) {
-                        button.classList.remove('hidden');
-                    } else {
-                        button.classList.remove('hidden');
-                    }
-                } else {
-                    button.classList.add('hidden');
-                }
-            }
-        });
-
-        if (!isMobile) {
-            indicators.forEach((indicator, i) => {
-                indicator.classList.remove('active');
-                if (i === index) {
-                    indicator.classList.add('active');
-                }
-            });
+    function updateCarousel(type, index) {
+        const { items, button, fifthImage } = elements[type];
+        const currentState = state[type];
+        
+        items[currentState.currentIndex]?.classList.remove('active');
+        items[index]?.classList.add('active');
+        
+        if (button) {
+            button.classList.toggle('hidden', index !== 2);
         }
+        
+        if (fifthImage) {
+            if (index === 4) {
+                fifthImage.setAttribute('onclick', 'irAgroBox()');
+                fifthImage.style.cursor = 'pointer';
+            } else {
+                fifthImage.removeAttribute('onclick');
+                fifthImage.style.cursor = 'default';
+            }
+        }
+        
+        if (type === 'desktop') {
+            elements.indicators[currentState.currentIndex]?.classList.remove('active');
+            elements.indicators[index]?.classList.add('active');
+        }
+        
+        currentState.currentIndex = index;
+    }
 
-        indicators.forEach((indicator, i) => {
+    function startAutoPlay(type) {
+        const currentState = state[type];
+        const itemsLength = elements[type].items.length;
+        
+        currentState.intervalId = setInterval(() => {
+            const nextIndex = (currentState.currentIndex + 1) % itemsLength;
+            updateCarousel(type, nextIndex);
+        }, AUTOPLAY_DELAY);
+    }
+
+    function resetAutoPlay(type) {
+        clearInterval(state[type].intervalId);
+        startAutoPlay(type);
+    }
+
+    function navigate(type, direction) {
+        const itemsLength = elements[type].items.length;
+        let nextIndex;
+        
+        if (direction === 'next') {
+            nextIndex = (state[type].currentIndex + 1) % itemsLength;
+        } else {
+            nextIndex = (state[type].currentIndex - 1 + itemsLength) % itemsLength;
+        }
+        
+        updateCarousel(type, nextIndex);
+        resetAutoPlay(type);
+    }
+
+    function setupEventListeners() {
+        elements.desktop.next?.addEventListener('click', () => navigate('desktop', 'next'));
+        elements.desktop.prev?.addEventListener('click', () => navigate('desktop', 'prev'));
+        
+        elements.mobile.next?.addEventListener('click', () => navigate('mobile', 'next'));
+        elements.mobile.prev?.addEventListener('click', () => navigate('mobile', 'prev'));
+        
+        elements.indicators.forEach((indicator, index) => {
             indicator.addEventListener('click', () => {
-                currentIndex = i;
-                updateCarousel(carouselItems, thirdImageButton, currentIndex);
-                resetAutoPlay();
+                updateCarousel('desktop', index);
+                resetAutoPlay('desktop');
             });
         });
     }
 
-    function startAutoPlay() {
-        intervalId = setInterval(AutoPlay, 3000);
-    }
- 
-    function startAutoPlayMobile() {
-        intervalIdMobile = setInterval(AutoPlayMobile, 3000);
-    }
- 
-    function resetAutoPlay() {
-        clearInterval(intervalId);
-        startAutoPlay();
-    }
- 
-    function resetAutoPlayMobile() {
-        clearInterval(intervalIdMobile);
-        startAutoPlayMobile();
-    }
- 
-    function AutoPlay() {
-        currentIndex = (currentIndex + 1) % carouselItems.length;
-        updateCarousel(carouselItems, thirdImageButton, currentIndex);
-    }
- 
-    function AutoPlayMobile() {
-        currentIndexMobile = (currentIndexMobile + 1) % carouselItemsMobile.length;
-        updateCarousel(carouselItemsMobile, thirdImageButtonMobile, currentIndexMobile, true);
+    function init() {
+        updateCarousel('desktop', 0);
+        updateCarousel('mobile', 0);
+        
+        if (elements.desktop.items.length > 0) startAutoPlay('desktop');
+        if (elements.mobile.items.length > 0) startAutoPlay('mobile');
+        
+        setupEventListeners();
     }
 
-    startAutoPlay();
-    startAutoPlayMobile();
-
-    nextButton.addEventListener('click', () => {
-        currentIndex = (currentIndex + 1) % carouselItems.length;
-        updateCarousel(carouselItems, thirdImageButton, currentIndex);
-        resetAutoPlay()
-    });
-
-    prevButton.addEventListener('click', () => {
-        currentIndex = (currentIndex - 1 + carouselItems.length) % carouselItems.length;
-        updateCarousel(carouselItems, thirdImageButton, currentIndex);
-        resetAutoPlay()
-    });
-
-    nextButtonMobile.addEventListener('click', () => {
-        currentIndexMobile = (currentIndexMobile + 1) % carouselItemsMobile.length;
-        updateCarousel(carouselItemsMobile, thirdImageButtonMobile, currentIndexMobile, true);
-        resetAutoPlayMobile()
-    });
-
-    prevButtonMobile.addEventListener('click', () => {
-        currentIndexMobile = (currentIndexMobile - 1 + carouselItemsMobile.length) % carouselItemsMobile.length;
-        updateCarousel(carouselItemsMobile, thirdImageButtonMobile, currentIndexMobile, true);
-        resetAutoPlayMobile()
-    });
-
-    updateCarousel(carouselItems, thirdImageButton, currentIndex);
-    updateCarousel(carouselItemsMobile, thirdImageButtonMobile, currentIndexMobile, true);
+    init();
 });
 
 function irPagina() {
     window.location.href = "/tiponutri";
+}
+
+function irAgroBox() {
+    window.open("https://agrobox.onrender.com/", "_blank");
 }
