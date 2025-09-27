@@ -116,6 +116,12 @@ body {
     cursor: pointer;
 }
 
+.form-busca {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
 .beneficios-plano li {
     list-style: none;
     margin: 8px 0;

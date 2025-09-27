@@ -16,9 +16,13 @@ const NWController = {
     ],
 
     // validação cadastro cliente
-    validacaoCadCliente : [
+    validacaoCadCliente: [
+        // **VALIDAÇÕES BÁSICAS**
         body("nome").isLength({min:2}).withMessage("O nome deve conter 2 ou mais caracteres!"),
-        body("email").isEmail().withMessage("Insira um Email válido!")
+        
+        // **VALIDAÇÃO DE EMAIL COM DUPLICIDADE**
+        body("email")
+            .isEmail().withMessage("Insira um Email válido!")
             .custom(async (email) => {
                 try {
                     const emailExiste = await NWModel.verificarEmailExistente(email);
@@ -34,62 +38,71 @@ const NWController = {
                     return true;
                 }
             }),
-            body("cpf")
-                .custom(async (cpf) => {
-                    const cpfLimpo = cpf.replace(/\D/g, '');
-                    
-                    if (cpfLimpo.length !== 11) {
-                        throw new Error('O CPF deve conter exatamente 11 dígitos!');
-                    }
-                    
-                    function validarCPF(cpf) {
-                        if (/^(\d)\1{10}$/.test(cpf)) return false;
-                        
-                        let soma = 0;
-                        for (let i = 0; i < 9; i++) {
-                            soma += parseInt(cpf.charAt(i)) * (10 - i);
-                        }
-                        let resto = soma % 11;
-                        let digito1 = resto < 2 ? 0 : 11 - resto;
-                        
-                        if (parseInt(cpf.charAt(9)) !== digito1) return false;
-                        
-                        soma = 0;
-                        for (let i = 0; i < 10; i++) {
-                            soma += parseInt(cpf.charAt(i)) * (11 - i);
-                        }
-                        resto = soma % 11;
-                        let digito2 = resto < 2 ? 0 : 11 - resto;
-                        
-                        return parseInt(cpf.charAt(10)) === digito2;
-                    }
-                    
-                    if (!validarCPF(cpfLimpo)) {
-                        throw new Error('CPF inválido!');
-                    }
-                    
-                    try {
-                        const cpfExiste = await NWModel.verificarCPFExistente(cpfLimpo);
-                        if (cpfExiste) {
-                            throw new Error('Este CPF já está cadastrado!');
-                        }
-                        return true;
-                    } catch (error) {
-                        if (error.message === 'Este CPF já está cadastrado!') {
-                            throw error;
-                        }
-                        console.error('Erro na validação de CPF:', error.message);
-                        return true;
-                    }
-                }),
         
+        // **VALIDAÇÃO DE CPF COM DUPLICIDADE**
+        body("cpf")
+            .custom(async (cpf) => {
+                const cpfLimpo = cpf.replace(/\D/g, '');
+                
+                if (cpfLimpo.length !== 11) {
+                    throw new Error('O CPF deve conter exatamente 11 dígitos!');
+                }
+                
+                // Validação de CPF
+                function validarCPF(cpf) {
+                    if (/^(\d)\1{10}$/.test(cpf)) return false;
+                    
+                    let soma = 0;
+                    for (let i = 0; i < 9; i++) {
+                        soma += parseInt(cpf.charAt(i)) * (10 - i);
+                    }
+                    let resto = soma % 11;
+                    let digito1 = resto < 2 ? 0 : 11 - resto;
+                    
+                    if (parseInt(cpf.charAt(9)) !== digito1) return false;
+                    
+                    soma = 0;
+                    for (let i = 0; i < 10; i++) {
+                        soma += parseInt(cpf.charAt(i)) * (11 - i);
+                    }
+                    resto = soma % 11;
+                    let digito2 = resto < 2 ? 0 : 11 - resto;
+                    
+                    return parseInt(cpf.charAt(10)) === digito2;
+                }
+                
+                if (!validarCPF(cpfLimpo)) {
+                    throw new Error('CPF inválido!');
+                }
+                
+                // Verificar se CPF já existe
+                try {
+                    const cpfExiste = await NWModel.verificarCPFExistente(cpfLimpo);
+                    if (cpfExiste) {
+                        throw new Error('Este CPF já está cadastrado!');
+                    }
+                    return true;
+                } catch (error) {
+                    if (error.message === 'Este CPF já está cadastrado!') {
+                        throw error;
+                    }
+                    console.error('Erro na validação de CPF:', error.message);
+                    return true;
+                }
+            }),
+        
+        // **VALIDAÇÃO DE SENHA**
         body("senha")
             .isLength({min:5}).withMessage("Insira uma senha válida!")
             .matches(/[A-Z]/).withMessage("Insira uma senha válida!")
             .matches(/[a-z]/).withMessage("Insira uma senha válida!")
             .matches(/\d/).withMessage("Insira uma senha válida!")
             .matches(/[\W_]/).withMessage("Insira uma senha válida!"),
+        
+        // **VALIDAÇÃO DE DDD**
         body("ddd").isLength({min:2}).withMessage("Insira um DDD válido!"),
+        
+        // **VALIDAÇÃO DE TELEFONE COM DUPLICIDADE**
         body("telefone")
             .isMobilePhone().withMessage("Insira um número de telefone válido!")
             .custom(async (telefone, { req }) => {
@@ -109,30 +122,14 @@ const NWController = {
                 }
             })
     ],
-
-    // validação cadastro nutricionista (card 1)
-    validacaoCadNutri1 : [
+    
+    validacaoCadNutri1: [
         body("nome").isLength({min:2}).withMessage("O nome deve conter 2 ou mais caracteres!"),
-        body("telefone")
-            .isMobilePhone().withMessage("Insira um número de telefone válido!")
-            .custom(async (telefone, { req }) => {
-                try {
-                    const ddd = req.body.ddd;
-                    const telefoneExiste = await NWModel.verificarTelefoneExistente(ddd, telefone);
-                    if (telefoneExiste) {
-                        throw new Error('Este telefone já está cadastrado!');
-                    }
-                    return true;
-                } catch (error) {
-                    if (error.message === 'Este telefone já está cadastrado!') {
-                        throw error;
-                    }
-                    console.error('Erro na validação de telefone:', error.message);
-                    return true;
-                }
-            }),
+        body("telefone").isMobilePhone().withMessage("Insira um número de telefone válido!"),
         body("ddd").isLength({min:2}).withMessage("Insira um DDD válido!"),
-        body("email").isEmail().withMessage("Insira um Email válido!")
+
+        body("email")
+            .isEmail().withMessage("Insira um Email válido!")
             .custom(async (email) => {
                 try {
                     const emailExiste = await NWModel.verificarEmailExistente(email);
@@ -148,21 +145,41 @@ const NWController = {
                     return true;
                 }
             }),
+        
+        body("telefone").custom(async (telefone, { req }) => {
+            try {
+                const ddd = req.body.ddd;
+                const telefoneExiste = await NWModel.verificarTelefoneExistente(ddd, telefone);
+                if (telefoneExiste) {
+                    throw new Error('Este telefone já está cadastrado!');
+                }
+                return true;
+            } catch (error) {
+                if (error.message === 'Este telefone já está cadastrado!') {
+                    throw error;
+                }
+                console.error('Erro na validação de telefone:', error.message);
+                return true;
+            }
+        }),
+        
         body("senha")
             .isLength({min:5}).withMessage("Insira uma senha válida!")
             .matches(/[A-Z]/).withMessage("Insira uma senha válida!")
             .matches(/[a-z]/).withMessage("Insira uma senha válida!")
             .matches(/\d/).withMessage("Insira uma senha válida!")
             .matches(/[\W_]/).withMessage("Insira uma senha válida!"),
+        
         body("area")
             .custom((value) => {
-              if (!value) return false;
-              if (Array.isArray(value)) {
-                return value.length >= 1;
-              }
-              return typeof value === "string" && value.length > 0;
+                if (!value) return false;
+                if (Array.isArray(value)) {
+                    return value.length >= 1;
+                }
+                return typeof value === "string" && value.length > 0;
             })
             .withMessage("Selecione no mínimo uma especialização!"),
+        
         body("crn")
             .isLength({min:5}).withMessage("Insira um CRN válido!")
             .custom(async (crn) => {
@@ -179,85 +196,162 @@ const NWController = {
                     console.error('Erro na validação de CRN:', error.message);
                     return true;
                 }
-            }),
+            })
     ],
 
     validacaoAtualizarDados: [
         body("nome").isLength({min:2}).withMessage("O nome deve conter 2 ou mais caracteres!"),
-        body("telefone")
-            .isMobilePhone().withMessage("Insira um número de telefone válido!")
-            .custom(async (telefone, { req }) => {
-                try {
-                    const ddd = req.body.ddd;
-                    const usuarioId = req.session.usuarioId;
-                    const telefoneExiste = await NWModel.verificarTelefoneExistenteParaAtualizacao(ddd, telefone, usuarioId);
-                    if (telefoneExiste) {
-                        throw new Error('Este telefone já está cadastrado!');
-                    }
-                    return true;
-                } catch (error) {
-                    if (error.message === 'Este telefone já está cadastrado!') {
-                        throw error;
-                    }
-                    console.error('Erro na validação de telefone:', error.message);
-                    return true;
-                }
-            }),
+        body("telefone").isMobilePhone().withMessage("Insira um número de telefone válido!"),
         body("ddd").isLength({min:2}).withMessage("Insira um DDD válido!"),
-        body("email").isEmail().withMessage("Insira um Email válido!")
-            .custom(async (email, { req }) => {
-                try {
-                    const usuarioId = req.session.usuarioId;
-                    const emailExiste = await NWModel.verificarEmailExistenteParaAtualizacao(email, usuarioId);
-                    if (emailExiste) {
-                        throw new Error('Este email já está cadastrado!');
-                    }
-                    return true;
-                } catch (error) {
-                    if (error.message === 'Este email já está cadastrado!') {
-                        throw error;
-                    }
-                    console.error('Erro na validação de email:', error.message);
-                    return true;
-                }
-            }),
+        body("email").isEmail().withMessage("Insira um Email válido!"),
         body("senha")
-            .optional({ checkFalsy: true }) // Senha opcional na atualização
+            .optional({ checkFalsy: true })
             .isLength({min:5}).withMessage("Insira uma senha válida!")
             .matches(/[A-Z]/).withMessage("Insira uma senha válida!")
             .matches(/[a-z]/).withMessage("Insira uma senha válida!")
             .matches(/\d/).withMessage("Insira uma senha válida!")
             .matches(/[\W_]/).withMessage("Insira uma senha válida!"),
         body("area")
-            .if((value, { req }) => req.session.tipoUsuario === 'N') // Apenas para nutricionistas
+            .if((value, { req }) => req.session.usuario && req.session.usuario.tipo === 'N')
             .custom((value) => {
-              if (!value) return false;
-              if (Array.isArray(value)) {
-                return value.length >= 1;
-              }
-              return typeof value === "string" && value.length > 0;
+                if (!value) return false;
+                if (Array.isArray(value)) {
+                    return value.length >= 1;
+                }
+                return typeof value === "string" && value.length > 0;
             })
             .withMessage("Selecione no mínimo uma especialização!"),
         body("crn")
-            .if((value, { req }) => req.session.tipoUsuario === 'N') // Apenas para nutricionistas
-            .isLength({min:5}).withMessage("Insira um CRN válido!")
-            .custom(async (crn, { req }) => {
-                try {
-                    const usuarioId = req.session.usuarioId;
-                    const crnExiste = await NWModel.verificarCrnExistenteParaAtualizacao(crn, usuarioId);
-                    if (crnExiste) {
+            .if((value, { req }) => req.session.usuario && req.session.usuario.tipo === 'N')
+            .isLength({min:5}).withMessage("Insira um CRN válido!"),
+        
+        // **VALIDAÇÃO CUSTOMIZADA: Verificar duplicidades em uma única consulta**
+        body("email").custom(async (email, { req }) => {
+            try {
+                const usuarioId = req.session.usuario.id;
+                const tipoUsuario = req.session.usuario.tipo;
+                const telefoneCompleto = req.body.ddd + req.body.telefone;
+                
+                const dadosParaVerificar = {
+                    email: email,
+                    telefone: telefoneCompleto
+                };
+                
+                if (tipoUsuario === 'N') {
+                    dadosParaVerificar.crn = req.body.crn;
+                }
+                
+                // **UMA ÚNICA CONSULTA para verificar todos os dados**
+                const conflitos = await NWModel.verificarDadosExistentesParaAtualizacao(dadosParaVerificar, usuarioId);
+                
+                // Armazenar resultados na request para uso nas outras validações
+                req.conflitosValidacao = conflitos;
+                
+                if (conflitos.email) {
+                    throw new Error('Este email já está cadastrado!');
+                }
+                
+                return true;
+            } catch (error) {
+                if (error.message === 'Este email já está cadastrado!') {
+                    throw error;
+                }
+                console.error('Erro na validação de dados:', error.message);
+                return true; // Fail-safe: prosseguir em caso de erro na consulta
+            }
+        }),
+        
+        body("telefone").custom(async (telefone, { req }) => {
+            try {
+                // Usar resultado já obtido na validação do email
+                if (req.conflitosValidacao && req.conflitosValidacao.telefone) {
+                    throw new Error('Este telefone já está cadastrado!');
+                }
+                return true;
+            } catch (error) {
+                if (error.message === 'Este telefone já está cadastrado!') {
+                    throw error;
+                }
+                return true;
+            }
+        }),
+        
+        body("crn").custom(async (crn, { req }) => {
+            try {
+                // Só executar para nutricionistas
+                if (req.session.usuario && req.session.usuario.tipo === 'N') {
+                    // Usar resultado já obtido na validação do email
+                    if (req.conflitosValidacao && req.conflitosValidacao.crn) {
                         throw new Error('Este CRN já está cadastrado!');
                     }
-                    return true;
-                } catch (error) {
-                    if (error.message === 'Este CRN já está cadastrado!') {
-                        throw error;
-                    }
-                    console.error('Erro na validação de CRN:', error.message);
-                    return true;
                 }
-            }),
+                return true;
+            } catch (error) {
+                if (error.message === 'Este CRN já está cadastrado!') {
+                    throw error;
+                }
+                return true;
+            }
+        })
     ],
+
+    /* --------------------------------------- BUSCA ------------------------------------ */
+
+    buscar: async (req, res) => {
+        try {
+            const termo = req.query.q;
+            
+            console.log('=== BUSCA EXECUTADA ===');
+            console.log('Termo recebido:', termo);
+
+            if (!termo) {
+                console.log('Sem termo - renderizando página inicial');
+                return res.render('pages/indexBusca', {
+                    resultados: null,
+                    termo: '',
+                    headerUsuario: req.session.usuario || { estaLogado: false }
+                });
+            }
+    
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                return res.render('pages/indexBusca', {
+                    resultados: null,
+                    termo: termo,
+                    erro: 'Termo de busca muito curto',
+                    headerUsuario: req.session.usuario || { estaLogado: false }
+                });
+            }
+            
+            console.log('Com termo - executando busca...');
+            const resultados = await NWModel.buscarConteudo(termo);
+            console.log('Resultados encontrados:', {
+                publicacoes: resultados.publicacoes?.length || 0,
+                nutricionistas: resultados.nutricionistas?.length || 0
+            });
+            
+            const dadosParaView = {
+                publicacoes: resultados.publicacoes || [],
+                nutricionistas: resultados.nutricionistas || [],
+                totalResultados: (resultados.publicacoes?.length || 0) + (resultados.nutricionistas?.length || 0)
+            };
+    
+            res.render('pages/indexBusca', {
+                resultados: dadosParaView,
+                termo: termo,
+                headerUsuario: req.session.usuario || { estaLogado: false }
+            });
+    
+        } catch (error) {
+            console.error('Erro na busca:', error);
+            res.render('pages/indexBusca', {
+                resultados: null,
+                termo: req.query.q || '',
+                erro: 'Erro interno do servidor',
+                headerUsuario: req.session.usuario || { estaLogado: false }
+            });
+        }
+    },
 
     /* --------------------------------------- UPDATE ------------------------------------ */
 
@@ -281,30 +375,11 @@ const NWController = {
             const usuarioId = req.session.usuario.id;
             const tipoUsuario = req.session.usuario.tipo;
     
-            // Buscar dados atuais do usuário para comparação
-            let dadosAtuais = {};
-            if (tipoUsuario === 'N') {
-                const perfilNutri = await NWModel.findPerfilNutri(usuarioId);
-                if (perfilNutri.nutricionista) {
-                    dadosAtuais = {
-                        nome: perfilNutri.nutricionista.NomeCompleto,
-                        email: perfilNutri.nutricionista.Email,
-                        telefone: perfilNutri.nutricionista.Telefone,
-                        crn: perfilNutri.nutricionista.Crn,
-                        sobreMim: perfilNutri.nutricionista.SobreMim || '',
-                        especializacoes: perfilNutri.nutricionista.Especializacoes ? 
-                                       perfilNutri.nutricionista.Especializacoes.split(', ') : []
-                    };
-                }
-            } else {
-                const perfilCliente = await NWModel.findPerfilCompleto(usuarioId);
-                if (perfilCliente.cliente) {
-                    dadosAtuais = {
-                        nome: perfilCliente.cliente.NomeCompleto,
-                        email: perfilCliente.cliente.Email,
-                        telefone: perfilCliente.cliente.Telefone
-                    };
-                }
+            // **OTIMIZAÇÃO 1: Uma única consulta para buscar dados atuais**
+            const dadosAtuais = await NWModel.buscarDadosParaComparacao(usuarioId, tipoUsuario);
+            
+            if (!dadosAtuais) {
+                return res.redirect('/config?erro=usuario_nao_encontrado');
             }
     
             // Preparar dados do formulário
@@ -314,81 +389,15 @@ const NWController = {
                     especialidade && especialidade.trim() !== '' && especialidade !== 'on'
                 ) : [];
     
-            // Verificar se houve mudanças nos dados principais
-            let houveAlteracao = false;
+            // **OTIMIZAÇÃO 2: Verificar mudanças de forma mais eficiente**
+            const mudancas = verificarMudancas(dadosAtuais, req.body, telefoneCompleto, especializacoesFormulario, tipoUsuario);
             
-            if (dadosAtuais.nome !== req.body.nome) {
-                console.log("Nome mudou:", dadosAtuais.nome, "->", req.body.nome);
-                houveAlteracao = true;
-            }
-            
-            if (dadosAtuais.email !== req.body.email) {
-                console.log("Email mudou:", dadosAtuais.email, "->", req.body.email);
-                houveAlteracao = true;
-            }
-            
-            if (dadosAtuais.telefone !== telefoneCompleto) {
-                console.log("Telefone mudou:", dadosAtuais.telefone, "->", telefoneCompleto);
-                houveAlteracao = true;
-            }
-    
-            if (req.body.senha && req.body.senha.trim() !== '') {
-                console.log("Nova senha fornecida");
-                houveAlteracao = true;
-            }
-    
-            if (tipoUsuario === 'N') {
-                if (dadosAtuais.crn !== req.body.crn) {
-                    console.log("CRN mudou:", dadosAtuais.crn, "->", req.body.crn);
-                    houveAlteracao = true;
-                }
-                
-                if ((dadosAtuais.sobreMim || '') !== (req.body.sobreMim || '')) {
-                    console.log("Sobre mim mudou:", dadosAtuais.sobreMim, "->", req.body.sobreMim);
-                    houveAlteracao = true;
-                }
-                
-                const especializacoesAtuais = dadosAtuais.especializacoes.sort();
-                const especializacoesNovas = especializacoesFormulario.sort();
-                
-                if (JSON.stringify(especializacoesAtuais) !== JSON.stringify(especializacoesNovas)) {
-                    console.log("Especializações mudaram:", especializacoesAtuais, "->", especializacoesNovas);
-                    houveAlteracao = true;
-                }
-            }
-    
-            // Se não houve alteração, retornar sem fazer update
-            if (!houveAlteracao) {
+            if (!mudancas.houveAlteracao) {
                 console.log("Nenhuma alteração detectada - ignorando atualização");
-                
-                // Preparar dados para renderizar (valores atuais formatados)
-                let dadosParaExibir = {};
-                if (tipoUsuario === 'N') {
-                    dadosParaExibir = {
-                        nome: dadosAtuais.nome,
-                        email: dadosAtuais.email,
-                        telefone: dadosAtuais.telefone ? dadosAtuais.telefone.slice(-9) : '',
-                        ddd: dadosAtuais.telefone ? dadosAtuais.telefone.slice(0, 2) : '',
-                        crn: dadosAtuais.crn,
-                        sobreMim: dadosAtuais.sobreMim,
-                        area: dadosAtuais.especializacoes,
-                        senha: ''
-                    };
-                } else {
-                    dadosParaExibir = {
-                        nome: dadosAtuais.nome,
-                        email: dadosAtuais.email,
-                        telefone: dadosAtuais.telefone ? dadosAtuais.telefone.slice(-9) : '',
-                        ddd: dadosAtuais.telefone ? dadosAtuais.telefone.slice(0, 2) : '',
-                        senha: ''
-                    };
-                }
-    
                 return res.redirect('/config?erro=nenhum_dado_alterado');
             }
     
-            // Prosseguir com a atualização
-            console.log("Alterações detectadas - prosseguindo com atualização");
+            console.log("Alterações detectadas:", mudancas.alteracoes);
     
             // Hash da senha apenas se foi fornecida
             let senhaHash = null;
@@ -410,7 +419,6 @@ const NWController = {
             let dadosPerfil = {
                 SobreMim: req.body.sobreMim || null
             };
-            let especializacoesSelecionadas = especializacoesFormulario;
     
             if (tipoUsuario === 'N') {
                 dadosEspecificos = {
@@ -418,18 +426,19 @@ const NWController = {
                 };
             }
     
-            const result = await NWModel.atualizarDadosUsuario(
+            // **OTIMIZAÇÃO 3: Atualização e busca dos dados em uma única transação**
+            const dadosAtualizados = await NWModel.atualizarEBuscarDados(
                 usuarioId,
                 dadosUsuario,
                 dadosEspecificos,
                 dadosPerfil,
-                especializacoesSelecionadas,
+                especializacoesFormulario,
                 tipoUsuario
             );
     
             console.log("Dados atualizados com sucesso - ID:", usuarioId);
             
-            // *** ATUALIZAR A SESSÃO COM OS NOVOS DADOS ***
+            // Atualizar a sessão
             req.session.usuario.nome = req.body.nome;
             req.session.usuario.email = req.body.email;
             
@@ -437,48 +446,10 @@ const NWController = {
                 req.session.usuario.documento = req.body.crn;
             }
     
-            console.log("Sessão atualizada:", {
-                id: req.session.usuario.id,
-                nome: req.session.usuario.nome,
-                email: req.session.usuario.email,
-                tipo: req.session.usuario.tipo
-            });
-            
-            // Recarregar dados atualizados para exibir
-            let dadosAtualizados = {};
-            if (tipoUsuario === 'N') {
-                const perfilNutri = await NWModel.findPerfilNutri(usuarioId);
-                if (perfilNutri.nutricionista) {
-                    dadosAtualizados = {
-                        nome: perfilNutri.nutricionista.NomeCompleto,
-                        email: perfilNutri.nutricionista.Email,
-                        telefone: perfilNutri.nutricionista.Telefone.slice(-9),
-                        ddd: perfilNutri.nutricionista.Telefone.slice(0, 2),
-                        crn: perfilNutri.nutricionista.Crn,
-                        sobreMim: perfilNutri.nutricionista.SobreMim || '',
-                        area: perfilNutri.nutricionista.Especializacoes ? 
-                               perfilNutri.nutricionista.Especializacoes.split(', ') : [],
-                        senha: ''
-                    };
-                }
-            } else {
-                const perfilCliente = await NWModel.findPerfilCompleto(usuarioId);
-                if (perfilCliente.cliente) {
-                    dadosAtualizados = {
-                        nome: perfilCliente.cliente.NomeCompleto,
-                        email: perfilCliente.cliente.Email,
-                        telefone: perfilCliente.cliente.Telefone.slice(-9),
-                        ddd: perfilCliente.cliente.Telefone.slice(0, 2),
-                        senha: ''
-                    };
-                }
-            }
-    
             return res.redirect('/config?sucesso=dados_atualizados');
     
         } catch (error) {
             console.error("Erro na atualização dos dados:", error.message);
-            
             return res.redirect('/config?erro');
         }
     },
@@ -867,50 +838,25 @@ const NWController = {
 
     cadastrarCliente: async (req, res) => {
         try {
-            const erros = validationResult(req);
-            if (!erros.isEmpty()) {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
                 return res.render('pages/indexCadastroCliente', {
                     etapa: "2",
                     cardSucesso: true,
                     valores: req.body,
-                    listaErros: erros
+                    listaErros: errors
                 });
             }
     
-            // validaçao de imagem
-            const validarImagem = (arquivo, tipo) => {
-                if (!arquivo) return null;
-                if (arquivo.size > 5 * 1024 * 1024) {
-                    throw new Error(`${tipo} muito grande. Máximo permitido: 5MB`);
-                }
-                if (arquivo.buffer && arquivo.buffer.length > 5 * 1024 * 1024) {
-                    throw new Error(`${tipo} muito grande após processamento. Máximo permitido: 5MB`);
-                }
-                const tiposPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
-                if (!tiposPermitidos.includes(arquivo.mimetype)) {
-                    throw new Error(`Formato de ${tipo} não suportado. Use: JPEG, PNG, GIF ou WEBP`);
-                }
-                return arquivo;
-            };
-    
-            // validaçao de imagem
-            const imagemPerfil = validarImagem(
-                req.files && req.files['input-imagem'] ? req.files['input-imagem'][0] : null, 
-                'foto de perfil'
-            );
+            // **VALIDAÇÃO DE IMAGENS MOVIDA PARA O CONTROLLER**
+            const imagensValidadas = validarImagensUpload(req.files);
             
-            const imagemBanner = validarImagem(
-                req.files && req.files['input-banner'] ? req.files['input-banner'][0] : null, 
-                'banner'
-            );
-    
-            // deixar o cpf limpo
+            // Preparar dados do usuário
             const cpfLimpo = req.body.cpf ? req.body.cpf.replace(/\D/g, '') : '';
             if (!cpfLimpo) {
                 throw new Error('CPF é obrigatório!');
             }
     
-            // criptografar a senha
             const senhaHash = await bcrypt.hash(req.body.senha, 12);
             
             const dadosUsuario = {
@@ -921,16 +867,23 @@ const NWController = {
                 UsuarioTipo: 'C'
             };
     
-            // interessesa
+            // Processar interesses
             let interessesSelecionados = [];
             if (req.body.area) {
                 interessesSelecionados = Array.isArray(req.body.area) ? req.body.area : [req.body.area];
-                interessesSelecionados = interessesSelecionados.filter(interesse => 
+                interessesSelecionados = interessesSelecionados.filter(interesse =>
                     interesse && interesse.trim() !== '' && interesse !== 'on'
                 );
             }
     
-            const resultado = await NWModel.createCliente(dadosUsuario, cpfLimpo, imagemPerfil, imagemBanner, interessesSelecionados);
+            // **CHAMADA ÚNICA AO MODEL**
+            const resultado = await NWModel.createCliente(
+                dadosUsuario, 
+                cpfLimpo, 
+                imagensValidadas.imagemPerfil, 
+                imagensValidadas.imagemBanner, 
+                interessesSelecionados
+            );
     
             console.log('Cliente cadastrado com sucesso - ID:', resultado.usuarioId);
             return res.redirect('/login?login=cadastro_realizado');
@@ -942,17 +895,17 @@ const NWController = {
                 etapa: "2",
                 cardSucesso: true,
                 valores: req.body,
-                listaErros: { 
-                    errors: [{ 
-                        msg: error.message.includes('muito grande') || error.message.includes('não suportado') 
-                            ? error.message 
-                            : 'Erro interno do servidor. Tente novamente.' 
-                    }] 
+                listaErros: {
+                    errors: [{
+                        msg: error.message.includes('muito grande') || error.message.includes('não suportado')
+                            ? error.message
+                            : 'Erro interno do servidor. Tente novamente.'
+                    }]
                 }
             });
         }
     },
-
+    
     cadastrarNutricionista: async (req, res) => {
         try {
             const errors = validationResult(req);
@@ -968,44 +921,9 @@ const NWController = {
                 });
             }
     
-            let imagemPerfil = null;
-            let imagemBanner = null;
+            // **VALIDAÇÃO DE IMAGENS E CERTIFICADOS MOVIDA PARA O CONTROLLER**
+            const arquivosValidados = validarArquivosNutricionista(req);
             
-            if (req.body.imagemPerfilData) {
-                try {
-                    const dadosImagem = JSON.parse(req.body.imagemPerfilData);
-                    if (dadosImagem && dadosImagem.buffer) {
-                        imagemPerfil = {
-                            originalname: dadosImagem.originalname,
-                            mimetype: dadosImagem.mimetype,
-                            size: dadosImagem.size,
-                            buffer: Buffer.from(dadosImagem.buffer, 'base64')
-                        };
-                    }
-                } catch (error) {
-                    console.error('Erro ao recuperar imagem de perfil:', error.message);
-                }
-            }
-            
-            if (req.body.imagemBannerData) {
-                try {
-                    const dadosImagem = JSON.parse(req.body.imagemBannerData);
-                    if (dadosImagem && dadosImagem.buffer) {
-                        imagemBanner = {
-                            originalname: dadosImagem.originalname,
-                            mimetype: dadosImagem.mimetype,
-                            size: dadosImagem.size,
-                            buffer: Buffer.from(dadosImagem.buffer, 'base64')
-                        };
-                    }
-                } catch (error) {
-                    console.error('Erro ao recuperar banner:', error.message);
-                }
-            }
-            
-            const certificadoFaculdade = req.files && req.files['certificadoFaculdade'] ? req.files['certificadoFaculdade'][0] : null;
-            const certificadoCurso = req.files && req.files['certificadoCurso'] ? req.files['certificadoCurso'][0] : null;
-
             const senhaHash = await bcrypt.hash(req.body.senha, 12);
     
             const dadosUsuario = {
@@ -1026,15 +944,16 @@ const NWController = {
                 graduacao: {
                     nome: req.body.faculdade,
                     instituicao: req.body.faculdadeOrg,
-                    certificado: certificadoFaculdade
+                    certificado: arquivosValidados.certificadoFaculdade
                 },
                 curso: {
                     nome: req.body.curso,
                     instituicao: req.body.cursoOrg,
-                    certificado: certificadoCurso
+                    certificado: arquivosValidados.certificadoCurso
                 }
             };
     
+            // Processar especializações
             let especializacoesSelecionadas = [];
             if (req.body.area) {
                 especializacoesSelecionadas = Array.isArray(req.body.area) ? req.body.area : [req.body.area];
@@ -1043,17 +962,13 @@ const NWController = {
                 );
             }
     
-            const certificados = {
-                faculdade: certificadoFaculdade,
-                curso: certificadoCurso
-            };
-    
+            // **CHAMADA ÚNICA AO MODEL**
             const result = await NWModel.createNutricionista(
                 dadosUsuario,
                 dadosNutricionista,
                 especializacoesSelecionadas,
-                imagemPerfil,
-                imagemBanner,
+                arquivosValidados.imagemPerfil,
+                arquivosValidados.imagemBanner,
                 formacao
             );
     
@@ -1081,6 +996,163 @@ const NWController = {
         }
     },
 
+}
+
+// **FUNÇÃO AUXILIAR: Verificar mudanças**
+function verificarMudancas(dadosAtuais, formData, telefoneCompleto, especializacoesFormulario, tipoUsuario) {
+    const alteracoes = [];
+    let houveAlteracao = false;
+
+    if (dadosAtuais.nome !== formData.nome) {
+        alteracoes.push("nome");
+        houveAlteracao = true;
+    }
+    
+    if (dadosAtuais.email !== formData.email) {
+        alteracoes.push("email");
+        houveAlteracao = true;
+    }
+    
+    if (dadosAtuais.telefone !== telefoneCompleto) {
+        alteracoes.push("telefone");
+        houveAlteracao = true;
+    }
+
+    if (formData.senha && formData.senha.trim() !== '') {
+        alteracoes.push("senha");
+        houveAlteracao = true;
+    }
+
+    if (tipoUsuario === 'N') {
+        if (dadosAtuais.crn !== formData.crn) {
+            alteracoes.push("crn");
+            houveAlteracao = true;
+        }
+        
+        if ((dadosAtuais.sobreMim || '') !== (formData.sobreMim || '')) {
+            alteracoes.push("sobreMim");
+            houveAlteracao = true;
+        }
+        
+        const especializacoesAtuais = (dadosAtuais.especializacoes || []).sort();
+        const especializacoesNovas = especializacoesFormulario.sort();
+        
+        if (JSON.stringify(especializacoesAtuais) !== JSON.stringify(especializacoesNovas)) {
+            alteracoes.push("especializacoes");
+            houveAlteracao = true;
+        }
+    }
+
+    return { houveAlteracao, alteracoes };
+}
+
+function validarImagensUpload(files) {
+    const validarImagem = (arquivo, tipo) => {
+        if (!arquivo) return null;
+        
+        if (arquivo.size > 5 * 1024 * 1024) {
+            throw new Error(`${tipo} muito grande. Máximo permitido: 5MB`);
+        }
+        
+        if (arquivo.buffer && arquivo.buffer.length > 5 * 1024 * 1024) {
+            throw new Error(`${tipo} muito grande após processamento. Máximo permitido: 5MB`);
+        }
+        
+        const tiposPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+        if (!tiposPermitidos.includes(arquivo.mimetype)) {
+            throw new Error(`Formato de ${tipo} não suportado. Use: JPEG, PNG, GIF ou WEBP`);
+        }
+        
+        return arquivo;
+    };
+
+    return {
+        imagemPerfil: validarImagem(
+            files && files['input-imagem'] ? files['input-imagem'][0] : null,
+            'foto de perfil'
+        ),
+        imagemBanner: validarImagem(
+            files && files['input-banner'] ? files['input-banner'][0] : null,
+            'banner'
+        )
+    };
+}
+
+function validarArquivosNutricionista(req) {
+    // Validar imagens (reutiliza a função do cliente)
+    const imagens = validarImagensUpload(req.files);
+    
+    // Recuperar imagens dos campos hidden (multi-step form)
+    let imagemPerfil = imagens.imagemPerfil;
+    let imagemBanner = imagens.imagemBanner;
+    
+    if (req.body.imagemPerfilData) {
+        try {
+            const dadosImagem = JSON.parse(req.body.imagemPerfilData);
+            if (dadosImagem && dadosImagem.buffer) {
+                imagemPerfil = {
+                    originalname: dadosImagem.originalname,
+                    mimetype: dadosImagem.mimetype,
+                    size: dadosImagem.size,
+                    buffer: Buffer.from(dadosImagem.buffer, 'base64')
+                };
+            }
+        } catch (error) {
+            console.error('Erro ao recuperar imagem de perfil:', error.message);
+        }
+    }
+    
+    if (req.body.imagemBannerData) {
+        try {
+            const dadosImagem = JSON.parse(req.body.imagemBannerData);
+            if (dadosImagem && dadosImagem.buffer) {
+                imagemBanner = {
+                    originalname: dadosImagem.originalname,
+                    mimetype: dadosImagem.mimetype,
+                    size: dadosImagem.size,
+                    buffer: Buffer.from(dadosImagem.buffer, 'base64')
+                };
+            }
+        } catch (error) {
+            console.error('Erro ao recuperar banner:', error.message);
+        }
+    }
+    
+    // Validar certificados
+    const validarCertificado = (arquivo, tipo) => {
+        if (!arquivo) return null;
+        
+        if (arquivo.size > 10 * 1024 * 1024) {
+            throw new Error(`${tipo} muito grande. Máximo permitido: 10MB`);
+        }
+        
+        const tiposPermitidos = [
+            'application/pdf', 
+            'image/jpeg', 
+            'image/jpg', 
+            'image/png', 
+            'image/gif', 
+            'image/webp'
+        ];
+        if (!tiposPermitidos.includes(arquivo.mimetype)) {
+            throw new Error(`Formato de ${tipo} não suportado. Use: PDF, JPEG, PNG, GIF ou WEBP`);
+        }
+        
+        return arquivo;
+    };
+
+    return {
+        imagemPerfil,
+        imagemBanner,
+        certificadoFaculdade: validarCertificado(
+            req.files && req.files['certificadoFaculdade'] ? req.files['certificadoFaculdade'][0] : null,
+            'certificado de faculdade'
+        ),
+        certificadoCurso: validarCertificado(
+            req.files && req.files['certificadoCurso'] ? req.files['certificadoCurso'][0] : null,
+            'certificado de curso'
+        )
+    };
 }
 
 module.exports = NWController;

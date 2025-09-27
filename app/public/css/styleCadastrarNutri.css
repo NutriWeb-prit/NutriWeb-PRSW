@@ -93,6 +93,12 @@ body {
     cursor: pointer;
 }
 
+.form-busca {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
 .entrar-button {
     background-color: green;
     color: white;
@@ -898,9 +904,9 @@ input[type="number"]::-webkit-inner-spin-button {
     }
 }
 
-input[type="text"],
-input[type="email"],
-input[type="password"] {
+.conteudo-form input[type="text"],
+.conteudo-form input[type="email"],
+.conteudo-form input[type="password"] {
     width: calc(100% - 4px);
     padding: 12px;
     font-size: 20px;
@@ -913,13 +919,13 @@ input[type="password"] {
     box-sizing: border-box;
 }
 
-input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="password"]:focus {
+.conteudo-form input[type="text"]:focus,
+.conteudo-form input[type="email"]:focus,
+.conteudo-form input[type="password"]:focus {
     border-color: #28a745;
 }
 
-input::placeholder {
+.conteudo-form input::placeholder {
     font-size: 14px;
     font-weight: bold;
     color: #545454; 

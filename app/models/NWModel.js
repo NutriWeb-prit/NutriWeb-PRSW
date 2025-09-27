@@ -59,179 +59,152 @@ const NWModel = {
         }
     },
 
-    atualizarDadosUsuario: async (usuarioId, dadosUsuario, dadosEspecificos = {}, dadosPerfil = {}, especializacoes = [], tipoUsuario) => {
-        let conn;
+    atualizarEBuscarDados: async (usuarioId, dadosUsuario, dadosEspecificos, dadosPerfil, especializacoes, tipoUsuario) => {
+        const conn = await pool.getConnection();
         
         try {
-            conn = await Promise.race([
-                pool.getConnection(),
-                new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout ao obter conexão')), 10000))
-            ]);
-            
             await conn.beginTransaction();
+            
+            // Atualizar dados do usuário
+            await conn.query(
+                `UPDATE Usuarios SET 
+                    NomeCompleto = ?, 
+                    Email = ?, 
+                    Telefone = ?
+                    ${dadosUsuario.Senha ? ', Senha = ?' : ''} 
+                WHERE id = ?`,
+                dadosUsuario.Senha ? 
+                    [dadosUsuario.NomeCompleto, dadosUsuario.Email, dadosUsuario.Telefone, dadosUsuario.Senha, usuarioId] :
+                    [dadosUsuario.NomeCompleto, dadosUsuario.Email, dadosUsuario.Telefone, usuarioId]
+            );
     
-            // 1. Atualizar dados básicos do usuário
-            const camposUsuario = [];
-            const valoresUsuario = [];
-            
-            Object.keys(dadosUsuario).forEach(campo => {
-                camposUsuario.push(`${campo} = ?`);
-                valoresUsuario.push(dadosUsuario[campo]);
-            });
-            
-            if (camposUsuario.length > 0) {
-                valoresUsuario.push(usuarioId);
+            // Atualizar dados específicos do tipo de usuário
+            if (tipoUsuario === 'N' && dadosEspecificos.Crn) {
                 await conn.query(
-                    `UPDATE Usuarios SET ${camposUsuario.join(', ')} WHERE id = ?`,
-                    valoresUsuario
+                    `UPDATE Nutricionistas SET Crn = ? WHERE UsuarioId = ?`,
+                    [dadosEspecificos.Crn, usuarioId]
                 );
-                console.log("Dados básicos do usuário atualizados");
             }
     
-            // 2. Atualizar ou inserir dados do perfil (SobreMim)
-            if (Object.keys(dadosPerfil).length > 0) {
-                // Verificar se já existe um perfil para este usuário
+            // Atualizar perfil - Verificar se existe registro primeiro
+            if (dadosPerfil.SobreMim !== undefined) {
+                // Verificar se já existe um perfil para o usuário
                 const [perfilExistente] = await conn.query(
-                    'SELECT id FROM Perfis WHERE UsuarioId = ?',
+                    `SELECT id FROM Perfis WHERE UsuarioId = ?`,
                     [usuarioId]
                 );
                 
                 if (perfilExistente.length > 0) {
                     // Atualizar perfil existente
-                    const camposPerfil = [];
-                    const valoresPerfil = [];
-                    
-                    Object.keys(dadosPerfil).forEach(campo => {
-                        camposPerfil.push(`${campo} = ?`);
-                        valoresPerfil.push(dadosPerfil[campo]);
-                    });
-                    
-                    valoresPerfil.push(usuarioId);
                     await conn.query(
-                        `UPDATE Perfis SET ${camposPerfil.join(', ')} WHERE UsuarioId = ?`,
-                        valoresPerfil
+                        `UPDATE Perfis SET SobreMim = ? WHERE UsuarioId = ?`,
+                        [dadosPerfil.SobreMim, usuarioId]
                     );
-                    console.log("Perfil existente atualizado");
                 } else {
                     // Criar novo perfil
-                    const campos = ['UsuarioId', ...Object.keys(dadosPerfil)];
-                    const valores = [usuarioId, ...Object.values(dadosPerfil)];
-                    const placeholders = campos.map(() => '?').join(',');
-                    
                     await conn.query(
-                        `INSERT INTO Perfis (${campos.join(', ')}) VALUES (${placeholders})`,
-                        valores
+                        `INSERT INTO Perfis (UsuarioId, SobreMim) VALUES (?, ?)`,
+                        [usuarioId, dadosPerfil.SobreMim]
                     );
-                    console.log("Novo perfil criado");
                 }
             }
     
-            // 3. Atualizar dados específicos baseado no tipo de usuário
-            if (tipoUsuario === 'N' && Object.keys(dadosEspecificos).length > 0) {
-                // Atualizar dados do nutricionista
-                const camposNutri = [];
-                const valoresNutri = [];
-                
-                Object.keys(dadosEspecificos).forEach(campo => {
-                    camposNutri.push(`${campo} = ?`);
-                    valoresNutri.push(dadosEspecificos[campo]);
-                });
-                
-                if (camposNutri.length > 0) {
-                    valoresNutri.push(usuarioId);
-                    await conn.query(
-                        `UPDATE Nutricionistas SET ${camposNutri.join(', ')} WHERE UsuarioId = ?`,
-                        valoresNutri
-                    );
-                    console.log("Dados específicos do nutricionista atualizados");
-                }
+            // Atualizar especializações para nutricionistas
+            if (tipoUsuario === 'N' && especializacoes && especializacoes.length > 0) {
+                // Remover especializações antigas
+                await conn.query(
+                    `DELETE ne FROM NutricionistasEspecializacoes ne
+                     INNER JOIN Nutricionistas n ON ne.NutricionistaId = n.id
+                     WHERE n.UsuarioId = ?`,
+                    [usuarioId]
+                );
     
-                // 4. Atualizar especializações do nutricionista
-                if (especializacoes.length >= 0) { // Permite array vazio para remover todas
-                    // Primeiro, buscar o ID do nutricionista
-                    const [nutriResult] = await conn.query(
-                        'SELECT id FROM Nutricionistas WHERE UsuarioId = ?',
-                        [usuarioId]
-                    );
+                // Inserir novas especializações
+                const [nutricionistaResult] = await conn.query(
+                    `SELECT id FROM Nutricionistas WHERE UsuarioId = ?`,
+                    [usuarioId]
+                );
+    
+                if (nutricionistaResult.length > 0) {
+                    const nutricionistaId = nutricionistaResult[0].id;
                     
-                    if (nutriResult.length > 0) {
-                        const nutricionistaId = nutriResult[0].id;
-                        
-                        // Remover especializações antigas
+                    for (const especializacao of especializacoes) {
                         await conn.query(
-                            'DELETE FROM NutricionistasEspecializacoes WHERE NutricionistaId = ?',
-                            [nutricionistaId]
+                            `INSERT INTO NutricionistasEspecializacoes (NutricionistaId, EspecializacaoId)
+                             SELECT ?, e.id FROM Especializacoes e WHERE e.Nome = ?`,
+                            [nutricionistaId, especializacao]
                         );
-                        console.log("Especializações antigas removidas");
-                        
-                        // Adicionar novas especializações (se houver)
-                        if (especializacoes.length > 0) {
-                            // Buscar IDs das especializações
-                            const placeholders = especializacoes.map(() => '?').join(',');
-                            const [especRows] = await conn.query(
-                                `SELECT id, Nome FROM Especializacoes WHERE Nome IN (${placeholders})`,
-                                especializacoes
-                            );
-                            
-                            if (especRows.length > 0) {
-                                const insertValues = especRows.map(({ id }) => [nutricionistaId, id]);
-                                await conn.query(
-                                    'INSERT INTO NutricionistasEspecializacoes (NutricionistaId, EspecializacaoId) VALUES ?',
-                                    [insertValues]
-                                );
-                                console.log(`${especRows.length} especializações adicionadas`);
-                            } else {
-                                console.warn("Nenhuma especialização válida encontrada para:", especializacoes);
-                            }
-                        }
                     }
-                }
-            } else if (tipoUsuario === 'C' && Object.keys(dadosEspecificos).length > 0) {
-                // Atualizar dados específicos do cliente (se necessário no futuro)
-                const camposCliente = [];
-                const valoresCliente = [];
-                
-                Object.keys(dadosEspecificos).forEach(campo => {
-                    camposCliente.push(`${campo} = ?`);
-                    valoresCliente.push(dadosEspecificos[campo]);
-                });
-                
-                if (camposCliente.length > 0) {
-                    valoresCliente.push(usuarioId);
-                    await conn.query(
-                        `UPDATE Clientes SET ${camposCliente.join(', ')} WHERE UsuarioId = ?`,
-                        valoresCliente
-                    );
-                    console.log("Dados específicos do cliente atualizados");
                 }
             }
     
             await conn.commit();
-            console.log("Transação commitada com sucesso");
-            return { usuarioId };
-    
-        } catch (err) {
-            console.error("Erro ao atualizar dados do usuário:", err.message);
             
-            if (conn) {
-                try {
-                    await conn.rollback();
-                    console.log("Rollback executado");
-                } catch (rollbackErr) {
-                    console.error('Erro no rollback:', rollbackErr.message);
+            // Buscar dados atualizados na mesma conexão
+            let dadosAtualizados = {};
+            if (tipoUsuario === 'N') {
+                const [rows] = await conn.query(
+                    `SELECT 
+                        u.NomeCompleto,
+                        u.Email,
+                        u.Telefone,
+                        n.Crn,
+                        p.SobreMim,
+                        (SELECT GROUP_CONCAT(e.Nome SEPARATOR ', ') 
+                         FROM NutricionistasEspecializacoes ne 
+                         INNER JOIN Especializacoes e ON ne.EspecializacaoId = e.id 
+                         WHERE ne.NutricionistaId = n.id) as Especializacoes
+                    FROM Usuarios u
+                    INNER JOIN Nutricionistas n ON u.id = n.UsuarioId
+                    LEFT JOIN Perfis p ON u.id = p.UsuarioId
+                    WHERE u.id = ?`,
+                    [usuarioId]
+                );
+                
+                if (rows.length > 0) {
+                    const dados = rows[0];
+                    dadosAtualizados = {
+                        nome: dados.NomeCompleto,
+                        email: dados.Email,
+                        telefone: dados.Telefone.slice(-9),
+                        ddd: dados.Telefone.slice(0, 2),
+                        crn: dados.Crn,
+                        sobreMim: dados.SobreMim || '',
+                        area: dados.Especializacoes ? dados.Especializacoes.split(', ') : [],
+                        senha: ''
+                    };
+                }
+            } else {
+                const [rows] = await conn.query(
+                    `SELECT 
+                        u.NomeCompleto,
+                        u.Email,
+                        u.Telefone
+                    FROM Usuarios u
+                    WHERE u.id = ?`,
+                    [usuarioId]
+                );
+                
+                if (rows.length > 0) {
+                    const dados = rows[0];
+                    dadosAtualizados = {
+                        nome: dados.NomeCompleto,
+                        email: dados.Email,
+                        telefone: dados.Telefone.slice(-9),
+                        ddd: dados.Telefone.slice(0, 2),
+                        senha: ''
+                    };
                 }
             }
             
-            throw err;
+            return dadosAtualizados;
             
+        } catch (error) {
+            await conn.rollback();
+            console.error("Erro na transação de atualização:", error);
+            throw error;
         } finally {
-            if (conn) {
-                try {
-                    conn.release();
-                } catch (releaseErr) {
-                    console.error('Erro ao liberar conexão:', releaseErr.message);
-                }
-            }
+            conn.release();
         }
     },
 
@@ -365,86 +338,229 @@ const NWModel = {
         }
     },
 
-    verificarTelefoneExistenteParaAtualizacao: async (ddd, telefone, usuarioId) => {
-        let conn;
+    buscarDadosParaComparacao: async (usuarioId, tipoUsuario) => {
         try {
-            const telefoneCompleto = ddd + telefone;
-            
-            conn = await Promise.race([
-                pool.getConnection(),
-                new Promise((_, reject) =>
-                    setTimeout(() => reject(new Error('Timeout ao obter conexão')), 10000)
-                )
-            ]);
-            
-            const [rows] = await conn.query(
-                "SELECT id FROM Usuarios WHERE Telefone = ? AND id != ? AND UsuarioStatus = 1 LIMIT 1",
-                [telefoneCompleto, usuarioId]
-            );
-            
-            return rows.length > 0;
-            
-        } catch (error) {
-            console.error("Erro ao verificar telefone para atualização:", error.message);
-            throw error;
-        } finally {
-            if (conn) {
-                conn.release();
+            if (tipoUsuario === 'N') {
+                const [rows] = await pool.query(
+                    `SELECT 
+                        u.NomeCompleto as nome,
+                        u.Email as email,
+                        u.Telefone as telefone,
+                        n.Crn as crn,
+                        p.SobreMim as sobreMim,
+                        (SELECT GROUP_CONCAT(e.Nome SEPARATOR ', ') 
+                         FROM NutricionistasEspecializacoes ne 
+                         INNER JOIN Especializacoes e ON ne.EspecializacaoId = e.id 
+                         WHERE ne.NutricionistaId = n.id) as especializacoes_str
+                    FROM Usuarios u
+                    INNER JOIN Nutricionistas n ON u.id = n.UsuarioId
+                    LEFT JOIN Perfis p ON u.id = p.UsuarioId
+                    WHERE u.id = ? AND u.UsuarioStatus = 1`,
+                    [usuarioId]
+                );
+                
+                if (rows.length === 0) return null;
+                
+                const dados = rows[0];
+                return {
+                    nome: dados.nome,
+                    email: dados.email,
+                    telefone: dados.telefone,
+                    crn: dados.crn,
+                    sobreMim: dados.sobreMim || '',
+                    especializacoes: dados.especializacoes_str ? dados.especializacoes_str.split(', ') : []
+                };
+            } else {
+                const [rows] = await pool.query(
+                    `SELECT 
+                        u.NomeCompleto as nome,
+                        u.Email as email,
+                        u.Telefone as telefone
+                    FROM Usuarios u
+                    INNER JOIN Clientes c ON u.id = c.UsuarioId
+                    WHERE u.id = ? AND u.UsuarioStatus = 1`,
+                    [usuarioId]
+                );
+                
+                if (rows.length === 0) return null;
+                
+                return {
+                    nome: rows[0].nome,
+                    email: rows[0].email,
+                    telefone: rows[0].telefone
+                };
             }
+        } catch (erro) {
+            console.error("Erro ao buscar dados para comparação:", erro);
+            throw erro;
         }
     },
-    
-    verificarEmailExistenteParaAtualizacao: async (email, usuarioId) => {
-        let conn;
+
+    verificarDadosExistentesParaAtualizacao: async (dados, usuarioId) => {
         try {
-            conn = await Promise.race([
-                pool.getConnection(),
-                new Promise((_, reject) =>
-                    setTimeout(() => reject(new Error('Timeout ao obter conexão')), 10000)
-                )
-            ]);
+            const checks = [];
+            const params = [];
             
-            const [rows] = await conn.query(
-                "SELECT id FROM Usuarios WHERE Email = ? AND id != ? AND UsuarioStatus = 1 LIMIT 1",
-                [email, usuarioId]
-            );
+            // Verificar email
+            if (dados.email) {
+                checks.push(`(SELECT COUNT(*) FROM Usuarios WHERE Email = ? AND id != ? AND UsuarioStatus = 1) as email_existe`);
+                params.push(dados.email, usuarioId);
+            }
             
-            return rows.length > 0;
+            // Verificar telefone
+            if (dados.telefone) {
+                checks.push(`(SELECT COUNT(*) FROM Usuarios WHERE Telefone = ? AND id != ? AND UsuarioStatus = 1) as telefone_existe`);
+                params.push(dados.telefone, usuarioId);
+            }
+            
+            // Verificar CRN
+            if (dados.crn) {
+                checks.push(`(SELECT COUNT(*) FROM Nutricionistas n INNER JOIN Usuarios u ON n.UsuarioId = u.id WHERE n.Crn = ? AND n.UsuarioId != ? AND u.UsuarioStatus = 1) as crn_existe`);
+                params.push(dados.crn, usuarioId);
+            }
+            
+            if (checks.length === 0) {
+                return { email: false, telefone: false, crn: false };
+            }
+            
+            const query = `SELECT ${checks.join(', ')}`;
+            const [rows] = await pool.query(query, params);
+            
+            return {
+                email: dados.email ? rows[0].email_existe > 0 : false,
+                telefone: dados.telefone ? rows[0].telefone_existe > 0 : false,
+                crn: dados.crn ? rows[0].crn_existe > 0 : false
+            };
             
         } catch (error) {
-            console.error("Erro ao verificar email para atualização:", error.message);
+            console.error("Erro ao verificar dados existentes:", error.message);
             throw error;
-        } finally {
-            if (conn) {
-                conn.release();
-            }
         }
     },
-    
-    verificarCrnExistenteParaAtualizacao: async (crn, usuarioId) => {
-        let conn;
+
+    buscarConteudo: async (termo) => {
         try {
-            conn = await Promise.race([
-                pool.getConnection(),
-                new Promise((_, reject) =>
-                    setTimeout(() => reject(new Error('Timeout ao obter conexão')), 10000)
-                )
-            ]);
+            // Preparamos o termo para busca (adiciona % para busca parcial)
+            const termoBusca = `%${termo}%`;
             
-            const [rows] = await conn.query(
-                "SELECT n.id FROM Nutricionistas n INNER JOIN Usuarios u ON n.UsuarioId = u.id WHERE n.Crn = ? AND n.UsuarioId != ? AND u.UsuarioStatus = 1 LIMIT 1",
-                [crn, usuarioId]
-            );
-            
-            return rows.length > 0;
-            
+            // Busca publicações que contenham o termo na legenda ou categoria
+            const queryPublicacoes = `
+                SELECT 
+                    p.id,
+                    p.Legenda,
+                    p.Categoria,
+                    p.MediaEstrelas,
+                    p.FotoPublicacao,
+                    u.NomeCompleto as autor_nome,
+                    perf.FotoPerfil as autor_foto,
+                    u.id as autor_id,
+                    n.id as nutricionista_id
+                FROM Publicacoes p
+                INNER JOIN NutricionistaPublicacao np ON p.id = np.PublicacaoId
+                INNER JOIN Nutricionistas n ON np.NutricionistaId = n.id
+                INNER JOIN Usuarios u ON n.UsuarioId = u.id
+                LEFT JOIN Perfis perf ON u.id = perf.UsuarioId
+                WHERE (p.Legenda LIKE ? OR p.Categoria LIKE ?)
+                  AND u.UsuarioStatus = 1
+                ORDER BY p.MediaEstrelas DESC, p.id DESC
+                LIMIT 10
+            `;
+    
+            // Busca nutricionistas que contenham o termo no nome ou nas especializações
+            const queryNutricionistas = `
+                SELECT 
+                    u.id as usuario_id,
+                    u.NomeCompleto,
+                    u.CEP,
+                    perf.FotoPerfil,
+                    perf.SobreMim,
+                    n.id as nutricionista_id,
+                    n.RazaoSocial,
+                    GROUP_CONCAT(DISTINCT esp.Nome SEPARATOR ', ') as especializacoes,
+                    AVG(p.MediaEstrelas) as media_avaliacoes,
+                    COUNT(DISTINCT np.PublicacaoId) as total_publicacoes
+                FROM Usuarios u
+                INNER JOIN Nutricionistas n ON u.id = n.UsuarioId
+                LEFT JOIN Perfis perf ON u.id = perf.UsuarioId
+                LEFT JOIN NutricionistasEspecializacoes ne ON n.id = ne.NutricionistaId
+                LEFT JOIN Especializacoes esp ON ne.EspecializacaoId = esp.id
+                LEFT JOIN NutricionistaPublicacao np ON n.id = np.NutricionistaId
+                LEFT JOIN Publicacoes p ON np.PublicacaoId = p.id
+                WHERE u.UsuarioTipo = 'N' 
+                  AND u.UsuarioStatus = 1
+                  AND (u.NomeCompleto LIKE ? 
+                       OR esp.Nome LIKE ? 
+                       OR n.RazaoSocial LIKE ?)
+                GROUP BY u.id, n.id
+                ORDER BY media_avaliacoes DESC, u.NomeCompleto ASC
+                LIMIT 10
+            `;
+    
+            // Executa as duas consultas ao banco de dados
+            const [publicacoes] = await pool.query(queryPublicacoes, [termoBusca, termoBusca]);
+            const [nutricionistas] = await pool.query(queryNutricionistas, [termoBusca, termoBusca, termoBusca]);
+    
+            // Processa os resultados das publicações
+            const publicacoesProcessadas = publicacoes.map(pub => {
+                let resumo = '';
+                if (pub.Legenda) {
+                    // Pega apenas os primeiros 150 caracteres da legenda
+                    resumo = pub.Legenda.length > 150 
+                        ? pub.Legenda.substring(0, 150) + '...' 
+                        : pub.Legenda;
+                }
+    
+                return {
+                    id: pub.id,
+                    legenda: pub.Legenda || '',
+                    resumo: resumo,
+                    categoria: pub.Categoria,
+                    mediaEstrelas: pub.MediaEstrelas ? parseFloat(pub.MediaEstrelas).toFixed(1) : '0.0',
+                    temFoto: pub.FotoPublicacao ? true : false,
+                    autor: {
+                        id: pub.autor_id,
+                        nutricionistaId: pub.nutricionista_id,
+                        nome: pub.autor_nome,
+                        fotoPerfil: pub.autor_foto || null
+                    },
+                    // URL para a publicação completa
+                    url: `/publicacao/${pub.id}`
+                };
+            });
+    
+            // Processa os resultados dos nutricionistas
+            const nutricionistasProcessados = nutricionistas.map(nut => {
+                let localizacao = 'Localização não informada';
+                if (nut.CEP) {
+                    // Você pode implementar uma função para converter CEP em cidade/estado
+                    localizacao = `CEP: ${nut.CEP}`;
+                }
+    
+                return {
+                    id: nut.usuario_id,
+                    nutricionistaId: nut.nutricionista_id,
+                    nome: nut.NomeCompleto,
+                    razaoSocial: nut.RazaoSocial,
+                    fotoPerfil: nut.FotoPerfil || null,
+                    sobreMim: nut.SobreMim || '',
+                    especializacoes: nut.especializacoes || 'Sem especialização definida',
+                    localizacao: localizacao,
+                    mediaAvaliacoes: nut.media_avaliacoes ? parseFloat(nut.media_avaliacoes).toFixed(1) : 'Sem avaliações',
+                    totalPublicacoes: nut.total_publicacoes || 0,
+                    // URL para o perfil do nutricionista
+                    url: `/perfilnutri?id=${nut.nutricionista_id}`
+                };
+            });
+    
+            // Retorna os resultados organizados
+            return {
+                publicacoes: publicacoesProcessadas,
+                nutricionistas: nutricionistasProcessados
+            };
+    
         } catch (error) {
-            console.error("Erro ao verificar CRN para atualização:", error.message);
-            throw error;
-        } finally {
-            if (conn) {
-                conn.release();
-            }
+            console.error('Erro ao buscar conteúdo:', error);
+            throw new Error('Erro ao realizar busca no banco de dados');
         }
     },
 
@@ -599,50 +715,6 @@ const NWModel = {
             return { cliente: null, publicacoes: [] };
         }
     },
-    
-    findImagemPerfil: async (usuarioId) => {
-        try {
-            const [result] = await pool.query(
-                "SELECT FotoPerfil FROM Perfis WHERE UsuarioId = ?",
-                [usuarioId]
-            );
-            
-            return result.length > 0 ? result[0].FotoPerfil : null;
-        } catch (erro) {
-            console.log("Erro ao buscar imagem de perfil:", erro);
-            return null;
-        }
-    },
-    
-    findImagemBanner: async (usuarioId) => {
-        try {
-            console.log("Buscando banner para usuarioId:", usuarioId);
-            const [result] = await pool.query(
-                'SELECT FotoBanner FROM Perfis WHERE UsuarioId = ? AND FotoBanner IS NOT NULL',
-                [usuarioId]
-            );
-            
-            console.log("Resultado da query banner:", result.length > 0 ? "Encontrado" : "Não encontrado");
-            return result.length > 0 ? result[0].FotoBanner : null;
-        } catch (erro) {
-            console.log("Erro ao buscar imagem de banner:", erro);
-            return null;
-        }
-    },
-    
-    findImagemPublicacao: async (publicacaoId) => {
-        try {
-            const [result] = await pool.query(
-                "SELECT FotoPublicacao FROM Publicacoes WHERE id = ?",
-                [publicacaoId]
-            );
-            
-            return result.length > 0 ? result[0].FotoPublicacao : null;
-        } catch (erro) {
-            console.log("Erro ao buscar imagem da publicação:", erro);
-            return null;
-        }
-    },
 
     findPerfilNutri: async (usuarioId) => {
         try {
@@ -716,6 +788,50 @@ const NWModel = {
         }
     },
     
+    findImagemPerfil: async (usuarioId) => {
+        try {
+            const [result] = await pool.query(
+                "SELECT FotoPerfil FROM Perfis WHERE UsuarioId = ?",
+                [usuarioId]
+            );
+            
+            return result.length > 0 ? result[0].FotoPerfil : null;
+        } catch (erro) {
+            console.log("Erro ao buscar imagem de perfil:", erro);
+            return null;
+        }
+    },
+    
+    findImagemBanner: async (usuarioId) => {
+        try {
+            console.log("Buscando banner para usuarioId:", usuarioId);
+            const [result] = await pool.query(
+                'SELECT FotoBanner FROM Perfis WHERE UsuarioId = ? AND FotoBanner IS NOT NULL',
+                [usuarioId]
+            );
+            
+            console.log("Resultado da query banner:", result.length > 0 ? "Encontrado" : "Não encontrado");
+            return result.length > 0 ? result[0].FotoBanner : null;
+        } catch (erro) {
+            console.log("Erro ao buscar imagem de banner:", erro);
+            return null;
+        }
+    },
+    
+    findImagemPublicacao: async (publicacaoId) => {
+        try {
+            const [result] = await pool.query(
+                "SELECT FotoPublicacao FROM Publicacoes WHERE id = ?",
+                [publicacaoId]
+            );
+            
+            return result.length > 0 ? result[0].FotoPublicacao : null;
+        } catch (erro) {
+            console.log("Erro ao buscar imagem da publicação:", erro);
+            return null;
+        }
+    },
+    
     findUsuarioIdByNutricionistaId: async (nutricionistaId) => {
         try {
             const [result] = await pool.query(
@@ -766,16 +882,9 @@ const NWModel = {
 
     // Criar um usuário Cliente
     createCliente: async (dadosUsuario, cpfLimpo, imagemPerfil = null, imagemBanner = null, interessesSelecionados = []) => {
-        let conn;
+        const conn = await pool.getConnection();
         
         try {
-            conn = await Promise.race([
-                pool.getConnection(),
-                new Promise((_, reject) => 
-                    setTimeout(() => reject(new Error('Timeout ao obter conexão')), 10000)
-                )
-            ]);
-            
             await conn.beginTransaction();
     
             // 1. Inserir usuário
@@ -792,7 +901,7 @@ const NWModel = {
             );
             const clienteId = clienteResult.insertId;
     
-            // 3. Inserir perfil com imagens
+            // 3. Inserir perfil com imagens (se houver)
             if (imagemPerfil || imagemBanner) {
                 const dadosPerfil = { UsuarioId: usuarioId };
     
@@ -827,19 +936,20 @@ const NWModel = {
                     'alimentacaoSaudavel': 9
                 };
     
-                // Inserir na tabela ClientesInteresses
+                // Inserir interesses em lote
+                const interessesParaInserir = [];
                 for (const interesse of interessesSelecionados) {
                     const interesseId = mapeamentoInteresses[interesse];
                     if (interesseId) {
-                        try {
-                            await conn.query(
-                                "INSERT INTO ClientesInteresses (ClienteId, InteresseId) VALUES (?, ?)",
-                                [clienteId, interesseId]
-                            );
-                        } catch (insertError) {
-                            console.error(`Erro ao inserir interesse ${interesse}:`, insertError.message);
-                        }
+                        interessesParaInserir.push([clienteId, interesseId]);
                     }
+                }
+                
+                if (interessesParaInserir.length > 0) {
+                    await conn.query(
+                        "INSERT INTO ClientesInteresses (ClienteId, InteresseId) VALUES ?",
+                        [interessesParaInserir]
+                    );
                 }
             }
     
@@ -854,46 +964,25 @@ const NWModel = {
             };
     
         } catch (err) {
+            await conn.rollback();
             console.error("Erro ao criar cliente:", err.message);
-            
-            if (conn) {
-                try {
-                    await conn.rollback();
-                } catch (rollbackErr) {
-                    console.error('Erro no rollback:', rollbackErr.message);
-                }
-            }
-            
             throw err;
-            
         } finally {
-            if (conn) {
-                try {
-                    conn.release();
-                } catch (releaseErr) {
-                    console.error('Erro ao liberar conexão:', releaseErr.message);
-                }
-            }
+            conn.release();
         }
     },
-
-    // Criar um usuário Nutricionista
     
+    // Criar Nutricionista
     createNutricionista: async (dadosUsuario, dadosNutricionista, especializacoes = [], imagemPerfil = null, imagemBanner = null, formacao = {}) => {
-        let conn;
+        const conn = await pool.getConnection();
         
         try {
-            conn = await Promise.race([
-                pool.getConnection(),
-                new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout ao obter conexão')), 10000))
-            ]);
-            
             await conn.beginTransaction();
-
+    
             // 1. Inserir usuário
             const [usuarioResult] = await conn.query("INSERT INTO Usuarios SET ?", [dadosUsuario]);
             const usuarioId = usuarioResult.insertId;
-
+    
             // 2. Inserir nutricionista
             const [nutricionistaResult] = await conn.query("INSERT INTO Nutricionistas SET ?", [{
                 UsuarioId: usuarioId,
@@ -901,8 +990,8 @@ const NWModel = {
                 RazaoSocial: dadosNutricionista.RazaoSocial
             }]);
             const nutricionistaId = nutricionistaResult.insertId;
-
-            // 3. Inserir perfil com imagens
+    
+            // 3. Inserir perfil com imagens e sobre mim
             if (imagemPerfil || imagemBanner || dadosNutricionista.SobreMim) {
                 const dadosPerfil = { UsuarioId: usuarioId };
                 
@@ -919,22 +1008,22 @@ const NWModel = {
                     }
                     dadosPerfil.FotoBanner = imagemBanner.buffer;
                 }
-
+    
                 if (dadosNutricionista.SobreMim) {
                     dadosPerfil.SobreMim = dadosNutricionista.SobreMim;
                 }
-
+    
                 await conn.query("INSERT INTO Perfis SET ?", [dadosPerfil]);
             }
-
-            // 4. Inserir especializações
+    
+            // 4. Inserir especializações (em lote)
             if (especializacoes.length > 0) {
                 const placeholders = especializacoes.map(() => '?').join(',');
                 const [rows] = await conn.query(
-                    `SELECT id, Nome FROM Especializacoes WHERE Nome IN (${placeholders})`,
+                    `SELECT id FROM Especializacoes WHERE Nome IN (${placeholders})`,
                     especializacoes
                 );
-
+    
                 if (rows.length > 0) {
                     const insertValues = rows.map(({ id }) => [nutricionistaId, id]);
                     await conn.query(
@@ -943,93 +1032,75 @@ const NWModel = {
                     );
                 }
             }
-
+    
             // 5. Inserir formações acadêmicas
-            if (formacao.graduacao || formacao.curso) {
-                if (formacao.graduacao && formacao.graduacao.nome && formacao.graduacao.instituicao) {
-                    const dadosGraduacao = {
-                        NutricionistaId: nutricionistaId,
-                        TipoFormacao: 'graduacao',
-                        NomeFormacao: formacao.graduacao.nome,
-                        NomeInstituicao: formacao.graduacao.instituicao
-                    };
-
-                    if (formacao.graduacao.certificado) {
-                        const cert = formacao.graduacao.certificado;
-                        if (cert.buffer.length > 16 * 1024 * 1024) {
-                            throw new Error('Certificado de graduação muito grande. Máximo: 16MB');
-                        }
-                        dadosGraduacao.CertificadoArquivo = cert.buffer;
-                        dadosGraduacao.CertificadoNome = cert.originalname;
-                        dadosGraduacao.CertificadoTipo = cert.mimetype;
-                        dadosGraduacao.CertificadoTamanho = cert.size;
+            const formacoesParaInserir = [];
+            
+            if (formacao.graduacao && formacao.graduacao.nome && formacao.graduacao.instituicao) {
+                const dadosGraduacao = {
+                    NutricionistaId: nutricionistaId,
+                    TipoFormacao: 'graduacao',
+                    NomeFormacao: formacao.graduacao.nome,
+                    NomeInstituicao: formacao.graduacao.instituicao
+                };
+    
+                if (formacao.graduacao.certificado) {
+                    const cert = formacao.graduacao.certificado;
+                    if (cert.buffer.length > 16 * 1024 * 1024) {
+                        throw new Error('Certificado de graduação muito grande. Máximo: 16MB');
                     }
-
-                    await conn.query("INSERT INTO NutricionistasFormacoes SET ?", [dadosGraduacao]);
+                    dadosGraduacao.CertificadoArquivo = cert.buffer;
+                    dadosGraduacao.CertificadoNome = cert.originalname;
+                    dadosGraduacao.CertificadoTipo = cert.mimetype;
+                    dadosGraduacao.CertificadoTamanho = cert.size;
                 }
-
-                if (formacao.curso && formacao.curso.nome && formacao.curso.instituicao) {
-                    const dadosCurso = {
-                        NutricionistaId: nutricionistaId,
-                        TipoFormacao: 'curso',
-                        NomeFormacao: formacao.curso.nome,
-                        NomeInstituicao: formacao.curso.instituicao
-                    };
-
-                    if (formacao.curso.certificado) {
-                        const cert = formacao.curso.certificado;
-                        if (cert.buffer.length > 16 * 1024 * 1024) {
-                            throw new Error('Certificado de curso muito grande. Máximo: 16MB');
-                        }
-                        dadosCurso.CertificadoArquivo = cert.buffer;
-                        dadosCurso.CertificadoNome = cert.originalname;
-                        dadosCurso.CertificadoTipo = cert.mimetype;
-                        dadosCurso.CertificadoTamanho = cert.size;
-                    }
-
-                    await conn.query("INSERT INTO NutricionistasFormacoes SET ?", [dadosCurso]);
-                }
+    
+                formacoesParaInserir.push(dadosGraduacao);
             }
-
+    
+            if (formacao.curso && formacao.curso.nome && formacao.curso.instituicao) {
+                const dadosCurso = {
+                    NutricionistaId: nutricionistaId,
+                    TipoFormacao: 'curso',
+                    NomeFormacao: formacao.curso.nome,
+                    NomeInstituicao: formacao.curso.instituicao
+                };
+    
+                if (formacao.curso.certificado) {
+                    const cert = formacao.curso.certificado;
+                    if (cert.buffer.length > 16 * 1024 * 1024) {
+                        throw new Error('Certificado de curso muito grande. Máximo: 16MB');
+                    }
+                    dadosCurso.CertificadoArquivo = cert.buffer;
+                    dadosCurso.CertificadoNome = cert.originalname;
+                    dadosCurso.CertificadoTipo = cert.mimetype;
+                    dadosCurso.CertificadoTamanho = cert.size;
+                }
+    
+                formacoesParaInserir.push(dadosCurso);
+            }
+    
+            // Inserir formações
+            for (const formacaoData of formacoesParaInserir) {
+                await conn.query("INSERT INTO NutricionistasFormacoes SET ?", [formacaoData]);
+            }
+    
             await conn.commit();
             return { usuarioId, nutricionistaId };
-
+    
         } catch (err) {
+            await conn.rollback();
             console.error("Erro ao criar nutricionista:", err.message);
-            
-            if (conn) {
-                try {
-                    await conn.rollback();
-                } catch (rollbackErr) {
-                    console.error('Erro no rollback:', rollbackErr.message);
-                }
-            }
-            
             throw err;
-            
         } finally {
-            if (conn) {
-                try {
-                    conn.release();
-                } catch (releaseErr) {
-                    console.error('Erro ao liberar conexão:', releaseErr.message);
-                }
-            }
+            conn.release();
         }
     },
 
     verificarEmailExistente: async (email) => {
-        let conn;
         try {
-            conn = await Promise.race([
-                pool.getConnection(),
-                new Promise((_, reject) => 
-                    setTimeout(() => reject(new Error('Timeout ao obter conexão')), 10000)
-                )
-            ]);
-            
-            const [rows] = await conn.query(
-                "SELECT id FROM Usuarios WHERE email = ? LIMIT 1",
+            const [rows] = await pool.query(
+                "SELECT id FROM Usuarios WHERE Email = ? AND UsuarioStatus = 1 LIMIT 1",
                 [email]
             );
             
@@ -1038,27 +1109,15 @@ const NWModel = {
         } catch (error) {
             console.error("Erro ao verificar email:", error.message);
             throw error;
-        } finally {
-            if (conn) {
-                conn.release();
-            }
         }
     },
-
+    
     verificarTelefoneExistente: async (ddd, telefone) => {
-        let conn;
         try {
             const telefoneCompleto = ddd + telefone;
             
-            conn = await Promise.race([
-                pool.getConnection(),
-                new Promise((_, reject) => 
-                    setTimeout(() => reject(new Error('Timeout ao obter conexão')), 10000)
-                )
-            ]);
-            
-            const [rows] = await conn.query(
-                "SELECT id FROM Usuarios WHERE telefone = ? LIMIT 1",
+            const [rows] = await pool.query(
+                "SELECT id FROM Usuarios WHERE Telefone = ? AND UsuarioStatus = 1 LIMIT 1",
                 [telefoneCompleto]
             );
             
@@ -1067,24 +1126,12 @@ const NWModel = {
         } catch (error) {
             console.error("Erro ao verificar telefone:", error.message);
             throw error;
-        } finally {
-            if (conn) {
-                conn.release();
-            }
         }
     },
-
+    
     verificarCrnExistente: async (crn) => {
-        let conn;
         try {
-            conn = await Promise.race([
-                pool.getConnection(),
-                new Promise((_, reject) => 
-                    setTimeout(() => reject(new Error('Timeout ao obter conexão')), 10000)
-                )
-            ]);
-            
-            const [rows] = await conn.query(
+            const [rows] = await pool.query(
                 "SELECT id FROM Nutricionistas WHERE Crn = ? LIMIT 1",
                 [crn]
             );
@@ -1094,28 +1141,16 @@ const NWModel = {
         } catch (error) {
             console.error("Erro ao verificar CRN:", error.message);
             throw error;
-        } finally {
-            if (conn) {
-                conn.release();
-            }
         }
     },
-
+    
     verificarCPFExistente: async (cpf) => {
-        let conn;
         try {
-            cpf = cpf.replace(/[^\d]/g, '');
+            const cpfLimpo = cpf.replace(/[^\d]/g, '');
             
-            conn = await Promise.race([
-                pool.getConnection(),
-                new Promise((_, reject) => 
-                    setTimeout(() => reject(new Error('Timeout ao obter conexão')), 10000)
-                )
-            ]);
-            
-            const [rows] = await conn.query(
-                "SELECT id FROM Clientes WHERE cpf = ? LIMIT 1",
-                [cpf]
+            const [rows] = await pool.query(
+                "SELECT id FROM Clientes WHERE CPF = ? LIMIT 1",
+                [cpfLimpo]
             );
             
             return rows.length > 0;
@@ -1123,10 +1158,6 @@ const NWModel = {
         } catch (error) {
             console.error("Erro ao verificar CPF:", error.message);
             throw error;
-        } finally {
-            if (conn) {
-                conn.release();
-            }
         }
     }
 

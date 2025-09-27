@@ -64,10 +64,20 @@
             </section>
         
             <section class="center-section">
-                <section class="input-premium">
-                    <span class="material-icons search-icon md-24">search</span>
-                    <input>
-                </section>
+                <form action="/buscar" method="GET" class="form-busca">
+                    <section class="input-premium">
+                        <span class="material-icons search-icon md-24">search</span>
+                        <input 
+                            type="text" 
+                            name="q" 
+                            placeholder="Buscar publicações e nutricionistas..."
+                            value="<%= typeof termo !== 'undefined' ? termo : '' %>"
+                            minlength="2"
+                            required
+                        >
+                        <button type="submit" style="display: none;"></button>
+                    </section>
+                </form>
             </section>
             
             <section class="right-section">
@@ -239,7 +249,7 @@
                                     <input type="checkbox" 
                                            name="area" 
                                            id="geriatrica" 
-                                           value="Geriátria"
+                                           value="Geriátrica"
                                            <%= valores.area && (Array.isArray(valores.area) ? valores.area.includes('Geriátria') : valores.area === 'Geriátria') ? 'checked' : '' %>>
                                     <label for="geriatrica">Nutrição Geriátrica</label>
                                 </section>

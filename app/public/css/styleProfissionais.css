@@ -92,6 +92,12 @@ body {
     cursor: pointer;
 }
 
+.form-busca {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
 .entrar-button {
     background-color: green;
     color: white;

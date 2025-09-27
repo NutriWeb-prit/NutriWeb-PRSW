@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/styleBusca.css">
+    <link rel="icon" href="imagens/logo-icon.png" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"rel="stylesheet">
+    <title><%= termo ? `Resultados para "${termo}"` : 'Buscar' %> - NutriWeb</title>
+</head>
+<body>
+    <header class="header">
+        <section class="left-section">
+            <a href="/"><img src="imagens/logo.png" alt="Logo" class="logo"></a>
+            <a href="/ranking" class="ranking"><button class="ranking-button">Ranking</button></a>
+            <a href="/profissionais"><button class="profissionais-button">Profissionais</button></a>
+        </section>
+    
+        <section class="center-section">
+            <form action="/buscar" method="GET" class="form-busca">
+                <section class="input-premium">
+                    <span class="material-icons search-icon md-24">search</span>
+                    <input 
+                        type="text" 
+                        name="q" 
+                        placeholder="Buscar publicações e nutricionistas..."
+                        value="<%= typeof termo !== 'undefined' ? termo : '' %>"
+                        minlength="2"
+                        required
+                    >
+                    <button type="submit" style="display: none;"></button>
+                </section>
+            </form>
+        </section>
+        
+        <section class="right-section">
+            <% if (headerUsuario.estaLogado) { %>
+                <a href="/premium"><button class="premium-button">Premium</button></a>
+                
+                <a href="<%= headerUsuario.urlPerfil %>" class="perfil-usuario-link">
+                    <section class="perfil-usuario">
+                        <img src="<%= headerUsuario.fotoPerfil %>" 
+                             alt="Foto de perfil" 
+                             class="foto-perfil-header"
+                             onerror="this.src='imagens/foto_perfil.jpg'">
+                        <span class="nome-usuario-header"><%= headerUsuario.nome %></span>
+                    </section>
+                </a>
+            <% } else { %>
+                <a href="/premium"><button class="premium-button">Premium</button></a>
+                <a href="/login"><button class="entrar-button">Entrar</button></a>
+            <% } %>
+        </section>
+    </header>
+
+    <main class="main-busca">
+        <section class="container-busca">
+            <% if (termo && termo.length > 0) { %>
+                <!-- Mostra o que foi pesquisado -->
+                <h1 class="titulo-busca">Resultados para "<%= termo %>"</h1>
+                
+                <% if (typeof erro !== 'undefined') { %>
+                    <!-- Se houve erro, mostra mensagem -->
+                    <section class="erro-busca">
+                        <p><%= erro %></p>
+                    </section>
+                <% } else if (resultados && resultados.totalResultados > 0) { %>
+                    <!-- Se encontrou resultados, mostra eles -->
+                    <section class="resumo-resultados">
+                        <p><%= resultados.totalResultados %> resultado(s) encontrado(s)</p>
+                    </section>
+
+                    <!-- Seção de Publicações -->
+                    <% if (resultados.publicacoes && resultados.publicacoes.length > 0) { %>
+                        <section class="secao-resultados">
+                            <h2 class="titulo-secao">Publicações (<%= resultados.publicacoes.length %>)</h2>
+                            <section class="lista-publicacoes">
+                                <% resultados.publicacoes.forEach(pub => { %>
+                                    <article class="item-publicacao">
+                                        <section class="info-autor">
+                                            <% if (pub.autor.fotoPerfil) { %>
+                                                <img src="data:image/jpeg;base64,<%= Buffer.from(pub.autor.fotoPerfil).toString('base64') %>" 
+                                                     alt="<%= pub.autor.nome %>" 
+                                                     class="foto-autor">
+                                            <% } else { %>
+                                                <img src="imagens/foto_perfil.jpg" 
+                                                     alt="<%= pub.autor.nome %>" 
+                                                     class="foto-autor">
+                                            <% } %>
+                                            <span class="nome-autor"><%= pub.autor.nome %></span>
+                                        </section>
+                                        
+                                        <section class="conteudo-publicacao">
+                                            <section class="categoria-avaliacao">
+                                                <span class="categoria"><%= pub.categoria %></span>
+                                                <span class="avaliacao">⭐ <%= pub.mediaEstrelas %></span>
+                                            </section>
+                                            
+                                            <% if (pub.resumo) { %>
+                                                <p class="resumo-publicacao"><%= pub.resumo %></p>
+                                            <% } %>
+                                            
+                                            <% if (pub.temFoto) { %>
+                                                <section class="indicador-foto">Contém imagem</section>
+                                            <% } %>
+                                            
+                                            <a href="<%= pub.url %>" class="link-ver-mais">Ver publicação completa →</a>
+                                        </section>
+                                    </article>
+                                <% }); %>
+                            </section>
+                        </section>
+                    <% } %>
+
+                    <!-- Seção de Nutricionistas -->
+                    <% if (resultados.nutricionistas && resultados.nutricionistas.length > 0) { %>
+                        <section class="secao-resultados">
+                            <h2 class="titulo-secao">Nutricionistas (<%= resultados.nutricionistas.length %>)</h2>
+                            <section class="lista-nutricionistas">
+                                <% resultados.nutricionistas.forEach(nut => { %>
+                                    <article class="item-nutricionista">
+                                        <% if (nut.fotoPerfil) { %>
+                                            <img src="data:image/jpeg;base64,<%= Buffer.from(nut.fotoPerfil).toString('base64') %>" 
+                                                 alt="<%= nut.nome %>" 
+                                                 class="foto-nutricionista">
+                                        <% } else if (nut.nutricionistaId >=0 && nut.nutricionistaId <= 36) { %>
+                                            <img src="imagens/profissional<%= nut.nutricionistaId %>.png" 
+                                                 alt="<%= nut.nome %>" 
+                                                 class="foto-nutricionista">
+                                        <% } else { %>
+                                            <img src="imagens/foto_perfil.jpg" 
+                                                 alt="<%= nut.nome %>" 
+                                                 class="foto-nutricionista">
+                                        <% } %>
+                                        
+                                        <section class="info-nutricionista">
+                                            <h3 class="nome-nutricionista">
+                                                <a href="<%= nut.url %>"><%= nut.nome %></a>
+                                            </h3>
+                                            
+                                            <% if (nut.razaoSocial) { %>
+                                                <p class="razao-social"><%= nut.razaoSocial %></p>
+                                            <% } %>
+                                            
+                                            <p class="especializacoes">Nutrição <%= nut.especializacoes %></p>
+                                            <p class="localizacao">📍 <%= nut.localizacao %></p>
+                                            
+                                            <section class="estatisticas">
+                                                <span class="avaliacao">⭐ <%= nut.mediaAvaliacoes %></span>
+                                                <span class="publicacoes">📝 <%= nut.totalPublicacoes %> publicações</span>
+                                            </section>
+                                            
+                                            <% if (nut.sobreMim) { %>
+                                                <p class="sobre-mim"><%= nut.sobreMim.substring(0, 100) %><%= nut.sobreMim.length > 100 ? '...' : '' %></p>
+                                            <% } %>
+                                        </section>
+                                    </article>
+                                <% }); %>
+                            </section>
+                        </section>
+                    <% } %>
+                <% } else { %>
+                    <!-- Se não encontrou nada -->
+                    <section class="sem-resultados">
+                        <h2>Nenhum resultado encontrado</h2>
+                        <p>Não encontramos nada para "<%= termo %>"</p>
+                        <section class="dicas-busca">
+                            <h3>Dicas para uma busca melhor:</h3>
+                            <ul>
+                                <li>Verifique a ortografia</li>
+                                <li>Use termos mais gerais</li>
+                                <li>Tente sinônimos ou palavras relacionadas</li>
+                            </ul>
+                        </section>
+                    </section>
+                <% } %>
+            <% } else { %>
+                <!-- Página inicial de busca (quando não há termo) -->
+                <section class="busca-inicial">
+                    <h1>Buscar</h1>
+                    <p>Use a barra de busca acima para encontrar publicações e nutricionistas</p>
+                    
+                    <section class="sugestoes-busca">
+                        <h3>Sugestões populares:</h3>
+                        <section class="tags-sugestoes">
+                            <a href="/buscar?q=diabetes" class="tag-sugestao">diabetes</a>
+                            <a href="/buscar?q=emagrecimento" class="tag-sugestao">emagrecimento</a>
+                            <a href="/buscar?q=proteína" class="tag-sugestao">proteína</a>
+                            <a href="/buscar?q=vegetariano" class="tag-sugestao">vegetariano</a>
+                        </section>
+                    </section>
+                </section>
+            <% } %>
+        </section>
+    </main>
+
+    <footer class="footer-desktop">
+        <section class="footer-container">
+
+            <section class="footer-logo">
+                <a href="/"><img src="imagens/logo.png" alt="Logo" class="logo"></a>
+                <a href="/"><h3>NutriWeb</h3></a>
+            </section>
+
+          <section class="footer-informacao">
+            <a href="/">Página Inicial</a>
+            <a href="/ranking">Ranking</a>
+            <a href="/profissionais">Profissionais</a>
+            <a href="/premium">Premium</a>
+            <a href="/login">Login</a>
+            <a href="/">Sobre nós</a> 
+            <a href="/tipoNutri">Como escolher o profissional ideal?</a>
+          </section>
+      
+          <section class="footer-social">
+            <p>Conecte-se com os melhores nutricionistas e encontre o profissional ideal para você.</p>
+            <h3>Siga-nos</h3>
+                <section class="social-icons">
+                <a href="https://www.instagram.com/nutriweb_oficial/"><i class="fab fa-instagram"></i></a>
+                </section>
+          </section>
+        </section>
+        
+        <section class="footer-bottom">
+          <p>&copy; 2024 NutriWeb. Todos os direitos reservados.</p>
+        </section>
+    </footer>
+
+</body>
+</html>

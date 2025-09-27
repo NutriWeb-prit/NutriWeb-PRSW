@@ -11,6 +11,8 @@ const { verificarUsuAutenticado, processarLogin, verificarPermissao, logout } = 
 
 router.use(verificarUsuAutenticado);
 
+router.use('/buscar', require('../routes/busca.js'));
+
 router.get("/login", NWController.mostrarLogin);
 
 router.post("/entrar", 
@@ -96,52 +98,7 @@ router.post('/atualizar-imagens',
     NWController.atualizarImagens
 );
 
-router.post(
-    "/atualizar-dados",
-    NWController.validacaoAtualizarDados,
-    async function (req, res) {
-        if (!req.session.usuario || !req.session.usuario.id || !req.session.usuario.tipo) {
-            return res.redirect('/login');
-        }
-        
-        const listaErros = validationResult(req);
-        const usuarioId = req.session.usuario.id;
-        const tipoUsuario = req.session.usuario.tipo;
-        
-        const dadosFormulario = {
-            nome: req.body.nome || '',
-            telefone: req.body.telefone || '',
-            ddd: req.body.ddd || '',
-            email: req.body.email || '',
-            senha: req.body.senha || '',
-            area: req.body.area || [],
-            crn: req.body.crn || ''
-        };
-
-        if (!listaErros.isEmpty()) {
-            return res.render("pages/indexConfig", {
-                tipoUsuario: tipoUsuario,
-                valores: dadosFormulario,
-                msgErro: {},
-                erroValidacao: {},
-                listaErros: listaErros
-            });
-        }
-
-        try {
-            await NWController.atualizarDadosPessoais(req, res);
-        } catch (error) {
-            console.error("Erro na atualização dos dados:", error.message);
-            return res.render("pages/indexConfig", {
-                tipoUsuario: tipoUsuario,
-                valores: dadosFormulario,
-                msgErro: { geral: 'Erro interno do servidor. Tente novamente.' },
-                erroValidacao: {},
-                listaErros: null
-            });
-        }
-    }
-);
+router.post('/atualizar-dados', NWController.validacaoAtualizarDados, NWController.atualizarDadosPessoais);
 
 router.get("/imagem/perfil/:usuarioId", 
     verificarPermissao(['C', 'N']),
@@ -254,162 +211,102 @@ router.get("/certificado/:formacaoId",
     }
 );
 
-router.post(
-    "/cadastrarcliente",
-    upload,
-    NWController.validacaoCadCliente,
-    async function (req, res) {
-        const etapa = req.body.etapa;
-        const listaErros = validationResult(req);
+router.post("/cadastrarcliente", upload, (req, res, next) => {
+    const etapa = req.body.etapa;
+    
+    const dadosCliente = {
+        nome: req.body.nome || '',
+        email: req.body.email || '',
+        senha: req.body.senha || '',
+        cpf: req.body.cpf || '',
+        ddd: req.body.ddd || '',
+        telefone: req.body.telefone || '',
+        area: req.body.area || null 
+    };
 
-        const dadosCliente = {
-            nome: req.body.nome || '',
-            email: req.body.email || '',
-            senha: req.body.senha || '',
-            cpf: req.body.cpf || '',
-            ddd: req.body.ddd || '',
-            telefone: req.body.telefone || '',
-            area: req.body.area || null 
-        };
-
-        if (etapa == "1") {
-            console.log('Processando ETAPA 1...');
+    if (etapa === "1") {
+        // **USAR O MIDDLEWARE DE VALIDAÇÃO COMPLETO**
+        return async function aplicarValidacoes(req, res) {
+            // Aplicar todas as validações sequencialmente
+            for (let i = 0; i < NWController.validacaoCadCliente.length; i++) {
+                try {
+                    await new Promise((resolve, reject) => {
+                        NWController.validacaoCadCliente[i](req, res, (err) => {
+                            if (err) reject(err);
+                            else resolve();
+                        });
+                    });
+                } catch (error) {
+                    console.error(`Erro na validação ${i}:`, error);
+                }
+            }
             
-            if (!listaErros.isEmpty()) {
-                console.log('Erros na etapa 1:', listaErros.array());
+            const errors = validationResult(req);
+            
+            if (!errors.isEmpty()) {
                 return res.render("pages/indexCadastroCliente", {
                     etapa: "1",
                     cardSucesso: false,
                     valores: dadosCliente,
-                    listaErros: listaErros,
+                    listaErros: errors,
                 });
             }
 
-            console.log('Etapa 1 validada, passando para etapa 2');
-            console.log('Dados preservados:', dadosCliente);
-            
             return res.render("pages/indexCadastroCliente", {
                 etapa: "2",
                 cardSucesso: true,
                 valores: dadosCliente,
                 listaErros: null,
             });
-        }
-
-        if (etapa == "2") {
-            console.log('Processando ETAPA 2 - upload de imagens e cadastro final');
-            console.log('Dados recebidos na etapa 2:', dadosCliente);
-            
-            try {
-                // Função para validar imagens (igual ao nutricionista)
-                const validarImagem = (arquivo, tipo) => {
-                    if (!arquivo) return null;
-                    
-                    console.log(`Validando ${tipo}:`, {
-                        nome: arquivo.originalname,
-                        tamanho: arquivo.size,
-                        tipo: arquivo.mimetype
-                    });
-                    
-                    if (arquivo.size > 5 * 1024 * 1024) {
-                        throw new Error(`${tipo} muito grande. Máximo permitido: 5MB`);
-                    }
-                    
-                    if (arquivo.buffer && arquivo.buffer.length > 5 * 1024 * 1024) {
-                        throw new Error(`${tipo} muito grande após processamento. Máximo permitido: 5MB`);
-                    }
-                    
-                    const tiposPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
-                    if (!tiposPermitidos.includes(arquivo.mimetype)) {
-                        throw new Error(`Formato de ${tipo} não suportado. Use: JPEG, PNG, GIF ou WEBP`);
-                    }
-                    
-                    console.log(`${tipo} validada com sucesso:`, arquivo.originalname, `(${arquivo.size} bytes)`);
-                    return arquivo;
-                };
-
-                const imagemPerfil = validarImagem(
-                    req.files && req.files['input-imagem'] ? req.files['input-imagem'][0] : null, 
-                    'foto de perfil'
-                );
-                
-                const imagemBanner = validarImagem(
-                    req.files && req.files['input-banner'] ? req.files['input-banner'][0] : null, 
-                    'banner'
-                );
-
-                console.log('Imagens:');
-                console.log('- Perfil:', imagemPerfil ? `${imagemPerfil.originalname} (${imagemPerfil.size} bytes)` : 'Não enviada');
-                console.log('- Banner:', imagemBanner ? `${imagemBanner.originalname} (${imagemBanner.size} bytes)` : 'Não enviada');
-
-                dadosCliente.imagemPerfil = imagemPerfil;
-                dadosCliente.imagemBanner = imagemBanner;
-
-                console.log('INTERESSES FINAIS ANTES DO CONTROLLER:');
-                console.log('- req.body.area:', req.body.area);
-                console.log('- dadosCliente.area:', dadosCliente.area);
-
-                return await NWController.cadastrarCliente(req, res);
-
-            } catch (error) {
-                console.error('Erro na validação de imagens:', error.message);
-                
-                let mensagemErro = 'Erro no upload das imagens. Tente novamente.';
-                
-                if (error.message.includes('muito grande')) {
-                    mensagemErro = error.message;
-                } else if (error.message.includes('não suportado')) {
-                    mensagemErro = error.message;
-                } else if (error.message.includes('formato') || error.message.includes('inválido')) {
-                    mensagemErro = error.message;
-                } else if (error.code === 'LIMIT_FILE_SIZE') {
-                    mensagemErro = 'Arquivo muito grande. Tamanho máximo permitido: 5MB';
-                }
-                
-                console.log('Retornando erro para etapa 2:', mensagemErro);
-                
-                return res.render("pages/indexCadastroCliente", {
-                    etapa: "2",
-                    cardSucesso: true,
-                    valores: dadosCliente,
-                    listaErros: { 
-                        errors: [{ msg: mensagemErro }] 
-                    },
-                });
-            }
-        }
-
-        console.log('Etapa inválida:', etapa);
-        return res.redirect('/cadastrarcliente');
+        }(req, res);
     }
-);
 
+    if (etapa === "2") {
+        // **ETAPA FINAL - CHAMAR CONTROLLER**
+        return NWController.cadastrarCliente(req, res);
+    }
 
-router.post(
-    "/cadastrarnutricionista",
-    upload, // Middleware de upload
-    NWController.validacaoCadNutri1,
-    async function (req, res) {
-        const etapa = req.body.etapa;
-        const listaErros = validationResult(req);
+    return res.redirect('/cadastrarcliente');
+});
 
-        const dadosNutri = {
-            nome: req.body.nome || '',
-            telefone: req.body.telefone || '',
-            ddd: req.body.ddd || '',
-            email: req.body.email || '',
-            senha: req.body.senha || '',
-            area: req.body.area || [],
-            crn: req.body.crn || '',
-            sobreMim: req.body.sobreMim || '',
-            faculdade: req.body.faculdade || '',
-            faculdadeOrg: req.body.faculdadeOrg || '',
-            curso: req.body.curso || '',
-            cursoOrg: req.body.cursoOrg || ''
-        };
+// **CADASTRO DE NUTRICIONISTA - SIMPLIFICADO**
+router.post("/cadastrarnutricionista", upload, (req, res, next) => {
+    const etapa = req.body.etapa;
+    
+    const dadosNutri = {
+        nome: req.body.nome || '',
+        telefone: req.body.telefone || '',
+        ddd: req.body.ddd || '',
+        email: req.body.email || '',
+        senha: req.body.senha || '',
+        area: req.body.area || [],
+        crn: req.body.crn || '',
+        sobreMim: req.body.sobreMim || '',
+        faculdade: req.body.faculdade || '',
+        faculdadeOrg: req.body.faculdadeOrg || '',
+        curso: req.body.curso || '',
+        cursoOrg: req.body.cursoOrg || '',
+        razaoSocial: req.body.razaoSocial || ''
+    };
 
-        if (etapa === "1") {
-            if (!listaErros.isEmpty()) {
+    if (etapa === "1") {
+        return async function aplicarValidacoes(req, res) {
+            for (let i = 0; i < NWController.validacaoCadNutri1.length; i++) {
+                try {
+                    await new Promise((resolve, reject) => {
+                        NWController.validacaoCadNutri1[i](req, res, (err) => {
+                            if (err) reject(err);
+                            else resolve();
+                        });
+                    });
+                } catch (error) {
+                    console.error(`Erro na validação ${i}:`, error);
+                }
+            }
+            
+            const errors = validationResult(req);
+            
+            if (!errors.isEmpty()) {
                 return res.render("pages/indexCadastrarNutri", {
                     etapa: "1", 
                     card1: "", 
@@ -418,7 +315,7 @@ router.post(
                     card4: "hidden",
                     cardSucesso: false,
                     valores: dadosNutri, 
-                    listaErros: listaErros
+                    listaErros: errors
                 });
             }
             
@@ -432,206 +329,82 @@ router.post(
                 valores: dadosNutri, 
                 listaErros: null
             });
-        }
+        }(req, res);
+    }
 
-        if (etapa === "2") {
-            try {
-                // Função para validar imagens
-                const validarImagem = (arquivo, tipo) => {
-                    if (!arquivo) return null;
-                    
-                    if (arquivo.size > 5 * 1024 * 1024) {
-                        throw new Error(`${tipo} muito grande. Máximo permitido: 5MB`);
-                    }
-                    
-                    if (arquivo.buffer && arquivo.buffer.length > 5 * 1024 * 1024) {
-                        throw new Error(`${tipo} muito grande após processamento. Máximo permitido: 5MB`);
-                    }
-                    
-                    const tiposPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
-                    if (!tiposPermitidos.includes(arquivo.mimetype)) {
-                        throw new Error(`Formato de ${tipo} não suportado. Use: JPEG, PNG, GIF ou WEBP`);
-                    }
-                    
-                    return arquivo;
+    if (etapa === "2") {
+        try {
+            const imagens = validarImagensEtapa2(req.files);
+            
+            if (imagens.imagemPerfil) {
+                dadosNutri.imagemPerfil = {
+                    originalname: imagens.imagemPerfil.originalname,
+                    mimetype: imagens.imagemPerfil.mimetype,
+                    size: imagens.imagemPerfil.size,
+                    buffer: imagens.imagemPerfil.buffer.toString('base64')
                 };
-
-                const imagemPerfil = validarImagem(
-                    req.files && req.files['input-imagem'] ? req.files['input-imagem'][0] : null, 
-                    'foto de perfil'
-                );
-                
-                const imagemBanner = validarImagem(
-                    req.files && req.files['input-banner'] ? req.files['input-banner'][0] : null, 
-                    'banner'
-                );
-
-                // Converter buffer para Base64 para armazenar no campo hidden
-                if (imagemPerfil) {
-                    dadosNutri.imagemPerfil = {
-                        originalname: imagemPerfil.originalname,
-                        mimetype: imagemPerfil.mimetype,
-                        size: imagemPerfil.size,
-                        buffer: imagemPerfil.buffer.toString('base64')
-                    };
-                }
-                
-                if (imagemBanner) {
-                    dadosNutri.imagemBanner = {
-                        originalname: imagemBanner.originalname,
-                        mimetype: imagemBanner.mimetype,
-                        size: imagemBanner.size,
-                        buffer: imagemBanner.buffer.toString('base64')
-                    };
-                }
-                
-                return res.render("pages/indexCadastrarNutri", {
-                    etapa: "3", 
-                    card1: "hidden", 
-                    card2: "hidden", 
-                    card3: "", 
-                    card4: "hidden",
-                    cardSucesso: true,
-                    valores: dadosNutri, 
-                    listaErros: null
-                });
-
-            } catch (error) {
-                let mensagemErro = 'Erro no upload das imagens. Tente novamente.';
-                
-                if (error.message.includes('muito grande')) {
-                    mensagemErro = error.message;
-                } else if (error.message.includes('não suportado')) {
-                    mensagemErro = error.message;
-                } else if (error.code === 'LIMIT_FILE_SIZE') {
-                    mensagemErro = 'Arquivo muito grande. Tamanho máximo permitido: 5MB';
-                }
-                
-                return res.render("pages/indexCadastrarNutri", {
-                    etapa: "2", 
-                    card1: "hidden", 
-                    card2: "", 
-                    card3: "hidden", 
-                    card4: "hidden",
-                    cardSucesso: true,
-                    valores: dadosNutri,
-                    listaErros: { 
-                        errors: [{ msg: mensagemErro }] 
-                    }
-                });
-            }
-        }
-
-        if (etapa === "3") {
-            // Recuperar imagens dos campos hidden
-            if (req.body.imagemPerfilData && req.body.imagemBannerData) {
-                dadosNutri.imagemPerfil = req.body.imagemPerfilData ? JSON.parse(req.body.imagemPerfilData) : null;
-                dadosNutri.imagemBanner = req.body.imagemBannerData ? JSON.parse(req.body.imagemBannerData) : null;
             }
             
-            // Preservar dados de formação na etapa 3
-            dadosNutri.sobreMim = req.body.sobreMim || '';
+            if (imagens.imagemBanner) {
+                dadosNutri.imagemBanner = {
+                    originalname: imagens.imagemBanner.originalname,
+                    mimetype: imagens.imagemBanner.mimetype,
+                    size: imagens.imagemBanner.size,
+                    buffer: imagens.imagemBanner.buffer.toString('base64')
+                };
+            }
             
             return res.render("pages/indexCadastrarNutri", {
-                etapa: "4", 
+                etapa: "3", 
                 card1: "hidden", 
                 card2: "hidden", 
-                card3: "hidden", 
-                card4: "",
+                card3: "", 
+                card4: "hidden",
                 cardSucesso: true,
                 valores: dadosNutri, 
                 listaErros: null
             });
+
+        } catch (error) {
+            return res.render("pages/indexCadastrarNutri", {
+                etapa: "2", 
+                card1: "hidden", 
+                card2: "", 
+                card3: "hidden", 
+                card4: "hidden",
+                cardSucesso: true,
+                valores: dadosNutri,
+                listaErros: { errors: [{ msg: error.message }] }
+            });
         }
-
-        if (etapa === "4") {
-            // Recuperar imagens dos campos hidden
-            if (req.body.imagemPerfilData || req.body.imagemBannerData) {
-                try {
-                    dadosNutri.imagemPerfil = req.body.imagemPerfilData ? JSON.parse(req.body.imagemPerfilData) : null;
-                    dadosNutri.imagemBanner = req.body.imagemBannerData ? JSON.parse(req.body.imagemBannerData) : null;
-                } catch (error) {
-                    console.error('Erro ao recuperar imagens dos campos hidden:', error.message);
-                    dadosNutri.imagemPerfil = null;
-                    dadosNutri.imagemBanner = null;
-                }
-            }
-            
-            try {
-                // Função para validar certificados
-                const validarCertificado = (arquivo, tipo) => {
-                    if (!arquivo) return null;
-                    
-                    if (arquivo.size > 10 * 1024 * 1024) {
-                        throw new Error(`${tipo} muito grande. Máximo permitido: 10MB`);
-                    }
-                    
-                    const tiposPermitidos = [
-                        'application/pdf', 
-                        'image/jpeg', 
-                        'image/jpg', 
-                        'image/png', 
-                        'image/gif', 
-                        'image/webp'
-                    ];
-                    if (!tiposPermitidos.includes(arquivo.mimetype)) {
-                        throw new Error(`Formato de ${tipo} não suportado. Use: PDF, JPEG, PNG, GIF ou WEBP`);
-                    }
-                    
-                    return arquivo;
-                };
-
-                const certificadoFaculdade = validarCertificado(
-                    req.files && req.files['certificadoFaculdade'] ? req.files['certificadoFaculdade'][0] : null,
-                    'certificado de faculdade'
-                );
-                
-                const certificadoCurso = validarCertificado(
-                    req.files && req.files['certificadoCurso'] ? req.files['certificadoCurso'][0] : null,
-                    'certificado de curso'
-                );
-
-                // Preparar dados de formação para o controller
-                dadosNutri.certificadoFaculdade = certificadoFaculdade;
-                dadosNutri.certificadoCurso = certificadoCurso;
-                
-                // Preservar dados de formação acadêmica
-                dadosNutri.faculdade = req.body.faculdade || '';
-                dadosNutri.faculdadeOrg = req.body.faculdadeOrg || '';
-                dadosNutri.curso = req.body.curso || '';
-                dadosNutri.cursoOrg = req.body.cursoOrg || '';
-
-                return await NWController.cadastrarNutricionista(req, res);
-
-            } catch (error) {
-                let mensagemErro = 'Erro no upload dos certificados. Tente novamente.';
-                
-                if (error.message.includes('muito grande')) {
-                    mensagemErro = error.message;
-                } else if (error.message.includes('não suportado')) {
-                    mensagemErro = error.message;
-                } else if (error.code === 'LIMIT_FILE_SIZE') {
-                    mensagemErro = 'Arquivo muito grande. Tamanho máximo permitido: 10MB';
-                }
-                
-                return res.render("pages/indexCadastrarNutri", {
-                    etapa: "4", 
-                    card1: "hidden", 
-                    card2: "hidden", 
-                    card3: "hidden", 
-                    card4: "",
-                    cardSucesso: true,
-                    valores: dadosNutri,
-                    listaErros: { 
-                        errors: [{ msg: mensagemErro }] 
-                    }
-                });
-            }
-        }
-
-        return res.redirect('/cadastrarnutricionista');
     }
-);
+
+    if (etapa === "3") {
+        if (req.body.imagemPerfilData) {
+            dadosNutri.imagemPerfil = JSON.parse(req.body.imagemPerfilData);
+        }
+        if (req.body.imagemBannerData) {
+            dadosNutri.imagemBanner = JSON.parse(req.body.imagemBannerData);
+        }
+        
+        return res.render("pages/indexCadastrarNutri", {
+            etapa: "4", 
+            card1: "hidden", 
+            card2: "hidden", 
+            card3: "hidden", 
+            card4: "",
+            cardSucesso: true,
+            valores: dadosNutri, 
+            listaErros: null
+        });
+    }
+
+    if (etapa === "4") {
+        return NWController.cadastrarNutricionista(req, res);
+    }
+
+    return res.redirect('/cadastrarnutricionista');
+});
 
 router.get("/cadastrocliente", function (req, res) {
     res.render('pages/indexCadastroCliente', { retorno: null, etapa:"1", valores: {nome:"", email:"", cpf:"", senha:"", telefone:"", ddd:""}, listaErros: null});
@@ -672,5 +445,33 @@ router.get("/publicar", function (req, res) {
 router.get("/assinatura", function (req, res) {
     res.render('pages/indexAssinatura')
 });
+
+function validarImagensEtapa2(files) {
+    const validarImagem = (arquivo, tipo) => {
+        if (!arquivo) return null;
+        
+        if (arquivo.size > 5 * 1024 * 1024) {
+            throw new Error(`${tipo} muito grande. Máximo permitido: 5MB`);
+        }
+        
+        const tiposPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+        if (!tiposPermitidos.includes(arquivo.mimetype)) {
+            throw new Error(`Formato de ${tipo} não suportado. Use: JPEG, PNG, GIF ou WEBP`);
+        }
+        
+        return arquivo;
+    };
+
+    return {
+        imagemPerfil: validarImagem(
+            files && files['input-imagem'] ? files['input-imagem'][0] : null, 
+            'foto de perfil'
+        ),
+        imagemBanner: validarImagem(
+            files && files['input-banner'] ? files['input-banner'][0] : null, 
+            'banner'
+        )
+    };
+}
 
 module.exports = router;

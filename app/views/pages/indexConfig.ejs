@@ -18,10 +18,20 @@
         </section>
     
         <section class="center-section">
-            <section class="input-premium">
-                <span class="material-icons search-icon md-24">search</span>
-                <input>
-            </section>
+            <form action="/buscar" method="GET" class="form-busca">
+                <section class="input-premium">
+                    <span class="material-icons search-icon md-24">search</span>
+                    <input 
+                        type="text" 
+                        name="q" 
+                        placeholder="Buscar publicações e nutricionistas..."
+                        value="<%= typeof termo !== 'undefined' ? termo : '' %>"
+                        minlength="2"
+                        required
+                    >
+                    <button type="submit" style="display: none;"></button>
+                </section>
+            </form>
         </section>
         
         <section class="right-section">
@@ -195,13 +205,15 @@
                                 oninput="this.value = this.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, '')">
                         </section>
                         
-                        <section class="campo-form">
-                            <label for="sobreMim">Sobre você</label>
-                            <textarea name="sobreMim"
-                            id="sobreMim" 
-                            class="campo-texto" 
-                            maxlength="400"><%= valores && valores.sobreMim ? valores.sobreMim : (headerUsuario.dadosCompletos ? headerUsuario.dadosCompletos.sobreMim : '') %></textarea>
-                        </section>
+                        <% if (headerUsuario.tipo == 'N') { %>
+                            <section class="campo-form">
+                                <label for="sobreMim">Sobre você</label>
+                                <textarea name="sobreMim"
+                                id="sobreMim" 
+                                class="campo-texto" 
+                                maxlength="400"><%= valores && valores.sobreMim ? valores.sobreMim : (headerUsuario.dadosCompletos ? headerUsuario.dadosCompletos.sobreMim : '') %></textarea>
+                            </section>
+                        <% } %>
                         
                         <section class="campo-form">
                             <label for="email">E-mail</label>
