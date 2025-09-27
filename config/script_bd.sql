@@ -251,7 +251,7 @@ INSERT INTO `Usuarios` (Telefone, Email, NomeCompleto, CEP, DataNascimento, Usua
 ('80888890123', 'andre.vale@nutriweb.com', 'Andre Vale', '19345678', '1983-12-07', 'N', '$2b$10$exemplo.hash.senha', 1),
 ('90777901234', 'bianca.moura@nutriweb.com', 'Bianca Moura', '20456789', '1991-04-15', 'N', '$2b$10$exemplo.hash.senha', 1),
 ('10666012345', 'daniel.peixoto@nutriweb.com', 'Daniel Peixoto', '21567890', '1986-10-30', 'N', '$2b$10$exemplo.hash.senha', 1),
-('19555123456', 'vanessa.tavares@nutriweb.com', 'Vanessa Tavares', '22678901', '1989-06-19', 'N', '$2b$10$exemplo.hash.senha', 1),
+('19555123456', 'vanessa.luz@nutriweb.com', 'Vanessa Luz', '22678901', '1989-06-19', 'N', '$2b$10$exemplo.hash.senha', 1),
 ('18444234567', 'gabriel.lemos@nutriweb.com', 'Gabriel Lemos', '23789012', '1987-02-26', 'N', '$2b$10$exemplo.hash.senha', 1);
 
 INSERT INTO `Nutricionistas` (UsuarioId, Crn) VALUES
@@ -327,7 +327,7 @@ INSERT INTO `Perfis` (UsuarioId, SobreMim) VALUES
 (32, 'Olá! Sou Andre Vale, especialista em nutrição balanceada. Ajudo você a criar um estilo de vida alimentar equilibrado, promovendo saúde e bem-estar de forma natural e sustentável.'),
 (33, 'Oi! Eu sou Bianca Moura, nutricionista funcional. Trabalho investigando as causas dos desequilíbrios no seu organismo, usando a alimentação como ferramenta para restaurar sua saúde de forma integral.'),
 (34, 'Olá! Sou Daniel Peixoto, especializado em nutrição funcional. Meu foco é entender como seu corpo funciona e personalizar sua alimentação para otimizar todos os seus sistemas internos.'),
-(35, 'Prazer! Sou Vanessa Tavares, nutricionista funcional. Acredito que cada pessoa é única, por isso investigo profundamente suas necessidades individuais para criar protocolos alimentares personalizados.'),
+(35, 'Prazer! Sou Vanessa Luz, nutricionista funcional. Acredito que cada pessoa é única, por isso investigo profundamente suas necessidades individuais para criar protocolos alimentares personalizados.'),
 (36, 'Olá! Sou Gabriel Lemos, focado em nutrição funcional. Trabalho com uma abordagem integrativa, usando alimentos como medicina para corrigir desequilíbrios e otimizar o funcionamento do seu organismo.');
 
 INSERT INTO `NutricionistasEspecializacoes` (NutricionistaId, EspecializacaoId) VALUES

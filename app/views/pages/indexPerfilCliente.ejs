@@ -91,6 +91,12 @@
                 <section id="imagem_de_fundo" style="background-image: url('<%= cliente.fotoBanner %>')"></section>
             <% } %>
             <main class="conteudo">
+                <section class="back">
+                    <a href="/" class="back-button">
+                        <span class="material-icons arrow-icon md-24">arrow_back_ios</span>
+                        <span class="back-arrow">Voltar</span>
+                    </a>
+                </section>
                 <section id="info_perfil">
                     <section id="container_foto">
                         <% if (isOwner) { %>

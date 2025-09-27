@@ -125,6 +125,12 @@
                 <section id="imagem_de_fundo" style="background-image: url('<%= nutricionista.fotoBanner %>')"></section>
             <% } %>
             <main class="conteudo">
+                <section class="back">
+                    <a href="/" class="back-button">
+                        <span class="material-icons arrow-icon md-24">arrow_back_ios</span>
+                        <span class="back-arrow">Voltar</span>
+                    </a>
+                </section>
                 <% if (erro) { %>
                     <section class="erro-mensagem">
                         <p><%= erro %></p>
