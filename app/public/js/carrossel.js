@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function irPagina() {
-    window.location.href = "/tiponutri";
+    window.location.href = "/quiz";
 }
 
 function irAgroBox() {

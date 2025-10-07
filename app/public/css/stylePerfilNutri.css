@@ -100,6 +100,7 @@ body {
     cursor: pointer;
     color: black;
     padding: 0;
+    transition: all 0.3s ease;
 }
 
 .input-premium {
@@ -461,6 +462,13 @@ main{
     margin-right: 10px;
 }
 
+.card-header-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
 .card-header img {
     border-radius: 50%;
     width: 50px;
@@ -573,7 +581,7 @@ main{
 
 .modal-content-publicacao {
     background: white;
-    width: 80%;
+    width: 90%;
     max-width: 1200px;
     display: flex;
     border-radius: 10px;
@@ -601,12 +609,18 @@ main{
     flex-direction: column;
 }
 
+.container-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 20px 10px 0;
+}
+
 .card-header-modal-publicacao {
     display: flex;
     align-items: center;
     padding: 0;
-    padding-top: 20px;
-    width: 30%;
+    width: auto;
     background-color: transparent;
 }
 
@@ -673,6 +687,25 @@ main{
     margin-top: 10px;
 }
 
+.modal-description-publicacao {
+    padding: 0 20px;
+    overflow-y: auto;
+    max-height: 300px;
+}
+
+.modal-description-publicacao::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-description-publicacao::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.modal-description-publicacao::-webkit-scrollbar-thumb {
+    background-color: #4CAF50;
+    border-radius: 8px;
+}
+
 .close-modal {
     position: absolute;
     top: 10px;
@@ -684,16 +717,134 @@ main{
     font-size: 45px;
 }
 
-.btn-favorite{
-    margin-left: auto;
-    color: transparent;
-    -webkit-text-stroke: 2px black; 
-    cursor: pointer;
-    margin-right: 8px;
+.btn-favorite-comment {
+    align-items: center;
+    gap: 10px;
+    padding: 15px 20px 10px 20px;
 }
 
-.btn-comment{
+.btn-favorite {
+    color: transparent;
+    -webkit-text-stroke: 2px black;
     cursor: pointer;
+    user-select: none;
+    transition: all 0.3s ease;
+}
+
+.btn-favorite.ativo {
+    color: red;
+    -webkit-text-stroke: 0px;
+}
+
+.btn-comment {
+    cursor: pointer;
+    user-select: none;
+}
+
+.comentarios-lista {
+    max-height: 150px;
+    overflow-y: auto;
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0 20px;
+    padding-right: 10px;
+}
+
+.comentarios-lista::-webkit-scrollbar {
+    width: 8px;
+}
+
+.comentarios-lista::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 8px;
+}
+
+.comentarios-lista::-webkit-scrollbar-thumb {
+    background-color: #4CAF50;
+    border-radius: 8px;
+    border: 2px solid #f1f1f1;
+}
+
+.sem-comentarios {
+    font-weight: bold;
+    margin: 20px 0;
+    font-size: 16px;
+    text-align: center;
+    color: #666;
+}
+
+.comentario-publicacao {
+    background-color: #f1f1f1;
+    padding: 10px;
+    border-radius: 6px;
+    margin-top: 10px;
+    font-size: 14px;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.comentario-topo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.foto-perfil {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+}
+
+.comentario-header {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+}
+
+.nome-usuario {
+    font-weight: bold;
+    font-size: 14px;
+    color: #222;
+}
+
+.menu-denunciar-comentario {
+    position: relative;
+    display: inline-block;
+}
+
+.menu-pontos-comentarios {
+    font-size: 22px;
+    cursor: pointer;
+    color: #666;
+    user-select: none;
+}
+
+.denunciar-comentario {
+    display: none;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 5px 10px;
+    font-size: 12px;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+    top: 25px;
+    white-space: nowrap;
+    z-index: 10;
+}
+
+.texto-comentario {
+    font-size: 14px;
+    color: #333;
+    margin-left: 40px;
+    margin-top: -4px;
 }
 
 .container-comentarios {
@@ -702,10 +853,7 @@ main{
     border: 1px solid #ccc;
     border-radius: 20px;
     padding: 8px 12px;
-    /* margin: 20px auto;  */
-    margin-right: 20px;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin: 15px 20px 20px 20px;
     background-color: #f9f9f9;
 }
 
@@ -721,6 +869,194 @@ main{
     flex: 1;
     font-size: 14px;
     background: transparent;
+}
+
+.controle-modal {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.menu-denunciar {
+    position: relative;
+    display: inline-block;
+}
+
+.menu-pontos {
+    font-size: 28px;
+    font-weight: 500;
+    cursor: pointer;
+    color: green;
+    user-select: none;
+}
+
+.denunciar-opcao {
+    display: none;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 13px;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+    top: -35px;
+    white-space: nowrap;
+}
+
+.close-modal-publicacao {
+    cursor: pointer;
+    color: green;
+    font-size: 45px;
+}
+
+.modal-content-denuncia {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+    position: relative;
+}
+
+.modal-content-denuncia h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.modal-content-denuncia p {
+    font-size: 17px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.btn-denuncia {
+    display: block;
+    background-color: #e9550d;
+    color: white;
+    font-weight: 530;
+    letter-spacing: 0.8px;
+    border: none;
+    padding: 11px;
+    margin: 10px 0;
+    width: 100%;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-denuncia:hover {
+    background-color: #d14800;
+}
+
+.btn-denuncia.selected {
+    background-color: #b63e00;
+}
+
+.modal-content-denuncia textarea {
+    width: 95%;
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 4px;
+    border: 2px solid #e9550d;
+    resize: none;
+    outline: none;
+    font-family: 'Arial', sans-serif;
+    font-size: 15.5px;
+    color: #333;
+}
+
+.modal-content-denuncia textarea:focus {
+    border: 2px solid #e9550d;
+}
+
+.modal-content-denuncia textarea::placeholder {
+    font-family: 'Arial', sans-serif;
+    font-size: 15.5px;
+    color: #999;
+}
+
+.btn-enviar-denuncia {
+    background-color: #007d20;
+    color: white;
+    border: none;
+    width: 100px;
+    letter-spacing: 0.5px;
+    padding: 9px 10px;
+    margin-top: 15px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-enviar-denuncia:hover {
+    background-color: #005d18;
+}
+
+.mensagem-confirmacao {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 40px 50px;
+    width: 500px;
+    max-width: 90%;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.15);
+    border-radius: 6px;
+    text-align: center;
+    z-index: 9999;
+    font-family: Arial, sans-serif;
+}
+
+.mensagem-confirmacao h2 {
+    color: #e9550d;
+    font-weight: bold;
+    font-size: 24px;
+    margin-bottom: 16px;
+}
+
+.mensagem-confirmacao p {
+    color: #222;
+    font-size: 17px;
+    line-height: 1.4;
+    margin: 0;
+}
+
+.fechar-msg {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: transparent;
+    border: none;
+    font-size: 33px;
+    font-weight: bold;
+    color: green;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.3s ease;
+}
+
+.fechar-msg:hover {
+    color: darkgreen;
+}
+
+.close-denuncia {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 40px;
+    cursor: pointer;
+    color: green;
+}
+
+.modal-image-mobile {
+    display: none;
 }
 
 .modal-description h2,

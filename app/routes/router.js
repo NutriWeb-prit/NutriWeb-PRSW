@@ -446,6 +446,10 @@ router.get("/assinatura", function (req, res) {
     res.render('pages/indexAssinatura')
 });
 
+router.get("/quiz", function (req, res) {
+    res.render('pages/indexQuiz')
+});
+
 function validarImagensEtapa2(files) {
     const validarImagem = (arquivo, tipo) => {
         if (!arquivo) return null;
