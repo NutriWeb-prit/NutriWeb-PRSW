@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="imagens/logo-icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="css/styleSenha.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Recuperar Senha - NutriWeb</title>
+</head>
+
+<body>
+    <header class="header">
+        <section class="left-section">
+            <a href="/"><img src="imagens/logo.png" alt="Logo" class="logo"></a>
+            <a href="/ranking" class="ranking"><button class="ranking-button">Ranking</button></a>
+            <a href="/profissionais"><button class="profissionais-button">Profissionais</button></a>
+        </section>
+    
+        <section class="center-section">
+            <form action="/buscar" method="GET" class="form-busca">
+                <section class="input-premium">
+                    <span class="material-icons search-icon md-24">search</span>
+                    <input type="text" name="q" placeholder="Buscar publicações e nutricionistas..." minlength="2" required>
+                </section>
+            </form>
+        </section>
+        
+        <section class="right-section">
+            <% if (headerUsuario.estaLogado) { %>
+                <a href="/premium"><button class="premium-button">Premium</button></a>
+                <a href="<%= headerUsuario.urlPerfil %>" class="perfil-usuario-link">
+                    <div class="perfil-usuario">
+                        <img src="<%= headerUsuario.fotoPerfil %>" alt="Foto de perfil" class="foto-perfil-header" onerror="this.src='imagens/foto_perfil.jpg'">
+                        <span class="nome-usuario-header"><%= headerUsuario.nome %></span>
+                    </div>
+                </a>
+            <% } else { %>
+                <a href="/premium"><button class="premium-button">Premium</button></a>
+                <a href="/login"><button class="entrar-button">Entrar</button></a>
+            <% } %>
+        </section>
+    </header>
+
+    <%
+    let erroValidacao = { email: "" };
+    let msgErro = { email: "" };
+
+    if (listaErros) {
+        listaErros.errors.forEach(function(erro) {
+            if (erro.path == "email") {
+                erroValidacao.email = "erro-form";
+                msgErro.email = erro.msg;
+            }
+        });
+    }
+    %>
+
+    <section class="header-content">
+        <a href="/login" class="back-button">
+            <span class="material-icons arrow-icon">arrow_back_ios</span>
+            <span class="back-arrow">Voltar</span>
+        </a>
+    </section>
+
+    <section class="senha-container">
+        <section class="senha-card">
+            <span class="material-icons">lock_reset</span>
+            <h2>Recuperar Senha</h2>
+            <p>Digite seu email cadastrado para receber as instruções de recuperação</p>
+            
+            <form method="post" action="/senha">
+                <input type="email" 
+                    name="email" 
+                    id="email" 
+                    value="<%= valores.email %>" 
+                    class="<%= erroValidacao.email %>" 
+                    placeholder="Digite seu e-mail"
+                    maxlength="50"
+                    autocomplete="email"
+                    required>
+                    
+                <% if (msgErro.email) { %>
+                    <span class="erro-mensagem"><%= msgErro.email %></span>
+                <% } %>
+                
+                <input type="submit" value="Enviar Instruções" class="btn-entrar">
+            </form>
+
+            <div class="or-divider">Ou</div>
+
+            <div class="senha-actions">
+                <a href="/login"><button>Voltar para o Login</button></a>
+                <a href="/cadastro"><button>Criar uma nova conta</button></a>
+            </div>
+        </section>
+
+        <section class="side-image">
+            <img src="imagens/img-login.jpg" alt="Recuperação de Senha">
+        </section>
+    </section>
+
+    <section class="mobile">
+        <section class="menu">
+            <section class="left-section">
+                <a href="/"><img src="imagens/logo.png" alt="Logo" class="logo"></a>
+            </section>
+            <section class="right-section">
+                <span class="material-icons search-icon md-24 menu-icon">menu</span>
+            </section>
+        </section>
+
+        <section class="mobile-menu hidden">
+            <ul>
+                <li><a href="/ranking">Ranking</a></li>
+                <li><a href="/profissionais">Profissionais</a></li>
+                <li><a href="/premium">Premium</a></li>
+                <li><a href="/login">Entrar</a></li>
+            </ul>
+        </section>
+    </section>
+
+    <footer class="footer-mobile">
+        <section class="footer-container">
+            <section class="footer-logo">
+                <a href="/"><img src="imagens/logo.png" alt="Logo" class="logo"></a>
+                <a href="/"><h3>NutriWeb</h3></a>
+            </section>
+            <section class="footer-informacao">
+                <a href="/">Página Inicial</a>
+                <a href="/ranking">Ranking</a>
+                <a href="/profissionais">Profissionais</a>
+                <a href="/premium">Premium</a>
+                <a href="/login">Login</a>
+            </section>
+            <section class="footer-social">
+                <p>Conecte-se com os melhores nutricionistas</p>
+                <h3>Siga-nos</h3>
+                <section class="social-icons">
+                    <a href="https://www.instagram.com/nutriweb_oficial/"><i class="fab fa-instagram"></i></a>
+                </section>
+            </section>
+        </section>
+        <section class="footer-bottom">
+            <p>&copy; 2024 NutriWeb. Todos os direitos reservados.</p>
+        </section>
+    </footer>
+
+    <script src="js/indexMenu.js"></script>
+    <script src="js/alerts.js"></script>
+</body>
+</html>

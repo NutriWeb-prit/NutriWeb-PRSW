@@ -4,14 +4,14 @@ document.addEventListener('DOMContentLoaded', function () {
             items: document.querySelectorAll('.carousel-item'),
             next: document.querySelector('.carousel-control-next'),
             prev: document.querySelector('.carousel-control-prev'),
-            button: document.getElementById('btn-sabeMais'),
+            thirdImage: document.querySelector('.carousel-item:nth-child(3) img'),
             fifthImage: document.querySelector('.carousel-item:nth-child(5) img')
         },
         mobile: {
             items: document.querySelectorAll('.carousel-item-mobile'),
             next: document.querySelector('.carousel-control-next-mobile'),
             prev: document.querySelector('.carousel-control-prev-mobile'),
-            button: document.getElementById('btn-sabeMais-mobile'),
+            thirdImage: document.querySelector('.carousel-item-mobile:nth-child(3) img'),
             fifthImage: document.querySelector('.carousel-item-mobile:nth-child(5) img')
         },
         indicators: document.querySelectorAll('.indicator')
@@ -25,14 +25,24 @@ document.addEventListener('DOMContentLoaded', function () {
     const AUTOPLAY_DELAY = 3000;
 
     function updateCarousel(type, index) {
-        const { items, button, fifthImage } = elements[type];
+        const { items, thirdImage, fifthImage } = elements[type];
         const currentState = state[type];
         
-        items[currentState.currentIndex]?.classList.remove('active');
+        items.forEach((item, i) => {
+            item.classList.remove('active');
+            item.style.zIndex = i === index ? '2' : '1';
+        });
+        
         items[index]?.classList.add('active');
         
-        if (button) {
-            button.classList.toggle('hidden', index !== 2);
+        if (thirdImage) {
+            if (index === 2) {
+                thirdImage.setAttribute('onclick', 'irPagina()');
+                thirdImage.style.cursor = 'pointer';
+            } else {
+                thirdImage.removeAttribute('onclick');
+                thirdImage.style.cursor = 'default';
+            }
         }
         
         if (fifthImage) {

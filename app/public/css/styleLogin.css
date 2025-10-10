@@ -387,12 +387,12 @@ body {
     color: #1877F2;
 }
 
-.novo-usuario{
+.novo-usuario, .esqueci-senha {
     align-items: center;
     margin-top: 30px;
 }
 
-.novo-usuario button{
+.novo-usuario button, .esqueci-senha button {
     border: none;
     color: green;
     font-size: 18px;

@@ -1,9 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Função para processar notificações com delay
     function processarNotificacoes() {
         const urlParams = new URLSearchParams(window.location.search);
-        
-        // Configuração centralizada de mensagens
+       
         const configuracoes = {
             erro: {
                 param: 'erro',
@@ -16,9 +14,23 @@ document.addEventListener('DOMContentLoaded', function() {
                     'permissao_negada': 'Você não tem permissão para acessar este recurso.',
                     'logout': 'Erro ao fazer logout.',
                     'nenhuma_imagem': 'Nenhuma imagem foi selecionada.',
-                    'nenhum_dado_alterado': 'Nenhum dado foi alterado.'
+                    'nenhum_dado_alterado': 'Nenhum dado foi alterado.',
+                    'token_ausente': 'Link de recuperação inválido.',
+                    'token_invalido': 'Link expirado ou inválido. Solicite um novo link.',
+                    'erro_envio': 'Erro ao enviar email. Tente novamente.',
+                    'erro_redefinir': 'Erro ao redefinir senha. Tente novamente.'
                 },
                 padrao: 'Ocorreu um erro inesperado.'
+            },
+            sucesso: {
+                param: 'sucesso',
+                mensagens: {
+                    'dados_atualizados': 'Dados atualizados com sucesso!',
+                    'imagens_atualizadas': 'Imagens atualizadas com sucesso!',
+                    'email_enviado': 'Email enviado! Verifique sua caixa de entrada e spam.',
+                    'senha_alterada': 'Senha alterada com sucesso! Faça login com sua nova senha.'
+                },
+                padrao: 'Operação realizada com sucesso!'
             },
             login: {
                 param: 'login',
@@ -28,14 +40,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     'cadastro_realizado': 'Cadastro realizado com sucesso!'
                 },
                 padrao: 'Operação realizada.'
-            },
-            sucesso: {
-                param: 'sucesso',
-                mensagens: {
-                    'dados_atualizados': 'Dados atualizados com sucesso!',
-                    'imagens_atualizadas': 'Imagens atualizadas com sucesso!'
-                },
-                padrao: 'Operação realizada com sucesso!'
             }
         };
 
@@ -45,10 +49,10 @@ document.addEventListener('DOMContentLoaded', function() {
         Object.keys(configuracoes).forEach(tipo => {
             const config = configuracoes[tipo];
             const valor = urlParams.get(config.param);
-            
+           
             if (valor) {
                 const mensagem = config.mensagens[valor] || config.padrao;
-                notificacoes.push(mensagem);
+                notificacoes.push({ mensagem, tipo });
                 parametrosParaRemover.push(config.param);
             }
         });
@@ -62,28 +66,29 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    function mostrarNotificacoesSequenciais(mensagens, callback) {
+    function mostrarNotificacoesSequenciais(notificacoes, callback) {
         let indice = 0;
-        
+       
         function mostrarProxima() {
-            if (indice < mensagens.length) {
-                alert(mensagens[indice]);
+            if (indice < notificacoes.length) {
+                const { mensagem, tipo } = notificacoes[indice];
+                alert(mensagem);
                 indice++;
                 setTimeout(mostrarProxima, 100);
             } else if (callback) {
                 callback();
             }
         }
-        
+       
         mostrarProxima();
     }
 
     function limparParametrosDaUrl(parametros, urlParams) {
         parametros.forEach(param => urlParams.delete(param));
-        
-        const novaUrl = window.location.pathname + 
+       
+        const novaUrl = window.location.pathname +
             (urlParams.toString() ? '?' + urlParams.toString() : '');
-        
+       
         if (window.history && window.history.replaceState) {
             window.history.replaceState({}, document.title, novaUrl);
         }

@@ -9,6 +9,9 @@ const upload = require("../util/uploader.js");
 
 const { verificarUsuAutenticado, processarLogin, verificarPermissao, logout } = require("../models/autenticador.js");
 
+const recuperacaoRouter = require('./recuperacao');
+router.use('/', recuperacaoRouter);
+
 router.use(verificarUsuAutenticado);
 
 router.use('/buscar', require('../routes/busca.js'));
