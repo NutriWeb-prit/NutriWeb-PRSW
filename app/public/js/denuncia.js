@@ -45,15 +45,26 @@ denunciaModal.addEventListener('keydown', (event) => {
 function enviarDenuncia() {
     const texto = textarea.value.trim();
     const algumSelecionado = [...botoes].some(btn => btn.classList.contains('selected'));
-
+    
     if (texto !== '' || algumSelecionado) {
+        let tipoDenuncia = window.comentarioSendoDenunciado ? 'comentario' : 'post';
+        
+        console.log('Denúncia enviada:', {
+            tipo: tipoDenuncia,
+            comentarioId: window.comentarioSendoDenunciado?.dataset.comentarioId || null,
+            motivo: texto || [...botoes].find(btn => btn.classList.contains('selected'))?.textContent
+        });
+        
         formDenuncia.style.display = 'none';
         mensagemConfirmacao.style.display = 'block';
-
         textarea.value = '';
         botoes.forEach(b => b.classList.remove('selected'));
+        
+        if (window.comentarioSendoDenunciado) {
+            window.comentarioSendoDenunciado = null;
+        }
     } else {
-        // alert('Por favor, selecione um motivo ou escreva um.');
+        alert('Por favor, selecione um motivo ou escreva um.');
     }
 }
 

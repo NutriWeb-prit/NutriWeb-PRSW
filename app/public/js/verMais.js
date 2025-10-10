@@ -13,7 +13,7 @@ function configurarVerMais() {
     
     const bannersDisponiveis = [
         "imagens/banner1.png",
-        "imagens/banner2.jpg", 
+        "imagens/banner2.png", 
         "imagens/banner4.png",
         "imagens/banner-agrobox-desktop.png"
     ];

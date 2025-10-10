@@ -86,7 +86,7 @@
             <img class="modal-content" id="modalImage">
         </section>
 
-        <section id="conteudo-completo">
+        <section id="conteudo-completo">    
             <section class="overlay hidden">
                 <section class="container-avaliar">
                     <section class="barra-avaliar"></section>
@@ -107,13 +107,11 @@
                                 <span class="star" data-value="4">★</span>
                                 <span class="star" data-value="5">★</span>
                             </section>
-                            <form action="" method="post">
-                                <textarea id="avaliacao" name="avaliacao" value="" class="" rows="15" cols="70" placeholder="Faça sua avaliação deste profissional"></textarea>
+                            <textarea id="avaliacao" name="avaliacao" value="" class="" rows="15" cols="70" maxlength="200" placeholder="Faça sua avaliação deste profissional"></textarea>
                                 <section class="buttons-avaliar">
                                     <button type="button" onclick="fecharMenu()" class="cancelar">Cancelar</button>
                                     <button type="submit" id="postar">Postar</button>
                                 </section>
-                            </form>
                         </section>
                     </section>
                 </section>
@@ -627,8 +625,11 @@
          </section>
     </body>
     <script src="js/caracteres.js"></script>
+    <script>
+        const headerUsuario = JSON.parse('<%- JSON.stringify(headerUsuario || { estaLogado: false }) %>');
+    </script>
     <script src="js/modalPublicacaoPerfilNutri.js"></script>
-    <script src="js/rating.js"></script>
+    <script src="js/avaliacoes.js"></script>
     <script src="js/indexMenu.js"></script>
     <script src="js/uploadimage.js"></script>
     <script src="js/modalHome.js"></script>

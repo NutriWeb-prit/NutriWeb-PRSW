@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const params = new URLSearchParams(window.location.search);
     const id = params.get('id');
-
+    
     const nutricionistas = {
         1: { imagem: 'imagens/profissional1.png'},
         2: { imagem: 'imagens/profissional2.png'},
@@ -39,15 +39,29 @@ document.addEventListener('DOMContentLoaded', function() {
         34: { imagem: 'imagens/profissional34.png'},
         35: { imagem: 'imagens/profissional35.png'},
         36: { imagem: 'imagens/profissional36.png'},
-
     };
-
-    if (id >=0 && id <= 36) {
+    
+    if (id >= 1 && id <= 36) {
         const nutri = nutricionistas[id];
-
         if (nutri) {
-            document.getElementById('foto-perfil').src = nutri.imagem;
-            document.getElementById('img-post').dataset.imgperfil = nutri.imagem;
+            const fotoPerfil = document.getElementById('foto-perfil');
+            if (fotoPerfil) {
+                fotoPerfil.src = nutri.imagem;
+            }
+            
+            const modalProfile = document.getElementById('modal-profile');
+            if (modalProfile) {
+                modalProfile.src = nutri.imagem;
+            }
+            
+            const imgPost = document.getElementById('img-post');
+            if (imgPost) {
+                imgPost.dataset.imgperfil = nutri.imagem;
+            }
+            
+            document.querySelectorAll('.img-post, .post_img').forEach(post => {
+                post.dataset.imgperfil = nutri.imagem;
+            });
         }
     }
 });
