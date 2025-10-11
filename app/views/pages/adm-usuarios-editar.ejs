@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Usuário - Painel Administrativo</title>
+    <link rel="stylesheet" href="/css/styleAdm.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+    <link rel="stylesheet" href="/css/admin-form.css">
+</head>
+<body>
+    <section class="navbar navbar-inverse">
+        <section class="navbar-header">
+            <ul class="nav navbar-nav">
+                <li><a href="/adm">Dashboard</a></li>
+                <li class="active"><a href="/adm/usuarios">Usuários</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/">Voltar ao Site</a></li>
+            </ul>
+        </section>
+    </section>
+
+    <section class="container">
+        <section class="page-header">
+            <h2>
+                <span class="material-symbols-outlined">edit</span>
+                Editar Usuário
+            </h2>
+            <p class="page-subtitle">Atualize as informações do usuário cadastrado</p>
+        </section>
+
+        <section class="form-card">
+            <form action="/adm/atualizar-usuario" method="post" class="form-horizontal">
+                <section class="form-section">
+                    <h3>
+                        <span class="material-symbols-outlined">badge</span>
+                        Identificação
+                    </h3>
+
+                    <div class="form-group">
+                        <label class="control-label">ID do Usuário</label>
+                        <input type="text" class="form-control" value="<%= usuario.id %>" disabled>
+                        <input type="hidden" name="id" value="<%= usuario.id %>">
+                        <small class="help-text">Este campo não pode ser alterado</small>
+                    </div>
+                </section>
+
+                <section class="form-section">
+                    <h3>
+                        <span class="material-symbols-outlined">person</span>
+                        Dados Pessoais
+                    </h3>
+
+                    <div class="form-group <%= listaErros && listaErros.array().some(e => e.param === 'nome') ? 'has-error' : '' %>">
+                        <label class="control-label">
+                            Nome Completo <span class="required">*</span>
+                        </label>
+                        <input type="text" 
+                               class="form-control" 
+                               name="nome" 
+                               value="<%= valores.NomeCompleto %>"
+                               placeholder="Digite o nome completo"
+                               required>
+                        <% if (listaErros && listaErros.array().some(e => e.param === 'nome')) { %>
+                            <small class="error-text">
+                                <span class="material-symbols-outlined">error</span>
+                                <%= listaErros.array().find(e => e.param === 'nome').msg %>
+                            </small>
+                        <% } %>
+                    </div>
+
+                    <div class="form-group <%= listaErros && listaErros.array().some(e => e.param === 'email') ? 'has-error' : '' %>">
+                        <label class="control-label">
+                            Email <span class="required">*</span>
+                        </label>
+                        <input type="email" 
+                               class="form-control" 
+                               name="email" 
+                               value="<%= valores.Email %>"
+                               placeholder="exemplo@email.com"
+                               required>
+                        <% if (listaErros && listaErros.array().some(e => e.param === 'email')) { %>
+                            <small class="error-text">
+                                <span class="material-symbols-outlined">error</span>
+                                <%= listaErros.array().find(e => e.param === 'email').msg %>
+                            </small>
+                        <% } %>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label">
+                            Telefone <span class="required">*</span>
+                        </label>
+                        <section class="phone-group">
+                            <input type="text" 
+                                   class="form-control phone-ddd" 
+                                   name="ddd" 
+                                   placeholder="DDD" 
+                                   maxlength="2" 
+                                   value="<%= valores.Telefone ? valores.Telefone.substring(0, 2) : '' %>"
+                                   required>
+                            <input type="text" 
+                                   class="form-control phone-number" 
+                                   name="telefone" 
+                                   placeholder="Número do telefone" 
+                                   maxlength="9" 
+                                   value="<%= valores.Telefone ? valores.Telefone.substring(2) : '' %>"
+                                   required>
+                        </section>
+                        <small class="help-text">Digite apenas números, sem espaços ou caracteres especiais</small>
+                    </div>
+                </section>
+
+                <section class="form-section">
+                    <h3>
+                        <span class="material-symbols-outlined">toggle_on</span>
+                        Status da Conta
+                    </h3>
+
+                    <div class="form-group">
+                        <label class="control-label">
+                            Status do Usuário <span class="required">*</span>
+                        </label>
+                        <select class="form-control" name="status" required>
+                            <option value="1" <%= valores.UsuarioStatus === 1 ? 'selected' : '' %>>
+                                ✓ Ativo - Usuário pode acessar o sistema
+                            </option>
+                            <option value="0" <%= valores.UsuarioStatus === 0 ? 'selected' : '' %>>
+                                ✗ Inativo - Usuário não pode acessar o sistema
+                            </option>
+                        </select>
+                        <small class="help-text">
+                            Usuários inativos não podem fazer login na plataforma
+                        </small>
+                    </div>
+                </section>
+
+                <section class="form-actions">
+                    <button type="submit" class="btn btn-success btn-lg">
+                        <span class="material-symbols-outlined">save</span>
+                        Salvar Alterações
+                    </button>
+                    <a href="/adm/usuarios" class="btn btn-default btn-lg">
+                        <span class="material-symbols-outlined">close</span>
+                        Cancelar
+                    </a>
+                </section>
+            </form>
+        </section>
+
+        <footer>
+            <p>&copy; 2025 Sistema NutriWeb | Painel Administrativo</p>
+        </footer>
+    </section>
+</body>
+</html>

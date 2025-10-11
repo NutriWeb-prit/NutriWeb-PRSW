@@ -15,8 +15,10 @@ window.addEventListener('DOMContentLoaded', function() {
     let avaliacaoSelecionada = 0;
     let avaliacoes = [];
     let paginaAtual = 0;
-    const ITENS_POR_PAGINA = 6;
     let btnCarregarMais = null;
+    
+    const isMobile = window.innerWidth <= 1100;
+    const ITENS_POR_PAGINA = isMobile ? 3 : 6;
 
     function verificarAutenticacao() {
         if (!usuarioLogado) {

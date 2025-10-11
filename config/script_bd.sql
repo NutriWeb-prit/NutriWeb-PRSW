@@ -252,7 +252,8 @@ INSERT INTO `Usuarios` (Telefone, Email, NomeCompleto, CEP, DataNascimento, Usua
 ('90777901234', 'bianca.moura@nutriweb.com', 'Bianca Moura', '20456789', '1991-04-15', 'N', '$2b$10$exemplo.hash.senha', 1),
 ('10666012345', 'daniel.peixoto@nutriweb.com', 'Daniel Peixoto', '21567890', '1986-10-30', 'N', '$2b$10$exemplo.hash.senha', 1),
 ('19555123456', 'vanessa.luz@nutriweb.com', 'Vanessa Luz', '22678901', '1989-06-19', 'N', '$2b$10$exemplo.hash.senha', 1),
-('18444234567', 'gabriel.lemos@nutriweb.com', 'Gabriel Lemos', '23789012', '1987-02-26', 'N', '$2b$10$exemplo.hash.senha', 1);
+('18444234567', 'gabriel.lemos@nutriweb.com', 'Gabriel Lemos', '23789012', '1987-02-26', 'N', '$2b$10$exemplo.hash.senha', 1),
+('00000000000', 'nutriweb.prit@gmail.com', 'NutriWeb', '00000000', '2023-02-08', 'A', '$2b$12$ZoWb8LtJKcQGSM23Jrdlku2BmjpClb/k.S7vWutsvjwR2a17XZm6G', 1);
 
 INSERT INTO `Nutricionistas` (UsuarioId, Crn) VALUES
 (1, 'CRN-1234'),

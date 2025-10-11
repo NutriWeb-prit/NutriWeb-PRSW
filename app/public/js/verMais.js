@@ -1,13 +1,14 @@
 document.addEventListener('DOMContentLoaded', function() {
     configurarVerMais();
+    configurarVerMaisMobile();
     aplicarEventListenersModalCards(document.querySelectorAll('.card'));
 });
 
 function configurarVerMais() {
-    const btnVerMais = document.querySelector('.btn-verMais');
+    const btnVerMais = document.querySelector('.cards-container .btn-verMais');
     const cardsContainer = document.querySelector('.cards-container');
-    const bannerCardMeio = document.querySelector('.banner-card-meio');
-    const cardsWrapperOriginal = document.querySelector('.cards-wrapper');
+    const bannerCardMeio = document.querySelector('.cards-container .banner-card-meio');
+    const cardsWrapperOriginal = document.querySelector('.cards-container .cards-wrapper');
     
     if (!btnVerMais || !cardsContainer || !bannerCardMeio || !cardsWrapperOriginal) return;
     
@@ -90,6 +91,103 @@ function configurarVerMais() {
         novoCardsWrapper.insertAdjacentElement('afterend', novoBanner);
         
         cardsContainer.appendChild(this);
+        this.addEventListener('click', arguments.callee);
+    });
+}
+
+function configurarVerMaisMobile() {
+    const btnVerMaisMobile = document.querySelector('.cards-container-mobile .btn-verMais');
+    const cardsContainerMobile = document.querySelector('.cards-container-mobile');
+    const bannerCardMeioMobile = document.querySelector('.cards-container-mobile .banner-card-meio');
+    const cardsWrapperOriginalMobile = document.querySelector('.cards-container-mobile .cards-wrapper');
+    
+    if (!btnVerMaisMobile || !cardsContainerMobile || !bannerCardMeioMobile || !cardsWrapperOriginalMobile) return;
+    
+    const bannersDisponiveisMobile = [
+        "imagens/banner1M.png",
+        "imagens/banner2M.png", 
+        "imagens/banner4M.png",
+        "imagens/banner-agrobox-mobile.png"
+    ];
+    
+    let ultimoBannerUsadoMobile = null;
+    
+    function obterBannerAtualMobile() {
+        const bannerAtual = bannerCardMeioMobile.querySelector('img');
+        return bannerAtual ? bannerAtual.src : null;
+    }
+    
+    const bannerOriginalMobile = obterBannerAtualMobile();
+    if (bannerOriginalMobile) {
+        const nomeArquivo = bannerOriginalMobile.split('/').pop();
+        ultimoBannerUsadoMobile = bannersDisponiveisMobile.find(banner => banner.includes(nomeArquivo)) || bannersDisponiveisMobile[0];
+    }
+    
+    const cardsOriginaisMobile = Array.from(cardsWrapperOriginalMobile.querySelectorAll('.card'));
+    
+    function selecionarBannerDiferenteMobile() {
+        let bannersParaEscolher = bannersDisponiveisMobile.filter(banner => banner !== ultimoBannerUsadoMobile);
+        
+        if (bannersParaEscolher.length === 0) {
+            bannersParaEscolher = bannersDisponiveisMobile;
+        }
+        
+        const bannerEscolhido = bannersParaEscolher[Math.floor(Math.random() * bannersParaEscolher.length)];
+        ultimoBannerUsadoMobile = bannerEscolhido;
+        
+        return bannerEscolhido;
+    }
+    
+    function criarBannerAleatorioMobile() {
+        const bannerSection = document.createElement('section');
+        bannerSection.className = 'banner-card-meio';
+        
+        const link = document.createElement('a');
+        link.href = '/tiponutri';
+        
+        const img = document.createElement('img');
+        const imagemAleatoria = selecionarBannerDiferenteMobile();
+        img.src = imagemAleatoria;
+        img.alt = "BannerPatrocinio";
+        
+        if (imagemAleatoria.includes('banner-agrobox-mobile')) {
+            link.onclick = function(e) { 
+                e.preventDefault();
+                irAgroBox(); 
+            };
+        }
+        
+        link.appendChild(img);
+        bannerSection.appendChild(link);
+        return bannerSection;
+    }
+    
+    btnVerMaisMobile.addEventListener('click', function() {
+        this.remove();
+        
+        const novoCardsWrapper = document.createElement('section');
+        novoCardsWrapper.className = 'cards-wrapper';
+        
+        const novosCards = [];
+        
+        cardsOriginaisMobile.forEach(card => {
+            const novoCard = card.cloneNode(true);
+            novoCardsWrapper.appendChild(novoCard);
+            novosCards.push(novoCard);
+        });
+        
+        aplicarEventListenersModalCards(novosCards);
+        
+        const novoBanner = criarBannerAleatorioMobile();
+        
+        const ultimoElemento = cardsContainerMobile.lastElementChild === this ? 
+                              cardsContainerMobile.children[cardsContainerMobile.children.length - 2] : 
+                              cardsContainerMobile.lastElementChild;
+        
+        ultimoElemento.insertAdjacentElement('afterend', novoCardsWrapper);
+        novoCardsWrapper.insertAdjacentElement('afterend', novoBanner);
+        
+        cardsContainerMobile.appendChild(this);
         this.addEventListener('click', arguments.callee);
     });
 }
@@ -186,5 +284,6 @@ function abrirModalComDados(card) {
         document.body.classList.add("body-no-scroll");
         
     } catch (error) {
+        console.error('Erro ao abrir modal:', error);
     }
 }

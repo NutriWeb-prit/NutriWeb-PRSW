@@ -1,33 +1,152 @@
 const pool = require("../../config/pool_conexoes");
 
 const NWModel = {
-    // Método para retornar todos os usuários ativos
     findAll: async () => {
         try {
-            const [resultados, estrutura] = await pool.query(
-                "SELECT * FROM Usuarios WHERE UsuarioStatus = 1"
+            const [usuarios] = await pool.query(
+                `SELECT 
+                    u.id,
+                    u.NomeCompleto,
+                    u.Email,
+                    u.Telefone,
+                    u.UsuarioTipo,
+                    u.UsuarioStatus,
+                    CASE 
+                        WHEN u.UsuarioTipo = 'C' THEN 'Cliente'
+                        WHEN u.UsuarioTipo = 'N' THEN 'Nutricionista'
+                        WHEN u.UsuarioTipo = 'A' THEN 'Administrador'
+                        ELSE 'Desconhecido'
+                    END as TipoUsuarioNome,
+                    CASE 
+                        WHEN u.UsuarioStatus = 1 THEN 'Ativo'
+                        ELSE 'Inativo'
+                    END as StatusNome
+                FROM Usuarios u
+                ORDER BY u.NomeCompleto ASC`
             );
-            console.log(resultados);
-            console.log(estrutura);
-            return resultados;
+            
+            console.log("Usuários carregados:", usuarios.length);
+            return usuarios;
         } catch (erro) {
-            console.log(erro);
-            return false;
+            console.error("Erro ao listar usuários:", erro);
+            throw erro;
         }
     },
-
-    // Buscar um usuário pelo ID
+    
+    // ===== BUSCAR POR ID =====
     findId: async (id) => {
         try {
-            const [linhas] = await pool.query(
-                "SELECT * FROM Usuarios WHERE UsuarioStatus = 1 AND id = ?",
+            const [resultado] = await pool.query(
+                `SELECT 
+                    u.id,
+                    u.NomeCompleto,
+                    u.Email,
+                    u.Telefone,
+                    u.UsuarioTipo,
+                    u.UsuarioStatus,
+                    u.CEP,
+                    u.DataNascimento,
+                    CASE 
+                        WHEN u.UsuarioTipo = 'C' THEN 'Cliente'
+                        WHEN u.UsuarioTipo = 'N' THEN 'Nutricionista'
+                        WHEN u.UsuarioTipo = 'A' THEN 'Administrador'
+                        ELSE 'Desconhecido'
+                    END as TipoUsuarioNome,
+                    CASE 
+                        WHEN u.UsuarioStatus = 1 THEN 'Ativo'
+                        ELSE 'Inativo'
+                    END as StatusNome
+                FROM Usuarios u
+                WHERE u.id = ?`,
                 [id]
             );
-            console.log(linhas);
-            return linhas;
+            
+            if (resultado.length === 0) {
+                return null;
+            }
+    
+            const usuario = resultado[0];
+            
+            if (usuario.UsuarioTipo === 'N') {
+                const [nutriData] = await pool.query(
+                    `SELECT Crn, RazaoSocial FROM Nutricionistas WHERE UsuarioId = ?`,
+                    [id]
+                );
+                
+                if (nutriData.length > 0) {
+                    usuario.Crn = nutriData[0].Crn;
+                    usuario.RazaoSocial = nutriData[0].RazaoSocial;
+                }
+            }
+            
+            if (usuario.UsuarioTipo === 'C') {
+                const [clientData] = await pool.query(
+                    `SELECT CPF FROM Clientes WHERE UsuarioId = ?`,
+                    [id]
+                );
+                
+                if (clientData.length > 0) {
+                    usuario.CPF = clientData[0].CPF;
+                }
+            }
+            
+            console.log("Usuário encontrado:", usuario.NomeCompleto);
+            return usuario;
         } catch (erro) {
-            console.log(erro);
-            return false;
+            console.error("Erro ao buscar usuário por ID:", erro);
+            throw erro;
+        }
+    },
+    
+    // ===== ATUALIZAÇÃO =====
+    atualizarUsuarioADM: async (usuarioId, dadosAtualizacao) => {
+        const conn = await pool.getConnection();
+        
+        try {
+            await conn.beginTransaction();
+            
+            await conn.query(
+                `UPDATE Usuarios SET 
+                    NomeCompleto = ?,
+                    Email = ?,
+                    Telefone = ?,
+                    UsuarioStatus = ?
+                WHERE id = ?`,
+                [
+                    dadosAtualizacao.NomeCompleto,
+                    dadosAtualizacao.Email,
+                    dadosAtualizacao.Telefone,
+                    dadosAtualizacao.UsuarioStatus,
+                    usuarioId
+                ]
+            );
+            
+            await conn.commit();
+            console.log("Usuário atualizado com sucesso - ID:", usuarioId);
+            return true;
+            
+        } catch (erro) {
+            await conn.rollback();
+            console.error("Erro ao atualizar usuário ADM:", erro);
+            throw erro;
+        } finally {
+            conn.release();
+        }
+    },
+    
+    // ===== EXCLUSÃO =====
+    delete: async (id) => {
+        try {
+            const [resultado] = await pool.query(
+                `UPDATE Usuarios SET UsuarioStatus = 0 WHERE id = ?`,
+                [id]
+            );
+            
+            console.log("Usuário inativado - ID:", id);
+            return resultado;
+        } catch (erro) {
+            console.error("Erro ao excluir usuário:", erro);
+            throw erro;
         }
     },
 
@@ -46,16 +165,54 @@ const NWModel = {
         }
     },
 
-    // Inativar um usuário (soft delete)
-    delete: async (id) => {
+    contarUsuarios: async () => {
         try {
-            const [linhas] = await pool.query(
-                "UPDATE Usuarios SET UsuarioStatus = 0 WHERE id = ?",
-                [id]
+            const [resultado] = await pool.query(
+                `SELECT COUNT(*) as total FROM Usuarios WHERE UsuarioStatus = 1`
             );
-            return linhas;
-        } catch (error) {
-            return error;
+            
+            const total = resultado[0].total || 0;
+            console.log("Total de usuários:", total);
+            return total;
+        } catch (erro) {
+            console.error("Erro ao contar usuários:", erro);
+            return 0;
+        }
+    },
+    
+    contarClientes: async () => {
+        try {
+            const [resultado] = await pool.query(
+                `SELECT COUNT(DISTINCT c.id) as total 
+                 FROM Clientes c
+                 INNER JOIN Usuarios u ON c.UsuarioId = u.id
+                 WHERE u.UsuarioStatus = 1 AND u.UsuarioTipo = 'C'`
+            );
+            
+            const total = resultado[0].total || 0;
+            console.log("Total de clientes:", total);
+            return total;
+        } catch (erro) {
+            console.error("Erro ao contar clientes:", erro);
+            return 0;
+        }
+    },
+    
+    contarNutricionistas: async () => {
+        try {
+            const [resultado] = await pool.query(
+                `SELECT COUNT(DISTINCT n.id) as total 
+                 FROM Nutricionistas n
+                 INNER JOIN Usuarios u ON n.UsuarioId = u.id
+                 WHERE u.UsuarioStatus = 1 AND u.UsuarioTipo = 'N'`
+            );
+            
+            const total = resultado[0].total || 0;
+            console.log("Total de nutricionistas:", total);
+            return total;
+        } catch (erro) {
+            console.error("Erro ao contar nutricionistas:", erro);
+            return 0;
         }
     },
 

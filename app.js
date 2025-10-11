@@ -26,6 +26,15 @@ app.use(express.urlencoded({ limit: '200mb', extended: true }));
 var rotas = require("./app/routes/router");
 app.use("/", rotas);
 
+const admRouter = require("./app/routes/adm");
+app.use("/adm", admRouter);
+
+app.get("/adm", (req, res) => {
+  res.render("pages/adm-index", {
+      titulo: "Painel Administrativo"
+  });
+});
+
 app.listen(port, () => {
   console.log(`Servidor ouvindo na porta ${port}\nhttp://localhost:${port}`);
 });
