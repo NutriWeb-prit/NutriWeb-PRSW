@@ -192,14 +192,11 @@ h4 {
     font-weight: 600;
     cursor: pointer;
     transition: var(--transicao);
-    display: inline-block;
+    display: inline-flex;
     text-align: center;
+    align-items: center;
+    gap: 5px;
     white-space: nowrap;
-}
-
-.btn:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--sombra-media);
 }
 
 .btn:active {
@@ -301,16 +298,14 @@ h4 {
     box-shadow: var(--sombra-leve);
     overflow: hidden;
     transition: var(--transicao);
-}
-
-.panel:hover {
-    box-shadow: var(--sombra-media);
-    transform: translateY(-2px);
+    margin-bottom: 20px;
 }
 
 .panel-heading {
+    display: flex;
+    align-items: center;
+    gap: 5px;
     background-color: var(--cor-primaria-clara);
-    border-bottom: 2px solid var(--cor-primaria);
     padding: 16px;
     font-weight: 700;
     color: var(--cor-primaria-escura);
@@ -326,10 +321,6 @@ h4 {
     padding: 12px 20px;
     font-size: 13px;
     color: var(--cor-texto-suave);
-}
-
-.panel-primary {
-    border-left: 4px solid var(--cor-primaria);
 }
 
 .panel-primary .panel-heading {
@@ -364,10 +355,6 @@ h4 {
     color: white;
 }
 
-.panel-info {
-    border-left: 4px solid var(--cor-info);
-}
-
 .panel-info .panel-heading {
     background-color: var(--cor-info);
     color: white;
@@ -394,7 +381,7 @@ h4 {
 }
 
 .table td {
-    padding: 14px 16px;
+    padding: 14px 15px;
     border-bottom: 1px solid var(--cor-borda);
 }
 
@@ -465,7 +452,6 @@ textarea.form-control {
 
 .form-horizontal .control-label {
     padding-top: 6px;
-    text-align: right;
 }
 
 .has-error .form-control {

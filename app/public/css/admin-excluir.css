@@ -106,6 +106,13 @@
     flex-shrink: 0;
 }
 
+.user-avatar-large img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
 .user-avatar-large .material-symbols-outlined {
     font-size: 64px;
     color: white;

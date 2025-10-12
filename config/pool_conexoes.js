@@ -8,7 +8,7 @@ try {
         database: process.env.DB_NAME,
         port: process.env.DB_PORT,
         waitForConnections: true,
-        connectionLimit: 4,
+        connectionLimit: 3,
         queueLimit: 0
     });
     
@@ -22,6 +22,22 @@ try {
             conn.release();
         }
     });
+
+    const gracefulShutdown = async () => {
+        console.log('\n🔴 Encerrando aplicação...');
+        try {
+            await pool.end();
+            console.log('✅ Pool de conexões fechado com sucesso');
+            process.exit(0);
+        } catch (err) {
+            console.error('❌ Erro ao fechar pool:', err);
+            process.exit(1);
+        }
+    };
+
+    process.on('SIGTERM', gracefulShutdown);
+    process.on('SIGINT', gracefulShutdown);
+    process.on('SIGUSR2', gracefulShutdown);
     
 } catch (e) {
     console.log("Falha ao estabelecer o pool de conexões!");

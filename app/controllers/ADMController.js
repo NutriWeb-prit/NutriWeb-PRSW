@@ -114,28 +114,32 @@ const ADMController = {
 
   exibirDetalhes: async (req, res) => {
     try {
-      const { id } = req.query;
-      
-      if (!id || isNaN(id)) {
-        return res.redirect("/adm/usuarios?erro=id_invalido");
-      }
+        const { id } = req.query;
+        
+        if (!id || isNaN(id)) {
+            return res.redirect("/adm/usuarios?erro=id_invalido");
+        }
 
-      const usuario = await NWModel.findId(id);
-      
-      if (!usuario) {
-        return res.redirect("/adm/usuarios?erro=usuario_nao_encontrado");
-      }
+        const usuario = await NWModel.findId(id);
+        
+        if (!usuario) {
+            return res.redirect("/adm/usuarios?erro=usuario_nao_encontrado");
+        }
 
-      res.render("pages/adm-usuarios-detalhes", {
-        usuario: usuario,
-        erro: null,
-        usuarioLogado: req.session.usuario
-      });
+        // Adicionar timestamp para cache busting
+        const timestamp = Date.now();
+
+        res.render("pages/adm-usuarios-detalhes", {
+            usuario: usuario,
+            erro: null,
+            usuarioLogado: req.session.usuario,
+            timestamp: timestamp  // ← ADICIONAR ESTA LINHA
+        });
     } catch (erro) {
-      console.error("Erro ao buscar detalhes:", erro);
-      res.redirect("/adm/usuarios?erro=erro_interno");
+        console.error("Erro ao buscar detalhes:", erro);
+        res.redirect("/adm/usuarios?erro=erro_interno");
     }
-  },
+},
 
   exibirEdicao: async (req, res) => {
     try {
@@ -151,11 +155,14 @@ const ADMController = {
         return res.redirect("/adm/usuarios?erro=usuario_nao_encontrado");
       }
 
+      const timestamp = Date.now();
+
       res.render("pages/adm-usuarios-editar", {
         usuario: usuario,
         valores: usuario,
         listaErros: null,
-        usuarioLogado: req.session.usuario
+        usuarioLogado: req.session.usuario,
+        timestamp: timestamp
       });
     } catch (erro) {
       console.error("Erro ao exibir edição:", erro);
@@ -165,39 +172,128 @@ const ADMController = {
 
   atualizarUsuario: async (req, res) => {
     try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        const usuario = await NWModel.findId(req.body.id);
-        return res.render("pages/adm-usuarios-editar", {
-          usuario: usuario,
-          valores: req.body,
-          listaErros: errors,
-          usuarioLogado: req.session.usuario
-        });
-      }
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            const usuario = await NWModel.findId(req.body.id);
+            return res.render("pages/adm-usuarios-editar", {
+                usuario: usuario,
+                valores: req.body,
+                listaErros: errors,
+                usuarioLogado: req.session.usuario
+            });
+        }
 
-      const { id, nome, email, telefone, ddd, status } = req.body;
+        const { 
+            id, 
+            nome, 
+            email, 
+            telefone, 
+            ddd, 
+            status,
+            dataNascimento,
+            cep,
+            crn,
+            razaoSocial,
+            sobreMim
+        } = req.body;
 
-      if (!id || isNaN(id)) {
-        return res.redirect("/adm/usuarios?erro=id_invalido");
-      }
+        if (!id || isNaN(id)) {
+            return res.redirect("/adm/usuarios?erro=id_invalido");
+        }
 
-      const dadosAtualizacao = {
-        NomeCompleto: nome,
-        Email: email,
-        Telefone: ddd + telefone,
-        UsuarioStatus: status
-      };
+        const usuarioAtual = await NWModel.findId(id);
+        if (!usuarioAtual) {
+            return res.redirect("/adm/usuarios?erro=usuario_nao_encontrado");
+        }
 
-      await NWModel.atualizarUsuarioADM(id, dadosAtualizacao);
+        console.log("Iniciando atualização do usuário ID:", id);
 
-      console.log("Usuário atualizado pela admin:", req.session.usuario.nome);
-      res.redirect("/adm/usuarios?sucesso=usuario_atualizado");
+        // ===== PROCESSAR AVATAR =====
+        let fotoPerfil = null;
+        
+        if (req.files && req.files['input-imagem']) {
+            const arquivo = req.files['input-imagem'][0];
+            
+            console.log("Arquivo enviado:", {
+                nome: arquivo.originalname,
+                tipo: arquivo.mimetype,
+                tamanho: arquivo.size
+            });
+
+            if (arquivo.size > 5 * 1024 * 1024) {
+                const usuario = await NWModel.findId(id);
+                const errors = {
+                    array: () => [{ 
+                        param: 'fotoPerfil', 
+                        msg: 'Arquivo muito grande! Máximo: 5MB' 
+                    }],
+                    isEmpty: () => false
+                };
+                return res.render("pages/adm-usuarios-editar", {
+                    usuario: usuario,
+                    valores: req.body,
+                    listaErros: errors,
+                    usuarioLogado: req.session.usuario
+                });
+            }
+
+            const tiposPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+            if (!tiposPermitidos.includes(arquivo.mimetype)) {
+                const usuario = await NWModel.findId(id);
+                const errors = {
+                    array: () => [{ 
+                        param: 'fotoPerfil', 
+                        msg: 'Tipo de arquivo não suportado! Use: JPG, PNG, GIF ou WEBP' 
+                    }],
+                    isEmpty: () => false
+                };
+                return res.render("pages/adm-usuarios-editar", {
+                    usuario: usuario,
+                    valores: req.body,
+                    listaErros: errors,
+                    usuarioLogado: req.session.usuario
+                });
+            }
+
+            fotoPerfil = arquivo.buffer;
+            console.log("✓ Avatar validado com sucesso");
+        }
+
+        const dadosAtualizacao = {
+            NomeCompleto: nome,
+            Email: email,
+            Telefone: ddd + telefone,
+            UsuarioStatus: status,
+            DataNascimento: dataNascimento || null,
+            CEP: cep || null
+        };
+
+        let dadosEspecificos = {
+            fotoPerfil: fotoPerfil
+        };
+
+        if (usuarioAtual.UsuarioTipo === 'N') {
+            dadosEspecificos.Crn = crn || null;
+            dadosEspecificos.RazaoSocial = razaoSocial || null;
+            dadosEspecificos.SobreMim = sobreMim || null;
+            console.log("Atualizando nutricionista com CRN:", crn);
+        } else if (usuarioAtual.UsuarioTipo === 'C') {
+            console.log("Atualizando cliente (CPF não é alterável)");
+        }
+
+        await NWModel.atualizarUsuarioCompletoADM(id, dadosAtualizacao, dadosEspecificos, usuarioAtual.UsuarioTipo);
+
+        console.log("Usuário atualizado com sucesso pela admin:", req.session.usuario.nome);
+        
+        // ===== ADICIONAR TIMESTAMP PARA CACHE BUSTING =====
+        const timestamp = Date.now();
+        res.redirect(`/adm/usuarios-detalhes?id=${id}&updated=${timestamp}`);
+
     } catch (erro) {
-      console.error("Erro ao atualizar usuário:", erro);
-      res.redirect("/adm/usuarios?erro=erro_atualizacao");
+        console.error("Erro ao atualizar usuário:", erro);
+        res.redirect("/adm/usuarios?erro=erro_atualizacao");
     }
-  },
+},
 
   exibirExclusao: async (req, res) => {
     try {
@@ -219,9 +315,12 @@ const ADMController = {
 
       console.log("Exibindo página de exclusão para usuário:", usuario.NomeCompleto);
 
+      const timestamp = Date.now();
+
       res.render("pages/adm-usuarios-excluir", {
         usuario: usuario,
-        usuarioLogado: req.session.usuario
+        usuarioLogado: req.session.usuario,
+        timestamp: timestamp
       });
     } catch (erro) {
       console.error("Erro ao exibir exclusão:", erro);

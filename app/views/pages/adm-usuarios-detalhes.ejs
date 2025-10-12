@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalhes do Usuário - Painel Administrativo</title>
     <link rel="stylesheet" href="/css/styleAdm.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
     <link rel="stylesheet" href="/css/admin-detalhes.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
 </head>
 <body>
     <section class="navbar navbar-inverse">
@@ -24,7 +24,7 @@
     <section class="container">
         <section class="page-header">
             <h2>
-                <span class="material-symbols-outlined">person</span>
+                <section class="material-symbols-outlined">person</section>
                 Detalhes do Usuário
             </h2>
             <p class="page-subtitle">Informações completas do usuário cadastrado</p>
@@ -34,17 +34,25 @@
             <section class="user-details-card">
                 <section class="card-header">
                     <section class="user-avatar">
-                        <span class="material-symbols-outlined">account_circle</span>
+                        <% if (usuario.FotoPerfil) { %>
+                            <img src="/adm/imagem/perfil/<%= usuario.id %>?t=<%= timestamp %>" 
+                                 alt="Avatar de <%= usuario.NomeCompleto %>" 
+                                 class="avatar-img"
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                            <section class="material-symbols-outlined" style="display:none;">account_circle</section>
+                        <% } else { %>
+                            <section class="material-symbols-outlined">account_circle</section>
+                        <% } %>
                     </section>
                     <section class="user-header-info">
                         <h3><%= usuario.NomeCompleto %></h3>
                         <p class="user-type">
-                            <span class="badge badge-<%= usuario.UsuarioTipo === 'N' ? 'success' : 'info' %>">
+                            <section class="badge badge-<%= usuario.UsuarioTipo === 'N' ? 'success' : (usuario.UsuarioTipo === 'A' ? 'admin' : 'info') %>">
                                 <%= usuario.TipoUsuarioNome %>
-                            </span>
-                            <span class="status-badge status-<%= usuario.UsuarioStatus === 1 ? 'ativo' : 'inativo' %>">
+                            </section>
+                            <section class="status-badge status-<%= usuario.UsuarioStatus === 1 ? 'ativo' : 'inativo' %>">
                                 <%= usuario.StatusNome %>
-                            </span>
+                            </section>
                         </p>
                     </section>
                 </section>
@@ -52,112 +60,125 @@
                 <section class="card-body">
                     <section class="info-section">
                         <h4>
-                            <span class="material-symbols-outlined">badge</span>
+                            <section class="material-symbols-outlined">badge</section>
                             Informações Básicas
                         </h4>
-                        <dl class="info-list">
-                            <div class="info-item">
+                        <section class="info-list">
+                            <section class="info-item">
                                 <dt>ID do Usuário</dt>
-                                <dd><span class="info-value">#<%= usuario.id %></span></dd>
-                            </div>
-                            <div class="info-item">
+                                <dd><section class="info-value">#<%= usuario.id %></section></dd>
+                            </section>
+                            <section class="info-item">
                                 <dt>Nome Completo</dt>
                                 <dd><%= usuario.NomeCompleto %></dd>
-                            </div>
-                            <div class="info-item">
+                            </section>
+                            <section class="info-item">
                                 <dt>Email</dt>
                                 <dd><%= usuario.Email %></dd>
-                            </div>
-                            <div class="info-item">
+                            </section>
+                            <section class="info-item">
                                 <dt>Telefone</dt>
                                 <dd>
                                     <%= usuario.Telefone ?
                                         `(${usuario.Telefone.substring(0,2)}) ${usuario.Telefone.substring(2,7)}-${usuario.Telefone.substring(7)}`
                                         : 'Não informado' %>
                                 </dd>
-                            </div>
-                            <div class="info-item">
+                            </section>
+                            <section class="info-item">
                                 <dt>Data de Nascimento</dt>
                                 <dd>
                                     <%= usuario.DataNascimento ? 
                                         new Date(usuario.DataNascimento).toLocaleDateString('pt-BR') 
                                         : 'Não informado' %>
                                 </dd>
-                            </div>
-                        </dl>
+                            </section>
+                            <section class="info-item">
+                                <dt>Tipo de Usuário</dt>
+                                <dd><%= usuario.TipoUsuarioNome %></dd>
+                            </section>
+                            <section class="info-item">
+                                <dt>Status</dt>
+                                <dd>
+                                    <section class="status-label status-<%= usuario.UsuarioStatus === 1 ? 'ativo' : 'inativo' %>">
+                                        <%= usuario.StatusNome %>
+                                    </section>
+                                </dd>
+                            </section>
+                        </section>
                     </section>
 
                     <section class="info-section">
                         <h4>
-                            <span class="material-symbols-outlined">location_on</span>
+                            <section class="material-symbols-outlined">location_on</section>
                             Endereço
                         </h4>
-                        <dl class="info-list">
-                            <div class="info-item">
+                        <section class="info-list">
+                            <section class="info-item">
                                 <dt>CEP</dt>
                                 <dd>
-                                    <%= usuario.CEP ? 
-                                        usuario.CEP 
-                                        : 'Não informado' %>
+                                    <%= usuario.CEP ? usuario.CEP : 'Não informado' %>
                                 </dd>
-                            </div>
-                        </dl>
+                            </section>
+                        </section>
                     </section>
 
                     <% if (usuario.UsuarioTipo === 'N') { %>
                         <section class="info-section">
                             <h4>
-                                <span class="material-symbols-outlined">medical_services</span>
+                                <section class="material-symbols-outlined">medical_services</section>
                                 Informações Profissionais (Nutricionista)
                             </h4>
-                            <dl class="info-list">
-                                <div class="info-item">
-                                    <dt>CRN</dt>
+                            <section class="info-list">
+                                <section class="info-item">
+                                    <dt>CRN (Conselho Regional)</dt>
                                     <dd>
-                                        <%= usuario.Crn ? 
-                                            usuario.Crn 
-                                            : 'Não informado' %>
+                                        <%= usuario.Crn ? usuario.Crn : 'Não informado' %>
                                     </dd>
-                                </div>
-                                <div class="info-item">
+                                </section>
+                                <section class="info-item">
                                     <dt>Razão Social</dt>
                                     <dd>
-                                        <%= usuario.RazaoSocial ? 
-                                            usuario.RazaoSocial 
-                                            : 'Não informado' %>
+                                        <%= usuario.RazaoSocial ? usuario.RazaoSocial : 'Não informado' %>
                                     </dd>
-                                </div>
-                            </dl>
+                                </section>
+                            </section>
                         </section>
                     <% } %>
 
                     <% if (usuario.UsuarioTipo === 'C') { %>
                         <section class="info-section">
                             <h4>
-                                <span class="material-symbols-outlined">fingerprint</span>
+                                <section class="material-symbols-outlined">fingerprint</section>
                                 Documentação (Cliente)
                             </h4>
-                            <dl class="info-list">
-                                <div class="info-item">
+                            <section class="info-list">
+                                <section class="info-item">
                                     <dt>CPF</dt>
                                     <dd>
-                                        <%= usuario.CPF ? 
-                                            usuario.CPF 
-                                            : '<span class="not-informed">Não informado</span>' %>
+                                        <% if (usuario.CPF) { %>
+                                            <%= usuario.CPF %>
+                                        <% } else { %>
+                                            <section class="not-informed">Não informado</section>
+                                        <% } %>
                                     </dd>
-                                </div>
-                            </dl>
+                                </section>
+                            </section>
                         </section>
                     <% } %>
+
                 </section>
 
                 <section class="card-footer">
                     <a href="/adm/usuarios-editar?id=<%= usuario.id %>" class="btn btn-warning">
-                        <span class="material-symbols-outlined">edit</span>
+                        <section class="material-symbols-outlined">edit</section>
                         Editar Usuário
                     </a>
+                    <a href="/adm/usuarios-excluir?id=<%= usuario.id %>" class="btn btn-danger">
+                        <section class="material-symbols-outlined">delete</section>
+                        Inativar Usuário
+                    </a>
                     <a href="/adm/usuarios" class="btn btn-default">
-                        <span class="material-symbols-outlined">arrow_back</span>
+                        <section class="material-symbols-outlined">arrow_back</section>
                         Voltar para Lista
                     </a>
                 </section>
@@ -167,11 +188,12 @@
                 <strong>Erro!</strong> Usuário não encontrado.
             </section>
             <a href="/adm/usuarios" class="btn btn-primary">
-                <span class="material-symbols-outlined">arrow_back</span>
+                <section class="material-symbols-outlined">arrow_back</section>
                 Voltar para Lista
             </a>
         <% } %>
 
+        <hr />
         <footer>
             <p>&copy; 2025 Sistema NutriWeb | Painel Administrativo</p>
         </footer>

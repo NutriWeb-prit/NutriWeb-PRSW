@@ -24,25 +24,17 @@
     <section class="container">
         <section class="page-header">
             <h2>
-                <span class="material-symbols-outlined">block</span>
+                <section class="material-symbols-outlined">block</section>
                 Inativar Usuário
             </h2>
             <p class="page-subtitle">Confirme a inativação do usuário no sistema</p>
-        </section>
-
-        <section class="alert alert-warning">
-            <span class="material-symbols-outlined alert-icon">warning</span>
-            <div class="alert-content">
-                <strong>Atenção!</strong>
-                <p>Você está prestes a <strong>INATIVAR</strong> este usuário. Os dados <strong>NÃO serão deletados</strong> do banco de dados, apenas marcados como inativos e o usuário não poderá mais acessar a plataforma.</p>
-            </div>
         </section>
 
         <% if (usuario) { %>
             <section class="confirmation-card">
                 <section class="card-header">
                     <h3>
-                        <span class="material-symbols-outlined">person_remove</span>
+                        <section class="material-symbols-outlined">person_remove</section>
                         Confirme os dados do usuário
                     </h3>
                 </section>
@@ -50,48 +42,56 @@
                 <section class="card-body">
                     <section class="user-preview">
                         <section class="user-avatar-large">
-                            <span class="material-symbols-outlined">account_circle</span>
+                            <% if (usuario.FotoPerfil) { %>
+                                <img src="/adm/imagem/perfil/<%= usuario.id %>?t=<%= timestamp %>" 
+                                     alt="Avatar de <%= usuario.NomeCompleto %>" 
+                                     class="avatar-img"
+                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                                <section class="material-symbols-outlined" style="display:none;">account_circle</section>
+                            <% } else { %>
+                                <section class="material-symbols-outlined">account_circle</section>
+                            <% } %>
                         </section>
                         <section class="user-info-preview">
                             <dl class="info-list-preview">
-                                <div class="info-item">
+                                <section class="info-item">
                                     <dt>Nome Completo</dt>
                                     <dd><%= usuario.NomeCompleto %></dd>
-                                </div>
-                                <div class="info-item">
+                                </section>
+                                <section class="info-item">
                                     <dt>Email</dt>
                                     <dd><%= usuario.Email %></dd>
-                                </div>
-                                <div class="info-item">
+                                </section>
+                                <section class="info-item">
                                     <dt>Telefone</dt>
                                     <dd>
                                         <%= usuario.Telefone ? 
                                             `(${usuario.Telefone.substring(0,2)}) ${usuario.Telefone.substring(2,7)}-${usuario.Telefone.substring(7)}` 
                                             : 'Não informado' %>
                                     </dd>
-                                </div>
-                                <div class="info-item">
+                                </section>
+                                <section class="info-item">
                                     <dt>Tipo de Usuário</dt>
                                     <dd>
-                                        <span class="badge badge-<%= usuario.UsuarioTipo === 'N' ? 'success' : 'info' %>">
+                                        <section class="badge badge-<%= usuario.UsuarioTipo === 'N' ? 'success' : 'info' %>">
                                             <%= usuario.TipoUsuarioNome %>
-                                        </span>
+                                        </section>
                                     </dd>
-                                </div>
-                                <div class="info-item">
+                                </section>
+                                <section class="info-item">
                                     <dt>Status Atual</dt>
                                     <dd>
-                                        <span class="status-badge status-<%= usuario.UsuarioStatus === 1 ? 'ativo' : 'inativo' %>">
+                                        <section class="status-badge status-<%= usuario.UsuarioStatus === 1 ? 'ativo' : 'inativo' %>">
                                             <%= usuario.StatusNome %>
-                                        </span>
+                                        </section>
                                     </dd>
-                                </div>
+                                </section>
                             </dl>
                         </section>
                     </section>
 
                     <section class="confirmation-message">
-                        <span class="material-symbols-outlined">help</span>
+                        <section class="material-symbols-outlined">help</section>
                         <h4>Tem certeza que deseja inativar este usuário?</h4>
                         <p>Esta ação pode ser revertida posteriormente editando o status do usuário.</p>
                     </section>
@@ -100,11 +100,11 @@
                 <section class="card-footer">
                     <form action="/adm/excluir-usuario?id=<%= usuario.id %>" method="post" class="confirmation-form">
                         <button type="submit" class="btn btn-danger btn-lg">
-                            <span class="material-symbols-outlined">block</span>
+                            <section class="material-symbols-outlined">block</section>
                             Sim, Inativar Usuário
                         </button>
                         <a href="/adm/usuarios" class="btn btn-default btn-lg">
-                            <span class="material-symbols-outlined">close</span>
+                            <section class="material-symbols-outlined">close</section>
                             Não, Cancelar
                         </a>
                     </form>
@@ -112,14 +112,14 @@
             </section>
         <% } else { %>
             <section class="alert alert-danger">
-                <span class="material-symbols-outlined alert-icon">error</span>
-                <div class="alert-content">
+                <section class="material-symbols-outlined alert-icon">error</section>
+                <section class="alert-content">
                     <strong>Erro!</strong>
                     <p>Usuário não encontrado no sistema.</p>
-                </div>
+                </section>
             </section>
             <a href="/adm/usuarios" class="btn btn-primary">
-                <span class="material-symbols-outlined">arrow_back</span>
+                <section class="material-symbols-outlined">arrow_back</section>
                 Voltar para Lista de Usuários
             </a>
         <% } %>

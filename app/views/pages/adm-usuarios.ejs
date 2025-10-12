@@ -24,7 +24,7 @@
     <section class="container">
         <section class="page-header">
             <h2>
-                <span class="material-symbols-outlined">group</span>
+                <section class="material-symbols-outlined">group</section>
                 Gerenciar Usuários
             </h2>
             <p class="page-subtitle">Visualize e gerencie todos os usuários cadastrados na plataforma</p>
@@ -33,7 +33,7 @@
         <% if (typeof erro !== 'undefined' && erro) { %>
             <section class="alert alert-danger alert-dismissible">
                 <button type="button" class="close" onclick="this.parentElement.style.display='none'">
-                    <span>&times;</span>
+                    <section>&times;</section>
                 </button>
                 <strong>Erro!</strong> <%= erro %>
             </section>
@@ -66,33 +66,33 @@
                                             : 'N/A' %>
                                     </td>
                                     <td>
-                                        <span class="badge badge-<%= usuario.TipoUsuarioNome === 'Nutricionista' ? 'success' : 'info' %>">
+                                        <section class="badge badge-<%= usuario.TipoUsuarioNome === 'Nutricionista' ? 'success' : 'info' %>">
                                             <%= usuario.TipoUsuarioNome %>
-                                        </span>
+                                        </section>
                                     </td>
                                     <td>
-                                        <span class="status-badge status-<%= usuario.UsuarioStatus === 1 ? 'ativo' : 'inativo' %>">
+                                        <section class="status-badge status-<%= usuario.UsuarioStatus === 1 ? 'ativo' : 'inativo' %>">
                                             <%= usuario.StatusNome %>
-                                        </span>
+                                        </section>
                                     </td>
                                     <td class="actions-column">
                                         <section class="btn-group-actions">
                                             <a href="/adm/usuarios-detalhes?id=<%= usuario.id %>" 
                                                class="btn btn-info btn-sm" 
                                                title="Visualizar detalhes">
-                                                <span class="material-symbols-outlined">visibility</span>
+                                                <section class="material-symbols-outlined">visibility</section>
                                                 Detalhes
                                             </a>
                                             <a href="/adm/usuarios-editar?id=<%= usuario.id %>" 
                                                class="btn btn-warning btn-sm"
                                                title="Editar usuário">
-                                                <span class="material-symbols-outlined">edit</span>
+                                                <section class="material-symbols-outlined">edit</section>
                                                 Editar
                                             </a>
                                             <a href="/adm/usuarios-excluir?id=<%= usuario.id %>" 
                                                class="btn btn-danger btn-sm"
                                                title="Inativar usuário">
-                                                <span class="material-symbols-outlined">block</span>
+                                                <section class="material-symbols-outlined">block</section>
                                                 Inativar
                                             </a>
                                         </section>
@@ -101,8 +101,8 @@
                             <% }); %>
                         <% } else { %>
                             <tr>
-                                <td colspan="7" class="empty-state">
-                                    <span class="material-symbols-outlined">person_off</span>
+                                <td colsection="7" class="empty-state">
+                                    <section class="material-symbols-outlined">person_off</section>
                                     <p>Nenhum usuário encontrado</p>
                                 </td>
                             </tr>
@@ -116,8 +116,5 @@
             <p>&copy; 2025 Sistema NutriWeb | Painel Administrativo</p>
         </footer>
     </section>
-
-    <script src="/js/jquery.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
 </body>
 </html>

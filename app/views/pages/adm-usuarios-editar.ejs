@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Usuário - Painel Administrativo</title>
     <link rel="stylesheet" href="/css/styleAdm.css">
+    <link rel="stylesheet" href="/css/admin-editar.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
-    <link rel="stylesheet" href="/css/admin-form.css">
 </head>
 <body>
     <section class="navbar navbar-inverse">
@@ -22,136 +22,293 @@
     </section>
 
     <section class="container">
-        <section class="page-header">
-            <h2>
-                <span class="material-symbols-outlined">edit</span>
-                Editar Usuário
-            </h2>
-            <p class="page-subtitle">Atualize as informações do usuário cadastrado</p>
-        </section>
+        <h2>
+            <span class="material-symbols-outlined">edit</span>
+            Editar Usuário
+        </h2>
 
-        <section class="form-card">
-            <form action="/adm/atualizar-usuario" method="post" class="form-horizontal">
-                <section class="form-section">
-                    <h3>
-                        <span class="material-symbols-outlined">badge</span>
-                        Identificação
-                    </h3>
+        <% if (listaErros && !listaErros.isEmpty && !listaErros.isEmpty()) { %>
+            <section class="alert alert-danger alert-dismissible fade in">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <strong>Erros ao atualizar:</strong>
+                <ul style="margin-top: 10px; margin-bottom: 0;">
+                    <% listaErros.array().forEach(erro => { %>
+                        <li><%= erro.msg %></li>
+                    <% }); %>
+                </ul>
+            </section>
+        <% } %>
 
-                    <div class="form-group">
-                        <label class="control-label">ID do Usuário</label>
-                        <input type="text" class="form-control" value="<%= usuario.id %>" disabled>
-                        <input type="hidden" name="id" value="<%= usuario.id %>">
-                        <small class="help-text">Este campo não pode ser alterado</small>
-                    </div>
-                </section>
+        <% if (usuario) { %>
+            <form action="/adm/atualizar-usuario" method="post" enctype="multipart/form-data" class="form-horizontal">
+                <input type="hidden" name="id" value="<%= usuario.id %>">
 
-                <section class="form-section">
-                    <h3>
-                        <span class="material-symbols-outlined">person</span>
-                        Dados Pessoais
-                    </h3>
+                <section class="panel panel-primary">
+                    <section class="panel-heading">
+                        <span class="material-symbols-outlined">photo_camera</span>
+                        Foto de Perfil
+                    </section>
+                    <section class="panel-body">
+                        <section class="form-group">
+                            <label class="col-sm-2 control-label">Avatar do Usuário</label>
+                            <section class="col-sm-10">
+                                <section class="avatar-upload-container">
+                                    <section class="avatar-preview">
+                                        <% if (usuario.FotoPerfil) { %>
+                                            <img id="avatar-preview-img" src="/adm/imagem/perfil/<%= usuario.id %>?t=<%= timestamp %>" alt="Avatar de <%= usuario.NomeCompleto %>" class="avatar-img">
+                                        <% } else { %>
+                                            <section id="avatar-preview-placeholder" class="avatar-placeholder">
+                                                <span class="material-symbols-outlined">account_circle</span>
+                                            </section>
+                                        <% } %>
+                                    </section>
 
-                    <div class="form-group <%= listaErros && listaErros.array().some(e => e.param === 'nome') ? 'has-error' : '' %>">
-                        <label class="control-label">
-                            Nome Completo <span class="required">*</span>
-                        </label>
-                        <input type="text" 
-                               class="form-control" 
-                               name="nome" 
-                               value="<%= valores.NomeCompleto %>"
-                               placeholder="Digite o nome completo"
-                               required>
-                        <% if (listaErros && listaErros.array().some(e => e.param === 'nome')) { %>
-                            <small class="error-text">
-                                <span class="material-symbols-outlined">error</span>
-                                <%= listaErros.array().find(e => e.param === 'nome').msg %>
-                            </small>
-                        <% } %>
-                    </div>
+                                    <input type="file" id="avatar-input" name="input-imagem" accept="image/*" style="display: none;">
 
-                    <div class="form-group <%= listaErros && listaErros.array().some(e => e.param === 'email') ? 'has-error' : '' %>">
-                        <label class="control-label">
-                            Email <span class="required">*</span>
-                        </label>
-                        <input type="email" 
-                               class="form-control" 
-                               name="email" 
-                               value="<%= valores.Email %>"
-                               placeholder="exemplo@email.com"
-                               required>
-                        <% if (listaErros && listaErros.array().some(e => e.param === 'email')) { %>
-                            <small class="error-text">
-                                <span class="material-symbols-outlined">error</span>
-                                <%= listaErros.array().find(e => e.param === 'email').msg %>
-                            </small>
-                        <% } %>
-                    </div>
+                                    <section class="avatar-actions">
+                                        <button type="button" class="btn btn-primary" onclick="document.getElementById('avatar-input').click();">
+                                            <span class="material-symbols-outlined">upload_file</span>
+                                            Selecionar Imagem
+                                        </button>
+                                        <span class="help-block">Formatos: JPG, PNG, GIF, WEBP | Máximo: 5MB</span>
+                                    </section>
 
-                    <div class="form-group">
-                        <label class="control-label">
-                            Telefone <span class="required">*</span>
-                        </label>
-                        <section class="phone-group">
-                            <input type="text" 
-                                   class="form-control phone-ddd" 
-                                   name="ddd" 
-                                   placeholder="DDD" 
-                                   maxlength="2" 
-                                   value="<%= valores.Telefone ? valores.Telefone.substring(0, 2) : '' %>"
-                                   required>
-                            <input type="text" 
-                                   class="form-control phone-number" 
-                                   name="telefone" 
-                                   placeholder="Número do telefone" 
-                                   maxlength="9" 
-                                   value="<%= valores.Telefone ? valores.Telefone.substring(2) : '' %>"
-                                   required>
+                                    <section id="file-preview" class="file-preview"></section>
+                                </section>
+                            </section>
                         </section>
-                        <small class="help-text">Digite apenas números, sem espaços ou caracteres especiais</small>
-                    </div>
+                    </section>
                 </section>
 
-                <section class="form-section">
-                    <h3>
-                        <span class="material-symbols-outlined">toggle_on</span>
-                        Status da Conta
-                    </h3>
+                <section class="panel panel-primary">
+                    <section class="panel-heading">
+                        <span class="material-symbols-outlined">badge</span>
+                        Informações Básicas
+                    </section>
+                    <section class="panel-body">
+                        <section class="form-group">
+                            <label class="col-sm-2 control-label">ID do Usuário</label>
+                            <section class="col-sm-10">
+                                <input type="text" class="form-control" value="#<%= usuario.id %>" disabled>
+                                <small class="help-block">ID do sistema (não pode ser alterado)</small>
+                            </section>
+                        </section>
 
-                    <div class="form-group">
-                        <label class="control-label">
-                            Status do Usuário <span class="required">*</span>
-                        </label>
-                        <select class="form-control" name="status" required>
-                            <option value="1" <%= valores.UsuarioStatus === 1 ? 'selected' : '' %>>
-                                ✓ Ativo - Usuário pode acessar o sistema
-                            </option>
-                            <option value="0" <%= valores.UsuarioStatus === 0 ? 'selected' : '' %>>
-                                ✗ Inativo - Usuário não pode acessar o sistema
-                            </option>
-                        </select>
-                        <small class="help-text">
-                            Usuários inativos não podem fazer login na plataforma
-                        </small>
-                    </div>
+                        <section class="form-group">
+                            <label class="col-sm-2 control-label">Nome Completo *</label>
+                            <section class="col-sm-10">
+                                <input type="text" class="form-control" name="nome" value="<%= usuario.NomeCompleto %>" required>
+                                <% if (listaErros && listaErros.array().some(e => e.param === 'nome')) { %>
+                                    <small class="help-block error"><%= listaErros.array().find(e => e.param === 'nome').msg %></small>
+                                <% } %>
+                            </section>
+                        </section>
+
+                        <section class="form-group">
+                            <label class="col-sm-2 control-label">Email *</label>
+                            <section class="col-sm-10">
+                                <input type="email" class="form-control" name="email" value="<%= usuario.Email %>" required>
+                                <% if (listaErros && listaErros.array().some(e => e.param === 'email')) { %>
+                                    <small class="help-block error"><%= listaErros.array().find(e => e.param === 'email').msg %></small>
+                                <% } %>
+                            </section>
+                        </section>
+
+                        <section class="form-group">
+                            <label class="col-sm-2 control-label">Telefone *</label>
+                            <section class="col-sm-2">
+                                <input type="text" class="form-control" name="ddd" placeholder="DDD" maxlength="2" 
+                                    value="<%= usuario.Telefone ? usuario.Telefone.substring(0, 2) : '' %>" required>
+                                <small class="help-block">DDD</small>
+                            </section>
+                            <section class="col-sm-8">
+                                <input type="text" class="form-control" name="telefone" placeholder="Telefone" 
+                                    value="<%= usuario.Telefone ? usuario.Telefone.substring(2) : '' %>" required>
+                                <small class="help-block">Número do telefone</small>
+                            </section>
+                        </section>
+
+                        <section class="form-group">
+                            <label class="col-sm-2 control-label">Data de Nascimento</label>
+                            <section class="col-sm-10">
+                                <input type="date" class="form-control" name="dataNascimento" 
+                                    value="<%= usuario.DataNascimento %>">
+                            </section>
+                        </section>
+
+                        <section class="form-group">
+                            <label class="col-sm-2 control-label">CEP</label>
+                            <section class="col-sm-10">
+                                <input type="text" class="form-control" name="cep" placeholder="00000-000"
+                                    value="<%= usuario.CEP ? usuario.CEP : '' %>">
+                            </section>
+                        </section>
+
+                        <section class="form-group">
+                            <label class="col-sm-2 control-label">Tipo de Usuário</label>
+                            <section class="col-sm-10">
+                                <input type="text" class="form-control" value="<%= usuario.TipoUsuarioNome %>" disabled>
+                                <small class="help-block">Tipo de usuário (não pode ser alterado)</small>
+                            </section>
+                        </section>
+
+                        <section class="form-group">
+                            <label class="col-sm-2 control-label">Status *</label>
+                            <section class="col-sm-10">
+                                <select class="form-control" name="status" required>
+                                    <option value="1" <%= usuario.UsuarioStatus === 1 ? 'selected' : '' %>>Ativo</option>
+                                    <option value="0" <%= usuario.UsuarioStatus === 0 ? 'selected' : '' %>>Inativo</option>
+                                </select>
+                            </section>
+                        </section>
+                    </section>
                 </section>
 
-                <section class="form-actions">
-                    <button type="submit" class="btn btn-success btn-lg">
-                        <span class="material-symbols-outlined">save</span>
-                        Salvar Alterações
-                    </button>
-                    <a href="/adm/usuarios" class="btn btn-default btn-lg">
-                        <span class="material-symbols-outlined">close</span>
-                        Cancelar
-                    </a>
+                <% if (usuario.UsuarioTipo === 'N') { %>
+                    <section class="panel panel-success">
+                        <section class="panel-heading">
+                            <span class="material-symbols-outlined">medical_services</span>
+                            Informações Profissionais (Nutricionista)
+                        </section>
+                        <section class="panel-body">
+                            <section class="form-group">
+                                <label class="col-sm-2 control-label">CRN (Conselho Regional)</label>
+                                <section class="col-sm-10">
+                                    <input type="text" class="form-control" name="crn" 
+                                        value="<%= usuario.Crn ? usuario.Crn : '' %>">
+                                    <small class="help-block">Número do Conselho Regional de Nutricionistas</small>
+                                </section>
+                            </section>
+
+                            <section class="form-group">
+                                <label class="col-sm-2 control-label">Razão Social</label>
+                                <section class="col-sm-10">
+                                    <input type="text" class="form-control" name="razaoSocial" 
+                                        value="<%= usuario.RazaoSocial ? usuario.RazaoSocial : '' %>">
+                                    <small class="help-block">Nome da empresa ou consultório</small>
+                                </section>
+                            </section>
+
+                            <section class="form-group">
+                                <label class="col-sm-2 control-label">Sobre Mim</label>
+                                <section class="col-sm-10">
+                                    <textarea class="form-control" name="sobreMim" rows="4"><%= usuario.SobreMim ? usuario.SobreMim : '' %></textarea>
+                                    <small class="help-block">Descrição profissional (máximo 400 caracteres)</small>
+                                </section>
+                            </section>
+                        </section>
+                    </section>
+                <% } %>
+
+                <% if (usuario.UsuarioTipo === 'C') { %>
+                    <section class="panel panel-info">
+                        <section class="panel-heading">
+                            <span class="material-symbols-outlined">fingerprint</span>
+                            Documentação (Cliente)
+                        </section>
+                        <section class="panel-body">
+                            <section class="form-group">
+                                <label class="col-sm-2 control-label">CPF</label>
+                                <section class="col-sm-10">
+                                    <input type="text" class="form-control" 
+                                        value="<%= usuario.CPF ? usuario.CPF : 'Não informado' %>" disabled>
+                                    <small class="help-block">CPF do cliente (não pode ser alterado)</small>
+                                </section>
+                            </section>
+                        </section>
+                    </section>
+                <% } %>
+
+                <section class="form-group">
+                    <section class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-success btn-lg">
+                            <span class="material-symbols-outlined">save</span>
+                            Salvar Alterações
+                        </button>
+                        <a href="/adm/usuarios-detalhes?id=<%= usuario.id %>" class="btn btn-default btn-lg">
+                            <span class="material-symbols-outlined">close</span>
+                            Cancelar
+                        </a>
+                    </section>
                 </section>
             </form>
-        </section>
+        <% } else { %>
+            <section class="alert alert-danger">
+                <strong>Erro!</strong> Usuário não encontrado.
+            </section>
+            <a href="/adm/usuarios" class="btn btn-primary">
+                <span class="material-symbols-outlined">arrow_back</span>
+                Voltar para Lista
+            </a>
+        <% } %>
 
+        <hr />
         <footer>
             <p>&copy; 2025 Sistema NutriWeb | Painel Administrativo</p>
         </footer>
     </section>
+
+    <script>
+        document.getElementById('avatar-input').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            
+            if (file) {
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('Arquivo muito grande! Máximo: 5MB');
+                    e.target.value = '';
+                    return;
+                }
+
+                const tiposPermitidos = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                if (!tiposPermitidos.includes(file.type)) {
+                    alert('Tipo de arquivo não suportado! Use: JPG, PNG, GIF ou WEBP');
+                    e.target.value = '';
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const previewDiv = document.getElementById('file-preview');
+                    previewDiv.innerHTML = `
+                        <section class="selected-file">
+                            <img src="${event.target.result}" alt="Preview da imagem selecionada" class="selected-file-img">
+                            <p class="selected-file-name"><strong>Arquivo selecionado:</strong> ${file.name}</p>
+                            <p class="selected-file-size"><strong>Tamanho:</strong> ${(file.size / 1024).toFixed(2)} KB</p>
+                        </section>
+                    `;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.querySelector('input[name="ddd"]')?.addEventListener('input', function() {
+            if (this.value.length > 2) {
+                this.value = this.value.slice(0, 2);
+            }
+        });
+
+        document.querySelector('input[name="telefone"]')?.addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '');
+            if (this.value.length > 9) {
+                this.value = this.value.slice(0, 9);
+            }
+        });
+
+        document.querySelector('input[name="cep"]')?.addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '');
+            if (this.value.length > 8) {
+                this.value = this.value.slice(0, 8);
+            }
+        });
+
+        document.querySelector('input[name="crn"]')?.addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '');
+            if (this.value.length > 11) {
+                this.value = this.value.slice(0, 11);
+            }
+        });
+    </script>
 </body>
 </html>

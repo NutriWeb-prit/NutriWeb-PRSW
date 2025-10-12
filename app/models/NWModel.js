@@ -33,7 +33,6 @@ const NWModel = {
         }
     },
     
-    // ===== BUSCAR POR ID =====
     findId: async (id) => {
         try {
             const [resultado] = await pool.query(
@@ -46,6 +45,8 @@ const NWModel = {
                     u.UsuarioStatus,
                     u.CEP,
                     u.DataNascimento,
+                    -- Verificar se existe foto de perfil
+                    CASE WHEN p.FotoPerfil IS NOT NULL THEN 1 ELSE 0 END as FotoPerfil,
                     CASE 
                         WHEN u.UsuarioTipo = 'C' THEN 'Cliente'
                         WHEN u.UsuarioTipo = 'N' THEN 'Nutricionista'
@@ -57,6 +58,7 @@ const NWModel = {
                         ELSE 'Inativo'
                     END as StatusNome
                 FROM Usuarios u
+                LEFT JOIN Perfis p ON u.id = p.UsuarioId
                 WHERE u.id = ?`,
                 [id]
             );
@@ -90,7 +92,7 @@ const NWModel = {
                 }
             }
             
-            console.log("Usuário encontrado:", usuario.NomeCompleto);
+            console.log("Usuário encontrado:", usuario.NomeCompleto, "- Tem foto:", !!usuario.FotoPerfil);
             return usuario;
         } catch (erro) {
             console.error("Erro ao buscar usuário por ID:", erro);
@@ -134,6 +136,106 @@ const NWModel = {
         }
     },
     
+    atualizarUsuarioCompletoADM: async (usuarioId, dadosAtualizacao, dadosEspecificos, tipoUsuario) => {
+        const conn = await pool.getConnection();
+        
+        try {
+            await conn.beginTransaction();
+    
+            console.log("Iniciando transação de atualização - Usuário ID:", usuarioId);
+    
+            const camposUsuario = Object.keys(dadosAtualizacao)
+                .map(campo => `${campo} = ?`)
+                .join(', ');
+            
+            const valoresUsuario = Object.values(dadosAtualizacao);
+            valoresUsuario.push(usuarioId);
+    
+            const queryUsuario = `UPDATE Usuarios SET ${camposUsuario} WHERE id = ?`;
+            
+            await conn.query(queryUsuario, valoresUsuario);
+            console.log("✓ Dados gerais do usuário atualizados");
+    
+            if (dadosEspecificos.fotoPerfil) {
+                console.log("Processando atualização de avatar...");
+    
+                const [perfilExistente] = await conn.query(
+                    'SELECT id FROM Perfis WHERE UsuarioId = ?',
+                    [usuarioId]
+                );
+    
+                if (perfilExistente.length > 0) {
+                    await conn.query(
+                        'UPDATE Perfis SET FotoPerfil = ? WHERE UsuarioId = ?',
+                        [dadosEspecificos.fotoPerfil, usuarioId]
+                    );
+                    console.log("✓ Avatar atualizado em perfil existente");
+                } else {
+                    await conn.query(
+                        'INSERT INTO Perfis (UsuarioId, FotoPerfil) VALUES (?, ?)',
+                        [usuarioId, dadosEspecificos.fotoPerfil]
+                    );
+                    console.log("✓ Novo perfil criado com avatar");
+                }
+            }
+    
+            if (tipoUsuario === 'N') {
+                const camposNutri = [];
+                const valoresNutri = [];
+    
+                if (dadosEspecificos.Crn !== undefined && dadosEspecificos.Crn !== null) {
+                    camposNutri.push('Crn = ?');
+                    valoresNutri.push(dadosEspecificos.Crn);
+                }
+    
+                if (dadosEspecificos.RazaoSocial !== undefined && dadosEspecificos.RazaoSocial !== null) {
+                    camposNutri.push('RazaoSocial = ?');
+                    valoresNutri.push(dadosEspecificos.RazaoSocial);
+                }
+    
+                if (camposNutri.length > 0) {
+                    valoresNutri.push(usuarioId);
+                    const queryNutri = `UPDATE Nutricionistas SET ${camposNutri.join(', ')} WHERE UsuarioId = ?`;
+                    await conn.query(queryNutri, valoresNutri);
+                    console.log("✓ Dados do nutricionista atualizados");
+                }
+    
+                if (dadosEspecificos.SobreMim !== undefined) {
+                    const [perfilExistente] = await conn.query(
+                        'SELECT id FROM Perfis WHERE UsuarioId = ?',
+                        [usuarioId]
+                    );
+    
+                    if (perfilExistente.length > 0) {
+                        await conn.query(
+                            'UPDATE Perfis SET SobreMim = ? WHERE UsuarioId = ?',
+                            [dadosEspecificos.SobreMim, usuarioId]
+                        );
+                    } else {
+                        await conn.query(
+                            'INSERT INTO Perfis (UsuarioId, SobreMim) VALUES (?, ?)',
+                            [usuarioId, dadosEspecificos.SobreMim]
+                        );
+                    }
+                    console.log("✓ Perfil (Sobre Mim) atualizado");
+                }
+            } else if (tipoUsuario === 'C') {
+                console.log("✓ Cliente atualizado (CPF é imutável)");
+            }
+    
+            await conn.commit();
+            console.log("✓✓ Transação confirmada com sucesso");
+            return true;
+    
+        } catch (erro) {
+            await conn.rollback();
+            console.error("✗ Erro na transação:", erro.message);
+            throw erro;
+        } finally {
+            conn.release();
+        }
+    },
+
     // ===== EXCLUSÃO =====
     delete: async (id) => {
         try {
