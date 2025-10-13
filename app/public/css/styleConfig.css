@@ -471,6 +471,10 @@ input[type="password"] {
     box-sizing: border-box;
 }
 
+.barra-pesquisa {
+    background-color: transparent !important;
+}
+
 .campo-form {
     margin-top: 20px;
 }

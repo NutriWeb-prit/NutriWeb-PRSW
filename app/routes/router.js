@@ -228,9 +228,7 @@ router.post("/cadastrarcliente", upload, (req, res, next) => {
     };
 
     if (etapa === "1") {
-        // **USAR O MIDDLEWARE DE VALIDAÇÃO COMPLETO**
         return async function aplicarValidacoes(req, res) {
-            // Aplicar todas as validações sequencialmente
             for (let i = 0; i < NWController.validacaoCadCliente.length; i++) {
                 try {
                     await new Promise((resolve, reject) => {
@@ -265,14 +263,12 @@ router.post("/cadastrarcliente", upload, (req, res, next) => {
     }
 
     if (etapa === "2") {
-        // **ETAPA FINAL - CHAMAR CONTROLLER**
         return NWController.cadastrarCliente(req, res);
     }
 
     return res.redirect('/cadastrarcliente');
 });
 
-// **CADASTRO DE NUTRICIONISTA - SIMPLIFICADO**
 router.post("/cadastrarnutricionista", upload, (req, res, next) => {
     const etapa = req.body.etapa;
     
@@ -383,26 +379,6 @@ router.post("/cadastrarnutricionista", upload, (req, res, next) => {
     }
 
     if (etapa === "3") {
-        if (req.body.imagemPerfilData) {
-            dadosNutri.imagemPerfil = JSON.parse(req.body.imagemPerfilData);
-        }
-        if (req.body.imagemBannerData) {
-            dadosNutri.imagemBanner = JSON.parse(req.body.imagemBannerData);
-        }
-        
-        return res.render("pages/indexCadastrarNutri", {
-            etapa: "4", 
-            card1: "hidden", 
-            card2: "hidden", 
-            card3: "hidden", 
-            card4: "",
-            cardSucesso: true,
-            valores: dadosNutri, 
-            listaErros: null
-        });
-    }
-
-    if (etapa === "4") {
         return NWController.cadastrarNutricionista(req, res);
     }
 

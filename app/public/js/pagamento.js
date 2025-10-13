@@ -27,21 +27,21 @@ function atualizarResumo() {
     
     switch(plano) {
         case 'mensal':
-            preco = 29.90;
-            desconto = 4.19;
-            total = 25.71;
+            preco = 79.90;
+            desconto = 11.18;
+            total = 68.72;
             labelTexto = 'Assinatura (Mensal)';
             break;
         case 'semestral':
-            preco = 179.40;
-            desconto = 25.12;
-            total = 154.28;
+            preco = 479.40;
+            desconto = 67.12;
+            total = 412.28;
             labelTexto = 'Assinatura (Semestral)';
             break;
         case 'anual':
-            preco = 358.80;
-            desconto = 50.23;
-            total = 308.57;
+            preco = 958.80;
+            desconto = 134.23;
+            total = 824.57;
             labelTexto = 'Assinatura (Anual)';
             break;
     }

@@ -405,73 +405,9 @@
             </section>
         </section>
 
-        <section class="container">
-            <section class="card-others" id="card-four">
-                <section class="conteudo-form">
-                    <form action="/cadastrarnutricionista" method="post" class="cadastro-form" id="card-four" enctype="multipart/form-data">
-                        <input type="hidden" name="etapa" value="4">
-                        <% if (Array.isArray(valores.area)) { %>
-                            <% valores.area.forEach((esp) => { %>
-                                <input type="hidden" name="area" value="<%= esp %>">
-                            <% }) %>
-                        <% } else if (valores.area) { %>
-                            <input type="hidden" name="area" value="<%= valores.area %>">
-                        <% } %>
-                        <input type="hidden" name="nome" value="<%= valores.nome %>">
-                        <input type="hidden" name="email" value="<%= valores.email %>">
-                        <input type="hidden" name="senha" value="<%= valores.senha %>">
-                        <input type="hidden" name="ddd" value="<%= valores.ddd %>">
-                        <input type="hidden" name="telefone" value="<%= valores.telefone %>">
-                        <input type="hidden" name="crn" value="<%= valores.crn %>">
-                        <input type="hidden" name="sobreMim" value="<%= valores.sobreMim || '' %>">
-                        <% if (valores.imagemPerfil) { %>
-                            <input type="hidden" name="imagemPerfilData" value="<%= JSON.stringify(valores.imagemPerfil) %>">
-                        <% } %>
-                        
-                        <% if (valores.imagemBanner) { %>
-                            <input type="hidden" name="imagemBannerData" value="<%= JSON.stringify(valores.imagemBanner) %>">
-                        <% } %>
-                        
-                        <h2 class="title_cursos">Mostre onde estudou e quais cursos fez</h2>
-        
-                        <h1>Faculdade</h1>
-                        <label class="label-especialidade" for="faculdade">Nome:</label>
-                        <input type="text" name="faculdade" id="faculdade" placeholder="Ex: Bacharelado em Nutrição" class="input-cad" value="<%= valores.faculdade || '' %>">
-        
-                        <label class="label-especialidade" for="faculdadeOrg">Organização:</label>
-                        <input type="text" name="faculdadeOrg" id="faculdadeOrg" placeholder="Ex: Universidade de São Paulo (USP)" class="input-cad" value="<%= valores.faculdadeOrg || '' %>">
-                        
-                        <input type="file" name="certificadoFaculdade" id="certificadoFaculdade" accept=".pdf,.jpg,.jpeg,.png" style="display: none;">
-                        <button type="button" class="btn-upload" onclick="document.getElementById('certificadoFaculdade').click()">
-                            <span class="material-icons icone-upload">cloud_upload</span>
-                            Faça o Upload do Certificado
-                        </button>
-        
-                        <h1>Curso Adicional</h1>
-                        <label class="label-especialidade" for="curso">Curso:</label>
-                        <input type="text" name="curso" id="curso" placeholder="Ex: Especialização em Nutrição Estética" class="input-cad" value="<%= valores.curso || '' %>">
-        
-                        <label class="label-especialidade" for="cursoOrg">Organização:</label>
-                        <input type="text" name="cursoOrg" id="cursoOrg" placeholder="Ex: Faculdade Método de São Paulo" class="input-cad" value="<%= valores.cursoOrg || '' %>">
-                        
-                        <input type="file" name="certificadoCurso" id="certificadoCurso" accept=".pdf,.jpg,.jpeg,.png" style="display: none;">
-                        <button type="button" class="btn-upload" onclick="document.getElementById('certificadoCurso').click()">
-                            <span class="material-icons icone-upload">cloud_upload</span>
-                            Faça o Upload do Certificado
-                        </button>
-        
-                        <button type="submit" class="btn-cadastrar">
-                            Finalizar Cadastro</i>
-                        </button>
-                    </form>
-                </section>
-            </section>
-        </section>
-
         <section class="barra-progresso">
             <span class="progresso ativo"></span>
             <span class="progresso <%= barra %>"></span>
-            <span class="progresso"></span>
             <span class="progresso"></span>
         </section>
 

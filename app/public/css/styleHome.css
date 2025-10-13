@@ -560,7 +560,6 @@ h1, h2, h3, h4, h5, h6 {
     flex-direction: column;
     margin: 20px auto;
     position: relative;
-    width: 80%;
     max-width: 1200px;
     padding: 50px;
     border-radius: 10px;

@@ -921,7 +921,6 @@ const NWController = {
                 });
             }
     
-            // **VALIDAÇÃO DE IMAGENS E CERTIFICADOS MOVIDA PARA O CONTROLLER**
             const arquivosValidados = validarArquivosNutricionista(req);
             
             const senhaHash = await bcrypt.hash(req.body.senha, 12);
@@ -953,7 +952,6 @@ const NWController = {
                 }
             };
     
-            // Processar especializações
             let especializacoesSelecionadas = [];
             if (req.body.area) {
                 especializacoesSelecionadas = Array.isArray(req.body.area) ? req.body.area : [req.body.area];
@@ -962,7 +960,6 @@ const NWController = {
                 );
             }
     
-            // **CHAMADA ÚNICA AO MODEL**
             const result = await NWModel.createNutricionista(
                 dadosUsuario,
                 dadosNutricionista,
@@ -998,7 +995,6 @@ const NWController = {
 
 }
 
-// **FUNÇÃO AUXILIAR: Verificar mudanças**
 function verificarMudancas(dadosAtuais, formData, telefoneCompleto, especializacoesFormulario, tipoUsuario) {
     const alteracoes = [];
     let houveAlteracao = false;
@@ -1079,10 +1075,8 @@ function validarImagensUpload(files) {
 }
 
 function validarArquivosNutricionista(req) {
-    // Validar imagens (reutiliza a função do cliente)
     const imagens = validarImagensUpload(req.files);
     
-    // Recuperar imagens dos campos hidden (multi-step form)
     let imagemPerfil = imagens.imagemPerfil;
     let imagemBanner = imagens.imagemBanner;
     
@@ -1118,7 +1112,6 @@ function validarArquivosNutricionista(req) {
         }
     }
     
-    // Validar certificados
     const validarCertificado = (arquivo, tipo) => {
         if (!arquivo) return null;
         
