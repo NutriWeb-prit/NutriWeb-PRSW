@@ -41,13 +41,13 @@
                 <% } %>
                 
                 <a href="<%= headerUsuario.urlPerfil %>" class="perfil-usuario-link">
-                    <div class="perfil-usuario">
+                    <section class="perfil-usuario">
                         <img src="<%= headerUsuario.fotoPerfil %>" 
                              alt="Foto de perfil" 
                              class="foto-perfil-header"
                              onerror="this.src='imagens/foto_perfil.jpg'">
                         <span class="nome-usuario-header"><%= headerUsuario.nome %></span>
-                    </div>
+                    </section>
                 </a>
 
                 <a href="/logout" class="logout-link">

@@ -20,7 +20,7 @@
         <section class="center-section">
             <form action="/buscar" method="GET" class="form-busca">
                 <section class="input-premium">
-                    <span class="material-icons search-icon md-24">search</span>
+                    <section class="material-icons search-icon md-24">search</section>
                     <input 
                         type="text" 
                         name="q" 
@@ -41,17 +41,17 @@
                 <% } %>
                 
                 <a href="<%= headerUsuario.urlPerfil %>" class="perfil-usuario-link">
-                    <div class="perfil-usuario">
+                    <section class="perfil-usuario">
                         <img src="<%= headerUsuario.fotoPerfil %>" 
                              alt="Foto de perfil" 
                              class="foto-perfil-header"
                              onerror="this.src='imagens/foto_perfil.jpg'">
-                        <span class="nome-usuario-header"><%= headerUsuario.nome %></span>
-                    </div>
+                        <section class="nome-usuario-header"><%= headerUsuario.nome %></section>
+                    </section>
                 </a>
 
                 <a href="/logout" class="logout-link">
-                    <span class="material-icons">logout</span>
+                    <section class="material-icons">logout</section>
                   </a>
             <% } else { %>
                 <a href="/premium"><button class="premium-button">Premium</button></a>
@@ -61,31 +61,31 @@
     </header>
 
     <main>
-        <div class="quiz-container">
-            <div class="quiz-header">
+        <section class="quiz-container">
+            <section class="quiz-header">
                 <h1 class="quiz-title">Descubra seu Nutricionista Ideal</h1>
                 <p class="quiz-subtitle">Responda 10 perguntas e encontre o profissional perfeito para você</p>
-            </div>
+            </section>
 
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressBar"></div>
-            </div>
-            <div class="question-counter" id="questionCounter">Pergunta 1 de 10</div>
+            <section class="progress-bar">
+                <section class="progress-fill" id="progressBar"></section>
+            </section>
+            <section class="question-counter" id="questionCounter">Pergunta 1 de 10</section>
 
-            <div id="quizContent"></div>
+            <section id="quizContent"></section>
 
-            <div class="navigation-buttons" id="navButtons">
+            <section class="navigation-buttons" id="navButtons">
                 <button class="btn btn-back" id="btnBack" onclick="previousQuestion()">Voltar</button>
                 <button class="btn btn-next" id="btnNext" onclick="nextQuestion()" disabled>Próxima</button>
-            </div>
+            </section>
 
-            <div class="result-container" id="resultContainer">
-                <div class="result-emoji" id="resultEmoji"></div>
+            <section class="result-container" id="resultContainer">
+                <section class="result-emoji" id="resultEmoji"></section>
                 <h2 class="result-title" id="resultTitle"></h2>
                 <p class="result-description" id="resultDescription"></p>
                 <button class="btn btn-restart" onclick="restartQuiz()">Refazer Quiz</button>
-            </div>
-        </div>
+            </section>
+        </section>
     </main>
 
     <section class="mobile">
@@ -96,7 +96,7 @@
             </section>
 
             <section class="right-section">
-                <span class="material-icons search-icon md-24 menu-icon">menu</span>
+                <section class="material-icons search-icon md-24 menu-icon">menu</section>
             </section>
         </section>
 

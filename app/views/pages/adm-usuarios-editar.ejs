@@ -23,14 +23,14 @@
 
     <section class="container">
         <h2>
-            <span class="material-symbols-outlined">edit</span>
+            <section class="material-symbols-outlined">edit</section>
             Editar Usuário
         </h2>
 
         <% if (listaErros && !listaErros.isEmpty && !listaErros.isEmpty()) { %>
             <section class="alert alert-danger alert-dismissible fade in">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                    <section aria-hidden="true">&times;</section>
                 </button>
                 <strong>Erros ao atualizar:</strong>
                 <ul style="margin-top: 10px; margin-bottom: 0;">
@@ -47,7 +47,7 @@
 
                 <section class="panel panel-primary">
                     <section class="panel-heading">
-                        <span class="material-symbols-outlined">photo_camera</span>
+                        <section class="material-symbols-outlined">photo_camera</section>
                         Foto de Perfil
                     </section>
                     <section class="panel-body">
@@ -60,7 +60,7 @@
                                             <img id="avatar-preview-img" src="/adm/imagem/perfil/<%= usuario.id %>?t=<%= timestamp %>" alt="Avatar de <%= usuario.NomeCompleto %>" class="avatar-img">
                                         <% } else { %>
                                             <section id="avatar-preview-placeholder" class="avatar-placeholder">
-                                                <span class="material-symbols-outlined">account_circle</span>
+                                                <section class="material-symbols-outlined">account_circle</section>
                                             </section>
                                         <% } %>
                                     </section>
@@ -69,10 +69,10 @@
 
                                     <section class="avatar-actions">
                                         <button type="button" class="btn btn-primary" onclick="document.getElementById('avatar-input').click();">
-                                            <span class="material-symbols-outlined">upload_file</span>
+                                            <section class="material-symbols-outlined">upload_file</section>
                                             Selecionar Imagem
                                         </button>
-                                        <span class="help-block">Formatos: JPG, PNG, GIF, WEBP | Máximo: 5MB</span>
+                                        <section class="help-block">Formatos: JPG, PNG, GIF, WEBP | Máximo: 5MB</section>
                                     </section>
 
                                     <section id="file-preview" class="file-preview"></section>
@@ -84,7 +84,7 @@
 
                 <section class="panel panel-primary">
                     <section class="panel-heading">
-                        <span class="material-symbols-outlined">badge</span>
+                        <section class="material-symbols-outlined">badge</section>
                         Informações Básicas
                     </section>
                     <section class="panel-body">
@@ -169,7 +169,7 @@
                 <% if (usuario.UsuarioTipo === 'N') { %>
                     <section class="panel panel-success">
                         <section class="panel-heading">
-                            <span class="material-symbols-outlined">medical_services</span>
+                            <section class="material-symbols-outlined">medical_services</section>
                             Informações Profissionais (Nutricionista)
                         </section>
                         <section class="panel-body">
@@ -205,7 +205,7 @@
                 <% if (usuario.UsuarioTipo === 'C') { %>
                     <section class="panel panel-info">
                         <section class="panel-heading">
-                            <span class="material-symbols-outlined">fingerprint</span>
+                            <section class="material-symbols-outlined">fingerprint</section>
                             Documentação (Cliente)
                         </section>
                         <section class="panel-body">
@@ -224,11 +224,11 @@
                 <section class="form-group">
                     <section class="col-sm-offset-2 col-sm-10">
                         <button type="submit" class="btn btn-success btn-lg">
-                            <span class="material-symbols-outlined">save</span>
+                            <section class="material-symbols-outlined">save</section>
                             Salvar Alterações
                         </button>
                         <a href="/adm/usuarios-detalhes?id=<%= usuario.id %>" class="btn btn-default btn-lg">
-                            <span class="material-symbols-outlined">close</span>
+                            <section class="material-symbols-outlined">close</section>
                             Cancelar
                         </a>
                     </section>
@@ -239,7 +239,7 @@
                 <strong>Erro!</strong> Usuário não encontrado.
             </section>
             <a href="/adm/usuarios" class="btn btn-primary">
-                <span class="material-symbols-outlined">arrow_back</span>
+                <section class="material-symbols-outlined">arrow_back</section>
                 Voltar para Lista
             </a>
         <% } %>

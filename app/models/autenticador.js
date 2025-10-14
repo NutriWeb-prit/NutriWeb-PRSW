@@ -2,6 +2,8 @@ const { validationResult } = require("express-validator");
 const NWModel = require("../models/NWModel"); 
 const bcrypt = require("bcryptjs");
 
+const cacheUsuarios = new Map();
+
 const processarLogin = async (req, res, next) => {
     const erros = validationResult(req);
     
@@ -57,6 +59,8 @@ const processarLogin = async (req, res, next) => {
             dataLogin: new Date()
         };
 
+        cacheUsuarios.delete(usuario.id);
+
         req.loginSucesso = true;
         next();
 
@@ -73,42 +77,65 @@ const verificarUsuAutenticado = async (req, res, next) => {
         res.locals.isCliente = req.session.usuario.tipo === 'C';
         res.locals.isNutricionista = req.session.usuario.tipo === 'N';
         
-        const timestamp = Date.now();
-        
+        const usuarioId = req.session.usuario.id;
         let dadosCompletos = null;
-        try {
-            if (req.session.usuario.tipo === 'N') {
-                const perfilNutri = await NWModel.findPerfilNutri(req.session.usuario.id);
-                if (perfilNutri.nutricionista) {
-                    dadosCompletos = {
-                        nome: perfilNutri.nutricionista.NomeCompleto,
-                        email: perfilNutri.nutricionista.Email,
-                        telefone: perfilNutri.nutricionista.Telefone ? perfilNutri.nutricionista.Telefone.slice(-9) : '',
-                        ddd: perfilNutri.nutricionista.Telefone ? perfilNutri.nutricionista.Telefone.slice(0, 2) : '',
-                        crn: perfilNutri.nutricionista.Crn || '',
-                        sobreMim: perfilNutri.nutricionista.SobreMim || '',
-                        area: perfilNutri.nutricionista.Especializacoes ? 
-                               perfilNutri.nutricionista.Especializacoes.split(', ') : [],
-                        senha: ''
-                    };
-                }
-            } else if (req.session.usuario.tipo === 'C') {
-                const perfilCliente = await NWModel.findPerfilCompleto(req.session.usuario.id);
-                if (perfilCliente.cliente) {
-                    dadosCompletos = {
-                        nome: perfilCliente.cliente.NomeCompleto,
-                        email: perfilCliente.cliente.Email,
-                        telefone: perfilCliente.cliente.Telefone ? perfilCliente.cliente.Telefone.slice(-9) : '',
-                        ddd: perfilCliente.cliente.Telefone ? perfilCliente.cliente.Telefone.slice(0, 2) : '',
-                        sobreMim: perfilCliente.cliente.SobreMim || '',
-                        senha: ''
-                    };
-                }
+
+        if (cacheUsuarios.has(usuarioId)) {
+            const cached = cacheUsuarios.get(usuarioId);
+            
+            if (Date.now() - cached.timestamp < 10000) {
+                dadosCompletos = cached.dados;
+            } else {
+                cacheUsuarios.delete(usuarioId);
             }
-        } catch (erro) {
-            console.error("Erro ao carregar dados completos:", erro.message);
+        }
+
+        if (!dadosCompletos) {
+            try {
+                if (req.session.usuario.tipo === 'N') {
+                    const perfilNutri = await NWModel.findPerfilNutri(usuarioId);
+                    if (perfilNutri.nutricionista) {
+                        dadosCompletos = {
+                            nome: perfilNutri.nutricionista.NomeCompleto,
+                            email: perfilNutri.nutricionista.Email,
+                            telefone: perfilNutri.nutricionista.Telefone ? perfilNutri.nutricionista.Telefone.slice(-9) : '',
+                            ddd: perfilNutri.nutricionista.Telefone ? perfilNutri.nutricionista.Telefone.slice(0, 2) : '',
+                            crn: perfilNutri.nutricionista.Crn || '',
+                            sobreMim: perfilNutri.nutricionista.SobreMim || '',
+                            area: perfilNutri.nutricionista.Especializacoes ? 
+                                   perfilNutri.nutricionista.Especializacoes.split(', ') : [],
+                            senha: ''
+                        };
+                    }
+                } else if (req.session.usuario.tipo === 'C') {
+                    const perfilCliente = await NWModel.findPerfilCompleto(usuarioId);
+                    if (perfilCliente.cliente) {
+                        dadosCompletos = {
+                            nome: perfilCliente.cliente.NomeCompleto,
+                            email: perfilCliente.cliente.Email,
+                            telefone: perfilCliente.cliente.Telefone ? perfilCliente.cliente.Telefone.slice(-9) : '',
+                            ddd: perfilCliente.cliente.Telefone ? perfilCliente.cliente.Telefone.slice(0, 2) : '',
+                            sobreMim: perfilCliente.cliente.SobreMim || '',
+                            senha: ''
+                        };
+                    }
+                }
+
+                cacheUsuarios.set(usuarioId, {
+                    dados: dadosCompletos,
+                    timestamp: Date.now()
+                });
+            
+
+            } catch (erro) {
+                console.error("Erro ao carregar dados completos:", erro.message);
+            }
         }
         
+        const timestamp = cacheUsuarios.has(usuarioId) 
+            ? cacheUsuarios.get(usuarioId).timestamp 
+            : Date.now();
+
         res.locals.headerUsuario = {
             id: req.session.usuario.id,
             nome: req.session.usuario.nome,
@@ -117,15 +144,17 @@ const verificarUsuAutenticado = async (req, res, next) => {
             urlPerfil: req.session.usuario.tipo === 'C' ? '/perfilcliente' : '/indexPerfilNutri',
             fotoPerfil: `/imagem/perfil/${req.session.usuario.id}?t=${timestamp}`,
             fotoBanner: `/imagem/banner/${req.session.usuario.id}?t=${timestamp}`,
-            // Dados completos para formulários
             dadosCompletos: dadosCompletos
         };
         
-        console.log("Usuário autenticado:", {
-            id: req.session.usuario.id,
-            nome: req.session.usuario.nome,
-            tipo: req.session.usuario.tipo
-        });
+        if (!cacheUsuarios.has(usuarioId) || 
+            (Date.now() - cacheUsuarios.get(usuarioId).timestamp) > 10000) {
+            console.log("Usuário autenticado (banco):", {
+                id: req.session.usuario.id,
+                nome: req.session.usuario.nome,
+                tipo: req.session.usuario.tipo
+            });
+        }
         
     } else {
         res.locals.usuarioLogado = null;
@@ -155,6 +184,10 @@ const verificarPermissao = (tiposPermitidos = [], paginaRedirecionamento = "/log
 
 const logout = (req, res, next) => {
     const nomeUsuario = req.session.usuario?.nome || 'Usuário';
+    
+    if (req.session.usuario?.id) {
+        cacheUsuarios.delete(req.session.usuario.id);
+    }
     
     req.session.destroy((err) => {
         if (err) {

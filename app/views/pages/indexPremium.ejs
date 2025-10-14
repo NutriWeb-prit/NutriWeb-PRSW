@@ -21,7 +21,7 @@
             <section class="center-section">
                 <form action="/buscar" method="GET" class="form-busca">
                     <section class="input-premium">
-                        <span class="material-icons search-icon md-24">search</span>
+                        <section class="material-icons search-icon md-24">search</section>
                         <input 
                             type="text" 
                             name="q" 
@@ -42,17 +42,17 @@
                     <% } %>
                     
                     <a href="<%= headerUsuario.urlPerfil %>" class="perfil-usuario-link">
-                        <div class="perfil-usuario">
+                        <section class="perfil-usuario">
                             <img src="<%= headerUsuario.fotoPerfil %>" 
                                  alt="Foto de perfil" 
                                  class="foto-perfil-header"
                                  onerror="this.src='imagens/foto_perfil.jpg'">
-                            <span class="nome-usuario-header"><%= headerUsuario.nome %></span>
-                        </div>
+                            <section class="nome-usuario-header"><%= headerUsuario.nome %></section>
+                        </section>
                     </a>
 
                     <a href="/logout" class="logout-link">
-                        <span class="material-icons">logout</span>
+                        <section class="material-icons">logout</section>
                       </a>
                 <% } else { %>
                     <a href="/premium"><button class="premium-button">Premium</button></a>
@@ -69,7 +69,7 @@
                 </section>
 
                 <section class="right-section">
-                    <span class="material-icons search-icon md-24 menu-icon">menu</span>
+                    <section class="material-icons search-icon md-24 menu-icon">menu</section>
                 </section>
             </section>
             
@@ -87,8 +87,8 @@
 
         <section class="back">
             <a href="/" class="back-button">
-                <span class="material-icons arrow-icon md-24">arrow_back_ios</span>
-                <span class="back-arrow">Voltar</span>
+                <section class="material-icons arrow-icon md-24">arrow_back_ios</section>
+                <section class="back-arrow">Voltar</section>
             </a>
         </section>
 
@@ -101,8 +101,8 @@
         
             <article class="card-planos">
 
-                <p>Plano <span class="name-plano">Básico</span></p>
-                <p><span class="basic-price">R$ 0</span>/gratuito</p>
+                <p>Plano <section class="name-plano">Básico</section></p>
+                <p><section class="basic-price">R$ 0</section>/gratuito</p>
 
                 <h3>O que está incluso?</h3>
                 <ul class="beneficios-plano">
@@ -117,8 +117,8 @@
 
             <article class="card-planos card-premium">
 
-                <p>Plano <span class="name-plano name-plano-premium">Essencial</span></p>
-                <p><span class="basic-price-premium">R$ 79,90</span>/por mês</p>
+                <p>Plano <section class="name-plano name-plano-premium">Essencial</section></p>
+                <p><section class="basic-price-premium">R$ 79,90</section>/por mês</p>
 
                 <h3>O que está incluso?</h3>
                 <ul class="beneficios-plano beneficios-plano-premium">

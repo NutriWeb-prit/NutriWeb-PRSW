@@ -64,7 +64,7 @@
             <section class="center-section">
                 <form action="/buscar" method="GET" class="form-busca">
                     <section class="input-premium">
-                        <span class="material-icons search-icon md-24">search</span>
+                        <section class="material-icons search-icon md-24">search</section>
                         <input 
                             type="text" 
                             name="q" 
@@ -85,17 +85,17 @@
                     <% } %>
                     
                     <a href="<%= headerUsuario.urlPerfil %>" class="perfil-usuario-link">
-                        <div class="perfil-usuario">
+                        <section class="perfil-usuario">
                             <img src="<%= headerUsuario.fotoPerfil %>" 
                                  alt="Foto de perfil" 
                                  class="foto-perfil-header"
                                  onerror="this.src='imagens/foto_perfil.jpg'">
-                            <span class="nome-usuario-header"><%= headerUsuario.nome %></span>
-                        </div>
+                            <section class="nome-usuario-header"><%= headerUsuario.nome %></section>
+                        </section>
                     </a>
 
                     <a href="/logout" class="logout-link">
-                        <span class="material-icons">logout</span>
+                        <section class="material-icons">logout</section>
                       </a>
                 <% } else { %>
                     <a href="/premium"><button class="premium-button">Premium</button></a>
@@ -106,8 +106,8 @@
 
         <section class="header-content">
             <a href="/cadastro" class="back-button">
-                <span class="material-icons arrow-icon md-24">arrow_back_ios</span>
-                <span class="back-arrow">Voltar</span>
+                <section class="material-icons arrow-icon md-24">arrow_back_ios</section>
+                <section class="back-arrow">Voltar</section>
             </a>
         </section>
 
@@ -127,7 +127,7 @@
                                 maxlength="125"
                                 oninput="this.value = this.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, '')">
                             <% if (msgErro.nome) { %>
-                                <span class="erro-mensagem"><%= msgErro.nome %></span>
+                                <section class="erro-mensagem"><%= msgErro.nome %></section>
                             <% } %>
                         </section>
                         <section class="campo-form">
@@ -139,7 +139,7 @@
                                 placeholder="E-mail"
                                 maxlength="50">
                             <% if (msgErro.email) { %>
-                                <span class="erro-mensagem"><%= msgErro.email %></span>
+                                <section class="erro-mensagem"><%= msgErro.email %></section>
                             <% } %>
                         </section>
                         <section class="campo-form">
@@ -152,7 +152,7 @@
                                 maxlength="14"
                                 oninput="formatarCPF(this)">
                             <% if (msgErro.cpf) { %>
-                                <span class="erro-mensagem"><%= msgErro.cpf %></span>
+                                <section class="erro-mensagem"><%= msgErro.cpf %></section>
                             <% } %>
                         </section>
                         <section class="campo-form">
@@ -164,10 +164,10 @@
                                 placeholder="Crie uma senha"
                                 maxlength="25">
                             <% if (msgErro.senha) { %>
-                                <span class="erro-mensagem"><%= msgErro.senha %></span>
+                                <section class="erro-mensagem"><%= msgErro.senha %></section>
                             <% } %>
                             <section id="password-requirements">
-                                <span>A senha deve conter:</span>
+                                <section>A senha deve conter:</section>
                                 <ul>
                                     <li id="length" class="invalid">Pelo menos 8 caracteres</li>
                                     <li id="uppercase" class="invalid">Pelo menos uma letra maiúscula</li>
@@ -204,10 +204,10 @@
                                 </section>
                             </section>
                             <% if (msgErro.ddd) { %>
-                                <span class="erro-mensagem"><%= msgErro.ddd %></span>
+                                <section class="erro-mensagem"><%= msgErro.ddd %></section>
                             <% } %>
                             <% if (msgErro.telefone) { %>
-                                <span class="erro-mensagem"><%= msgErro.telefone %></span>
+                                <section class="erro-mensagem"><%= msgErro.telefone %></section>
                             <% } %>
                         </section>
                         
@@ -339,7 +339,7 @@
                             </label>
                             <input type="file" name="input-imagem" id="input-imagem" class="input-imagem" accept="image/*" />
 
-                            <span class="material-icons icone-ajuda" onclick="toggleInfo()">question_mark</span>
+                            <section class="material-icons icone-ajuda" onclick="toggleInfo()">question_mark</section>
 
                             <section id="informacao" class="informacao" style="display: none;">
                                 <p>Para escolher uma boa foto de perfil, prefira uma imagem 
@@ -372,10 +372,10 @@
         </section>
 
         <section class="barra-progresso">
-            <span class="progresso ativo"></span>
-            <span class="progresso <%= barra %>"></span>
-            <!-- <span class="progresso"></span> -->
-            <!-- <span class="progresso"></span> -->
+            <section class="progresso ativo"></section>
+            <section class="progresso <%= barra %>"></section>
+            <!-- <section class="progresso"></section> -->
+            <!-- <section class="progresso"></section> -->
         </section>
 
         <section class="mobile">
@@ -386,7 +386,7 @@
                 </section>
 
                 <section class="right-section">
-                    <span class="material-icons search-icon md-24 menu-icon">menu</span>
+                    <section class="material-icons search-icon md-24 menu-icon">menu</section>
                 </section>
             </section>
 

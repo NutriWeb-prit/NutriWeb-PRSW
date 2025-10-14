@@ -20,7 +20,7 @@
         <section class="center-section">
             <form action="/buscar" method="GET" class="form-busca">
                 <section class="input-premium">
-                    <span class="material-icons search-icon md-24">search</span>
+                    <section class="material-icons search-icon md-24">search</section>
                     <input 
                         class="barra-pesquisa"
                         type="text"
@@ -42,17 +42,17 @@
                 <% } %>
                 
                 <a href="<%= headerUsuario.urlPerfil %>" class="perfil-usuario-link">
-                    <div class="perfil-usuario">
+                    <section class="perfil-usuario">
                         <img src="<%= headerUsuario.fotoPerfil %>" 
                              alt="Foto de perfil" 
                              class="foto-perfil-header"
                              onerror="this.src='imagens/foto_perfil.jpg'">
-                        <span class="nome-usuario-header"><%= headerUsuario.nome %></span>
-                    </div>
+                        <section class="nome-usuario-header"><%= headerUsuario.nome %></section>
+                    </section>
                 </a>
 
                 <a href="/logout" class="logout-link">
-                    <span class="material-icons">logout</span>
+                    <section class="material-icons">logout</section>
                   </a>
             <% } else { %>
                 <a href="/premium"><button class="premium-button">Premium</button></a>
@@ -63,8 +63,8 @@
     
     <section class="header-content">
         <a href="/perfilnutri" class="back-button">
-            <span class="material-icons arrow-icon md-24">arrow_back_ios</span>
-            <span class="back-arrow">Voltar</span>
+            <section class="material-icons arrow-icon md-24">arrow_back_ios</section>
+            <section class="back-arrow">Voltar</section>
         </a>
     </section>
 
@@ -164,18 +164,18 @@
                             </section>
                             
                             <section class="container-fotoBanner">
-                                <div class="image-preview-container">
+                                <section class="image-preview-container">
                                     <img src="<%= headerUsuario.fotoBanner %>"
                                          id="preview-banner"
                                          class="foto-banner"
                                          onerror="this.src='/imagens/foto_perfil.jpg'">
-                                    <div class="overlay">
+                                    <section class="overlay">
                                         <label for="input-foto-banner" class="btn-upload">
                                             <i class="fas fa-camera"></i>
                                             Alterar Banner
                                         </label>
-                                    </div>
-                                </div>
+                                    </section>
+                                </section>
                                 <input type="file" 
                                        id="input-foto-banner" 
                                        name="fotoBanner" 
@@ -200,7 +200,7 @@
                         <section class="campo-form">
                             <label for="nome">Nome Completo</label>
                             <% if (msgErro.nome) { %>
-                                <span class="erro-mensagem"><%= msgErro.nome %></span>
+                                <section class="erro-mensagem"><%= msgErro.nome %></section>
                             <% } %>
                             <input type="text" 
                                 id="nome" 
@@ -225,7 +225,7 @@
                         <section class="campo-form">
                             <label for="email">E-mail</label>
                             <% if (msgErro.email) { %>
-                                <span class="erro-mensagem"><%= msgErro.email %></span>
+                                <section class="erro-mensagem"><%= msgErro.email %></section>
                             <% } %>
                             <input type="text" 
                                 id="email" 
@@ -240,7 +240,7 @@
                             <section class="campo-form campo-senha">
                                 <label for="senha">Senha</label>
                                 <% if (msgErro.senha) { %>
-                                    <span class="erro-mensagem"><%= msgErro.senha %></span>
+                                    <section class="erro-mensagem"><%= msgErro.senha %></section>
                                 <% } %>
                                 <input type="password" 
                                     id="senha" 
@@ -250,7 +250,7 @@
                                     placeholder="Crie uma senha"
                                     maxlength="25">
                                 <section id="password-requirements">
-                                    <span>A senha deve conter:</span>
+                                    <section>A senha deve conter:</section>
                                     <ul>
                                         <li id="length" class="invalid">Pelo menos 8 caracteres</li>
                                         <li id="uppercase" class="invalid">Pelo menos uma letra maiúscula</li>
@@ -287,10 +287,10 @@
                                     </section>
                                 </section>
                                 <% if (msgErro.ddd) { %>
-                                    <span class="erro-mensagem"><%= msgErro.ddd %></span>
+                                    <section class="erro-mensagem"><%= msgErro.ddd %></section>
                                 <% } %>
                                 <% if (msgErro.telefone) { %>
-                                    <span class="erro-mensagem"><%= msgErro.telefone %></span>
+                                    <section class="erro-mensagem"><%= msgErro.telefone %></section>
                                 <% } %>
                             </section>
                         </section>
@@ -299,7 +299,7 @@
                             <section class="campo-form">
                                 <label for="crn">CRN</label>
                                 <% if (msgErro.crn) { %>
-                                    <span class="erro-mensagem"><%= msgErro.crn %></span>
+                                    <section class="erro-mensagem"><%= msgErro.crn %></section>
                                 <% } %>
                                 <input type="text" 
                                     id="crn" 
@@ -400,7 +400,7 @@
                                     </section>
                                 </section>
                                 <% if (msgErro.area) { %>
-                                    <span class="erro-mensagem"><%= msgErro.area %></span>
+                                    <section class="erro-mensagem"><%= msgErro.area %></section>
                                 <% } %>
                             </section>
                         <% } %>
@@ -430,7 +430,7 @@
             </section>
 
             <section class="right-section">
-                <span class="material-icons search-icon md-24 menu-icon">menu</span>
+                <section class="material-icons search-icon md-24 menu-icon">menu</section>
             </section>
         </section>
 

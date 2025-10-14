@@ -21,7 +21,7 @@
         <section class="center-section">
             <form action="/buscar" method="GET" class="form-busca">
                 <section class="input-premium">
-                    <span class="material-icons search-icon md-24">search</span>
+                    <section class="material-icons search-icon md-24">search</section>
                     <input 
                         type="text" 
                         name="q" 
@@ -42,17 +42,17 @@
                 <% } %>
                 
                 <a href="<%= headerUsuario.urlPerfil %>" class="perfil-usuario-link">
-                    <div class="perfil-usuario">
+                    <section class="perfil-usuario">
                         <img src="<%= headerUsuario.fotoPerfil %>" 
                              alt="Foto de perfil" 
                              class="foto-perfil-header"
                              onerror="this.src='imagens/foto_perfil.jpg'">
-                        <span class="nome-usuario-header"><%= headerUsuario.nome %></span>
-                    </div>
+                        <section class="nome-usuario-header"><%= headerUsuario.nome %></section>
+                    </section>
                 </a>
 
                 <a href="/logout" class="logout-link">
-                    <span class="material-icons">logout</span>
+                    <section class="material-icons">logout</section>
                   </a>
             <% } else { %>
                 <a href="/premium"><button class="premium-button">Premium</button></a>
@@ -81,20 +81,20 @@
 
     <section class="header-content">
         <a href="/login" class="back-button">
-            <span class="material-icons arrow-icon">arrow_back_ios</span>
-            <span class="back-arrow">Voltar</span>
+            <section class="material-icons arrow-icon">arrow_back_ios</section>
+            <section class="back-arrow">Voltar</section>
         </a>
     </section>
 
     <section class="senha-container rSenha-container">
         <% if (tokenValido) { %>
             <section class="senha-card rSenha-card">
-                <span class="material-icons">vpn_key</span>
+                <section class="material-icons">vpn_key</section>
                 <h2>Nova Senha</h2>
                 <p>Digite sua nova senha com segurança</p>
                 
                 <section id="password-requirements">
-                    <span>A senha deve conter:</span>
+                    <section>A senha deve conter:</section>
                     <ul>
                         <li id="length" class="invalid">Pelo menos 8 caracteres</li>
                         <li id="uppercase" class="invalid">Pelo menos uma letra maiúscula</li>
@@ -115,7 +115,7 @@
                         minlength="6"
                         required>
                     <% if (msgErro.senha) { %>
-                        <span class="erro-mensagem"><%= msgErro.senha %></span>
+                        <section class="erro-mensagem"><%= msgErro.senha %></section>
                     <% } %>
                     
                     <input type="password" 
@@ -126,29 +126,29 @@
                         minlength="6"
                         required>
                     <% if (msgErro.confirmarSenha) { %>
-                        <span class="erro-mensagem"><%= msgErro.confirmarSenha %></span>
+                        <section class="erro-mensagem"><%= msgErro.confirmarSenha %></section>
                     <% } %>
                     
                     <input type="submit" value="Alterar Senha" class="btn-entrar">
                 </form>
 
-                <div class="or-divider">Ou</div>
+                <section class="or-divider">Ou</section>
 
-                <div class="senha-actions">
+                <section class="senha-actions">
                     <a href="/login"><button>Voltar para o Login</button></a>
-                </div>
+                </section>
             </section>
 
         <% } else { %>
             <section class="senha-card invalido">
-                <span class="material-icons">error_outline</span>
+                <section class="material-icons">error_outline</section>
                 <h2>Link Inválido</h2>
                 <p>Este link de recuperação expirou ou já foi utilizado. Por favor, solicite um novo link de recuperação.</p>
                 
-                <div class="senha-actions" style="margin-top: 30px;">
+                <section class="senha-actions" style="margin-top: 30px;">
                     <a href="/senha"><button>Solicitar Novo Link</button></a>
                     <a href="/login"><button>Voltar para o Login</button></a>
-                </div>
+                </section>
             </section>
         <% } %>
 
@@ -163,7 +163,7 @@
                 <a href="/"><img src="imagens/logo.png" alt="Logo" class="logo"></a>
             </section>
             <section class="right-section">
-                <span class="material-icons search-icon md-24 menu-icon">menu</span>
+                <section class="material-icons search-icon md-24 menu-icon">menu</section>
             </section>
         </section>
 

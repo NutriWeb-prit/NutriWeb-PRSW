@@ -12,10 +12,11 @@ const upload = require("../util/uploader.js");
 
 const { verificarUsuAutenticado, processarLogin, verificarPermissao, logout } = require("../models/autenticador.js");
 
+router.use(verificarUsuAutenticado);
+
 const recuperacaoRouter = require('./recuperacao');
 router.use('/', recuperacaoRouter);
-
-router.use(verificarUsuAutenticado);
+router.get('/', NWController.mostrarHome);
 
 router.use('/buscar', require('../routes/busca.js'));
 
@@ -108,41 +109,49 @@ router.post('/atualizar-imagens',
 
 router.post('/atualizar-dados', NWController.validacaoAtualizarDados, NWController.atualizarDadosPessoais);
 
-router.get("/imagem/perfil/:usuarioId", 
-    async (req, res) => {
-        try {
-            const usuarioId = req.params.usuarioId;
-            
-            const caminho = await NWModel.findImagemPerfil(usuarioId);
-            
-            if (!caminho) {
-                console.log('Foto de perfil não encontrada para usuário:', usuarioId);
-                return res.status(404).send('Imagem não encontrada');
-            }
-            
-            const caminhoCompleto = path.join(__dirname, '../../app/public', caminho);
-            
-            console.log('Servindo imagem de perfil:', caminhoCompleto);
-            
-            if (!fs.existsSync(caminhoCompleto)) {
-                console.log('Arquivo não encontrado no disco:', caminhoCompleto);
-                return res.status(404).send('Arquivo não encontrado');
-            }
-
-            res.set({
+router.get("/imagem/perfil/:usuarioId", async (req, res) => {
+    try {
+        const usuarioId = req.params.usuarioId;
+        
+        const caminho = await NWModel.findImagemPerfil(usuarioId);
+        
+        // Se não houver imagem, serve imagem padrão ao invés de 404
+        if (!caminho) {
+            console.log('Foto de perfil não encontrada, servindo padrão');
+            const caminhoDefault = path.join(__dirname, '../../app/public/imagens/foto_perfil.jpg');
+            return res.set({
                 'Content-Type': 'image/jpeg',
-                'Cache-Control': 'public, max-age=86400',
-                'ETag': `perfil-${usuarioId}-${Date.now()}`
-            });
-            
-            res.sendFile(caminhoCompleto);
-            
-        } catch (erro) {
-            console.error("Erro ao servir imagem de perfil:", erro);
-            res.status(500).send('Erro interno');
+                'Cache-Control': 'public, max-age=2592000', // 30 dias
+                'ETag': `perfil-default`
+            }).sendFile(caminhoDefault);
         }
+        
+        const caminhoCompleto = path.join(__dirname, '../../app/public', caminho);
+        
+        if (!fs.existsSync(caminhoCompleto)) {
+            console.log('Arquivo não encontrado no disco, servindo padrão');
+            const caminhoDefault = path.join(__dirname, '../../app/public/imagens/foto_perfil.jpg');
+            return res.set({
+                'Content-Type': 'image/jpeg',
+                'Cache-Control': 'public, max-age=2592000',
+                'ETag': `perfil-default`
+            }).sendFile(caminhoDefault);
+        }
+
+        res.set({
+            'Content-Type': 'image/jpeg',
+            'Cache-Control': 'public, max-age=86400',
+            'ETag': `perfil-${usuarioId}`
+        });
+        
+        res.sendFile(caminhoCompleto);
+        
+    } catch (erro) {
+        console.error("Erro ao servir imagem:", erro);
+        const caminhoDefault = path.join(__dirname, '../../app/public/imagens/foto_perfil.jpg');
+        res.sendFile(caminhoDefault);
     }
-);
+});
 
 router.get("/imagem/banner/:usuarioId", 
     async (req, res) => {

@@ -21,7 +21,7 @@
             <section class="center-section">
                 <form action="/buscar" method="GET" class="form-busca">
                     <section class="input-premium">
-                        <span class="material-icons search-icon md-24">search</span>
+                        <section class="material-icons search-icon md-24">search</section>
                         <input 
                             type="text" 
                             name="q" 
@@ -42,17 +42,17 @@
                     <% } %>
                     
                     <a href="<%= headerUsuario.urlPerfil %>" class="perfil-usuario-link">
-                        <div class="perfil-usuario">
+                        <section class="perfil-usuario">
                             <img src="<%= headerUsuario.fotoPerfil %>" 
                                  alt="Foto de perfil" 
                                  class="foto-perfil-header"
                                  onerror="this.src='imagens/foto_perfil.jpg'">
-                            <span class="nome-usuario-header"><%= headerUsuario.nome %></span>
-                        </div>
+                            <section class="nome-usuario-header"><%= headerUsuario.nome %></section>
+                        </section>
                     </a>
 
                     <a href="/logout" class="logout-link">
-                        <span class="material-icons">logout</span>
+                        <section class="material-icons">logout</section>
                       </a>
                 <% } else { %>
                     <a href="/premium"><button class="premium-button">Premium</button></a>
@@ -80,15 +80,15 @@
         %>
         
         <% if (retorno && retorno.tipo === "sucesso") { %>
-            <div class="alert alert-success">
+            <section class="alert alert-success">
                 <%= retorno.mensagem %>
-            </div>
+            </section>
         <% } %>
 
         <section class="header-content">
             <a href="/" class="back-button">
-                <span class="material-icons arrow-icon md-24">arrow_back_ios</span>
-                <span class="back-arrow">Voltar</span>
+                <section class="material-icons arrow-icon md-24">arrow_back_ios</section>
+                <section class="back-arrow">Voltar</section>
             </a>
         </section>
 
@@ -104,7 +104,7 @@
                         placeholder="E-mail"
                         maxlength="50">
                         <% if (msgErro.email) { %>
-                            <span class="erro-mensagem"><%= msgErro.email %></span>
+                            <section class="erro-mensagem"><%= msgErro.email %></section>
                         <% } %>
                     <input type="password" 
                         name="senha" 
@@ -113,11 +113,11 @@
                         class="<%= erroValidacao.senha %>" 
                         placeholder="Senha">
                         <% if (msgErro.senha) { %>
-                            <span class="erro-mensagem"><%= msgErro.senha %></span>
+                            <section class="erro-mensagem"><%= msgErro.senha %></section>
                         <% } %>
                     <input type="submit" value="Entrar" class="btn-entrar">
                 </form>
-                <span class="or-sectionider">_______ Ou _______</span>
+                <section class="or-sectionider">_______ Ou _______</section>
 
                 <section class="esqueci-senha">
                     <a href="/senha"><button>Esqueci minha senha</button></a>
@@ -141,7 +141,7 @@
                 </section>
 
                 <section class="right-section">
-                    <span class="material-icons search-icon md-24 menu-icon">menu</span>
+                    <section class="material-icons search-icon md-24 menu-icon">menu</section>
                 </section>
             </section>
 

@@ -19,7 +19,7 @@
         <section class="center-section">
             <form action="/buscar" method="GET" class="form-busca">
                 <section class="input-premium">
-                    <span class="material-icons search-icon md-24">search</span>
+                    <section class="material-icons search-icon md-24">search</section>
                     <input 
                         type="text" 
                         name="q" 
@@ -45,12 +45,12 @@
                              alt="Foto de perfil" 
                              class="foto-perfil-header"
                              onerror="this.src='imagens/foto_perfil.jpg'">
-                        <span class="nome-usuario-header"><%= headerUsuario.nome %></span>
+                        <section class="nome-usuario-header"><%= headerUsuario.nome %></section>
                     </section>
                 </a>
 
                 <a href="/logout" class="logout-link">
-                    <span class="material-icons">logout</span>
+                    <section class="material-icons">logout</section>
                   </a>
             <% } else { %>
                 <a href="/premium"><button class="premium-button">Premium</button></a>
@@ -89,13 +89,13 @@
                                                      alt="<%= pub.autor.nome %>" 
                                                      class="foto-autor">
                                             <% } %>
-                                            <span class="nome-autor"><%= pub.autor.nome %></span>
+                                            <section class="nome-autor"><%= pub.autor.nome %></section>
                                         </section>
                                         
                                         <section class="conteudo-publicacao">
                                             <section class="categoria-avaliacao">
-                                                <span class="categoria"><%= pub.categoria %></span>
-                                                <span class="avaliacao">⭐ <%= pub.mediaEstrelas %></span>
+                                                <section class="categoria"><%= pub.categoria %></section>
+                                                <section class="avaliacao">⭐ <%= pub.mediaEstrelas %></section>
                                             </section>
                                             
                                             <% if (pub.resumo) { %>
@@ -147,8 +147,8 @@
                                             <p class="localizacao">📍 <%= nut.localizacao %></p>
                                             
                                             <section class="estatisticas">
-                                                <span class="avaliacao">⭐ <%= nut.mediaAvaliacoes %></span>
-                                                <span class="publicacoes">📝 <%= nut.totalPublicacoes %> publicações</span>
+                                                <section class="avaliacao">⭐ <%= nut.mediaAvaliacoes %></section>
+                                                <section class="publicacoes">📝 <%= nut.totalPublicacoes %> publicações</section>
                                             </section>
                                             
                                             <% if (nut.sobreMim) { %>

@@ -23,7 +23,7 @@
             <section class="center-section">
                 <form action="/buscar" method="GET" class="form-busca">
                     <section class="input-premium">
-                        <span class="material-icons search-icon md-24">search</span>
+                        <section class="material-icons search-icon md-24">search</section>
                         <input 
                             type="text" 
                             name="q" 
@@ -44,17 +44,16 @@
                     <% } %>
                     
                     <a href="<%= headerUsuario.urlPerfil %>" class="perfil-usuario-link">
-                        <div class="perfil-usuario">
+                        <section class="perfil-usuario">
                             <img src="<%= headerUsuario.fotoPerfil %>" 
                                  alt="Foto de perfil" 
-                                 class="foto-perfil-header"
-                                 onerror="this.src='imagens/foto_perfil.jpg'">
-                            <span class="nome-usuario"><%= headerUsuario.nome %></span>
-                        </div>
+                                 class="foto-perfil-header">
+                            <section class="nome-usuario"><%= headerUsuario.nome %></section>
+                        </section>
                     </a>
 
                     <a href="/logout" class="logout-link">
-                        <span class="material-icons">logout</span>
+                        <section class="material-icons">logout</section>
                       </a>
                 <% } else { %>
                     <a href="/premium"><button class="premium-button">Premium</button></a>
@@ -71,7 +70,7 @@
                 </section>
 
                 <section class="right-section">
-                    <span class="material-icons search-icon md-24 menu-icon">menu</span>
+                    <section class="material-icons search-icon md-24 menu-icon">menu</section>
                 </section>
             </section>
             
@@ -99,8 +98,8 @@
             <main class="conteudo">
                 <section class="back">
                     <a href="/" class="back-button">
-                        <span class="material-icons arrow-icon md-24">arrow_back_ios</span>
-                        <span class="back-arrow">Voltar</span>
+                        <section class="material-icons arrow-icon md-24">arrow_back_ios</section>
+                        <section class="back-arrow">Voltar</section>
                     </a>
                 </section>
                 <section id="info_perfil">
@@ -131,7 +130,7 @@
                             <section class="objetivo_interesses_perfil">
                                 <% if (cliente.interesses && cliente.interesses !== 'Nenhum interesse cadastrado') { %>
                                     <h3>Interesses Nutricionais:</h3>
-                                    <span id="interesses"><%= cliente.interesses %></span>
+                                    <section id="interesses"><%= cliente.interesses %></section>
                                 <% } %>
                             </section>
                         <% } else { %>
@@ -141,9 +140,9 @@
                     </section>
                     
                     <section id="opcoes-perfil">
-                        <span class="material-symbols-outlined opc-perfil">edit</span>
-                        <span class="material-symbols-outlined opc-perfil hidden">visibility</span>
-                        <span class="material-symbols-outlined opc-perfil">visibility_off</span>
+                        <section class="material-symbols-outlined opc-perfil">edit</section>
+                        <section class="material-symbols-outlined opc-perfil hidden">visibility</section>
+                        <section class="material-symbols-outlined opc-perfil">visibility_off</section>
                     </section>
         
                     <section id="rede_sociais">
@@ -151,14 +150,14 @@
                         <% if (cliente && cliente.telefone) { %>
                             <p class="contato">
                                 <img src="imagens/contato-whatsapp.png" alt="" class="icone_contato">
-                                <span id="whatsapp"><%= cliente.telefone %></span>
+                                <section id="whatsapp"><%= cliente.telefone %></section>
                             </p>
                         <% } %>
              
                         <% if (cliente && cliente.email) { %>
                             <p class="contato">
                                 <img src="imagens/contato-email.png" alt="" class="icone_contato">
-                                <span id="email"><%= cliente.email %></span>
+                                <section id="email"><%= cliente.email %></section>
                             </p>
                         <% } %>
                     </section>
@@ -166,7 +165,7 @@
                 </section>
         
                 <section id="publi">
-                    <span id="titulopubli">Publicações Curtidas</span>
+                    <section id="titulopubli">Publicações Curtidas</section>
         
                     <section class="grid-publicacoes">
                         <% if (publicacoesCurtidas && publicacoesCurtidas.length > 0) { %>
@@ -177,9 +176,9 @@
                                          class="post_img"
                                          data-id="<%= publicacao.id %>">
                                     <section class="post-info">
-                                        <span class="categoria"><%= publicacao.categoria %></span>
+                                        <section class="categoria"><%= publicacao.categoria %></section>
                                         <% if (publicacao.estrelas > 0) { %>
-                                            <span class="estrelas">⭐ <%= publicacao.estrelas %></span>
+                                            <section class="estrelas">⭐ <%= publicacao.estrelas %></section>
                                         <% } %>
                                     </section>
                                 </article>

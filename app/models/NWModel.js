@@ -99,7 +99,6 @@ const NWModel = {
         }
     },
     
-    // ===== ATUALIZAÇÃO =====
     atualizarUsuarioADM: async (usuarioId, dadosAtualizacao) => {
         const conn = await pool.getConnection();
         
@@ -235,7 +234,6 @@ const NWModel = {
         }
     },
 
-    // ===== EXCLUSÃO =====
     delete: async (id) => {
         try {
             const [resultado] = await pool.query(
@@ -323,7 +321,6 @@ const NWModel = {
         try {
             await conn.beginTransaction();
             
-            // Atualizar dados do usuário
             await conn.query(
                 `UPDATE Usuarios SET 
                     NomeCompleto = ?, 
@@ -336,7 +333,6 @@ const NWModel = {
                     [dadosUsuario.NomeCompleto, dadosUsuario.Email, dadosUsuario.Telefone, usuarioId]
             );
     
-            // Atualizar dados específicos do tipo de usuário
             if (tipoUsuario === 'N' && dadosEspecificos.Crn) {
                 await conn.query(
                     `UPDATE Nutricionistas SET Crn = ? WHERE UsuarioId = ?`,
@@ -344,22 +340,18 @@ const NWModel = {
                 );
             }
     
-            // Atualizar perfil - Verificar se existe registro primeiro
             if (dadosPerfil.SobreMim !== undefined) {
-                // Verificar se já existe um perfil para o usuário
                 const [perfilExistente] = await conn.query(
                     `SELECT id FROM Perfis WHERE UsuarioId = ?`,
                     [usuarioId]
                 );
                 
                 if (perfilExistente.length > 0) {
-                    // Atualizar perfil existente
                     await conn.query(
                         `UPDATE Perfis SET SobreMim = ? WHERE UsuarioId = ?`,
                         [dadosPerfil.SobreMim, usuarioId]
                     );
                 } else {
-                    // Criar novo perfil
                     await conn.query(
                         `INSERT INTO Perfis (UsuarioId, SobreMim) VALUES (?, ?)`,
                         [usuarioId, dadosPerfil.SobreMim]
@@ -367,17 +359,14 @@ const NWModel = {
                 }
             }
     
-            // Atualizar especializações para nutricionistas
             if (tipoUsuario === 'N' && especializacoes && especializacoes.length > 0) {
-                // Remover especializações antigas
                 await conn.query(
                     `DELETE ne FROM NutricionistasEspecializacoes ne
                      INNER JOIN Nutricionistas n ON ne.NutricionistaId = n.id
                      WHERE n.UsuarioId = ?`,
                     [usuarioId]
                 );
-    
-                // Inserir novas especializações
+
                 const [nutricionistaResult] = await conn.query(
                     `SELECT id FROM Nutricionistas WHERE UsuarioId = ?`,
                     [usuarioId]
@@ -398,7 +387,6 @@ const NWModel = {
     
             await conn.commit();
             
-            // Buscar dados atualizados na mesma conexão
             let dadosAtualizados = {};
             if (tipoUsuario === 'N') {
                 const [rows] = await conn.query(
@@ -871,6 +859,54 @@ const NWModel = {
                 cliente: null,
                 publicacoesCurtidas: []
             });
+        }
+    },
+
+    buscarPublicacoes: async () => {
+        try {
+            console.log("Executando query de publicações...");
+            
+            const [publicacoes] = await pool.query(`
+                SELECT
+                    p.id as PublicacaoId,
+                    p.Legenda,
+                    p.Categoria,
+                    p.MediaEstrelas,
+                    p.CaminhoFoto,
+                    p.DataCriacao,
+                    
+                    u.id as UsuarioId,
+                    u.NomeCompleto,
+                    
+                    n.id as NutricionistaId,
+                    
+                    perf.CaminhoFotoPerfil as FotoPerfil,
+                    
+                    GROUP_CONCAT(DISTINCT esp.Nome SEPARATOR ', ') as Especializacoes
+                FROM Publicacoes p
+                
+                INNER JOIN NutricionistaPublicacao np ON p.id = np.PublicacaoId
+                INNER JOIN Nutricionistas n ON np.NutricionistaId = n.id
+                INNER JOIN Usuarios u ON n.UsuarioId = u.id
+                
+                LEFT JOIN Perfis perf ON u.id = perf.UsuarioId
+                LEFT JOIN NutricionistasEspecializacoes ne ON n.id = ne.NutricionistaId
+                LEFT JOIN Especializacoes esp ON ne.EspecializacaoId = esp.id
+                
+                WHERE u.UsuarioStatus = 1
+                
+                GROUP BY p.id, u.id, n.id, p.Legenda, p.Categoria, p.MediaEstrelas, 
+                         p.CaminhoFoto, p.DataCriacao, perf.CaminhoFotoPerfil
+                ORDER BY p.MediaEstrelas DESC, p.DataCriacao DESC
+                LIMIT 12
+            `);
+            
+            console.log(`Publicações encontradas: ${publicacoes.length}`);
+            return publicacoes;
+            
+        } catch (error) {
+            console.error("Erro ao buscar publicações no banco:", error.message);
+            throw error;
         }
     },
 

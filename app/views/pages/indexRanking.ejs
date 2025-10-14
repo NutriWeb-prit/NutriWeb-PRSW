@@ -23,7 +23,7 @@
             <section class="center-section">
                 <form action="/buscar" method="GET" class="form-busca">
                     <section class="input-premium">
-                        <span class="material-icons search-icon md-24">search</span>
+                        <section class="material-icons search-icon md-24">search</section>
                         <input 
                             type="text" 
                             name="q" 
@@ -44,17 +44,17 @@
                     <% } %>
                     
                     <a href="<%= headerUsuario.urlPerfil %>" class="perfil-usuario-link">
-                        <div class="perfil-usuario">
+                        <section class="perfil-usuario">
                             <img src="<%= headerUsuario.fotoPerfil %>" 
                                  alt="Foto de perfil" 
                                  class="foto-perfil-header"
                                  onerror="this.src='imagens/foto_perfil.jpg'">
-                            <span class="nome-usuario-header"><%= headerUsuario.nome %></span>
-                        </div>
+                            <section class="nome-usuario-header"><%= headerUsuario.nome %></section>
+                        </section>
                     </a>
 
                     <a href="/logout" class="logout-link">
-                        <span class="material-icons">logout</span>
+                        <section class="material-icons">logout</section>
                       </a>
                 <% } else { %>
                     <a href="/premium"><button class="premium-button">Premium</button></a>
@@ -73,7 +73,7 @@
                     </section>
     
                     <section class="right-section">
-                        <span class="material-icons search-icon md-24 menu-icon">menu</span>
+                        <section class="material-icons search-icon md-24 menu-icon">menu</section>
                     </section>
                 </section>
                 
@@ -100,8 +100,8 @@
 
             <section class="back">
                 <a href="/" class="back-button">
-                    <span class="material-icons arrow-icon md-24">arrow_back_ios</span>
-                    <span class="back-arrow">Voltar</span>
+                    <section class="material-icons arrow-icon md-24">arrow_back_ios</section>
+                    <section class="back-arrow">Voltar</section>
                 </a>
             </section>
 
@@ -120,7 +120,7 @@
                             <td class="posicao_geral top1"><h1>1°</h1></td>
                             <td class="nome">
                                 <a href="/perfilnutri?id=4">
-                                    <img src="imagens/profissional4.png" class="nutri-img">
+                                    <img src="/imagem/perfil/4" class="nutri-img">
                                     <p>
                                         <strong>Pablo Parron</strong><br>
                                         <em>Nutrição Clínica</em>
@@ -148,7 +148,7 @@
                             <td class="posicao_geral top2"><h1>2°</h1></td>
                             <td class="nome">
                                 <a href="/perfilnutri?id=6">
-                                    <img src="imagens/profissional6.png" class="nutri-img">
+                                    <img src="/imagem/perfil/6" class="nutri-img">
                                     <p>
                                         <strong>Camila Ocanã</strong><br>
                                         <em>Nutrição Estética</em>
@@ -174,7 +174,7 @@
                             <td class="posicao_geral top3"><h1>3°</h1></td>
                             <td class="nome">
                                 <a href="/perfilnutri?id=7">
-                                    <img src="imagens/profissional7.png" class="nutri-img">
+                                    <img src="/imagem/perfil/7" class="nutri-img">
                                     <p>
                                         <strong>Agatha Matos</strong><br>
                                         <em>Nutrição Estética</em>
@@ -200,7 +200,7 @@
                             <td class="posicao_geral"><h1>4°</h1></td>
                             <td class="nome">
                                 <a href="/perfilnutri?id=12">
-                                    <img src="imagens/profissional12.png" class="nutri-img">
+                                    <img src="/imagem/perfil/12" class="nutri-img">
                                     <p>
                                         <strong>Renata Dias</strong><br>
                                         <em>Nutrição Esportiva</em>
@@ -226,7 +226,7 @@
                             <td class="posicao_geral "><h1>5°</h1></td>
                             <td class="nome">
                                 <a href="/perfilnutri?id=1">
-                                    <img src="imagens/profissional1.png" class="nutri-img">
+                                    <img src="/imagem/perfil/1" class="nutri-img">
                                     <p>
                                         <strong>Julia Barros</strong><br>
                                         <em>Nutrição Esportiva</em>
@@ -252,7 +252,7 @@
                             <td class="posicao_geral "><h1>6°</h1></td>
                             <td class="nome">
                                 <a href="/perfilnutri?id=8">
-                                    <img src="imagens/profissional8.png" class="nutri-img">
+                                    <img src="/imagem/perfil/8" class="nutri-img">
                                     <p>
                                         <strong>Roberto Carlos</strong><br>
                                         <em>Nutrição Esportiva</em>
@@ -278,7 +278,7 @@
                             <td class="posicao_geral "><h1>7°</h1></td>
                             <td class="nome">
                                 <a href="/perfilnutri?id=3">
-                                    <img src="imagens/profissional3.png" class="nutri-img">
+                                    <img src="/imagem/perfil/3" class="nutri-img">
                                     <p>
                                         <strong>Flávia Flins</strong><br>
                                         <em>Nutrição Estética</em>
@@ -304,7 +304,7 @@
                             <td class="posicao_geral "><h1>8°</h1></td>
                             <td class="nome">
                                 <a href="/perfilnutri?id=14">
-                                    <img src="imagens/profissional14.png" class="nutri-img">
+                                    <img src="/imagem/perfil/14" class="nutri-img">
                                     <p>
                                         <strong>Larissa Monteiro</strong><br>
                                         <em>Nutrição Estética</em>
@@ -330,7 +330,7 @@
                             <td class="posicao_geral "><h1>9°</h1></td>
                             <td class="nome">
                                 <a href="/perfilnutri?id=18">
-                                    <img src="imagens/profissional18.png" class="nutri-img">
+                                    <img src="/imagem/perfil/18" class="nutri-img">
                                     <p>
                                         <strong>Gustavo Ribeiro</strong><br>
                                         <em>Nutrição Geriátrica</em>
@@ -356,7 +356,7 @@
                             <td class="posicao_geral "><h1>10°</h1></td>
                             <td class="nome">
                                 <a href="/perfilnutri?id=15">
-                                    <img src="imagens/profissional15.png" class="nutri-img">
+                                    <img src="/imagem/perfil/15" class="nutri-img">
                                     <p>
                                         <strong>Daniela Castro</strong><br>
                                         <em>Nutrição Clínica</em>

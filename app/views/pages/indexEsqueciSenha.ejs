@@ -21,7 +21,7 @@
         <section class="center-section">
             <form action="/buscar" method="GET" class="form-busca">
                 <section class="input-premium">
-                    <span class="material-icons search-icon md-24">search</span>
+                    <section class="material-icons search-icon md-24">search</section>
                     <input type="text" name="q" placeholder="Buscar publicações e nutricionistas..." minlength="2" required>
                 </section>
             </form>
@@ -34,14 +34,14 @@
                 <% } %>
                 
                 <a href="<%= headerUsuario.urlPerfil %>" class="perfil-usuario-link">
-                    <div class="perfil-usuario">
+                    <section class="perfil-usuario">
                         <img src="<%= headerUsuario.fotoPerfil %>" alt="Foto de perfil" class="foto-perfil-header" onerror="this.src='imagens/foto_perfil.jpg'">
-                        <span class="nome-usuario-header"><%= headerUsuario.nome %></span>
-                    </div>
+                        <section class="nome-usuario-header"><%= headerUsuario.nome %></section>
+                    </section>
                 </a>
 
                 <a href="/logout" class="logout-link">
-                    <span class="material-icons">logout</span>
+                    <section class="material-icons">logout</section>
                   </a>
             <% } else { %>
                 <a href="/premium"><button class="premium-button">Premium</button></a>
@@ -66,14 +66,14 @@
 
     <section class="header-content">
         <a href="/login" class="back-button">
-            <span class="material-icons arrow-icon">arrow_back_ios</span>
-            <span class="back-arrow">Voltar</span>
+            <section class="material-icons arrow-icon">arrow_back_ios</section>
+            <section class="back-arrow">Voltar</section>
         </a>
     </section>
 
     <section class="senha-container">
         <section class="senha-card">
-            <span class="material-icons">lock_reset</span>
+            <section class="material-icons">lock_reset</section>
             <h2>Recuperar Senha</h2>
             <p>Digite seu email cadastrado para receber as instruções de recuperação</p>
             
@@ -89,18 +89,18 @@
                     required>
                     
                 <% if (msgErro.email) { %>
-                    <span class="erro-mensagem"><%= msgErro.email %></span>
+                    <section class="erro-mensagem"><%= msgErro.email %></section>
                 <% } %>
                 
                 <input type="submit" value="Enviar Instruções" class="btn-entrar">
             </form>
 
-            <div class="or-divider">Ou</div>
+            <section class="or-divider">Ou</section>
 
-            <div class="senha-actions">
+            <section class="senha-actions">
                 <a href="/login"><button>Voltar para o Login</button></a>
                 <a href="/cadastro"><button>Criar uma nova conta</button></a>
-            </div>
+            </section>
         </section>
 
         <section class="side-image">
@@ -114,7 +114,7 @@
                 <a href="/"><img src="imagens/logo.png" alt="Logo" class="logo"></a>
             </section>
             <section class="right-section">
-                <span class="material-icons search-icon md-24 menu-icon">menu</span>
+                <section class="material-icons search-icon md-24 menu-icon">menu</section>
             </section>
         </section>
 

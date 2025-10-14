@@ -679,9 +679,15 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .caption {
-    padding: 10px;
+    padding: 0 10px;
     font-size: 14px;
     text-align: center;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+            line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .modal {
@@ -728,6 +734,13 @@ h1, h2, h3, h4, h5, h6 {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+}
+
+.modal-card-bottom {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 50%;
 }
 
 .card-header-modal{
@@ -828,7 +841,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 #comentarios-lista {
-    max-height: 90px;
+    max-height: 270px;
     overflow-y: auto;
     display: none;
     flex-direction: column;
@@ -880,14 +893,9 @@ h1, h2, h3, h4, h5, h6 {
     color: #0056b3;
 }
 
-.modal-description h2,
-.modal-description h3 {
-    color: green;
-    margin-top: 20px;
-}
-
 .modal-description p {
-    margin-top: 10px;
+    font-size: 20px;
+    margin-top: 25px;
 }
 
 .controle-modal {

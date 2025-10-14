@@ -375,21 +375,18 @@ const NWController = {
             const usuarioId = req.session.usuario.id;
             const tipoUsuario = req.session.usuario.tipo;
     
-            // **OTIMIZAÇÃO 1: Uma única consulta para buscar dados atuais**
             const dadosAtuais = await NWModel.buscarDadosParaComparacao(usuarioId, tipoUsuario);
             
             if (!dadosAtuais) {
                 return res.redirect('/config?erro=usuario_nao_encontrado');
             }
     
-            // Preparar dados do formulário
             const telefoneCompleto = req.body.ddd + req.body.telefone;
             const especializacoesFormulario = req.body.area ? 
                 (Array.isArray(req.body.area) ? req.body.area : [req.body.area]).filter(especialidade => 
                     especialidade && especialidade.trim() !== '' && especialidade !== 'on'
                 ) : [];
     
-            // **OTIMIZAÇÃO 2: Verificar mudanças de forma mais eficiente**
             const mudancas = verificarMudancas(dadosAtuais, req.body, telefoneCompleto, especializacoesFormulario, tipoUsuario);
             
             if (!mudancas.houveAlteracao) {
@@ -399,7 +396,6 @@ const NWController = {
     
             console.log("Alterações detectadas:", mudancas.alteracoes);
     
-            // Hash da senha apenas se foi fornecida
             let senhaHash = null;
             if (req.body.senha && req.body.senha.trim() !== '') {
                 senhaHash = await bcrypt.hash(req.body.senha, 12);
@@ -426,7 +422,6 @@ const NWController = {
                 };
             }
     
-            // **OTIMIZAÇÃO 3: Atualização e busca dos dados em uma única transação**
             const dadosAtualizados = await NWModel.atualizarEBuscarDados(
                 usuarioId,
                 dadosUsuario,
@@ -438,7 +433,6 @@ const NWController = {
     
             console.log("Dados atualizados com sucesso - ID:", usuarioId);
             
-            // Atualizar a sessão
             req.session.usuario.nome = req.body.nome;
             req.session.usuario.email = req.body.email;
             
@@ -534,7 +528,6 @@ const NWController = {
     processarLogin: (req, res) => {
         const erros = validationResult(req);
         
-        // Se há erros de validação
         if (!erros.isEmpty()) {
             console.log("Erros de validação no login:", erros.array());
             return res.render("pages/indexLogin", {
@@ -642,6 +635,53 @@ const NWController = {
             valores: { email: "", senha: "" }, 
             listaErros: null
         });
+    },
+
+    mostrarHome: async (req, res) => {
+        try {
+            console.log("Buscando publicações do banco...");
+            const publicacoes = await NWModel.buscarPublicacoes();
+            
+            const publicacoesProcessadas = publicacoes.map(pub => {
+                const legenda = pub.Legenda || 'Sem legenda disponível';
+                
+                console.log('Processando publicação:', {
+                    id: pub.PublicacaoId,
+                    legenda: legenda.substring(0, 50) + '...'
+                });
+                
+                return {
+                    id: pub.PublicacaoId || pub.id,
+                    nutricionistaId: pub.NutricionistaId,
+                    nome: pub.NomeCompleto,
+                    profissao: pub.Especializacoes || 'Nutrição',
+                    imgPerfil: pub.FotoPerfil ? `/imagem/perfil/${pub.UsuarioId}` : 'imagens/foto_perfil.jpg',
+                    imgConteudo: pub.CaminhoFoto || 'imagens/placeholder-post.jpg',
+                    legenda: legenda,
+                    categoria: pub.Categoria || 'Nutrição',
+                    mediaEstrelas: pub.MediaEstrelas || 5,
+                    dataPublicacao: pub.DataPublicacao || pub.DataCriacao || new Date().toISOString()
+                };
+            });
+            
+            console.log(`${publicacoesProcessadas.length} publicações carregadas`);
+            
+            // ===== USAR res.locals.headerUsuario que já foi definido pelo middleware =====
+            return res.render('pages/indexHome', {
+                publicacoes: publicacoesProcessadas,
+                headerUsuario: res.locals.headerUsuario, // ← Usar do middleware
+                totalPublicacoes: publicacoesProcessadas.length
+            });
+            
+        } catch (error) {
+            console.error("Erro ao carregar home:", error.message);
+            
+            return res.render('pages/indexHome', {
+                publicacoes: [],
+                headerUsuario: res.locals.headerUsuario || { estaLogado: false },
+                erro: 'Erro ao carregar publicações'
+            });
+        }
     },
 
     mostrarPerfilCliente: async (req, res) => {
