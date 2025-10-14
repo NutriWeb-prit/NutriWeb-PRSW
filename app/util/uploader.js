@@ -1,13 +1,59 @@
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 
-const storage = multer.memoryStorage();
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        const uploadDir = path.join(__dirname, '../public/uploads');
+        
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir, { recursive: true });
+        }
+        
+        cb(null, uploadDir);
+    },
+    filename: (req, file, cb) => {
+        
+        const timestamp = Date.now();
+        const randomNum = Math.floor(Math.random() * 10000);
+        const ext = path.extname(file.originalname);
+        const name = path.basename(file.originalname, ext);
+        
+        const cleanName = name.replace(/[^a-zA-Z0-9]/g, '_').substring(0, 20);
+        
+        const filename = `${cleanName}-${timestamp}-${randomNum}${ext}`;
+        
+        console.log(`Arquivo será salvo como: ${filename}`);
+        cb(null, filename);
+    }
+});
 
-// FileFilter original (para cadastros)
+const imageStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        const uploadDir = path.join(__dirname, '../public/uploads');
+        
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir, { recursive: true });
+        }
+        
+        cb(null, uploadDir);
+    },
+    filename: (req, file, cb) => {
+        const timestamp = Date.now();
+        const randomNum = Math.floor(Math.random() * 10000);
+        const ext = path.extname(file.originalname);
+        const name = path.basename(file.originalname, ext);
+        const cleanName = name.replace(/[^a-zA-Z0-9]/g, '_').substring(0, 20);
+        const filename = `${cleanName}-${timestamp}-${randomNum}${ext}`;
+        
+        console.log(`Imagem será salva como: ${filename}`);
+        cb(null, filename);
+    }
+});
+
 const fileFilter = (req, file, cb) => {
     console.log('Validando arquivo:', file.originalname, 'Campo:', file.fieldname);
    
-    // Para imagens (perfil e banner) - cadastro
     if (file.fieldname === 'input-imagem' || file.fieldname === 'input-banner') {
         const allowedTypes = /jpeg|jpg|png|gif|webp/;
         const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
@@ -19,7 +65,6 @@ const fileFilter = (req, file, cb) => {
         }
     }
    
-    // Para certificados
     if (file.fieldname === 'certificadoFaculdade' || file.fieldname === 'certificadoCurso') {
         const allowedTypes = /pdf|jpeg|jpg|png/;
         const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
@@ -34,11 +79,9 @@ const fileFilter = (req, file, cb) => {
     cb(new Error('Campo de arquivo não reconhecido'));
 };
 
-// FileFilter para atualização de imagens
 const imageFileFilter = (req, file, cb) => {
     console.log('Validando imagem:', file.originalname, 'Campo:', file.fieldname);
     
-    // Para as imagens de configuração
     if (file.fieldname === 'fotoPerfil' || file.fieldname === 'fotoBanner') {
         const allowedTypes = /jpeg|jpg|png|gif|webp/;
         const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
@@ -54,7 +97,7 @@ const imageFileFilter = (req, file, cb) => {
 };
 
 const upload = multer({
-    storage: storage,
+    storage: storage, 
     limits: {
         fileSize: 10 * 1024 * 1024, 
         files: 4,
@@ -64,7 +107,7 @@ const upload = multer({
 });
 
 const uploadImagens = multer({
-    storage: storage,
+    storage: imageStorage, 
     limits: {
         fileSize: 5 * 1024 * 1024,
         files: 2,
@@ -106,7 +149,9 @@ const uploadWithErrorHandling = (req, res, next) => {
             });
         }
        
-        console.log('Upload processado');
+        console.log('Upload processado com sucesso');
+        console.log('Arquivos recebidos:', req.files ? Object.keys(req.files) : 'nenhum');
+        
         next();
     });
 };
@@ -129,10 +174,12 @@ const uploadImagensWithErrorHandling = (req, res, next) => {
                 mensagemErro = err.message;
             }
             
-            return res.redirect('/configuracoes?error=' + encodeURIComponent(mensagemErro));
+            return res.redirect('/config?error=' + encodeURIComponent(mensagemErro));
         }
         
         console.log('Upload de imagens processado com sucesso');
+        console.log('Arquivos recebidos:', req.files ? Object.keys(req.files) : 'nenhum');
+        
         next();
     });
 };

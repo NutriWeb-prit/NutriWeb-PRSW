@@ -50,12 +50,13 @@ CREATE TABLE `NutricionistasFormacoes` (
     `TipoFormacao` ENUM('graduacao', 'curso') NOT NULL,
     `NomeFormacao` VARCHAR(255) NOT NULL,
     `NomeInstituicao` VARCHAR(255) NOT NULL,
-    `CertificadoArquivo` LONGBLOB NULL,
-    `CertificadoNome` VARCHAR(255) NULL,
-    `CertificadoTipo` VARCHAR(100) NULL,
-    `CertificadoTamanho` INT NULL,
+    `CaminhoArquivo` VARCHAR(255) NULL COMMENT 'Caminho do arquivo de certificado no servidor',
+    `NomeArquivo` VARCHAR(255) NULL,
+    `TipoArquivo` VARCHAR(100) NULL,
+    `TamanhoArquivo` INT NULL,
     `DataCriacao` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (`NutricionistaId`) REFERENCES `Nutricionistas`(`id`) ON DELETE CASCADE
+    FOREIGN KEY (`NutricionistaId`) REFERENCES `Nutricionistas`(`id`) ON DELETE CASCADE,
+    INDEX `idx_nutricionista` (`NutricionistaId`)
 );
 
 CREATE TABLE `NutricionistaContatoSociais` (
@@ -68,22 +69,27 @@ CREATE TABLE `NutricionistaContatoSociais` (
 
 CREATE TABLE `Perfis` (
 	`id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-	`FotoPerfil` MEDIUMBLOB,
-	`FotoBanner` MEDIUMBLOB,
+	`CaminhoFotoPerfil` VARCHAR(255) COMMENT 'Caminho para a foto de perfil',
+	`CaminhoFotoBanner` VARCHAR(255) COMMENT 'Caminho para a foto de banner',
 	`SobreMim` VARCHAR(400),
 	`UsuarioId` INTEGER UNSIGNED NOT NULL,
 	PRIMARY KEY(`id`),
-	FOREIGN KEY (`UsuarioId`) REFERENCES `Usuarios`(`id`)
+	FOREIGN KEY (`UsuarioId`) REFERENCES `Usuarios`(`id`),
+	INDEX `idx_usuario` (`UsuarioId`)
 );
-
 
 CREATE TABLE `Publicacoes` (
 	`id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-	`FotoPublicacao` BLOB,
+	`CaminhoFoto` VARCHAR(255) COMMENT 'Caminho da foto da publicação',
 	`Legenda` VARCHAR(1000),
     `Categoria` enum('Dica', 'Receita') NOT NULL,
 	`MediaEstrelas` DECIMAL(2,1) DEFAULT 0.0,
-	PRIMARY KEY(`id`)
+	`UsuarioId` INTEGER UNSIGNED NOT NULL,
+	`DataCriacao` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY(`id`),
+	FOREIGN KEY (`UsuarioId`) REFERENCES `Usuarios`(`id`) ON DELETE CASCADE,
+	INDEX `idx_usuario_data` (`UsuarioId`, `DataCriacao`),
+	INDEX `idx_categoria` (`Categoria`)
 );
 
 CREATE TABLE `Avaliacoes` (
@@ -92,8 +98,8 @@ CREATE TABLE `Avaliacoes` (
 	`PublicacaoId` INTEGER UNSIGNED NOT NULL,
 	`Comentario` VARCHAR(1300),
 	`DataAvaliacao` DATETIME NOT NULL,
-	`imgAvaliacao` BLOB,
-	`Classificao` DECIMAL(2,1),
+	`CaminhoImagem` VARCHAR(255) COMMENT 'Caminho da imagem da avaliação',
+	`Classificacao` DECIMAL(2,1),
 	PRIMARY KEY(`id`),
 	FOREIGN KEY (`ClienteId`) REFERENCES `Clientes`(`id`),
 	FOREIGN KEY (`PublicacaoId`) REFERENCES `Publicacoes`(`id`)

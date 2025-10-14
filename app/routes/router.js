@@ -2,6 +2,9 @@ var express = require("express");
 var router = express.Router();
 const { body, validationResult } = require("express-validator");
 
+const path = require('path');
+const fs = require('fs');
+
 const NWController = require("../controllers/NWController");
 const NWModel = require("../models/NWModel");
 
@@ -45,7 +48,7 @@ router.get("/config", async function (req, res) {
     
     try {
         const usuarioId = req.session.usuario.id;
-        const tipoUsuario = req.session.usuario.UsuarioTipo; // 'N' para nutricionista, 'C' para cliente
+        const tipoUsuario = req.session.usuario.tipo;
         
         let dadosUsuario = {};
         
@@ -55,12 +58,13 @@ router.get("/config", async function (req, res) {
                 dadosUsuario = {
                     nome: perfilNutri.nutricionista.NomeCompleto,
                     email: perfilNutri.nutricionista.Email,
-                    telefone: perfilNutri.nutricionista.Telefone.slice(-9),
-                    ddd: perfilNutri.nutricionista.Telefone.slice(0, 2),
+                    telefone: perfilNutri.nutricionista.Telefone ? perfilNutri.nutricionista.Telefone.slice(-9) : '',
+                    ddd: perfilNutri.nutricionista.Telefone ? perfilNutri.nutricionista.Telefone.slice(0, 2) : '',
                     crn: perfilNutri.nutricionista.Crn,
+                    sobreMim: perfilNutri.nutricionista.SobreMim || '',
                     area: perfilNutri.nutricionista.Especializacoes ? 
                            perfilNutri.nutricionista.Especializacoes.split(', ') : [],
-                    senha: '' // Nunca mostrar senha
+                    senha: ''
                 };
             }
         } else {
@@ -69,9 +73,10 @@ router.get("/config", async function (req, res) {
                 dadosUsuario = {
                     nome: perfilCliente.cliente.NomeCompleto,
                     email: perfilCliente.cliente.Email,
-                    telefone: perfilCliente.cliente.Telefone.slice(-9),
-                    ddd: perfilCliente.cliente.Telefone.slice(0, 2),
-                    senha: '' // Nunca mostrar senha
+                    telefone: perfilCliente.cliente.Telefone ? perfilCliente.cliente.Telefone.slice(-9) : '',
+                    ddd: perfilCliente.cliente.Telefone ? perfilCliente.cliente.Telefone.slice(0, 2) : '',
+                    sobreMim: perfilCliente.cliente.SobreMim || '',
+                    senha: '' 
                 };
             }
         }
@@ -87,7 +92,7 @@ router.get("/config", async function (req, res) {
     } catch (error) {
         console.error("Erro ao carregar página de configuração:", error.message);
         return res.render("pages/indexConfig", {
-            tipoUsuario: req.session.tipoUsuario || 'C',
+            tipoUsuario: req.session.usuario.tipo || 'C',
             valores: {},
             msgErro: { geral: 'Erro ao carregar dados' },
             erroValidacao: {},
@@ -104,28 +109,33 @@ router.post('/atualizar-imagens',
 router.post('/atualizar-dados', NWController.validacaoAtualizarDados, NWController.atualizarDadosPessoais);
 
 router.get("/imagem/perfil/:usuarioId", 
-    verificarPermissao(['C', 'N']),
     async (req, res) => {
         try {
             const usuarioId = req.params.usuarioId;
             
-            if (req.session.usuario.id !== parseInt(usuarioId) && req.session.usuario.tipo !== 'N') {
-                return res.status(403).send('Acesso negado');
-            }
+            const caminho = await NWModel.findImagemPerfil(usuarioId);
             
-            const imagem = await NWModel.findImagemPerfil(usuarioId);
-            
-            if (!imagem) {
+            if (!caminho) {
+                console.log('Foto de perfil não encontrada para usuário:', usuarioId);
                 return res.status(404).send('Imagem não encontrada');
             }
             
+            const caminhoCompleto = path.join(__dirname, '../../app/public', caminho);
+            
+            console.log('Servindo imagem de perfil:', caminhoCompleto);
+            
+            if (!fs.existsSync(caminhoCompleto)) {
+                console.log('Arquivo não encontrado no disco:', caminhoCompleto);
+                return res.status(404).send('Arquivo não encontrado');
+            }
+
             res.set({
                 'Content-Type': 'image/jpeg',
-                'Cache-Control': 'public, max-age=3600',
-                'ETag': `perfil-${usuarioId}`
+                'Cache-Control': 'public, max-age=86400',
+                'ETag': `perfil-${usuarioId}-${Date.now()}`
             });
             
-            res.send(imagem);
+            res.sendFile(caminhoCompleto);
             
         } catch (erro) {
             console.error("Erro ao servir imagem de perfil:", erro);
@@ -139,19 +149,29 @@ router.get("/imagem/banner/:usuarioId",
         try {
             const usuarioId = req.params.usuarioId;
             
-            const imagem = await NWModel.findImagemBanner(usuarioId);
+            const caminho = await NWModel.findImagemBanner(usuarioId);
             
-            if (!imagem) {
+            if (!caminho) {
+                console.log('Banner não encontrado para usuário:', usuarioId);
                 return res.status(404).send('Banner não encontrado');
+            }
+            
+            const caminhoCompleto = path.join(__dirname, '../../app/public', caminho);
+            
+            console.log('Servindo banner:', caminhoCompleto);
+            
+            if (!fs.existsSync(caminhoCompleto)) {
+                console.log('Arquivo não encontrado no disco:', caminhoCompleto);
+                return res.status(404).send('Arquivo não encontrado');
             }
             
             res.set({
                 'Content-Type': 'image/jpeg',
-                'Cache-Control': 'public, max-age=3600',
-                'ETag': `banner-${usuarioId}`
+                'Cache-Control': 'public, max-age=86400',
+                'ETag': `banner-${usuarioId}-${Date.now()}`
             });
             
-            res.send(imagem);
+            res.sendFile(caminhoCompleto);
             
         } catch (erro) {
             console.error("Erro ao servir imagem de banner:", erro);
@@ -160,24 +180,69 @@ router.get("/imagem/banner/:usuarioId",
     }
 );
 
+router.get("/imagem/publicacao/:publicacaoId", 
+    async (req, res) => {
+        try {
+            const publicacaoId = req.params.publicacaoId;
+            
+            const caminho = await NWModel.findImagemPublicacao(publicacaoId);
+            
+            if (!caminho) {
+                console.log('Imagem de publicação não encontrada:', publicacaoId);
+                return res.status(404).send('Imagem não encontrada');
+            }
+            
+            const caminhoCompleto = path.join(__dirname, '../../app/public', caminho);
+            
+            console.log('Servindo imagem de publicação:', caminhoCompleto);
+            
+            if (!fs.existsSync(caminhoCompleto)) {
+                console.log('Arquivo não encontrado no disco:', caminhoCompleto);
+                return res.status(404).send('Arquivo não encontrado');
+            }
+            
+            res.set({
+                'Content-Type': 'image/jpeg',
+                'Cache-Control': 'public, max-age=86400',
+                'ETag': `pub-${publicacaoId}`
+            });
+            
+            res.sendFile(caminhoCompleto);
+            
+        } catch (erro) {
+            console.error("Erro ao servir imagem de publicação:", erro);
+            res.status(500).send('Erro interno');
+        }
+    }
+);
+
 router.get("/certificado/:formacaoId", 
-    verificarPermissao(['N', 'C']),
     async (req, res) => {
         try {
             const formacaoId = req.params.formacaoId;
             
             const certificado = await NWModel.findCertificado(formacaoId);
             
-            if (!certificado || !certificado.CertificadoArquivo) {
+            if (!certificado || !certificado.CaminhoArquivo) {
+                console.log('Certificado não encontrado:', formacaoId);
                 return res.status(404).send('Certificado não encontrado');
             }
             
+            const caminhoCompleto = path.join(__dirname, '../../app/public', certificado.CaminhoArquivo);
+            
+            console.log('Servindo certificado:', caminhoCompleto);
+            
+            if (!fs.existsSync(caminhoCompleto)) {
+                console.log('Arquivo de certificado não encontrado no disco:', caminhoCompleto);
+                return res.status(404).send('Arquivo não encontrado');
+            }
+            
             let contentType = 'application/octet-stream';
-            if (certificado.CertificadoTipo) {
-                contentType = certificado.CertificadoTipo;
+            if (certificado.TipoArquivo) {
+                contentType = certificado.TipoArquivo;
             } else {
-                const extensao = certificado.CertificadoNome ? 
-                    certificado.CertificadoNome.split('.').pop().toLowerCase() : '';
+                const extensao = certificado.NomeArquivo ? 
+                    certificado.NomeArquivo.split('.').pop().toLowerCase() : '';
                 
                 switch (extensao) {
                     case 'pdf':
@@ -190,22 +255,22 @@ router.get("/certificado/:formacaoId",
                     case 'png':
                         contentType = 'image/png';
                         break;
-                    case 'doc':
-                        contentType = 'application/msword';
+                    case 'gif':
+                        contentType = 'image/gif';
                         break;
-                    case 'docx':
-                        contentType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+                    case 'webp':
+                        contentType = 'image/webp';
                         break;
                 }
             }
-        
+            
             res.set({
                 'Content-Type': contentType,
-                'Content-Disposition': `inline; filename="${certificado.CertificadoNome || 'certificado'}"`,
-                'Cache-Control': 'public, max-age=3600'
+                'Content-Disposition': `inline; filename="${certificado.NomeArquivo || 'certificado'}"`,
+                'Cache-Control': 'public, max-age=86400'
             });
             
-            res.send(certificado.CertificadoArquivo);
+            res.sendFile(caminhoCompleto);
             
         } catch (erro) {
             console.error("Erro ao servir certificado:", erro);
@@ -285,7 +350,9 @@ router.post("/cadastrarnutricionista", upload, (req, res, next) => {
         faculdadeOrg: req.body.faculdadeOrg || '',
         curso: req.body.curso || '',
         cursoOrg: req.body.cursoOrg || '',
-        razaoSocial: req.body.razaoSocial || ''
+        razaoSocial: req.body.razaoSocial || '',
+        caminhoFotoPerfil: req.body.caminhoFotoPerfil || '',
+        caminhoFotoBanner: req.body.caminhoFotoBanner || ''
     };
 
     if (etapa === "1") {
@@ -333,25 +400,27 @@ router.post("/cadastrarnutricionista", upload, (req, res, next) => {
 
     if (etapa === "2") {
         try {
+            console.log('=== ETAPA 2: VALIDANDO IMAGENS ===');
+            console.log('Arquivos recebidos:', req.files ? Object.keys(req.files) : 'nenhum');
+            
             const imagens = validarImagensEtapa2(req.files);
             
+            console.log('Imagens validadas:', {
+                temPerfil: !!imagens.imagemPerfil,
+                temBanner: !!imagens.imagemBanner
+            });
+            
             if (imagens.imagemPerfil) {
-                dadosNutri.imagemPerfil = {
-                    originalname: imagens.imagemPerfil.originalname,
-                    mimetype: imagens.imagemPerfil.mimetype,
-                    size: imagens.imagemPerfil.size,
-                    buffer: imagens.imagemPerfil.buffer.toString('base64')
-                };
+                dadosNutri.caminhoFotoPerfil = imagens.imagemPerfil;
+                console.log('✅ Foto de perfil salva em dadosNutri:', imagens.imagemPerfil);
             }
             
             if (imagens.imagemBanner) {
-                dadosNutri.imagemBanner = {
-                    originalname: imagens.imagemBanner.originalname,
-                    mimetype: imagens.imagemBanner.mimetype,
-                    size: imagens.imagemBanner.size,
-                    buffer: imagens.imagemBanner.buffer.toString('base64')
-                };
+                dadosNutri.caminhoFotoBanner = imagens.imagemBanner;
+                console.log('✅ Foto de banner salva em dadosNutri:', imagens.imagemBanner);
             }
+            
+            console.log('Prosseguindo para etapa 3...');
             
             return res.render("pages/indexCadastrarNutri", {
                 etapa: "3", 
@@ -360,11 +429,13 @@ router.post("/cadastrarnutricionista", upload, (req, res, next) => {
                 card3: "", 
                 card4: "hidden",
                 cardSucesso: true,
-                valores: dadosNutri, 
+                valores: dadosNutri,
                 listaErros: null
             });
 
         } catch (error) {
+            console.error('ERRO na etapa 2:', error.message);
+            
             return res.render("pages/indexCadastrarNutri", {
                 etapa: "2", 
                 card1: "hidden", 
@@ -431,7 +502,18 @@ router.get("/quiz", function (req, res) {
 
 function validarImagensEtapa2(files) {
     const validarImagem = (arquivo, tipo) => {
-        if (!arquivo) return null;
+        if (!arquivo) {
+            console.log(`${tipo}: nenhum arquivo enviado`);
+            return null;
+        }
+        
+        console.log(`Validando ${tipo}:`, {
+            originalname: arquivo.originalname,
+            filename: arquivo.filename,
+            size: arquivo.size,
+            mimetype: arquivo.mimetype,
+            path: arquivo.path
+        });
         
         if (arquivo.size > 5 * 1024 * 1024) {
             throw new Error(`${tipo} muito grande. Máximo permitido: 5MB`);
@@ -442,18 +524,27 @@ function validarImagensEtapa2(files) {
             throw new Error(`Formato de ${tipo} não suportado. Use: JPEG, PNG, GIF ou WEBP`);
         }
         
-        return arquivo;
+        const caminhoRelativo = arquivo.path
+            .replace(/\\/g, '/') 
+            .split('public/')[1]; 
+        
+        console.log(`${tipo} será acessado em: ${caminhoRelativo}`);
+        return caminhoRelativo;
     };
 
+    const imagemPerfil = validarImagem(
+        files && files['input-imagem'] ? files['input-imagem'][0] : null, 
+        'foto de perfil'
+    );
+    
+    const imagemBanner = validarImagem(
+        files && files['input-banner'] ? files['input-banner'][0] : null, 
+        'banner'
+    );
+    
     return {
-        imagemPerfil: validarImagem(
-            files && files['input-imagem'] ? files['input-imagem'][0] : null, 
-            'foto de perfil'
-        ),
-        imagemBanner: validarImagem(
-            files && files['input-banner'] ? files['input-banner'][0] : null, 
-            'banner'
-        )
+        imagemPerfil,
+        imagemBanner
     };
 }
 

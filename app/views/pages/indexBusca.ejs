@@ -46,6 +46,10 @@
                         <span class="nome-usuario-header"><%= headerUsuario.nome %></span>
                     </section>
                 </a>
+
+                <a href="/logout" class="logout-link">
+                    <span class="material-icons">logout</span>
+                  </a>
             <% } else { %>
                 <a href="/premium"><button class="premium-button">Premium</button></a>
                 <a href="/login"><button class="entrar-button">Entrar</button></a>
@@ -56,21 +60,17 @@
     <main class="main-busca">
         <section class="container-busca">
             <% if (termo && termo.length > 0) { %>
-                <!-- Mostra o que foi pesquisado -->
                 <h1 class="titulo-busca">Resultados para "<%= termo %>"</h1>
                 
                 <% if (typeof erro !== 'undefined') { %>
-                    <!-- Se houve erro, mostra mensagem -->
                     <section class="erro-busca">
                         <p><%= erro %></p>
                     </section>
                 <% } else if (resultados && resultados.totalResultados > 0) { %>
-                    <!-- Se encontrou resultados, mostra eles -->
                     <section class="resumo-resultados">
                         <p><%= resultados.totalResultados %> resultado(s) encontrado(s)</p>
                     </section>
 
-                    <!-- Seção de Publicações -->
                     <% if (resultados.publicacoes && resultados.publicacoes.length > 0) { %>
                         <section class="secao-resultados">
                             <h2 class="titulo-secao">Publicações (<%= resultados.publicacoes.length %>)</h2>
@@ -112,7 +112,6 @@
                         </section>
                     <% } %>
 
-                    <!-- Seção de Nutricionistas -->
                     <% if (resultados.nutricionistas && resultados.nutricionistas.length > 0) { %>
                         <section class="secao-resultados">
                             <h2 class="titulo-secao">Nutricionistas (<%= resultados.nutricionistas.length %>)</h2>
@@ -160,7 +159,6 @@
                         </section>
                     <% } %>
                 <% } else { %>
-                    <!-- Se não encontrou nada -->
                     <section class="sem-resultados">
                         <h2>Nenhum resultado encontrado</h2>
                         <p>Não encontramos nada para "<%= termo %>"</p>
@@ -175,7 +173,6 @@
                     </section>
                 <% } %>
             <% } else { %>
-                <!-- Página inicial de busca (quando não há termo) -->
                 <section class="busca-inicial">
                     <h1>Buscar</h1>
                     <p>Use a barra de busca acima para encontrar publicações e nutricionistas</p>
@@ -225,6 +222,6 @@
           <p>&copy; 2024 NutriWeb. Todos os direitos reservados.</p>
         </section>
     </footer>
-
+    <script src="js/segurancaForms.js"></script>
 </body>
 </html>

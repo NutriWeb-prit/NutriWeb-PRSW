@@ -45,8 +45,7 @@ const NWModel = {
                     u.UsuarioStatus,
                     u.CEP,
                     u.DataNascimento,
-                    -- Verificar se existe foto de perfil
-                    CASE WHEN p.FotoPerfil IS NOT NULL THEN 1 ELSE 0 END as FotoPerfil,
+                    CASE WHEN p.CaminhoFotoPerfil IS NOT NULL THEN 1 ELSE 0 END as FotoPerfil,
                     CASE 
                         WHEN u.UsuarioTipo = 'C' THEN 'Cliente'
                         WHEN u.UsuarioTipo = 'N' THEN 'Nutricionista'
@@ -467,7 +466,7 @@ const NWModel = {
         }
     },
 
-    atualizarImagensUsuario: async (usuarioId, fotoPerfil = null, fotoBanner = null) => {
+    atualizarImagensUsuario: async (usuarioId, caminhoFotoPerfil = null, caminhoFotoBanner = null) => {
         let conn;
         
         try {
@@ -480,7 +479,6 @@ const NWModel = {
             
             await conn.beginTransaction();
     
-            // Verificar se o usuário já tem um perfil
             const [perfilExistente] = await conn.query(
                 "SELECT id FROM Perfis WHERE UsuarioId = ?",
                 [usuarioId]
@@ -489,20 +487,15 @@ const NWModel = {
             let dadosPerfil = {};
             let temAtualizacao = false;
     
-            // Preparar dados para atualização
-            if (fotoPerfil) {
-                if (fotoPerfil.buffer.length > 16 * 1024 * 1024) {
-                    throw new Error('Foto de perfil muito grande. Máximo permitido: 16MB');
-                }
-                dadosPerfil.FotoPerfil = fotoPerfil.buffer;
+            if (caminhoFotoPerfil) {
+                console.log('Salvando caminho de foto de perfil:', caminhoFotoPerfil);
+                dadosPerfil.CaminhoFotoPerfil = caminhoFotoPerfil;
                 temAtualizacao = true;
             }
     
-            if (fotoBanner) {
-                if (fotoBanner.buffer.length > 16 * 1024 * 1024) {
-                    throw new Error('Banner muito grande. Máximo permitido: 16MB');
-                }
-                dadosPerfil.FotoBanner = fotoBanner.buffer;
+            if (caminhoFotoBanner) {
+                console.log('Salvando caminho de foto de banner:', caminhoFotoBanner);
+                dadosPerfil.CaminhoFotoBanner = caminhoFotoBanner;
                 temAtualizacao = true;
             }
     
@@ -515,27 +508,23 @@ const NWModel = {
             if (perfilExistente.length > 0) {
                 console.log('Atualizando perfil existente, ID:', perfilExistente[0].id);
                 
-                // Atualizar perfil existente
                 const campos = [];
                 const valores = [];
     
-                if (fotoPerfil) {
-                    campos.push('FotoPerfil = ?');
-                    valores.push(fotoPerfil.buffer);
-                    console.log('Adicionando foto de perfil, tamanho buffer:', fotoPerfil.buffer.length);
+                if (caminhoFotoPerfil) {
+                    campos.push('CaminhoFotoPerfil = ?');
+                    valores.push(caminhoFotoPerfil);
                 }
     
-                if (fotoBanner) {
-                    campos.push('FotoBanner = ?');
-                    valores.push(fotoBanner.buffer);
-                    console.log('Adicionando foto de banner, tamanho buffer:', fotoBanner.buffer.length);
+                if (caminhoFotoBanner) {
+                    campos.push('CaminhoFotoBanner = ?');
+                    valores.push(caminhoFotoBanner);
                 }
     
                 valores.push(usuarioId);
     
                 const queryUpdate = `UPDATE Perfis SET ${campos.join(', ')} WHERE UsuarioId = ?`;
                 console.log('Query de update:', queryUpdate);
-                console.log('Valores (sem buffers):', valores.length, 'valores');
     
                 const [updateResult] = await conn.query(queryUpdate, valores);
                 console.log('Resultado do UPDATE:', updateResult);
@@ -547,7 +536,7 @@ const NWModel = {
                 };
     
             } else {
-                // Criar novo perfil
+                console.log('Criando novo perfil para usuário:', usuarioId);
                 dadosPerfil.UsuarioId = usuarioId;
                 
                 const [insertResult] = await conn.query(
@@ -563,13 +552,14 @@ const NWModel = {
             }
     
             await conn.commit();
+            console.log('Imagens atualizadas com sucesso no banco');
             
             return {
                 usuarioId,
                 ...resultado,
                 imagensAtualizadas: {
-                    fotoPerfil: !!fotoPerfil,
-                    fotoBanner: !!fotoBanner
+                    fotoPerfil: !!caminhoFotoPerfil,
+                    fotoBanner: !!caminhoFotoBanner
                 }
             };
     
@@ -699,19 +689,17 @@ const NWModel = {
 
     buscarConteudo: async (termo) => {
         try {
-            // Preparamos o termo para busca (adiciona % para busca parcial)
             const termoBusca = `%${termo}%`;
             
-            // Busca publicações que contenham o termo na legenda ou categoria
             const queryPublicacoes = `
                 SELECT 
                     p.id,
                     p.Legenda,
                     p.Categoria,
                     p.MediaEstrelas,
-                    p.FotoPublicacao,
+                    p.CaminhoFoto,
                     u.NomeCompleto as autor_nome,
-                    perf.FotoPerfil as autor_foto,
+                    perf.CaminhoFotoPerfil as autor_foto,
                     u.id as autor_id,
                     n.id as nutricionista_id
                 FROM Publicacoes p
@@ -725,13 +713,12 @@ const NWModel = {
                 LIMIT 10
             `;
     
-            // Busca nutricionistas que contenham o termo no nome ou nas especializações
             const queryNutricionistas = `
                 SELECT 
                     u.id as usuario_id,
                     u.NomeCompleto,
                     u.CEP,
-                    perf.FotoPerfil,
+                    perf.CaminhoFotoPerfil,
                     perf.SobreMim,
                     n.id as nutricionista_id,
                     n.RazaoSocial,
@@ -755,15 +742,12 @@ const NWModel = {
                 LIMIT 10
             `;
     
-            // Executa as duas consultas ao banco de dados
             const [publicacoes] = await pool.query(queryPublicacoes, [termoBusca, termoBusca]);
             const [nutricionistas] = await pool.query(queryNutricionistas, [termoBusca, termoBusca, termoBusca]);
     
-            // Processa os resultados das publicações
             const publicacoesProcessadas = publicacoes.map(pub => {
                 let resumo = '';
                 if (pub.Legenda) {
-                    // Pega apenas os primeiros 150 caracteres da legenda
                     resumo = pub.Legenda.length > 150 
                         ? pub.Legenda.substring(0, 150) + '...' 
                         : pub.Legenda;
@@ -775,23 +759,20 @@ const NWModel = {
                     resumo: resumo,
                     categoria: pub.Categoria,
                     mediaEstrelas: pub.MediaEstrelas ? parseFloat(pub.MediaEstrelas).toFixed(1) : '0.0',
-                    temFoto: pub.FotoPublicacao ? true : false,
+                    temFoto: pub.CaminhoFoto ? true : false, 
                     autor: {
                         id: pub.autor_id,
                         nutricionistaId: pub.nutricionista_id,
                         nome: pub.autor_nome,
                         fotoPerfil: pub.autor_foto || null
                     },
-                    // URL para a publicação completa
                     url: `/publicacao/${pub.id}`
                 };
             });
     
-            // Processa os resultados dos nutricionistas
             const nutricionistasProcessados = nutricionistas.map(nut => {
                 let localizacao = 'Localização não informada';
                 if (nut.CEP) {
-                    // Você pode implementar uma função para converter CEP em cidade/estado
                     localizacao = `CEP: ${nut.CEP}`;
                 }
     
@@ -800,18 +781,16 @@ const NWModel = {
                     nutricionistaId: nut.nutricionista_id,
                     nome: nut.NomeCompleto,
                     razaoSocial: nut.RazaoSocial,
-                    fotoPerfil: nut.FotoPerfil || null,
+                    fotoPerfil: nut.CaminhoFotoPerfil || null,
                     sobreMim: nut.SobreMim || '',
                     especializacoes: nut.especializacoes || 'Sem especialização definida',
                     localizacao: localizacao,
                     mediaAvaliacoes: nut.media_avaliacoes ? parseFloat(nut.media_avaliacoes).toFixed(1) : 'Sem avaliações',
                     totalPublicacoes: nut.total_publicacoes || 0,
-                    // URL para o perfil do nutricionista
                     url: `/perfilnutri?id=${nut.nutricionista_id}`
                 };
             });
     
-            // Retorna os resultados organizados
             return {
                 publicacoes: publicacoesProcessadas,
                 nutricionistas: nutricionistasProcessados
@@ -825,7 +804,6 @@ const NWModel = {
 
     mostrarPerfilCliente: async (req, res) => {
         try {
-            // Verificar se o usuário está logado
             if (!req.session.usuario || req.session.usuario.tipo !== 'C') {
                 return res.redirect('/login?erro=acesso_negado');
             }
@@ -833,10 +811,9 @@ const NWModel = {
             const usuarioId = req.session.usuario.id;
             console.log("Carregando perfil do cliente ID:", usuarioId);
             
-            // Buscar dados completos do cliente
-            const dadosCliente = await NWModel.findClienteCompleto(usuarioId);
+            const dadosCliente = await NWModel.findPerfilCompleto(usuarioId);
             
-            if (!dadosCliente || dadosCliente.length === 0) {
+            if (!dadosCliente || dadosCliente.cliente === null) {
                 console.log("Cliente não encontrado");
                 return res.render("pages/indexPerfilCliente", {
                     erro: "Dados do cliente não encontrados",
@@ -845,10 +822,8 @@ const NWModel = {
                 });
             }
             
-            const cliente = dadosCliente[0];
-
-            const publicacoesCurtidas = await NWModel.findPublicacoesCurtidas(usuarioId);
-            
+            const { cliente, publicacoes } = dadosCliente;
+    
             const dadosProcessados = {
                 id: cliente.id,
                 nome: cliente.NomeCompleto,
@@ -862,20 +837,12 @@ const NWModel = {
                 objetivos: cliente.SobreMim || "Ainda não definiu seus objetivos nutricionais.",
                 interesses: cliente.InteressesNutricionais || "Nenhum interesse cadastrado",
                 
-                // Processar fotos
-                fotoPerfil: cliente.FotoPerfil ? 
-                    `data:image/jpeg;base64,${cliente.FotoPerfil.toString('base64')}` : 
-                    'imagens/foto_perfil.jpg',
+                fotoPerfil: cliente.FotoPerfil ? `/imagem/perfil/${usuarioId}` : 'imagens/foto_perfil.jpg',
+                fotoBanner: cliente.FotoBanner ? `/imagem/banner/${usuarioId}` : null,
                 
-                fotoBanner: cliente.FotoBanner ? 
-                    `data:image/jpeg;base64,${cliente.FotoBanner.toString('base64')}` : 
-                    null,
-                
-                publicacoes: publicacoesCurtidas.map(pub => ({
-                    id: pub.id,
-                    imagem: pub.FotoPublicacao ? 
-                        `data:image/jpeg;base64,${pub.FotoPublicacao.toString('base64')}` : 
-                        'imagens/placeholder-post.jpg',
+                publicacoes: publicacoes.map(pub => ({
+                    id: pub.PublicacaoId,
+                    imagem: pub.FotoPublicacao ? `/imagem/publicacao/${pub.PublicacaoId}` : 'imagens/placeholder-post.jpg',
                     legenda: pub.Legenda,
                     categoria: pub.Categoria,
                     estrelas: pub.MediaEstrelas,
@@ -919,11 +886,9 @@ const NWModel = {
                     u.DataNascimento,
                     c.id as ClienteId,
                     c.CPF,
-                    -- Verificar SE existe foto, mas não carregar os dados
-                    CASE WHEN p.FotoPerfil IS NOT NULL THEN 1 ELSE 0 END as FotoPerfil,
-                    CASE WHEN p.FotoBanner IS NOT NULL THEN 1 ELSE 0 END as FotoBanner,
+                    CASE WHEN p.CaminhoFotoPerfil IS NOT NULL THEN 1 ELSE 0 END as FotoPerfil,
+                    CASE WHEN p.CaminhoFotoBanner IS NOT NULL THEN 1 ELSE 0 END as FotoBanner,
                     p.SobreMim,
-                    -- Otimizar GROUP_CONCAT com LIMIT
                     (SELECT GROUP_CONCAT(i.Nome SEPARATOR ', ') 
                      FROM ClientesInteresses ci 
                      INNER JOIN InteressesNutricionais i ON ci.InteresseId = i.id 
@@ -949,8 +914,7 @@ const NWModel = {
                     p.Categoria,
                     p.MediaEstrelas,
                     cp.DataCurtida,
-                    -- Verificar SE existe foto, mas não carregar os dados
-                    CASE WHEN p.FotoPublicacao IS NOT NULL THEN 1 ELSE 0 END as FotoPublicacao
+                    CASE WHEN p.CaminhoFoto IS NOT NULL THEN 1 ELSE 0 END as FotoPublicacao
                 FROM Publicacoes p
                 INNER JOIN CurtidasPublicacoes cp ON p.id = cp.PublicacaoId
                 WHERE cp.ClienteId = ?
@@ -985,8 +949,8 @@ const NWModel = {
                     u.Telefone,
                     n.id as NutricionistaId,
                     n.Crn,
-                    CASE WHEN p.FotoPerfil IS NOT NULL THEN 1 ELSE 0 END as FotoPerfil,
-                    CASE WHEN p.FotoBanner IS NOT NULL THEN 1 ELSE 0 END as FotoBanner,
+                    p.CaminhoFotoPerfil as FotoPerfil,
+                    p.CaminhoFotoBanner as FotoBanner,
                     p.SobreMim,
                     (SELECT GROUP_CONCAT(e.Nome SEPARATOR ', ') 
                      FROM NutricionistasEspecializacoes ne 
@@ -1012,7 +976,7 @@ const NWModel = {
                     TipoFormacao,
                     NomeFormacao,
                     NomeInstituicao,
-                    CASE WHEN CertificadoArquivo IS NOT NULL THEN 1 ELSE 0 END as CertificadoArquivo
+                    CASE WHEN CaminhoArquivo IS NOT NULL THEN 1 ELSE 0 END as CertificadoArquivo
                 FROM NutricionistasFormacoes
                 WHERE NutricionistaId = ?
                 ORDER BY TipoFormacao DESC, DataCriacao DESC`,
@@ -1032,7 +996,9 @@ const NWModel = {
             console.log("Perfil básico carregado:", {
                 nutricionistaId: nutricionista.id,
                 formacoes: formacoes.length,
-                contatosSociais: contatosSociais.length
+                contatosSociais: contatosSociais.length,
+                temFotoPerfil: !!nutricionista.FotoPerfil,
+                temFotoBanner: !!nutricionista.FotoBanner
             });
             
             return {
@@ -1050,29 +1016,29 @@ const NWModel = {
     findImagemPerfil: async (usuarioId) => {
         try {
             const [result] = await pool.query(
-                "SELECT FotoPerfil FROM Perfis WHERE UsuarioId = ?",
+                "SELECT CaminhoFotoPerfil FROM Perfis WHERE UsuarioId = ?",
                 [usuarioId]
             );
             
-            return result.length > 0 ? result[0].FotoPerfil : null;
+            return result.length > 0 ? result[0].CaminhoFotoPerfil : null;
         } catch (erro) {
-            console.log("Erro ao buscar imagem de perfil:", erro);
+            console.log("Erro ao buscar caminho de imagem de perfil:", erro);
             return null;
         }
     },
     
     findImagemBanner: async (usuarioId) => {
         try {
-            console.log("Buscando banner para usuarioId:", usuarioId);
+            console.log("Buscando caminho de banner para usuarioId:", usuarioId);
             const [result] = await pool.query(
-                'SELECT FotoBanner FROM Perfis WHERE UsuarioId = ? AND FotoBanner IS NOT NULL',
+                'SELECT CaminhoFotoBanner FROM Perfis WHERE UsuarioId = ? AND CaminhoFotoBanner IS NOT NULL',
                 [usuarioId]
             );
             
             console.log("Resultado da query banner:", result.length > 0 ? "Encontrado" : "Não encontrado");
-            return result.length > 0 ? result[0].FotoBanner : null;
+            return result.length > 0 ? result[0].CaminhoFotoBanner : null;
         } catch (erro) {
-            console.log("Erro ao buscar imagem de banner:", erro);
+            console.log("Erro ao buscar caminho de banner:", erro);
             return null;
         }
     },
@@ -1080,13 +1046,13 @@ const NWModel = {
     findImagemPublicacao: async (publicacaoId) => {
         try {
             const [result] = await pool.query(
-                "SELECT FotoPublicacao FROM Publicacoes WHERE id = ?",
+                "SELECT CaminhoFoto FROM Publicacoes WHERE id = ?",
                 [publicacaoId]
             );
             
-            return result.length > 0 ? result[0].FotoPublicacao : null;
+            return result.length > 0 ? result[0].CaminhoFoto : null;
         } catch (erro) {
-            console.log("Erro ao buscar imagem da publicação:", erro);
+            console.log("Erro ao buscar caminho da imagem de publicação:", erro);
             return null;
         }
     },
@@ -1124,9 +1090,9 @@ const NWModel = {
         try {
             const [result] = await pool.query(
                 `SELECT 
-                    CertificadoArquivo,
-                    CertificadoNome,
-                    CertificadoTipo
+                    CaminhoArquivo,
+                    NomeArquivo,
+                    TipoArquivo
                 FROM NutricionistasFormacoes 
                 WHERE id = ?`,
                 [formacaoId]
@@ -1140,48 +1106,40 @@ const NWModel = {
     },
 
     // Criar um usuário Cliente
-    createCliente: async (dadosUsuario, cpfLimpo, imagemPerfil = null, imagemBanner = null, interessesSelecionados = []) => {
+    createCliente: async (dadosUsuario, cpfLimpo, caminhoFotoPerfil = null, caminhoFotoBanner = null, interessesSelecionados = []) => {
         const conn = await pool.getConnection();
         
         try {
             await conn.beginTransaction();
     
-            // 1. Inserir usuário
             const [usuarioResult] = await conn.query(
                 "INSERT INTO Usuarios SET ?", 
                 [dadosUsuario]
             );
             const usuarioId = usuarioResult.insertId;
     
-            // 2. Inserir cliente
             const [clienteResult] = await conn.query(
                 "INSERT INTO Clientes (UsuarioId, CPF) VALUES (?, ?)", 
                 [usuarioId, cpfLimpo]
             );
             const clienteId = clienteResult.insertId;
     
-            // 3. Inserir perfil com imagens (se houver)
-            if (imagemPerfil || imagemBanner) {
+            if (caminhoFotoPerfil || caminhoFotoBanner) {
                 const dadosPerfil = { UsuarioId: usuarioId };
     
-                if (imagemPerfil) {
-                    if (imagemPerfil.buffer.length > 16 * 1024 * 1024) {
-                        throw new Error('Foto de perfil muito grande. Máximo permitido: 16MB');
-                    }
-                    dadosPerfil.FotoPerfil = imagemPerfil.buffer;
+                if (caminhoFotoPerfil) {
+                    console.log('Armazenando caminho de foto de perfil:', caminhoFotoPerfil);
+                    dadosPerfil.CaminhoFotoPerfil = caminhoFotoPerfil;
                 }
     
-                if (imagemBanner) {
-                    if (imagemBanner.buffer.length > 16 * 1024 * 1024) {
-                        throw new Error('Banner muito grande. Máximo permitido: 16MB');
-                    }
-                    dadosPerfil.FotoBanner = imagemBanner.buffer;
+                if (caminhoFotoBanner) {
+                    console.log('Armazenando caminho de foto de banner:', caminhoFotoBanner);
+                    dadosPerfil.CaminhoFotoBanner = caminhoFotoBanner;
                 }
     
                 await conn.query("INSERT INTO Perfis SET ?", [dadosPerfil]);
             }
     
-            // 4. Processar interesses nutricionais
             if (interessesSelecionados && Array.isArray(interessesSelecionados) && interessesSelecionados.length > 0) {
                 const mapeamentoInteresses = {
                     'emagrecimento': 1,
@@ -1195,7 +1153,6 @@ const NWModel = {
                     'alimentacaoSaudavel': 9
                 };
     
-                // Inserir interesses em lote
                 const interessesParaInserir = [];
                 for (const interesse of interessesSelecionados) {
                     const interesseId = mapeamentoInteresses[interesse];
@@ -1218,7 +1175,7 @@ const NWModel = {
                 usuarioId, 
                 clienteId,
                 cpfSalvo: cpfLimpo,
-                temImagens: !!(imagemPerfil || imagemBanner),
+                temImagens: !!(caminhoFotoPerfil || caminhoFotoBanner),
                 interessesSalvos: interessesSelecionados ? interessesSelecionados.length : 0
             };
     
@@ -1232,17 +1189,19 @@ const NWModel = {
     },
     
     // Criar Nutricionista
-    createNutricionista: async (dadosUsuario, dadosNutricionista, especializacoes = [], imagemPerfil = null, imagemBanner = null, formacao = {}) => {
+    createNutricionista: async (dadosUsuario, dadosNutricionista, especializacoes = [], caminhoFotoPerfil = null, caminhoFotoBanner = null, formacao = {}) => {
         const conn = await pool.getConnection();
         
         try {
             await conn.beginTransaction();
     
-            // 1. Inserir usuário
+            console.log('=== SALVANDO NUTRICIONISTA NO BANCO ===');
+            console.log('Caminho foto perfil recebido:', caminhoFotoPerfil);
+            console.log('Caminho foto banner recebido:', caminhoFotoBanner);
+    
             const [usuarioResult] = await conn.query("INSERT INTO Usuarios SET ?", [dadosUsuario]);
             const usuarioId = usuarioResult.insertId;
     
-            // 2. Inserir nutricionista
             const [nutricionistaResult] = await conn.query("INSERT INTO Nutricionistas SET ?", [{
                 UsuarioId: usuarioId,
                 Crn: dadosNutricionista.Crn,
@@ -1250,32 +1209,27 @@ const NWModel = {
             }]);
             const nutricionistaId = nutricionistaResult.insertId;
     
-            // 3. Inserir perfil com imagens e sobre mim
-            if (imagemPerfil || imagemBanner || dadosNutricionista.SobreMim) {
+            if (caminhoFotoPerfil || caminhoFotoBanner || dadosNutricionista.SobreMim) {
                 const dadosPerfil = { UsuarioId: usuarioId };
                 
-                if (imagemPerfil) {
-                    if (imagemPerfil.buffer.length > 16 * 1024 * 1024) {
-                        throw new Error('Foto de perfil muito grande. Máximo: 16MB');
-                    }
-                    dadosPerfil.FotoPerfil = imagemPerfil.buffer;
+                if (caminhoFotoPerfil) {
+                    console.log('Salvando CaminhoFotoPerfil no banco:', caminhoFotoPerfil);
+                    dadosPerfil.CaminhoFotoPerfil = caminhoFotoPerfil;
                 }
                 
-                if (imagemBanner) {
-                    if (imagemBanner.buffer.length > 16 * 1024 * 1024) {
-                        throw new Error('Banner muito grande. Máximo: 16MB');
-                    }
-                    dadosPerfil.FotoBanner = imagemBanner.buffer;
+                if (caminhoFotoBanner) {
+                    console.log('Salvando CaminhoFotoBanner no banco:', caminhoFotoBanner);
+                    dadosPerfil.CaminhoFotoBanner = caminhoFotoBanner;
                 }
     
                 if (dadosNutricionista.SobreMim) {
                     dadosPerfil.SobreMim = dadosNutricionista.SobreMim;
                 }
     
-                await conn.query("INSERT INTO Perfis SET ?", [dadosPerfil]);
+                const [perfilResult] = await conn.query("INSERT INTO Perfis SET ?", [dadosPerfil]);
+                console.log('✅ Perfil inserido com ID:', perfilResult.insertId);
             }
     
-            // 4. Inserir especializações (em lote)
             if (especializacoes.length > 0) {
                 const placeholders = especializacoes.map(() => '?').join(',');
                 const [rows] = await conn.query(
@@ -1292,7 +1246,6 @@ const NWModel = {
                 }
             }
     
-            // 5. Inserir formações acadêmicas
             const formacoesParaInserir = [];
             
             if (formacao.graduacao && formacao.graduacao.nome && formacao.graduacao.instituicao) {
@@ -1305,13 +1258,10 @@ const NWModel = {
     
                 if (formacao.graduacao.certificado) {
                     const cert = formacao.graduacao.certificado;
-                    if (cert.buffer.length > 16 * 1024 * 1024) {
-                        throw new Error('Certificado de graduação muito grande. Máximo: 16MB');
-                    }
-                    dadosGraduacao.CertificadoArquivo = cert.buffer;
-                    dadosGraduacao.CertificadoNome = cert.originalname;
-                    dadosGraduacao.CertificadoTipo = cert.mimetype;
-                    dadosGraduacao.CertificadoTamanho = cert.size;
+                    dadosGraduacao.CaminhoArquivo = cert.filepath;
+                    dadosGraduacao.NomeArquivo = cert.filename;
+                    dadosGraduacao.TipoArquivo = cert.mimetype;
+                    dadosGraduacao.TamanhoArquivo = cert.size;
                 }
     
                 formacoesParaInserir.push(dadosGraduacao);
@@ -1327,24 +1277,21 @@ const NWModel = {
     
                 if (formacao.curso.certificado) {
                     const cert = formacao.curso.certificado;
-                    if (cert.buffer.length > 16 * 1024 * 1024) {
-                        throw new Error('Certificado de curso muito grande. Máximo: 16MB');
-                    }
-                    dadosCurso.CertificadoArquivo = cert.buffer;
-                    dadosCurso.CertificadoNome = cert.originalname;
-                    dadosCurso.CertificadoTipo = cert.mimetype;
-                    dadosCurso.CertificadoTamanho = cert.size;
+                    dadosCurso.CaminhoArquivo = cert.filepath;
+                    dadosCurso.NomeArquivo = cert.filename;
+                    dadosCurso.TipoArquivo = cert.mimetype;
+                    dadosCurso.TamanhoArquivo = cert.size;
                 }
     
                 formacoesParaInserir.push(dadosCurso);
             }
     
-            // Inserir formações
             for (const formacaoData of formacoesParaInserir) {
                 await conn.query("INSERT INTO NutricionistasFormacoes SET ?", [formacaoData]);
             }
     
             await conn.commit();
+            console.log('✅✅ Nutricionista cadastrado com sucesso!');
             return { usuarioId, nutricionistaId };
     
         } catch (err) {

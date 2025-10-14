@@ -30,12 +30,17 @@
         <section class="right-section">
             <% if (headerUsuario.estaLogado) { %>
                 <a href="/premium"><button class="premium-button">Premium</button></a>
+                
                 <a href="<%= headerUsuario.urlPerfil %>" class="perfil-usuario-link">
                     <div class="perfil-usuario">
                         <img src="<%= headerUsuario.fotoPerfil %>" alt="Foto de perfil" class="foto-perfil-header" onerror="this.src='imagens/foto_perfil.jpg'">
                         <span class="nome-usuario-header"><%= headerUsuario.nome %></span>
                     </div>
                 </a>
+
+                <a href="/logout" class="logout-link">
+                    <span class="material-icons">logout</span>
+                  </a>
             <% } else { %>
                 <a href="/premium"><button class="premium-button">Premium</button></a>
                 <a href="/login"><button class="entrar-button">Entrar</button></a>
@@ -147,6 +152,7 @@
         </section>
     </footer>
 
+    <script src="js/segurancaForms.js"></script>
     <script src="js/indexMenu.js"></script>
     <script src="js/alerts.js"></script>
 </body>

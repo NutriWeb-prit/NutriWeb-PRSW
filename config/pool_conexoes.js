@@ -1,4 +1,4 @@
-const mysql = require('mysql2');
+const mysql = require('mysql2/promise');
 
 try {
     var pool = mysql.createPool({
@@ -9,19 +9,39 @@ try {
         port: process.env.DB_PORT,
         waitForConnections: true,
         connectionLimit: 3,
-        queueLimit: 0
+        queueLimit: 0,
+        enableKeepAlive: true,
+        keepAliveInitialDelay: 0,
+        maxIdle: 10 
     });
-    
+   
     console.log("Pool de conexões estabelecido!");
-    
-    pool.getConnection((err, conn) => {
-        if (err) {
-            console.log("Erro ao conectar:", err);
-        } else {
+   
+    (async () => {
+        try {
+            const conn = await pool.getConnection();
             console.log("Conectado ao SGBD!");
             conn.release();
+        } catch (err) {
+            console.log("Erro ao conectar:", err.message);
         }
-    });
+    })();
+
+    const resetPoolPeriodically = () => {
+        setInterval(async () => {
+            try {
+                console.log('🔄 [' + new Date().toLocaleTimeString() + '] Limpando conexões inativas...');
+                
+                await pool.query('SELECT 1');
+                
+                console.log('✅ Pool verificado e limpo com sucesso');
+            } catch (err) {
+                console.error('⚠️ Erro ao limpar pool:', err.message);
+            }
+        }, 2 * 60 * 1000);
+    };
+
+    resetPoolPeriodically();
 
     const gracefulShutdown = async () => {
         console.log('\n🔴 Encerrando aplicação...');
@@ -38,10 +58,10 @@ try {
     process.on('SIGTERM', gracefulShutdown);
     process.on('SIGINT', gracefulShutdown);
     process.on('SIGUSR2', gracefulShutdown);
-    
+
+    module.exports = pool;
+   
 } catch (e) {
     console.log("Falha ao estabelecer o pool de conexões!");
     console.log(e);
 }
-
-module.exports = pool.promise();

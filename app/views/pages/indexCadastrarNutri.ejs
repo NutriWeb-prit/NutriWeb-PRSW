@@ -93,6 +93,10 @@
                             <span class="nome-usuario-header"><%= headerUsuario.nome %></span>
                         </div>
                     </a>
+
+                    <a href="/logout" class="logout-link">
+                        <span class="material-icons">logout</span>
+                      </a>
                 <% } else { %>
                     <a href="/premium"><button class="premium-button">Premium</button></a>
                     <a href="/login"><button class="entrar-button">Entrar</button></a>
@@ -379,12 +383,12 @@
                         <input type="hidden" name="ddd" value="<%= valores.ddd %>">
                         <input type="hidden" name="telefone" value="<%= valores.telefone %>">
                         <input type="hidden" name="crn" value="<%= valores.crn %>">
-                        <% if (valores.imagemPerfil) { %>
-                            <input type="hidden" name="imagemPerfilData" value="<%= JSON.stringify(valores.imagemPerfil) %>">
+                        <% if (valores.caminhoFotoPerfil) { %>
+                            <input type="hidden" name="caminhoFotoPerfil" value="<%= valores.caminhoFotoPerfil %>">
                         <% } %>
                         
-                        <% if (valores.imagemBanner) { %>
-                            <input type="hidden" name="imagemBannerData" value="<%= JSON.stringify(valores.imagemBanner) %>">
+                        <% if (valores.caminhoFotoBanner) { %>
+                            <input type="hidden" name="caminhoFotoBanner" value="<%= valores.caminhoFotoBanner %>">
                         <% } %>
                         
                         <h2><strong class="strong-cad">Personalizando</strong><br> seu perfil</h2>
@@ -398,7 +402,7 @@
                         maxlength="400"><%= valores.sobreMim || '' %></textarea>
         
                         <button type="submit" class="btn-cadastrar continuar">
-                            Continuar <i class="fas fa-arrow-right seta"></i>
+                            Finalizar <i class="fas fa-arrow-right seta"></i>
                         </button>
                     </form>
                 </section>
@@ -468,6 +472,7 @@
         </footer>
         
     </body>
+    <script src="js/segurancaForms.js"></script>
     <script src="js/indexMenu.js"></script>
     <script src="js/validacaotemporeal.js"></script>
     <script src="js/form-card.js"></script>

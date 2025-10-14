@@ -471,6 +471,7 @@ const NWController = {
                 console.log(`Validando ${tipo}:`, arquivo ? 'arquivo presente' : 'arquivo ausente');
                 if (!arquivo) return null;
                 
+                console.log(`${tipo} - Caminho:`, arquivo.path);
                 console.log(`${tipo} - Tamanho:`, arquivo.size, 'bytes');
                 console.log(`${tipo} - Tipo:`, arquivo.mimetype);
                 
@@ -478,16 +479,17 @@ const NWController = {
                     throw new Error(`${tipo} muito grande. Máximo permitido: 5MB`);
                 }
                 
-                if (arquivo.buffer && arquivo.buffer.length > 5 * 1024 * 1024) {
-                    throw new Error(`${tipo} muito grande após processamento. Máximo permitido: 5MB`);
-                }
-                
                 const tiposPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
                 if (!tiposPermitidos.includes(arquivo.mimetype)) {
                     throw new Error(`Formato de ${tipo} não suportado. Use: JPEG, PNG, GIF ou WEBP`);
                 }
                 
-                return arquivo;
+                const caminhoRelativo = arquivo.path
+                    .replace(/\\/g, '/') 
+                    .split('public/')[1];
+                
+                console.log(`${tipo} será salvo em: ${caminhoRelativo}`);
+                return caminhoRelativo;
             };
     
             const fotoPerfil = validarImagem(
@@ -499,14 +501,14 @@ const NWController = {
                 req.files && req.files['fotoBanner'] ? req.files['fotoBanner'][0] : null,
                 'banner'
             );
-
+    
             if (!fotoPerfil && !fotoBanner) {
                 console.log('ERRO: Nenhuma imagem foi enviada');
                 return res.redirect('/config?erro=nenhuma_imagem');
             }
-
+    
             const resultado = await NWModel.atualizarImagensUsuario(usuarioId, fotoPerfil, fotoBanner);
-
+    
             if (req.headers['accept'] && req.headers['accept'].includes('application/json')) {
                 return res.json({
                     success: true,
@@ -518,7 +520,7 @@ const NWController = {
             return res.redirect('/config?sucesso=imagens_atualizadas');
     
         } catch (error) {
-    
+            console.error('Erro ao atualizar imagens:', error);
             return res.redirect('/config?erro=' + encodeURIComponent(
                 error.message.includes('muito grande') || error.message.includes('não suportado')
                     ? error.message
@@ -848,10 +850,8 @@ const NWController = {
                 });
             }
     
-            // **VALIDAÇÃO DE IMAGENS MOVIDA PARA O CONTROLLER**
             const imagensValidadas = validarImagensUpload(req.files);
             
-            // Preparar dados do usuário
             const cpfLimpo = req.body.cpf ? req.body.cpf.replace(/\D/g, '') : '';
             if (!cpfLimpo) {
                 throw new Error('CPF é obrigatório!');
@@ -867,7 +867,6 @@ const NWController = {
                 UsuarioTipo: 'C'
             };
     
-            // Processar interesses
             let interessesSelecionados = [];
             if (req.body.area) {
                 interessesSelecionados = Array.isArray(req.body.area) ? req.body.area : [req.body.area];
@@ -876,12 +875,11 @@ const NWController = {
                 );
             }
     
-            // **CHAMADA ÚNICA AO MODEL**
             const resultado = await NWModel.createCliente(
                 dadosUsuario, 
                 cpfLimpo, 
-                imagensValidadas.imagemPerfil, 
-                imagensValidadas.imagemBanner, 
+                imagensValidadas.imagemPerfil,
+                imagensValidadas.imagemBanner,
                 interessesSelecionados
             );
     
@@ -960,12 +958,19 @@ const NWController = {
                 );
             }
     
+            const caminhoFotoPerfil = req.body.caminhoFotoPerfil || null;
+            const caminhoFotoBanner = req.body.caminhoFotoBanner || null;
+    
+            console.log('=== ETAPA 3: SALVANDO NO BANCO ===');
+            console.log('Foto de perfil a ser salva:', caminhoFotoPerfil);
+            console.log('Foto de banner a ser salva:', caminhoFotoBanner);
+    
             const result = await NWModel.createNutricionista(
                 dadosUsuario,
                 dadosNutricionista,
                 especializacoesSelecionadas,
-                arquivosValidados.imagemPerfil,
-                arquivosValidados.imagemBanner,
+                caminhoFotoPerfil, 
+                caminhoFotoBanner, 
                 formacao
             );
     
@@ -991,6 +996,53 @@ const NWController = {
                 }
             });
         }
+    },
+
+    validarArquivosNutricionista: function(req) {
+        const imagens = this.validarImagensUpload(req.files);
+        
+        let imagemPerfil = imagens.imagemPerfil;
+        let imagemBanner = imagens.imagemBanner;
+        
+        const validarCertificado = (arquivo, tipo) => {
+            if (!arquivo) return null;
+            
+            if (arquivo.size > 10 * 1024 * 1024) {
+                throw new Error(`${tipo} muito grande. Máximo permitido: 10MB`);
+            }
+            
+            const tiposPermitidos = [
+                'application/pdf', 
+                'image/jpeg', 
+                'image/jpg', 
+                'image/png', 
+                'image/gif', 
+                'image/webp'
+            ];
+            if (!tiposPermitidos.includes(arquivo.mimetype)) {
+                throw new Error(`Formato de ${tipo} não suportado. Use: PDF, JPEG, PNG, GIF ou WEBP`);
+            }
+            
+            return {
+                filepath: arquivo.filepath,
+                filename: arquivo.filename,
+                mimetype: arquivo.mimetype,
+                size: arquivo.size
+            };
+        };
+    
+        return {
+            imagemPerfil,
+            imagemBanner,
+            certificadoFaculdade: validarCertificado(
+                req.files && req.files['certificadoFaculdade'] ? req.files['certificadoFaculdade'][0] : null,
+                'certificado de faculdade'
+            ),
+            certificadoCurso: validarCertificado(
+                req.files && req.files['certificadoCurso'] ? req.files['certificadoCurso'][0] : null,
+                'certificado de curso'
+            )
+        };
     },
 
 }
@@ -1046,12 +1098,14 @@ function validarImagensUpload(files) {
     const validarImagem = (arquivo, tipo) => {
         if (!arquivo) return null;
         
+        console.log(`Validando ${tipo}:`, {
+            originalname: arquivo.originalname,
+            size: arquivo.size,
+            path: arquivo.path // ✅ Agora .path existe (diskStorage)
+        });
+        
         if (arquivo.size > 5 * 1024 * 1024) {
             throw new Error(`${tipo} muito grande. Máximo permitido: 5MB`);
-        }
-        
-        if (arquivo.buffer && arquivo.buffer.length > 5 * 1024 * 1024) {
-            throw new Error(`${tipo} muito grande após processamento. Máximo permitido: 5MB`);
         }
         
         const tiposPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
@@ -1059,7 +1113,12 @@ function validarImagensUpload(files) {
             throw new Error(`Formato de ${tipo} não suportado. Use: JPEG, PNG, GIF ou WEBP`);
         }
         
-        return arquivo;
+        const caminhoRelativo = arquivo.path
+            .replace(/\\/g, '/')
+            .split('public/')[1];
+        
+        console.log(`${tipo} será salvo com caminho relativo: ${caminhoRelativo}`);
+        return caminhoRelativo;
     };
 
     return {
@@ -1080,40 +1139,14 @@ function validarArquivosNutricionista(req) {
     let imagemPerfil = imagens.imagemPerfil;
     let imagemBanner = imagens.imagemBanner;
     
-    if (req.body.imagemPerfilData) {
-        try {
-            const dadosImagem = JSON.parse(req.body.imagemPerfilData);
-            if (dadosImagem && dadosImagem.buffer) {
-                imagemPerfil = {
-                    originalname: dadosImagem.originalname,
-                    mimetype: dadosImagem.mimetype,
-                    size: dadosImagem.size,
-                    buffer: Buffer.from(dadosImagem.buffer, 'base64')
-                };
-            }
-        } catch (error) {
-            console.error('Erro ao recuperar imagem de perfil:', error.message);
-        }
-    }
-    
-    if (req.body.imagemBannerData) {
-        try {
-            const dadosImagem = JSON.parse(req.body.imagemBannerData);
-            if (dadosImagem && dadosImagem.buffer) {
-                imagemBanner = {
-                    originalname: dadosImagem.originalname,
-                    mimetype: dadosImagem.mimetype,
-                    size: dadosImagem.size,
-                    buffer: Buffer.from(dadosImagem.buffer, 'base64')
-                };
-            }
-        } catch (error) {
-            console.error('Erro ao recuperar banner:', error.message);
-        }
-    }
-    
     const validarCertificado = (arquivo, tipo) => {
         if (!arquivo) return null;
+        
+        console.log(`Validando ${tipo}:`, {
+            originalname: arquivo.originalname,
+            size: arquivo.size,
+            path: arquivo.path
+        });
         
         if (arquivo.size > 10 * 1024 * 1024) {
             throw new Error(`${tipo} muito grande. Máximo permitido: 10MB`);
@@ -1131,7 +1164,18 @@ function validarArquivosNutricionista(req) {
             throw new Error(`Formato de ${tipo} não suportado. Use: PDF, JPEG, PNG, GIF ou WEBP`);
         }
         
-        return arquivo;
+        const caminhoRelativo = arquivo.path
+            .replace(/\\/g, '/')
+            .split('public/')[1];
+        
+        console.log(`${tipo} será salvo com caminho relativo: ${caminhoRelativo}`);
+        
+        return {
+            filepath: caminhoRelativo,
+            filename: arquivo.filename,
+            mimetype: arquivo.mimetype,
+            size: arquivo.size
+        };
     };
 
     return {

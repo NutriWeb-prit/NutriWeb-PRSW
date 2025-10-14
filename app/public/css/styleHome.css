@@ -137,6 +137,18 @@ h1, h2, h3, h4, h5, h6 {
     opacity: 0.8;
 }
 
+.logout-link {
+    display: inline-flex;
+    align-items: center;
+    color: #020202;
+    text-decoration: none;
+    margin: 0 20px 0 40px
+}
+  
+.logout-link:hover {
+    color: #FF5B00;
+}
+
 .perfil-usuario {
     display: flex;
     align-items: center;
