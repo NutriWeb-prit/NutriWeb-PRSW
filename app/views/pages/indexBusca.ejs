@@ -35,7 +35,9 @@
         
         <section class="right-section">
             <% if (headerUsuario.estaLogado) { %>
-                <a href="/premium"><button class="premium-button">Premium</button></a>
+                <% if (headerUsuario.tipo !== 'C') { %>
+                    <a href="/premium"><button class="premium-button">Premium</button></a>
+                <% } %>
                 
                 <a href="<%= headerUsuario.urlPerfil %>" class="perfil-usuario-link">
                     <section class="perfil-usuario">

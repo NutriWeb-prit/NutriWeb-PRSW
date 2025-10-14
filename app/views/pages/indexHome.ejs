@@ -37,7 +37,9 @@
             
             <section class="right-section">
                 <% if (headerUsuario.estaLogado) { %>
-                    <a href="/premium"><button class="premium-button">Premium</button></a>
+                    <% if (headerUsuario.tipo !== 'C') { %>
+                        <a href="/premium"><button class="premium-button">Premium</button></a>
+                    <% } %>
                     
                     <a href="<%= headerUsuario.urlPerfil %>" class="perfil-usuario-link">
                         <div class="perfil-usuario">
@@ -905,55 +907,58 @@
                 </section>
 
                 <section class="modal-card">
-                    <section class="container-card-header">
-                        <a href="/perfilnutri?id=1" class="card-perfil card-perfil-modal">
-                            <section class="card-header card-header-modal">
-                                <img src="imagens/profissional1.png" alt="Profile" id="modal-profile">
-                                <section>
-                                    <section class="name" id="modal-name">Julia</section>
-                                    <section class="profession">Nutricionista</section>
+                    <section class="modal-card-top">
+                        <section class="container-card-header">
+                            <a href="/perfilnutri?id=1" class="card-perfil card-perfil-modal">
+                                <section class="card-header card-header-modal">
+                                    <img src="imagens/profissional1.png" alt="Profile" id="modal-profile">
+                                    <section>
+                                        <section class="name" id="modal-name">Julia</section>
+                                        <section class="profession">Nutricionista</section>
+                                    </section>
                                 </section>
+                            </a>
+                            <section class="controle-modal">
+                                <section id="menu-denunciar" class="menu-denunciar">
+                                    <span class="menu-pontos" id="menu-pontos">⋮</span>
+                                    <section class="denunciar-opcao" id="denunciar-opcao">Denunciar</section>
+                                </section>
+            
+                                <span class="close-modal md-24" id="close-modal">&times;</span>
                             </section>
-                        </a>
-                        <section class="controle-modal">
-                            <section id="menu-denunciar" class="menu-denunciar">
-                                <span class="menu-pontos" id="menu-pontos">⋮</span>
-                                <section class="denunciar-opcao" id="denunciar-opcao">Denunciar</section>
-                            </section>
-        
-                            <span class="close-modal md-24" id="close-modal">&times;</span>
+                        </section>
+                    
+                        <section class="modal-image-mobile">
+                            <img src="imagens/img-login.jpg" alt="Content Image" id="modal-img">
+                        </section>
+
+                        <section class="modal-description">
+                            <h2>QUAIS SÃO OS BENEFÍCIOS DO MAMÃO?</h2>
+                            <p>Além de ser considerado um alimento com efeito calmante natural, o mamão fornece em vitaminas A, C, cálcio, ferro, potássio, licopeno e fibras, entre outros nutrientes.</p>
+                            <h3>XÔ ENVELHECIMENTO PRECOCE</h3>
+                            <p>Ele possui betacaroteno e outras substâncias com ação antioxidante que afastam os danos causados à pele pela ação dos radicais livres. Por conter vitaminas C, A e E, também contribui para uma maior firmeza da pele.</p>
+                            <h3>AÇÃO DETOXIFICANTE</h3>
+                            <p>Os antioxidantes presentes na fruta também ajudam no processo natural de eliminação das toxinas pelo fígado.</p>
                         </section>
                     </section>
-                    
-                    <section class="modal-image-mobile">
-                        <img src="imagens/img-login.jpg" alt="Content Image" id="modal-img">
-                    </section>
+                    <section class="modal-card-bottom">
+                        <section class="btn-favorite-comment">
+                            <span class="material-icons btn-favorite md-48">favorite</span>
+                            <span class="material-icons btn-comment md-48">chat</span>
+                        </section>
 
-                    <section class="modal-description">
-                        <h2>QUAIS SÃO OS BENEFÍCIOS DO MAMÃO?</h2>
-                        <p>Além de ser considerado um alimento com efeito calmante natural, o mamão fornece em vitaminas A, C, cálcio, ferro, potássio, licopeno e fibras, entre outros nutrientes.</p>
-                        <h3>XÔ ENVELHECIMENTO PRECOCE</h3>
-                        <p>Ele possui betacaroteno e outras substâncias com ação antioxidante que afastam os danos causados à pele pela ação dos radicais livres. Por conter vitaminas C, A e E, também contribui para uma maior firmeza da pele.</p>
-                        <h3>AÇÃO DETOXIFICANTE</h3>
-                        <p>Os antioxidantes presentes na fruta também ajudam no processo natural de eliminação das toxinas pelo fígado.</p>
-                    </section>
+                        <section class="comentarios-lista" id="comentarios-lista">
+                            <p class="sem-comentarios" id="sem-comentarios">Seja o primeiro a comentar!</p>
+                        </section>
 
-                    <section class="btn-favorite-comment">
-                        <span class="material-icons btn-favorite md-48">favorite</span>
-                        <span class="material-icons btn-comment md-48">chat</span>
-                    </section>
-
-                    <section class="comentarios-lista" id="comentarios-lista">
-                        <p class="sem-comentarios" id="sem-comentarios">Seja o primeiro a comentar!</p>
-                    </section>
-
-                    <section class="container-comentarios">
-                        <span class="material-icons">account_circle</span>
-                        <input type="text" id="input-comentario" placeholder="Adicione um comentário...">
-                        <button class="btn-enviar" id="btn-enviar">
-                            <span class="material-icons">send</span>
-                        </button>
-                    </section>                  
+                        <section class="container-comentarios">
+                            <span class="material-icons">account_circle</span>
+                            <input type="text" id="input-comentario" placeholder="Adicione um comentário...">
+                            <button class="btn-enviar" id="btn-enviar">
+                                <span class="material-icons">send</span>
+                            </button>
+                        </section>          
+                    </section>        
                 </section>
             </section>
             
