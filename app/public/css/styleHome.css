@@ -698,12 +698,14 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .modal-content {
-    background: white;
+    background: #ffffff;
+    height: 80vh;
     width: 90%;
     max-width: 1200px;
     display: flex;
     border-radius: 10px;
     position: relative;
+    margin-top: 80px;
 }
 
 .modal-image {
@@ -737,6 +739,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .modal-description{
+    overflow-y: auto;
     padding-right: 20px;
 }
 
@@ -833,16 +836,16 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: 8px;
 }
 
-#comentarios-lista::-webkit-scrollbar {
+#comentarios-lista::-webkit-scrollbar, .modal-description::-webkit-scrollbar {
     width: 8px;
 }
 
-#comentarios-lista::-webkit-scrollbar-track {
+#comentarios-lista::-webkit-scrollbar-track, .modal-description::-webkit-scrollbar-track {
     background: #f1f1f1; 
     border-radius: 8px;
 }
 
-#comentarios-lista::-webkit-scrollbar-thumb {
+#comentarios-lista::-webkit-scrollbar-thumb, .modal-description::-webkit-scrollbar-thumb {
     background-color: #4CAF50;
     border-radius: 8px;
     border: 2px solid #f1f1f1; 
