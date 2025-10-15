@@ -225,7 +225,6 @@ const NWController = {
             .if((value, { req }) => req.session.usuario && req.session.usuario.tipo === 'N')
             .isLength({min:5}).withMessage("Insira um CRN válido!"),
         
-        // **VALIDAÇÃO CUSTOMIZADA: Verificar duplicidades em uma única consulta**
         body("email").custom(async (email, { req }) => {
             try {
                 const usuarioId = req.session.usuario.id;
@@ -241,10 +240,8 @@ const NWController = {
                     dadosParaVerificar.crn = req.body.crn;
                 }
                 
-                // **UMA ÚNICA CONSULTA para verificar todos os dados**
                 const conflitos = await NWModel.verificarDadosExistentesParaAtualizacao(dadosParaVerificar, usuarioId);
                 
-                // Armazenar resultados na request para uso nas outras validações
                 req.conflitosValidacao = conflitos;
                 
                 if (conflitos.email) {
@@ -257,13 +254,12 @@ const NWController = {
                     throw error;
                 }
                 console.error('Erro na validação de dados:', error.message);
-                return true; // Fail-safe: prosseguir em caso de erro na consulta
+                return true;
             }
         }),
         
         body("telefone").custom(async (telefone, { req }) => {
             try {
-                // Usar resultado já obtido na validação do email
                 if (req.conflitosValidacao && req.conflitosValidacao.telefone) {
                     throw new Error('Este telefone já está cadastrado!');
                 }
@@ -278,9 +274,7 @@ const NWController = {
         
         body("crn").custom(async (crn, { req }) => {
             try {
-                // Só executar para nutricionistas
                 if (req.session.usuario && req.session.usuario.tipo === 'N') {
-                    // Usar resultado já obtido na validação do email
                     if (req.conflitosValidacao && req.conflitosValidacao.crn) {
                         throw new Error('Este CRN já está cadastrado!');
                     }

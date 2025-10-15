@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="imagens/logo-icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="css/styleHeader.css">
     <link rel="stylesheet" href="css/styleLogin.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -11,55 +12,7 @@
 </head>
     <body>
 
-        <header class="header">
-            <section class="left-section">
-                <a href="/"><img src="imagens/logo.png" alt="Logo" class="logo"></a>
-                <a href="/ranking" class="ranking"><button class="ranking-button">Ranking</button></a>
-                <a href="/profissionais"><button class="profissionais-button">Profissionais</button></a>
-            </section>
-        
-            <section class="center-section">
-                <form action="/buscar" method="GET" class="form-busca">
-                    <section class="input-premium">
-                        <section class="material-icons search-icon md-24">search</section>
-                        <input 
-                            type="text" 
-                            name="q" 
-                            placeholder="Buscar publicações e nutricionistas..."
-                            value="<%= typeof termo !== 'undefined' ? termo : '' %>"
-                            minlength="2"
-                            required
-                        >
-                        <button type="submit" style="display: none;"></button>
-                    </section>
-                </form>
-            </section>
-            
-            <section class="right-section">
-                <% if (headerUsuario.estaLogado) { %>
-                    <% if (headerUsuario.tipo !== 'C') { %>
-                        <a href="/premium"><button class="premium-button">Premium</button></a>
-                    <% } %>
-                    
-                    <a href="<%= headerUsuario.urlPerfil %>" class="perfil-usuario-link">
-                        <section class="perfil-usuario">
-                            <img src="<%= headerUsuario.fotoPerfil %>" 
-                                 alt="Foto de perfil" 
-                                 class="foto-perfil-header"
-                                 onerror="this.src='imagens/foto_perfil.jpg'">
-                            <section class="nome-usuario-header"><%= headerUsuario.nome %></section>
-                        </section>
-                    </a>
-
-                    <a href="/logout" class="logout-link">
-                        <section class="material-icons">logout</section>
-                      </a>
-                <% } else { %>
-                    <a href="/premium"><button class="premium-button">Premium</button></a>
-                    <a href="/login"><button class="entrar-button">Entrar</button></a>
-                <% } %>
-            </section>
-        </header>
+        <%- include('../partials/header.ejs') %>
 
         <%
         let erroValidacao = {"email": "", "senha": ""};

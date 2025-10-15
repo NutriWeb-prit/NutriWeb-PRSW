@@ -1,76 +1,71 @@
 <header class="header">
-                <section class="left-section">
-                    <a href="/"><img src="imagens/logo.png" alt="Logo" class="logo"></a>
-                    <a href="/ranking" class="ranking"><button class="ranking-button">Ranking</button></a>
-                    <a href="/profissionais"><button class="profissionais-button">Profissionais</button></a>
-                </section>
-            
-                <section class="center-section">
-                    <form action="/buscar" method="GET" class="form-busca">
-                        <section class="input-premium">
-                            <section class="material-icons search-icon md-24">search</section>
-                            <input 
-                                type="text" 
-                                name="q" 
-                                placeholder="Buscar publicações e nutricionistas..."
-                                value="<%= typeof termo !== 'undefined' ? termo : '' %>"
-                                minlength="2"
-                                required
-                            >
-                            <button type="submit" style="display: none;"></button>
-                        </section>
-                    </form>
-                </section>
-                
-                <section class="right-section">
-                    <% if (headerUsuario.estaLogado) { %>
-                        <% if (headerUsuario.tipo !== 'C') { %>
-                            <a href="/premium"><button class="premium-button">Premium</button></a>
-                        <% } %>
-                        
-                        <a href="<%= headerUsuario.urlPerfil %>" class="perfil-usuario-link">
-                            <section class="perfil-usuario">
-                                <div class="perfil-foto-container">
-                                    <img src="<%= headerUsuario.fotoPerfil %>" 
-                                        alt="Foto de perfil" 
-                                        class="foto-perfil-header"
-                                        onerror="this.src='imagens/foto_perfil.jpg'">
-                                    
-                                    <!-- SELO PREMIUM COM ESTRELA -->
-                                    <% if (headerUsuario.tipo === 'N' && headerUsuario.premium && headerUsuario.premium.temPremium) { %>
-                                        <div class="selo-premium-star" title="Nutricionista Premium - Plano <%= headerUsuario.premium.duracao %>">
-                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <!-- Círculo dourado de fundo -->
-                                                <circle cx="12" cy="12" r="11" fill="url(#goldGradient)"/>
-                                                
-                                                <!-- Estrela branca -->
-                                                <path d="M12 4L13.5 9H18.5L14.5 12L16 17L12 14L8 17L9.5 12L5.5 9H10.5L12 4Z" 
-                                                    fill="white" 
-                                                    stroke="white" 
-                                                    stroke-width="0.5"/>
-                                                
-                                                <!-- Gradiente dourado -->
-                                                <defs>
-                                                    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                                        <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
-                                                        <stop offset="100%" style="stop-color:#FFA500;stop-opacity:1" />
-                                                    </linearGradient>
-                                                </defs>
-                                            </svg>
-                                        </div>
-                                    <% } %>
-                                </div>
-                                
-                                <section class="nome-usuario-header"><%= headerUsuario.nome %></section>
-                            </section>
-                        </a>
+    <section class="left-section">
+        <a href="/"><img src="imagens/logo.png" alt="Logo" class="logo"></a>
+        <a href="/ranking" class="ranking"><button class="ranking-button">Ranking</button></a>
+        <a href="/profissionais"><button class="profissionais-button">Profissionais</button></a>
+    </section>
 
-                        <a href="/logout" class="logout-link">
-                            <section class="material-icons">logout</section>
-                        </a>
-                    <% } else { %>
-                        <a href="/premium"><button class="premium-button">Premium</button></a>
-                        <a href="/login"><button class="entrar-button">Entrar</button></a>
-                    <% } %>
+    <section class="center-section">
+        <form action="/buscar" method="GET" class="form-busca">
+            <section class="input-premium">
+                <section class="material-icons search-icon md-24">search</section>
+                <input  
+                    name="q" 
+                    placeholder="Buscar publicações e nutricionistas..."
+                    value="<%= typeof termo !== 'undefined' ? termo : '' %>"
+                    minlength="2"
+                    required
+                >
+                <button type="submit" style="display: none;"></button>
+            </section>
+        </form>
+    </section>
+    
+    <section class="right-section">
+        <% if (headerUsuario.estaLogado) { %>
+            <% if (headerUsuario.tipo !== 'C') { %>
+                <a href="/premium"><button class="premium-button">Premium</button></a>
+            <% } %>
+            
+            <a href="<%= headerUsuario.urlPerfil %>" class="perfil-usuario-link">
+                <section class="perfil-usuario">
+                    <div class="perfil-foto-container">
+                        <img src="<%= headerUsuario.fotoPerfil %>" 
+                            alt="Foto de perfil" 
+                            class="foto-perfil-header"
+                            onerror="this.src='imagens/foto_perfil.jpg'">
+                        
+                        <% if (headerUsuario.tipo === 'N' && headerUsuario.premium && headerUsuario.premium.temPremium) { %>
+                            <div class="selo-premium-star" title="Nutricionista Premium - Plano <%= headerUsuario.premium.duracao %>">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="12" cy="12" r="11" fill="url(#goldGradient)"/>
+                                    
+                                    <path d="M12 4L13.5 9H18.5L14.5 12L16 17L12 14L8 17L9.5 12L5.5 9H10.5L12 4Z" 
+                                        fill="white" 
+                                        stroke="white" 
+                                        stroke-width="0.5"/>
+                                    
+                                    <defs>
+                                        <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+                                            <stop offset="100%" style="stop-color:#FFA500;stop-opacity:1" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                            </div>
+                        <% } %>
+                    </div>
+                    
+                    <section class="nome-usuario-header"><%= headerUsuario.nome %></section>
                 </section>
-            </header>
+            </a>
+
+            <a href="/logout" class="logout-link">
+                <section class="material-icons">logout</section>
+            </a>
+        <% } else { %>
+            <a href="/premium"><button class="premium-button">Premium</button></a>
+            <a href="/login"><button class="entrar-button">Entrar</button></a>
+        <% } %>
+    </section>
+</header>
