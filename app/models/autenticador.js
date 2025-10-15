@@ -1,5 +1,6 @@
 const { validationResult } = require("express-validator");
-const NWModel = require("../models/NWModel"); 
+const NWModel = require("../models/NWModel");
+const pagamentoModel = require("../models/pagamentoModel");
 const bcrypt = require("bcryptjs");
 
 const cacheUsuarios = new Map();
@@ -79,12 +80,15 @@ const verificarUsuAutenticado = async (req, res, next) => {
         
         const usuarioId = req.session.usuario.id;
         let dadosCompletos = null;
+        let premiumInfo = { temPremium: false }; // ADICIONAR
 
+        // Verificar cache
         if (cacheUsuarios.has(usuarioId)) {
             const cached = cacheUsuarios.get(usuarioId);
             
             if (Date.now() - cached.timestamp < 10000) {
                 dadosCompletos = cached.dados;
+                premiumInfo = cached.premiumInfo || { temPremium: false }; // ADICIONAR
             } else {
                 cacheUsuarios.delete(usuarioId);
             }
@@ -106,6 +110,10 @@ const verificarUsuAutenticado = async (req, res, next) => {
                                    perfilNutri.nutricionista.Especializacoes.split(', ') : [],
                             senha: ''
                         };
+                        
+                        // VERIFICAR PREMIUM - NOVO CÓDIGO
+                        const nutricionistaId = perfilNutri.nutricionista.NutricionistaId;
+                        premiumInfo = await pagamentoModel.verificarPremiumAtivo(nutricionistaId);
                     }
                 } else if (req.session.usuario.tipo === 'C') {
                     const perfilCliente = await NWModel.findPerfilCompleto(usuarioId);
@@ -121,11 +129,12 @@ const verificarUsuAutenticado = async (req, res, next) => {
                     }
                 }
 
+                // Salvar no cache COM informação de Premium
                 cacheUsuarios.set(usuarioId, {
                     dados: dadosCompletos,
+                    premiumInfo: premiumInfo, // ADICIONAR
                     timestamp: Date.now()
                 });
-            
 
             } catch (erro) {
                 console.error("Erro ao carregar dados completos:", erro.message);
@@ -144,7 +153,8 @@ const verificarUsuAutenticado = async (req, res, next) => {
             urlPerfil: req.session.usuario.tipo === 'C' ? '/perfilcliente' : '/indexPerfilNutri',
             fotoPerfil: `/imagem/perfil/${req.session.usuario.id}?t=${timestamp}`,
             fotoBanner: `/imagem/banner/${req.session.usuario.id}?t=${timestamp}`,
-            dadosCompletos: dadosCompletos
+            dadosCompletos: dadosCompletos,
+            premium: premiumInfo // ADICIONAR ESTA LINHA
         };
         
         if (!cacheUsuarios.has(usuarioId) || 
@@ -152,7 +162,8 @@ const verificarUsuAutenticado = async (req, res, next) => {
             console.log("Usuário autenticado (banco):", {
                 id: req.session.usuario.id,
                 nome: req.session.usuario.nome,
-                tipo: req.session.usuario.tipo
+                tipo: req.session.usuario.tipo,
+                premium: premiumInfo.temPremium // ADICIONAR
             });
         }
         

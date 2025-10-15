@@ -221,6 +221,8 @@ body {
     white-space: nowrap;
 }
 
+/* header */
+
 .center-content {
     display: flex;
     flex-direction: column;

@@ -168,6 +168,66 @@ const pagamentoModel = {
             throw error;
         }
     },
+
+    async verificarPremiumAtivo(nutricionistaId) {
+    try {
+        const query = `
+            SELECT 
+                p.id as PlanoId,
+                p.TipoPlano,
+                p.Duracao,
+                t.DataTransacao,
+                s.TituloStatus
+            FROM Planos p
+            INNER JOIN Transacoes t ON t.PlanoId = p.id
+            INNER JOIN Status s ON t.StatusId = s.id
+            WHERE p.NutricionistaId = ?
+            AND p.TipoPlano = 'Premium'
+            AND s.TituloStatus = 'Pagamento Confirmado'
+            ORDER BY t.DataTransacao DESC
+            LIMIT 1
+        `;
+        
+        const [rows] = await pool.query(query, [nutricionistaId]);
+        
+        if (rows.length === 0) {
+            return { temPremium: false };
+        }
+        
+        const plano = rows[0];
+        
+        // Calcular data de expiração baseado na duração
+        const dataTransacao = new Date(plano.DataTransacao);
+        let dataExpiracao = new Date(dataTransacao);
+        
+        switch (plano.Duracao) {
+            case 'Mensal':
+                dataExpiracao.setMonth(dataExpiracao.getMonth() + 1);
+                break;
+            case 'Semestral':
+                dataExpiracao.setMonth(dataExpiracao.getMonth() + 6);
+                break;
+            case 'Anual':
+                dataExpiracao.setFullYear(dataExpiracao.getFullYear() + 1);
+                break;
+        }
+        
+        const hoje = new Date();
+        const estaAtivo = hoje <= dataExpiracao;
+        
+        return {
+            temPremium: estaAtivo,
+            planoId: plano.PlanoId,
+            duracao: plano.Duracao,
+            dataExpiracao: dataExpiracao.toISOString(),
+            diasRestantes: estaAtivo ? Math.ceil((dataExpiracao - hoje) / (1000 * 60 * 60 * 24)) : 0
+        };
+        
+        } catch (error) {
+            console.error("Erro ao verificar Premium ativo:", error);
+            return { temPremium: false };
+        }
+    },
     
     // NOVO: Garantir que todos os status necessários existam
     async garantirStatusExistem() {

@@ -204,6 +204,7 @@ const pagamentoController = {
                     failure: `${process.env.BASE_URL || 'http://localhost:3000'}/assinatura/feedback`,
                     pending: `${process.env.BASE_URL || 'http://localhost:3000'}/assinatura/feedback`
                 },
+                auto_return: 'approved',
                 statement_descriptor: 'NUTRIWEB',
                 external_reference: `T-${transacaoId}`,
                 notification_url: `${process.env.BASE_URL || 'http://localhost:3000'}/webhook/mercadopago`
@@ -226,98 +227,213 @@ const pagamentoController = {
 
     // ========== PROCESSAR FEEDBACK ==========
     async processarFeedback(req, res) {
-        try {
-            const { 
-                payment_id, 
-                status, 
-                external_reference, 
-                payment_type 
-            } = req.query;
+    try {
+        const { 
+            payment_id, 
+            status, 
+            external_reference, 
+            payment_type 
+        } = req.query;
 
-            // Recuperar dados da transação da sessão
-            const transacaoAtual = req.session.transacaoAtual;
+        console.log('Feedback recebido:', { payment_id, status, payment_type });
 
-            if (!transacaoAtual) {
-                console.error("Transação não encontrada na sessão");
-                return res.redirect('/premium?erro=transacao_nao_encontrada');
-            }
+        // Recuperar dados da transação da sessão
+        const transacaoAtual = req.session.transacaoAtual;
 
-            // Mapear status do Mercado Pago para seu sistema
-            let novoStatus;
-            let mensagem;
-            let sucesso = false;
+        if (!transacaoAtual) {
+            console.error("Transação não encontrada na sessão");
+            return res.redirect('/premium?erro=transacao_nao_encontrada');
+        }
 
-            switch (status) {
-                case 'approved':
-                    novoStatus = 'Pagamento Confirmado';
-                    mensagem = 'Pagamento aprovado! Bem-vindo ao Premium';
-                    sucesso = true;
-                    break;
-                case 'pending':
-                case 'in_process':
-                    novoStatus = 'Em andamento';
-                    mensagem = 'Pagamento em análise';
-                    break;
-                case 'rejected':
-                case 'cancelled':
-                    novoStatus = 'Cancelado';
-                    mensagem = 'Pagamento recusado ou cancelado';
-                    break;
-                default:
-                    novoStatus = 'A pagar';
-                    mensagem = 'Status desconhecido';
-            }
+        // Mapear status do Mercado Pago para seu sistema
+        let novoStatus;
+        let mensagem;
+        let tipoRedirecionamento; // 'sucesso', 'pendente', 'erro'
 
-            // Atualizar status da transação
-            await pagamentoModel.atualizarStatusTransacao(
-                transacaoAtual.transacaoId,
-                novoStatus,
-                payment_id
-            );
+        switch (status) {
+            case 'approved':
+                novoStatus = 'Pagamento Confirmado';
+                mensagem = 'Pagamento aprovado! Bem-vindo ao Premium 🎉';
+                tipoRedirecionamento = 'sucesso';
+                break;
+                
+            case 'pending':
+            case 'in_process':
+                novoStatus = 'Em andamento';
+                
+                // Mensagem específica baseada no tipo de pagamento
+                if (payment_type === 'ticket') {
+                    mensagem = 'Aguardando pagamento do boleto. Você receberá uma confirmação por email';
+                } else if (payment_type === 'bank_transfer') {
+                    mensagem = 'Transferência bancária em processamento. Aguarde a confirmação';
+                } else {
+                    mensagem = 'Pagamento em análise. Você será notificado quando for aprovado';
+                }
+                
+                tipoRedirecionamento = 'pendente';
+                break;
+                
+            case 'rejected':
+                novoStatus = 'Cancelado';
+                mensagem = 'Pagamento recusado. Verifique os dados do cartão ou tente outro método';
+                tipoRedirecionamento = 'erro';
+                break;
+                
+            case 'cancelled':
+                novoStatus = 'Cancelado';
+                mensagem = 'Pagamento cancelado. Você pode tentar novamente quando quiser';
+                tipoRedirecionamento = 'erro';
+                break;
+                
+            default:
+                novoStatus = 'A pagar';
+                mensagem = 'Status de pagamento desconhecido. Entre em contato com o suporte';
+                tipoRedirecionamento = 'erro';
+        }
 
-            // Limpar sessão
-            delete req.session.transacaoAtual;
+        // Atualizar status da transação
+        await pagamentoModel.atualizarStatusTransacao(
+            transacaoAtual.transacaoId,
+            novoStatus,
+            payment_id
+        );
 
-            // Redirecionar com feedback
-            if (sucesso) {
+        console.log(`Transação ${transacaoAtual.transacaoId} atualizada para: ${novoStatus}`);
+
+        // Limpar sessão
+        delete req.session.transacaoAtual;
+
+        // Redirecionar com feedback apropriado
+        switch (tipoRedirecionamento) {
+            case 'sucesso':
                 req.session.mensagemSucesso = mensagem;
                 return res.redirect('/premium?pagamento=sucesso');
-            } else {
+                
+            case 'pendente':
+                req.session.mensagemPendente = mensagem;
+                return res.redirect('/premium?pagamento=pendente');
+                
+            case 'erro':
                 req.session.mensagemErro = mensagem;
                 return res.redirect('/premium?pagamento=erro');
-            }
+        }
 
         } catch (error) {
             console.error("Erro ao processar feedback:", error);
-            res.redirect('/premium?erro=processamento');
+            req.session.mensagemErro = 'Erro ao processar retorno do pagamento. Entre em contato com o suporte';
+            res.redirect('/premium?pagamento=erro');
         }
     },
 
     // ========== WEBHOOK ==========
     async receberWebhook(req, res) {
-        try {
-            const { type, data } = req.body;
+    try {
+        const { type, data, action } = req.body;
 
-            // Responder imediatamente para o MP
-            res.status(200).send('OK');
+        console.log('========================================');
+        console.log('Webhook recebido do Mercado Pago');
+        console.log('Tipo:', type);
+        console.log('Action:', action);
+        console.log('Data:', JSON.stringify(data, null, 2));
+        console.log('========================================');
 
-            // Processar webhook em background
-            if (type === 'payment') {
-                const paymentId = data.id;
-                
-                // Registrar no log de webhooks
-                await pagamentoModel.registrarWebhook({
-                    tipoEvento: type,
-                    paymentId: paymentId,
-                    dadosJson: JSON.stringify(req.body)
+        // Responder imediatamente para o MP (IMPORTANTE!)
+        res.status(200).send('OK');
+
+        // Processar apenas eventos de pagamento
+        if (type === 'payment') {
+            const paymentId = data.id;
+            
+            // Registrar no log de webhooks
+            await pagamentoModel.registrarWebhook({
+                tipoEvento: type,
+                paymentId: paymentId,
+                dadosJson: JSON.stringify(req.body)
+            });
+            
+            // Buscar detalhes do pagamento no Mercado Pago
+            try {
+                const client = new MercadoPagoConfig({
+                    accessToken: process.env.accessToken
                 });
                 
-                console.log(`Webhook recebido - Payment ID: ${paymentId}`);
+                const payment = new Payment(client);
+                const pagamentoInfo = await payment.get({ id: paymentId });
+                
+                console.log('Detalhes do pagamento:', {
+                    id: pagamentoInfo.id,
+                    status: pagamentoInfo.status,
+                    status_detail: pagamentoInfo.status_detail,
+                    external_reference: pagamentoInfo.external_reference,
+                    payment_type: pagamentoInfo.payment_type_id
+                });
+                
+                // Extrair ID da transação da external_reference
+                const externalRef = pagamentoInfo.external_reference;
+                if (!externalRef || !externalRef.startsWith('T-')) {
+                    console.log('External reference inválida:', externalRef);
+                    return;
+                }
+                
+                const transacaoId = parseInt(externalRef.replace('T-', ''));
+                
+                // Mapear status
+                let novoStatus;
+                
+                switch (pagamentoInfo.status) {
+                    case 'approved':
+                        novoStatus = 'Pagamento Confirmado';
+                        console.log(`✅ PAGAMENTO APROVADO - Transação ${transacaoId}`);
+                        
+                        // Aqui você pode enviar email de confirmação ao cliente
+                        // await enviarEmailConfirmacao(transacaoId);
+                        break;
+                        
+                    case 'pending':
+                    case 'in_process':
+                        novoStatus = 'Em andamento';
+                        console.log(`⏳ Pagamento em processamento - Transação ${transacaoId}`);
+                        break;
+                        
+                    case 'rejected':
+                    case 'cancelled':
+                        novoStatus = 'Cancelado';
+                        console.log(`❌ Pagamento recusado/cancelado - Transação ${transacaoId}`);
+                        break;
+                        
+                    case 'refunded':
+                    case 'charged_back':
+                        novoStatus = 'Cancelado';
+                        console.log(`🔙 Pagamento estornado - Transação ${transacaoId}`);
+                        break;
+                        
+                    default:
+                        console.log(`⚠️ Status desconhecido: ${pagamentoInfo.status}`);
+                        return;
+                }
+                
+                // Atualizar status no banco
+                await pagamentoModel.atualizarStatusTransacao(
+                    transacaoId,
+                    novoStatus,
+                    paymentId
+                );
+                
+                console.log(`✅ Status atualizado: Transação ${transacaoId} -> ${novoStatus}`);
+                
+                // Marcar webhook como processado
+                await pagamentoModel.marcarWebhookProcessado(paymentId, 'Processado');
+                
+            } catch (error) {
+                console.error('Erro ao processar pagamento:', error.message);
+                
+                // Marcar webhook com erro
+                await pagamentoModel.marcarWebhookProcessado(paymentId, 'Erro');
             }
+        }
 
         } catch (error) {
             console.error("Erro no webhook:", error);
-            res.status(500).send('Error');
         }
     }
 };
