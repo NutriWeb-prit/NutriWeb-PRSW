@@ -29,14 +29,14 @@
             
             <a href="<%= headerUsuario.urlPerfil %>" class="perfil-usuario-link">
                 <section class="perfil-usuario">
-                    <div class="perfil-foto-container">
+                    <section class="perfil-foto-container">
                         <img src="<%= headerUsuario.fotoPerfil %>" 
                             alt="Foto de perfil" 
                             class="foto-perfil-header"
                             onerror="this.src='imagens/foto_perfil.jpg'">
                         
                         <% if (headerUsuario.tipo === 'N' && headerUsuario.premium && headerUsuario.premium.temPremium) { %>
-                            <div class="selo-premium-star" title="Nutricionista Premium - Plano <%= headerUsuario.premium.duracao %>">
+                            <section class="selo-premium-star" title="Nutricionista Premium - Plano <%= headerUsuario.premium.duracao %>">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <circle cx="12" cy="12" r="11" fill="url(#goldGradient)"/>
                                     
@@ -52,9 +52,9 @@
                                         </linearGradient>
                                     </defs>
                                 </svg>
-                            </div>
+                            </section>
                         <% } %>
-                    </div>
+                    </section>
                     
                     <section class="nome-usuario-header"><%= headerUsuario.nome %></section>
                 </section>

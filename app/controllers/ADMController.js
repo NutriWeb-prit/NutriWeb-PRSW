@@ -126,14 +126,13 @@ const ADMController = {
             return res.redirect("/adm/usuarios?erro=usuario_nao_encontrado");
         }
 
-        // Adicionar timestamp para cache busting
         const timestamp = Date.now();
 
         res.render("pages/adm-usuarios-detalhes", {
             usuario: usuario,
             erro: null,
             usuarioLogado: req.session.usuario,
-            timestamp: timestamp  // ← ADICIONAR ESTA LINHA
+            timestamp: timestamp
         });
     } catch (erro) {
         console.error("Erro ao buscar detalhes:", erro);
@@ -208,7 +207,6 @@ const ADMController = {
 
         console.log("Iniciando atualização do usuário ID:", id);
 
-        // ===== PROCESSAR AVATAR =====
         let fotoPerfil = null;
         
         if (req.files && req.files['input-imagem']) {
@@ -285,7 +283,6 @@ const ADMController = {
 
         console.log("Usuário atualizado com sucesso pela admin:", req.session.usuario.nome);
         
-        // ===== ADICIONAR TIMESTAMP PARA CACHE BUSTING =====
         const timestamp = Date.now();
         res.redirect(`/adm/usuarios-detalhes?id=${id}&updated=${timestamp}`);
 

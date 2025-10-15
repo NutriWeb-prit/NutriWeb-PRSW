@@ -5,10 +5,10 @@ const NWController = require('../controllers/NWController');
 
 router.get('/', [
     query('q')
-        .optional() // Campo opcional
+        .optional()
         .isLength({ min: 2 })
         .withMessage('O termo de busca deve ter pelo menos 2 caracteres')
-        .trim() // Remove espaços no início e fim
+        .trim()
 ], NWController.buscar);
 
 module.exports = router;

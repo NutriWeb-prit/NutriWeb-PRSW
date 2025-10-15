@@ -80,15 +80,14 @@ const verificarUsuAutenticado = async (req, res, next) => {
         
         const usuarioId = req.session.usuario.id;
         let dadosCompletos = null;
-        let premiumInfo = { temPremium: false }; // ADICIONAR
+        let premiumInfo = { temPremium: false }; 
 
-        // Verificar cache
         if (cacheUsuarios.has(usuarioId)) {
             const cached = cacheUsuarios.get(usuarioId);
             
             if (Date.now() - cached.timestamp < 10000) {
                 dadosCompletos = cached.dados;
-                premiumInfo = cached.premiumInfo || { temPremium: false }; // ADICIONAR
+                premiumInfo = cached.premiumInfo || { temPremium: false };
             } else {
                 cacheUsuarios.delete(usuarioId);
             }
@@ -111,7 +110,6 @@ const verificarUsuAutenticado = async (req, res, next) => {
                             senha: ''
                         };
                         
-                        // VERIFICAR PREMIUM - NOVO CÓDIGO
                         const nutricionistaId = perfilNutri.nutricionista.NutricionistaId;
                         premiumInfo = await pagamentoModel.verificarPremiumAtivo(nutricionistaId);
                     }
@@ -129,10 +127,9 @@ const verificarUsuAutenticado = async (req, res, next) => {
                     }
                 }
 
-                // Salvar no cache COM informação de Premium
                 cacheUsuarios.set(usuarioId, {
                     dados: dadosCompletos,
-                    premiumInfo: premiumInfo, // ADICIONAR
+                    premiumInfo: premiumInfo,
                     timestamp: Date.now()
                 });
 
@@ -154,7 +151,7 @@ const verificarUsuAutenticado = async (req, res, next) => {
             fotoPerfil: `/imagem/perfil/${req.session.usuario.id}?t=${timestamp}`,
             fotoBanner: `/imagem/banner/${req.session.usuario.id}?t=${timestamp}`,
             dadosCompletos: dadosCompletos,
-            premium: premiumInfo // ADICIONAR ESTA LINHA
+            premium: premiumInfo
         };
         
         if (!cacheUsuarios.has(usuarioId) || 
@@ -163,7 +160,7 @@ const verificarUsuAutenticado = async (req, res, next) => {
                 id: req.session.usuario.id,
                 nome: req.session.usuario.nome,
                 tipo: req.session.usuario.tipo,
-                premium: premiumInfo.temPremium // ADICIONAR
+                premium: premiumInfo.temPremium
             });
         }
         

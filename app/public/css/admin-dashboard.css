@@ -207,7 +207,6 @@ footer {
     box-shadow: var(--sombra-leve);
 }
 
-/* Responsive */
 @media (max-width: 768px) {
     .welcome-banner {
         padding: 28px 20px;

@@ -1,6 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Sua função processarNotificacoes() existente...
-    
     function processarNotificacoes() {
         const urlParams = new URLSearchParams(window.location.search);
        
@@ -21,8 +19,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     'token_invalido': 'Link expirado ou inválido. Solicite um novo link.',
                     'erro_envio': 'Erro ao enviar email. Tente novamente.',
                     'erro_redefinir': 'Erro ao redefinir senha. Tente novamente.',
-                    
-                    // ========== NOVOS: ALERTAS DE PAGAMENTO ==========
                     'transacao_nao_encontrada': 'Transação não encontrada. Tente novamente.',
                     'processamento': 'Erro ao processar pagamento. Tente novamente.',
                     'plano_ativo': 'Você já possui um plano ativo.',
@@ -41,8 +37,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     'imagens_atualizadas': 'Imagens atualizadas com sucesso!',
                     'email_enviado': 'Email enviado! Verifique sua caixa de entrada e spam.',
                     'senha_alterada': 'Senha alterada com sucesso! Faça login com sua nova senha.',
-                    
-                    // ========== NOVOS: SUCESSO DE PAGAMENTO ==========
                     'assinatura_confirmada': '🎉 Assinatura Premium ativada! Bem-vindo(a)!',
                     'pagamento_processando': 'Pagamento em processamento. Você receberá confirmação em breve.'
                 },
@@ -58,7 +52,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 padrao: 'Operação realizada.'
             },
             
-            // ========== NOVO: CATEGORIA DE PAGAMENTO ==========
             pagamento: {
                 param: 'pagamento',
                 mensagens: {

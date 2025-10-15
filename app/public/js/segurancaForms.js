@@ -2,10 +2,10 @@
     'use strict';
 
     const CONFIG = {
-        autoProtectForms: true,        // Protege todos os forms automaticamente
-        autoProtectButtons: true,       // Protege botões com data-attribute
-        timeoutMs: 15000,               // Timeout padrão (15 segundos)
-        debug: true                    // Ativa logs de debug
+        autoProtectForms: true,
+        autoProtectButtons: true,
+        timeoutMs: 15000,
+        debug: true
     };
 
     function log(...args) {

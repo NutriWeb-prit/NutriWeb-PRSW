@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Verificação de autenticação
     const usuarioLogado = typeof headerUsuario !== 'undefined' && headerUsuario.estaLogado;
     const dadosUsuario = usuarioLogado ? headerUsuario : null;
 

@@ -17,10 +17,8 @@ const NWController = {
 
     // validação cadastro cliente
     validacaoCadCliente: [
-        // **VALIDAÇÕES BÁSICAS**
         body("nome").isLength({min:2}).withMessage("O nome deve conter 2 ou mais caracteres!"),
         
-        // **VALIDAÇÃO DE EMAIL COM DUPLICIDADE**
         body("email")
             .isEmail().withMessage("Insira um Email válido!")
             .custom(async (email) => {
@@ -39,7 +37,6 @@ const NWController = {
                 }
             }),
         
-        // **VALIDAÇÃO DE CPF COM DUPLICIDADE**
         body("cpf")
             .custom(async (cpf) => {
                 const cpfLimpo = cpf.replace(/\D/g, '');
@@ -48,7 +45,6 @@ const NWController = {
                     throw new Error('O CPF deve conter exatamente 11 dígitos!');
                 }
                 
-                // Validação de CPF
                 function validarCPF(cpf) {
                     if (/^(\d)\1{10}$/.test(cpf)) return false;
                     
@@ -75,7 +71,6 @@ const NWController = {
                     throw new Error('CPF inválido!');
                 }
                 
-                // Verificar se CPF já existe
                 try {
                     const cpfExiste = await NWModel.verificarCPFExistente(cpfLimpo);
                     if (cpfExiste) {
@@ -90,19 +85,16 @@ const NWController = {
                     return true;
                 }
             }),
-        
-        // **VALIDAÇÃO DE SENHA**
+    
         body("senha")
             .isLength({min:5}).withMessage("Insira uma senha válida!")
             .matches(/[A-Z]/).withMessage("Insira uma senha válida!")
             .matches(/[a-z]/).withMessage("Insira uma senha válida!")
             .matches(/\d/).withMessage("Insira uma senha válida!")
             .matches(/[\W_]/).withMessage("Insira uma senha válida!"),
-        
-        // **VALIDAÇÃO DE DDD**
+
         body("ddd").isLength({min:2}).withMessage("Insira um DDD válido!"),
         
-        // **VALIDAÇÃO DE TELEFONE COM DUPLICIDADE**
         body("telefone")
             .isMobilePhone().withMessage("Insira um número de telefone válido!")
             .custom(async (telefone, { req }) => {
@@ -660,10 +652,9 @@ const NWController = {
             
             console.log(`${publicacoesProcessadas.length} publicações carregadas`);
             
-            // ===== USAR res.locals.headerUsuario que já foi definido pelo middleware =====
             return res.render('pages/indexHome', {
                 publicacoes: publicacoesProcessadas,
-                headerUsuario: res.locals.headerUsuario, // ← Usar do middleware
+                headerUsuario: res.locals.headerUsuario,
                 totalPublicacoes: publicacoesProcessadas.length
             });
             
@@ -1135,7 +1126,7 @@ function validarImagensUpload(files) {
         console.log(`Validando ${tipo}:`, {
             originalname: arquivo.originalname,
             size: arquivo.size,
-            path: arquivo.path // ✅ Agora .path existe (diskStorage)
+            path: arquivo.path 
         });
         
         if (arquivo.size > 5 * 1024 * 1024) {

@@ -7,8 +7,6 @@ body {
     flex-direction: column;
 }
 
-/* CONTEUDO */
-
 .conteudo {
     position: relative;
     z-index: 2;

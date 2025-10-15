@@ -1,11 +1,9 @@
 document.addEventListener('DOMContentLoaded', function () {
     const etapaAtual = parseInt(document.querySelector('input[name="etapa"]').value);
 
-    // Seleciona todos os cards e esconde todos
     const todosOsCards = document.querySelectorAll('.card, .card-others');
     todosOsCards.forEach(card => card.style.display = 'none');
 
-    // Mostra apenas o card da etapa atual
     if (etapaAtual === 1) {
         document.getElementById('card').style.display = 'block';
     } else if (etapaAtual === 2) {
@@ -16,7 +14,6 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('card-four').style.display = 'block';
     }
 
-    // Atualiza barra de progresso (se existir)
     const barraProgresso = document.querySelectorAll('.barra-progresso .progresso');
     for (let i = 0; i < etapaAtual; i++) {
         if (barraProgresso[i]) {

@@ -54,7 +54,6 @@ class RecuperacaoSenhaController {
                 );
             }
             
-            // Redireciona com mensagem de sucesso via query param
             return res.redirect('/senha?sucesso=email_enviado');
             
         } catch (error) {
@@ -63,7 +62,6 @@ class RecuperacaoSenhaController {
         }
     }
     
-    // GET - Página de redefinição
     static async exibirPaginaRedefinicao(req, res) {
         const { token } = req.query;
         
@@ -93,7 +91,6 @@ class RecuperacaoSenhaController {
         });
     }
     
-    // POST - Redefinir senha
     static async redefinirSenha(req, res) {
         const erros = validationResult(req);
         const { token } = req.body;

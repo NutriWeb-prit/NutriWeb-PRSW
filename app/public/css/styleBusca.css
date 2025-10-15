@@ -29,7 +29,6 @@ h1, h2, h3, h4, h5, h6 {
     padding: 50px;
 }
 
-/* Título da busca */
 .titulo-busca {
     color: #333;
     font-size: 32px;
@@ -39,7 +38,6 @@ h1, h2, h3, h4, h5, h6 {
     font-family: 'Montserrat', sans-serif;
 }
 
-/* Resumo dos resultados */
 .resumo-resultados {
     background-color: #e8f5e8;
     border: 1px solid #28a745;
@@ -56,7 +54,6 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 16px;
 }
 
-/* Seções de resultados */
 .secao-resultados {
     margin-bottom: 50px;
 }
@@ -71,7 +68,6 @@ h1, h2, h3, h4, h5, h6 {
     font-family: 'Montserrat', sans-serif;
 }
 
-/* Lista de publicações */
 .lista-publicacoes {
     display: flex;
     flex-direction: column;
@@ -170,7 +166,6 @@ h1, h2, h3, h4, h5, h6 {
     transform: translateX(5px);
 }
 
-/* Lista de nutricionistas */
 .lista-nutricionistas {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
@@ -259,7 +254,6 @@ h1, h2, h3, h4, h5, h6 {
     border-top: 1px solid #e9ecef;
 }
 
-/* Página sem resultados */
 .sem-resultados {
     text-align: center;
     padding: 80px 40px;
@@ -307,7 +301,6 @@ h1, h2, h3, h4, h5, h6 {
     margin-bottom: 10px;
 }
 
-/* Página inicial de busca */
 .busca-inicial {
     text-align: center;
     padding: 100px 40px;
@@ -364,7 +357,6 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
 }
 
-/* Mensagem de erro */
 .erro-busca {
     background-color: #f8d7da;
     border: 1px solid #f5c6cb;
@@ -380,8 +372,6 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 400;
     font-size: 16px;
 }
-
-
 
 /* footer */
 footer {
@@ -455,7 +445,6 @@ footer {
     display: none;
 }
 
-/* Responsividade */
 @media (max-width: 768px) {
     .header {
         display: none;

@@ -9,8 +9,6 @@ body {
     background-color: #f5f5f5;
 }
 
-/* Header */
-
 .back-button {
     display: flex;
     align-items: center;
@@ -88,8 +86,6 @@ body {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-
-/* Conteúdo */
 
 .conteudo {
     width: 80vw;
@@ -478,7 +474,7 @@ input[type="password"] {
     margin-top: 48px;
 }
 
-/* Footer */
+/* footer */
 
 footer {
     background-color: #144b0d;

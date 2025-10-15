@@ -249,7 +249,6 @@ const NWModel = {
         }
     },
 
-    // Buscar usuário por email para login
     findByEmail: async (email) => {
         try {
             const [linhas] = await pool.query(
@@ -638,19 +637,16 @@ const NWModel = {
             const checks = [];
             const params = [];
             
-            // Verificar email
             if (dados.email) {
                 checks.push(`(SELECT COUNT(*) FROM Usuarios WHERE Email = ? AND id != ? AND UsuarioStatus = 1) as email_existe`);
                 params.push(dados.email, usuarioId);
             }
             
-            // Verificar telefone
             if (dados.telefone) {
                 checks.push(`(SELECT COUNT(*) FROM Usuarios WHERE Telefone = ? AND id != ? AND UsuarioStatus = 1) as telefone_existe`);
                 params.push(dados.telefone, usuarioId);
             }
             
-            // Verificar CRN
             if (dados.crn) {
                 checks.push(`(SELECT COUNT(*) FROM Nutricionistas n INNER JOIN Usuarios u ON n.UsuarioId = u.id WHERE n.Crn = ? AND n.UsuarioId != ? AND u.UsuarioStatus = 1) as crn_existe`);
                 params.push(dados.crn, usuarioId);
@@ -1121,7 +1117,6 @@ const NWModel = {
         }
     },
 
-    // Função para servir certificados (mantida igual)
     findCertificado: async (formacaoId) => {
         try {
             const [result] = await pool.query(
@@ -1141,7 +1136,6 @@ const NWModel = {
         }
     },
 
-    // Criar um usuário Cliente
     createCliente: async (dadosUsuario, cpfLimpo, caminhoFotoPerfil = null, caminhoFotoBanner = null, interessesSelecionados = []) => {
         const conn = await pool.getConnection();
         
@@ -1224,7 +1218,6 @@ const NWModel = {
         }
     },
     
-    // Criar Nutricionista
     createNutricionista: async (dadosUsuario, dadosNutricionista, especializacoes = [], caminhoFotoPerfil = null, caminhoFotoBanner = null, formacao = {}) => {
         const conn = await pool.getConnection();
         

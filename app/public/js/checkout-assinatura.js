@@ -1,23 +1,16 @@
-// public/js/checkout-assinatura.js
-
-// Inicializar Mercado Pago com Public Key
 const mp = new MercadoPago('APP_USR-d7fc2323-3d04-4de7-b78d-7a5b7ad7dd38', {
     locale: 'pt-BR'
 });
 
-// Variável global para controlar botão de checkout
 let checkoutButton = null;
 
-// Evento ao clicar em CONFIRMAR PAGAMENTO
 document.querySelector('.confirmar-btn').addEventListener('click', async function(e) {
     e.preventDefault();
     
-    // Desabilitar botão para evitar cliques duplos
     this.disabled = true;
     this.textContent = 'Processando...';
     
     try {
-        // Coletar dados do formulário
         const dadosAssinatura = {
             nome: document.getElementById('nome').value.trim(),
             email: document.getElementById('email').value.trim(),
@@ -26,7 +19,6 @@ document.querySelector('.confirmar-btn').addEventListener('click', async functio
             tipoPlano: document.getElementById('tipoPlano').value
         };
         
-        // Validar campos obrigatórios
         if (!validarFormulario(dadosAssinatura)) {
             if (typeof window.mostrarNotificacao === 'function') {
                 window.mostrarNotificacao('Por favor, preencha todos os campos obrigatórios', 0);
@@ -38,7 +30,6 @@ document.querySelector('.confirmar-btn').addEventListener('click', async functio
             return;
         }
         
-        // Enviar dados para criar preferência
         const response = await fetch('/assinatura/criar-preferencia', {
             method: 'POST',
             headers: {
@@ -50,7 +41,6 @@ document.querySelector('.confirmar-btn').addEventListener('click', async functio
         if (!response.ok) {
             const error = await response.json();
             
-            // Se houver erros de validação do express-validator
             if (error.errors && Array.isArray(error.errors)) {
                 const mensagensErro = error.errors.map(err => err.msg).join('\n');
                 throw new Error(mensagensErro);
@@ -63,10 +53,8 @@ document.querySelector('.confirmar-btn').addEventListener('click', async functio
         
         console.log('Preferência criada:', data.preferenceId);
         
-        // CORREÇÃO: Aguardar a área de pagamento estar pronta
         await mostrarAreaPagamento();
         
-        // Criar botão de checkout do Mercado Pago
         await criarBotaoCheckout(data.preferenceId);
         
     } catch (error) {
@@ -77,7 +65,6 @@ document.querySelector('.confirmar-btn').addEventListener('click', async functio
     }
 });
 
-// Validar dados do formulário
 function validarFormulario(dados) {
     if (!dados.nome || dados.nome.length < 3) {
         console.log('Nome inválido');
@@ -98,20 +85,17 @@ function validarFormulario(dados) {
     return true;
 }
 
-// Criar botão de checkout do Mercado Pago
 async function criarBotaoCheckout(preferenceId) {
     try {
         console.log('Criando botão de checkout para preferência:', preferenceId);
         
         const bricksBuilder = mp.bricks();
         
-        // Se já existe um botão, remover
         if (checkoutButton) {
             console.log('Removendo botão existente...');
             await checkoutButton.unmount();
         }
         
-        // Limpar container antes de criar novo botão
         const container = document.getElementById('wallet_container');
         if (!container) {
             throw new Error('Container do checkout não encontrado');
@@ -119,7 +103,6 @@ async function criarBotaoCheckout(preferenceId) {
         
         container.innerHTML = '';
         
-        // Criar novo botão
         console.log('Montando novo botão...');
         checkoutButton = await bricksBuilder.create('wallet', 'wallet_container', {
             initialization: {
@@ -140,12 +123,10 @@ async function criarBotaoCheckout(preferenceId) {
     }
 }
 
-// Mostrar área de pagamento (AGORA RETORNA PROMISE)
 function mostrarAreaPagamento() {
     return new Promise((resolve) => {
         console.log('Mostrando área de pagamento...');
         
-        // Esconder formulário com animação
         const formContainer = document.querySelector('.left-container form');
         formContainer.style.opacity = '0';
         formContainer.style.transition = 'opacity 0.3s';
@@ -153,7 +134,6 @@ function mostrarAreaPagamento() {
         setTimeout(() => {
             formContainer.style.display = 'none';
             
-            // Criar container de pagamento se não existe
             let paymentContainer = document.getElementById('payment-container');
             if (!paymentContainer) {
                 console.log('Criando container de pagamento...');
@@ -173,7 +153,6 @@ function mostrarAreaPagamento() {
                 document.querySelector('.left-container').appendChild(paymentContainer);
             }
             
-            // Garantir que o container está visível
             paymentContainer.style.display = 'block';
             paymentContainer.style.opacity = '0';
             
@@ -181,15 +160,12 @@ function mostrarAreaPagamento() {
                 paymentContainer.style.opacity = '1';
                 paymentContainer.style.transition = 'opacity 0.3s';
                 console.log('Container de pagamento exibido');
-                
-                // IMPORTANTE: Resolver a Promise somente aqui
                 resolve();
             }, 50);
         }, 300);
     });
 }
 
-// Voltar para formulário (caso usuário desista)
 function voltarParaFormulario() {
     console.log('Voltando para formulário...');
     
@@ -197,7 +173,6 @@ function voltarParaFormulario() {
     const formContainer = document.querySelector('.left-container form');
     const botao = document.querySelector('.confirmar-btn');
     
-    // Destruir botão do Mercado Pago se existir
     if (checkoutButton) {
         checkoutButton.unmount();
         checkoutButton = null;
@@ -217,7 +192,6 @@ function voltarParaFormulario() {
     }, 300);
 }
 
-// Atualizar resumo ao mudar plano
 function atualizarResumo() {
     const tipoPlano = document.getElementById('tipoPlano').value;
     const valores = {
@@ -233,7 +207,7 @@ function atualizarResumo() {
     };
     
     const valorBase = valores[tipoPlano];
-    const desconto = valorBase * 0.14; // 14% de desconto
+    const desconto = valorBase * 0.14;
     const valorFinal = valorBase - desconto;
     
     document.getElementById('labelAssinatura').textContent = labels[tipoPlano];
@@ -242,7 +216,6 @@ function atualizarResumo() {
     document.getElementById('valorTotal').textContent = `R$ ${valorFinal.toFixed(2)}`;
 }
 
-// Inicializar resumo ao carregar a página
 document.addEventListener('DOMContentLoaded', function() {
     atualizarResumo();
     console.log('Checkout inicializado');

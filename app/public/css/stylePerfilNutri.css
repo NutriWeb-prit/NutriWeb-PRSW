@@ -7,8 +7,6 @@ body {
     flex-direction: column;
 }
 
-/* CONTEUDO */
-
 .perfil-mobile {
     display: none;
 }

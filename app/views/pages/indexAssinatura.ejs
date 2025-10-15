@@ -57,8 +57,8 @@
     
     <section class="header-content">
         <a href="/premium" class="back-button">
-            <span class="material-icons arrow-icon md-24">arrow_back_ios</span>
-            <span>Voltar</span>
+            <section class="material-icons arrow-icon md-24">arrow_back_ios</section>
+            <section>Voltar</section>
         </a>
     </section>
 
@@ -78,7 +78,7 @@
                         placeholder="Digite seu nome completo"
                         oninput="this.value = this.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, '')">
                     <% if (msgErro.nome) { %>
-                        <span class="erro-mensagem"><%= msgErro.nome %></span>
+                        <section class="erro-mensagem"><%= msgErro.nome %></section>
                     <% } %>
                 </section>
                 
@@ -93,7 +93,7 @@
                             maxlength="50"
                             placeholder="seu@email.com">
                         <% if (msgErro.email) { %>
-                            <span class="erro-mensagem"><%= msgErro.email %></span>
+                            <section class="erro-mensagem"><%= msgErro.email %></section>
                         <% } %>
                     </section>
                     <section class="campo-form">
@@ -107,7 +107,7 @@
                             placeholder="(11) 99999-9999"
                             oninput="formatarTelefone(this)">
                         <% if (msgErro.telefone) { %>
-                            <span class="erro-mensagem"><%= msgErro.telefone %></span>
+                            <section class="erro-mensagem"><%= msgErro.telefone %></section>
                         <% } %>
                     </section>
                 </section>
@@ -124,7 +124,7 @@
                             placeholder="000.000.000-00"
                             oninput="formatarCPF(this)">
                         <% if (msgErro.cpf) { %>
-                            <span class="erro-mensagem"><%= msgErro.cpf %></span>
+                            <section class="erro-mensagem"><%= msgErro.cpf %></section>
                         <% } %>
                     </section>
                     <section class="campo-form">
@@ -140,7 +140,7 @@
                             </select>
                         </section>
                         <% if (msgErro.tipoPlano) { %>
-                            <span class="erro-mensagem"><%= msgErro.tipoPlano %></span>
+                            <section class="erro-mensagem"><%= msgErro.tipoPlano %></section>
                         <% } %>
                     </section>
                 </section>
@@ -150,15 +150,15 @@
                     <section class="payment-methods">
                         <button type="button" class="payment-btn active" data-method="cartao" onclick="selecionarPagamento('cartao')">
                             <section class="payment-icon"></section>
-                            <span>Cartão</span>
+                            <section>Cartão</section>
                         </button>
                         <button type="button" class="payment-btn" data-method="pix" onclick="selecionarPagamento('pix')">
                             <section class="payment-icon"></section>
-                            <span>Pix</span>
+                            <section>Pix</section>
                         </button>
                         <button type="button" class="payment-btn" data-method="mercadopago" onclick="selecionarPagamento('mercadopago')">
                             <section class="payment-icon"></section>
-                            <span>Mercado Pago</span>
+                            <section>Mercado Pago</section>
                         </button>
                     </section>
                 </section>
@@ -169,26 +169,26 @@
             <h1>Resumo</h1>
             <section class="resumo-content">
                 <section class="resumo-item">
-                    <span class="resumo-label" id="labelAssinatura">Assinatura (Mensal)</span>
-                    <span class="resumo-valor" id="valorAssinatura">R$ 79,90</span>
+                    <section class="resumo-label" id="labelAssinatura">Assinatura (Mensal)</section>
+                    <section class="resumo-valor" id="valorAssinatura">R$ 79,90</section>
                 </section>
                 <section class="resumo-item cupom-item">
-                    <span class="resumo-label">
+                    <section class="resumo-label">
                         Cupom 
-                        <span class="cupom-code">BEMVINDO</span>
-                        <span class="desconto-badge">-14%</span>
-                    </span>
-                    <span class="resumo-valor desconto" id="valorDesconto">R$ -11,18</span>
+                        <section class="cupom-code">BEMVINDO</section>
+                        <section class="desconto-badge">-14%</section>
+                    </section>
+                    <section class="resumo-valor desconto" id="valorDesconto">R$ -11,18</section>
                 </section>
                 <hr class="resumo-divider">
                 <section class="resumo-total">
-                    <span class="total-label">TOTAL</span>
-                    <span class="total-valor" id="valorTotal">R$ 68,72</span>
+                    <section class="total-label">TOTAL</section>
+                    <section class="total-valor" id="valorTotal">R$ 68,72</section>
                 </section>
                 
                 <section class="plano-destaque">
                     <section class="plano-header">
-                        <span class="plano-tipo">Plano</span>
+                        <section class="plano-tipo">Plano</section>
                         <h3 class="plano-nome">Essencial</h3>
                     </section>
                     <ul class="plano-beneficios">
@@ -216,7 +216,7 @@
             </section>
 
             <section class="right-section">
-                <span class="material-icons search-icon md-24 menu-icon">menu</span>
+                <section class="material-icons search-icon md-24 menu-icon">menu</section>
             </section>
         </section>
 

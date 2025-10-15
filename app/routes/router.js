@@ -117,13 +117,12 @@ router.get("/imagem/perfil/:usuarioId", async (req, res) => {
         
         const caminho = await NWModel.findImagemPerfil(usuarioId);
         
-        // Se não houver imagem, serve imagem padrão ao invés de 404
         if (!caminho) {
             console.log('Foto de perfil não encontrada, servindo padrão');
             const caminhoDefault = path.join(__dirname, '../../app/public/imagens/foto_perfil.jpg');
             return res.set({
                 'Content-Type': 'image/jpeg',
-                'Cache-Control': 'public, max-age=2592000', // 30 dias
+                'Cache-Control': 'public, max-age=2592000',
                 'ETag': `perfil-default`
             }).sendFile(caminhoDefault);
         }
@@ -516,9 +515,9 @@ router.get("/assinatura", function (req, res) {
             email: req.session.usuario.email || '',
             telefone: '',
             cpf: '',
-            tipoPlano: 'mensal' // ← Adicionar
+            tipoPlano: 'mensal'
         },
-        listaErros: null, // ← Adicionar
+        listaErros: null,
         mensagemErro: req.query.erro || null,
         mensagemSucesso: req.query.sucesso || null
     });

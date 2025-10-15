@@ -13,6 +13,5 @@ function showModal(cardId) {
 }
 
 function closeModal() {
-    // Oculta o modal
     document.getElementById('modal').style.display = 'none';
 }

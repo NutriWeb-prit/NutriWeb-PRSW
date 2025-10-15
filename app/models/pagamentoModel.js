@@ -1,7 +1,6 @@
 const pool = require("../../config/pool_conexoes");
 
 const pagamentoModel = {
-    // Criar novo plano na tabela Planos
     async criarPlano(dados) {
         try {
             const query = `
@@ -29,22 +28,18 @@ const pagamentoModel = {
         }
     },
 
-    // Criar transação inicial (status: A pagar)
     async criarTransacao(dados) {
         const connection = await pool.getConnection();
         
         try {
             await connection.beginTransaction();
             
-            // PASSO 1: Buscar o StatusId ANTES de fazer o INSERT
             const [statusRows] = await connection.query(
                 'SELECT id FROM Status WHERE TituloStatus = ?',
                 ['A pagar']
             );
             
-            // PASSO 2: Verificar se encontrou o status
             if (!statusRows || statusRows.length === 0) {
-                // Se não existe, criar o status
                 console.log("Status 'A pagar' não encontrado. Criando...");
                 const [insertStatus] = await connection.query(
                     "INSERT INTO Status (TituloStatus) VALUES ('A pagar')"
@@ -56,7 +51,6 @@ const pagamentoModel = {
             
             console.log("StatusId encontrado/criado:", statusId);
             
-            // PASSO 3: Agora sim, inserir a transação com o StatusId correto
             const query = `
                 INSERT INTO Transacoes (
                     PlanoId,
@@ -70,7 +64,7 @@ const pagamentoModel = {
             
             const [result] = await connection.query(query, [
                 dados.planoId,
-                statusId,  // Usar o ID que encontramos/criamos
+                statusId,
                 dados.metodoPagamento,
                 dados.pagamentoAutomatico || false,
                 dados.valorTotal
@@ -88,14 +82,12 @@ const pagamentoModel = {
         }
     },
 
-    // Atualizar status da transação após pagamento
     async atualizarStatusTransacao(transacaoId, novoStatus, paymentId = null) {
         const connection = await pool.getConnection();
         
         try {
             await connection.beginTransaction();
             
-            // PASSO 1: Buscar o StatusId do novo status
             const [statusRows] = await connection.query(
                 'SELECT id FROM Status WHERE TituloStatus = ?',
                 [novoStatus]
@@ -107,13 +99,11 @@ const pagamentoModel = {
             
             const statusId = statusRows[0].id;
             
-            // PASSO 2: Atualizar a transação
             await connection.query(
                 'UPDATE Transacoes SET StatusId = ? WHERE id = ?',
                 [statusId, transacaoId]
             );
             
-            // PASSO 3: Se tiver paymentId do Mercado Pago, atualizar também
             if (paymentId) {
                 await connection.query(
                     'UPDATE Transacoes SET MercadoPagoPaymentId = ? WHERE id = ?',
@@ -132,7 +122,6 @@ const pagamentoModel = {
         }
     },
 
-    // Buscar nutricionista por ID de usuário
     async buscarNutricionistaPorUsuarioId(usuarioId) {
         try {
             const query = `
@@ -146,7 +135,6 @@ const pagamentoModel = {
         }
     },
 
-    // Verificar se nutricionista já tem plano ativo
     async verificarPlanoAtivo(nutricionistaId) {
         try {
             const query = `
@@ -196,7 +184,6 @@ const pagamentoModel = {
         
         const plano = rows[0];
         
-        // Calcular data de expiração baseado na duração
         const dataTransacao = new Date(plano.DataTransacao);
         let dataExpiracao = new Date(dataTransacao);
         
@@ -229,7 +216,6 @@ const pagamentoModel = {
         }
     },
     
-    // NOVO: Garantir que todos os status necessários existam
     async garantirStatusExistem() {
         const connection = await pool.getConnection();
         
@@ -264,7 +250,6 @@ const pagamentoModel = {
         }
     },
     
-    // NOVO: Buscar plano existente (mesmo que inativo)
     async buscarPlanoExistente(nutricionistaId) {
         try {
             const query = `
@@ -280,7 +265,6 @@ const pagamentoModel = {
         }
     },
     
-    // NOVO: Atualizar dados de um plano existente
     async atualizarPlano(planoId, dados) {
         try {
             const query = `
@@ -306,7 +290,6 @@ const pagamentoModel = {
         }
     },
     
-    // NOVO: Registrar webhook recebido
     async registrarWebhook(dados) {
         try {
             const query = `
@@ -325,7 +308,6 @@ const pagamentoModel = {
             
         } catch (error) {
             console.error("Erro ao registrar webhook:", error);
-            // Não lançar erro para não afetar o webhook
         }
     }
 };

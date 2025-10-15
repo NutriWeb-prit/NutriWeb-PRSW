@@ -2,13 +2,11 @@ const { MercadoPagoConfig, Preference } = require('mercadopago');
 const { body, validationResult } = require('express-validator');
 const pagamentoModel = require('../models/pagamentoModel');
 
-// Configurar Mercado Pago com credenciais
 const client = new MercadoPagoConfig({
     accessToken: process.env.accessToken
 });
 
 const pagamentoController = {
-    // ========== VALIDAÇÕES ==========
     validacaoAssinatura: [
         body("nome")
             .isLength({min: 3})
@@ -35,7 +33,6 @@ const pagamentoController = {
                     throw new Error('O CPF deve conter exatamente 11 dígitos!');
                 }
                 
-                // Validação de CPF
                 function validarCPF(cpf) {
                     if (/^(\d)\1{10}$/.test(cpf)) return false;
                     
@@ -70,17 +67,14 @@ const pagamentoController = {
             .withMessage("Selecione um plano válido!")
     ],
 
-    // Mapear valores dos planos
     valoresPlanos: {
         'mensal': { valor: 29.90, descricao: 'Plano Premium Mensal' },
         'semestral': { valor: 149.90, descricao: 'Plano Premium Semestral' },
         'anual': { valor: 269.90, descricao: 'Plano Premium Anual' }
     },
 
-    // ========== CRIAR PREFERÊNCIA ==========
     async criarPreferencia(req, res) {
         try {
-            // Validar dados recebidos
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
                 return res.status(400).json({ 
@@ -91,21 +85,18 @@ const pagamentoController = {
 
             const { tipoPlano, nome, email, cpf, telefone } = req.body;
 
-            // Verificar se usuário está autenticado
             if (!req.session.usuario || !req.session.usuario.id) {
                 return res.status(401).json({ 
                     error: 'Usuário não autenticado' 
                 });
             }
 
-            // Verificar se é nutricionista
             if (req.session.usuario.tipo !== 'N') {
                 return res.status(403).json({ 
                     error: 'Apenas nutricionistas podem assinar planos premium' 
                 });
             }
 
-            // Buscar dados do plano
             const planoInfo = pagamentoController.valoresPlanos[tipoPlano];
             if (!planoInfo) {
                 return res.status(400).json({ 
@@ -113,12 +104,10 @@ const pagamentoController = {
                 });
             }
 
-            // Aplicar desconto se aplicável (cupom BEMVINDO = 14%)
             const valorOriginal = planoInfo.valor;
             const desconto = valorOriginal * 0.14;
             const valorFinal = valorOriginal - desconto;
 
-            // Buscar nutricionista
             const nutricionista = await pagamentoModel.buscarNutricionistaPorUsuarioId(
                 req.session.usuario.id
             );
@@ -129,7 +118,6 @@ const pagamentoController = {
                 });
             }
 
-            // Verificar se já tem plano ativo
             const planoAtivo = await pagamentoModel.verificarPlanoAtivo(nutricionista.id);
             if (planoAtivo) {
                 return res.status(400).json({ 
@@ -137,11 +125,9 @@ const pagamentoController = {
                 });
             }
 
-            // Verificar se JÁ existe um plano (mesmo inativo) e pegar seu ID
             let planoId = await pagamentoModel.buscarPlanoExistente(nutricionista.id);
             
             if (planoId) {
-                // Se já existe um plano, apenas atualizar suas informações
                 console.log(`Plano existente encontrado (ID: ${planoId}). Atualizando...`);
                 await pagamentoModel.atualizarPlano(planoId, {
                     tipoPlano: 'Premium',
@@ -149,7 +135,6 @@ const pagamentoController = {
                     valorSubtotal: valorOriginal
                 });
             } else {
-                // Se não existe, criar novo plano
                 console.log('Criando novo plano...');
                 planoId = await pagamentoModel.criarPlano({
                     nutricionistaId: nutricionista.id,
@@ -160,7 +145,6 @@ const pagamentoController = {
                 });
             }
 
-            // Criar transação pendente
             const transacaoId = await pagamentoModel.criarTransacao({
                 planoId: planoId,
                 metodoPagamento: 'MercadoPago',
@@ -168,14 +152,12 @@ const pagamentoController = {
                 valorTotal: valorFinal
             });
 
-            // Armazenar IDs na sessão para usar no feedback
             req.session.transacaoAtual = {
                 transacaoId,
                 planoId,
                 tipoPlano
             };
 
-            // Criar preferência no Mercado Pago
             const preference = new Preference(client);
             
             const preferenceData = {
@@ -225,7 +207,6 @@ const pagamentoController = {
         }
     },
 
-    // ========== PROCESSAR FEEDBACK ==========
     async processarFeedback(req, res) {
     try {
         const { 
@@ -237,7 +218,6 @@ const pagamentoController = {
 
         console.log('Feedback recebido:', { payment_id, status, payment_type });
 
-        // Recuperar dados da transação da sessão
         const transacaoAtual = req.session.transacaoAtual;
 
         if (!transacaoAtual) {
@@ -245,10 +225,9 @@ const pagamentoController = {
             return res.redirect('/premium?erro=transacao_nao_encontrada');
         }
 
-        // Mapear status do Mercado Pago para seu sistema
         let novoStatus;
         let mensagem;
-        let tipoRedirecionamento; // 'sucesso', 'pendente', 'erro'
+        let tipoRedirecionamento;
 
         switch (status) {
             case 'approved':
@@ -261,7 +240,6 @@ const pagamentoController = {
             case 'in_process':
                 novoStatus = 'Em andamento';
                 
-                // Mensagem específica baseada no tipo de pagamento
                 if (payment_type === 'ticket') {
                     mensagem = 'Aguardando pagamento do boleto. Você receberá uma confirmação por email';
                 } else if (payment_type === 'bank_transfer') {
@@ -291,7 +269,6 @@ const pagamentoController = {
                 tipoRedirecionamento = 'erro';
         }
 
-        // Atualizar status da transação
         await pagamentoModel.atualizarStatusTransacao(
             transacaoAtual.transacaoId,
             novoStatus,
@@ -300,10 +277,8 @@ const pagamentoController = {
 
         console.log(`Transação ${transacaoAtual.transacaoId} atualizada para: ${novoStatus}`);
 
-        // Limpar sessão
         delete req.session.transacaoAtual;
 
-        // Redirecionar com feedback apropriado
         switch (tipoRedirecionamento) {
             case 'sucesso':
                 req.session.mensagemSucesso = mensagem;
@@ -325,7 +300,6 @@ const pagamentoController = {
         }
     },
 
-    // ========== WEBHOOK ==========
     async receberWebhook(req, res) {
     try {
         const { type, data, action } = req.body;
@@ -337,21 +311,17 @@ const pagamentoController = {
         console.log('Data:', JSON.stringify(data, null, 2));
         console.log('========================================');
 
-        // Responder imediatamente para o MP (IMPORTANTE!)
         res.status(200).send('OK');
 
-        // Processar apenas eventos de pagamento
         if (type === 'payment') {
             const paymentId = data.id;
             
-            // Registrar no log de webhooks
             await pagamentoModel.registrarWebhook({
                 tipoEvento: type,
                 paymentId: paymentId,
                 dadosJson: JSON.stringify(req.body)
             });
             
-            // Buscar detalhes do pagamento no Mercado Pago
             try {
                 const client = new MercadoPagoConfig({
                     accessToken: process.env.accessToken
@@ -368,7 +338,6 @@ const pagamentoController = {
                     payment_type: pagamentoInfo.payment_type_id
                 });
                 
-                // Extrair ID da transação da external_reference
                 const externalRef = pagamentoInfo.external_reference;
                 if (!externalRef || !externalRef.startsWith('T-')) {
                     console.log('External reference inválida:', externalRef);
@@ -377,16 +346,12 @@ const pagamentoController = {
                 
                 const transacaoId = parseInt(externalRef.replace('T-', ''));
                 
-                // Mapear status
                 let novoStatus;
                 
                 switch (pagamentoInfo.status) {
                     case 'approved':
                         novoStatus = 'Pagamento Confirmado';
                         console.log(`✅ PAGAMENTO APROVADO - Transação ${transacaoId}`);
-                        
-                        // Aqui você pode enviar email de confirmação ao cliente
-                        // await enviarEmailConfirmacao(transacaoId);
                         break;
                         
                     case 'pending':
@@ -412,7 +377,6 @@ const pagamentoController = {
                         return;
                 }
                 
-                // Atualizar status no banco
                 await pagamentoModel.atualizarStatusTransacao(
                     transacaoId,
                     novoStatus,
@@ -421,13 +385,11 @@ const pagamentoController = {
                 
                 console.log(`✅ Status atualizado: Transação ${transacaoId} -> ${novoStatus}`);
                 
-                // Marcar webhook como processado
                 await pagamentoModel.marcarWebhookProcessado(paymentId, 'Processado');
                 
             } catch (error) {
                 console.error('Erro ao processar pagamento:', error.message);
                 
-                // Marcar webhook com erro
                 await pagamentoModel.marcarWebhookProcessado(paymentId, 'Erro');
             }
         }

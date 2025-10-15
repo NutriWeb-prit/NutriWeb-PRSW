@@ -1,5 +1,3 @@
-// conteúdo mobile
-
 const publiSelector = document.getElementById('publi_selecionar');
 const avaliarSelector = document.getElementById('avaliacao_selecionar');
 const avaliacoes = document.getElementById('avaliar_nutri')

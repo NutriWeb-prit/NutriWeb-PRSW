@@ -30,14 +30,12 @@ function formatarTelefone(input) {
     input.value = value;
 }
 
-// Função para formatar número do cartão
 function formatarCartao(input) {
     let value = input.value.replace(/\D/g, '');
     value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
     input.value = value;
 }
 
-// Função para formatar validade do cartão
 function formatarValidade(input) {
     let value = input.value.replace(/\D/g, '');
     if (value.length >= 2) {

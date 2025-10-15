@@ -40,7 +40,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 selectedDiv.click();
                 
-                // Disparar evento change
                 var event = new Event('change', { bubbles: true });
                 select.dispatchEvent(event);
             });
