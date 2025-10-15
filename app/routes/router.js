@@ -8,6 +8,8 @@ const fs = require('fs');
 const NWController = require("../controllers/NWController");
 const NWModel = require("../models/NWModel");
 
+const PagamentoController = require("../controllers/pagamentoController");
+
 const upload = require("../util/uploader.js");
 
 const { verificarUsuAutenticado, processarLogin, verificarPermissao, logout } = require("../models/autenticador.js");
@@ -502,8 +504,39 @@ router.get("/publicar", function (req, res) {
 });
 
 router.get("/assinatura", function (req, res) {
-    res.render('pages/indexAssinatura')
+    if (!req.session.usuario || !req.session.usuario.id) {
+        return res.redirect('/login?redirect=/assinatura');
+    }
+    if (req.session.usuario.tipo !== 'N') {
+        return res.redirect('/premium?erro=apenas_nutricionistas');
+    }
+    res.render('pages/indexAssinatura', {
+        valores: {
+            nome: req.session.usuario.nome || '',
+            email: req.session.usuario.email || '',
+            telefone: '',
+            cpf: '',
+            tipoPlano: 'mensal' // ← Adicionar
+        },
+        listaErros: null, // ← Adicionar
+        mensagemErro: req.query.erro || null,
+        mensagemSucesso: req.query.sucesso || null
+    });
 });
+
+router.post("/assinatura/criar-preferencia", 
+    verificarPermissao(['N']),
+    PagamentoController.validacaoAssinatura,
+    PagamentoController.criarPreferencia
+);
+
+router.get("/assinatura/feedback", 
+    PagamentoController.processarFeedback
+);
+
+router.post("/webhook/mercadopago", 
+    PagamentoController.receberWebhook
+);
 
 router.get("/quiz", function (req, res) {
     res.render('pages/indexQuiz')

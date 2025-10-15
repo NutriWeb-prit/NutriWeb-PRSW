@@ -109,7 +109,7 @@ CREATE TABLE `Planos` (
 	`id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
 	`NutricionistaId` INTEGER UNSIGNED NOT NULL UNIQUE,
 	`TipoPlano` ENUM('Basico', 'Premium') NOT NULL,
-	`Duracao` ENUM('Mensal', 'Trimestral', 'Anual') DEFAULT NULL,
+	`Duracao` ENUM('Mensal', 'Semestral', 'Anual') DEFAULT NULL,
 	`PagamentoAutomatico` BOOLEAN DEFAULT FALSE,
 	`ValorSubtotal` DECIMAL(10,2),
 	PRIMARY KEY(`id`),
@@ -126,10 +126,11 @@ CREATE TABLE `Transacoes` (
 	`id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
 	`PlanoId` INTEGER unsigned NOT NULL,
 	`StatusId` INTEGER Unsigned  NOT NULL,
-	`MetodoPagamento` ENUM('Pix', 'CartaoCredito', 'CartaoDebito') NOT NULL,
+	`MetodoPagamento` ENUM('Pix', 'CartaoCredito', 'CartaoDebito', 'MercadoPago') NOT NULL,
 	`PagamentoAutomatico` BOOLEAN DEFAULT FALSE,
 	`DataTransacao` DATETIME NOT NULL,
 	`ValorTotal` DECIMAL(10,2),
+	`MercadoPagoPaymentId` VARCHAR(100) NULL,
 	PRIMARY KEY(`id`),
 	FOREIGN KEY (`PlanoId`) REFERENCES `Planos`(`id`),
 	FOREIGN KEY (`StatusId`) REFERENCES `Status`(`id`)
@@ -221,6 +222,19 @@ CREATE TABLE `CurtidasPublicacoes` (
   FOREIGN KEY (ClienteId) REFERENCES Clientes(id),
   FOREIGN KEY (PublicacaoId) REFERENCES Publicacoes(id)
 );
+
+CREATE TABLE `WebhookLogs` (
+    `id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    `TipoEvento` VARCHAR(50) NOT NULL,
+    `PaymentId` VARCHAR(100),
+    `DataRecebimento` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `DadosJson` TEXT,
+    `ProcessadoEm` DATETIME NULL,
+    `StatusProcessamento` ENUM('Pendente', 'Processado', 'Erro') DEFAULT 'Pendente',
+    PRIMARY KEY(`id`),
+    INDEX `idx_payment` (`PaymentId`),
+    INDEX `idx_status` (`StatusProcessamento`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `Usuarios` (Telefone, Email, NomeCompleto, CEP, DataNascimento, UsuarioTipo, Senha, UsuarioStatus) VALUES
 ('11123456789', 'julia@nutriweb.com', 'Julia Barros', '01310100', '1985-03-15', 'N', '$2b$10$exemplo.hash.senha', 1),

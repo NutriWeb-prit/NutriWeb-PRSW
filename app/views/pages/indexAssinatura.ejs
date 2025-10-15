@@ -7,9 +7,51 @@
     <link rel="icon" href="imagens/logo-icon.png" type="image/x-icon">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
     <title>Assinatura - NutriWeb</title>
 </head>
 <body>
+
+    <%
+    let erroValidacao = {"nome": "", "email": "", "telefone": "", "cpf": "", "tipoPlano": ""};
+    let msgErro = {"nome": "", "email": "", "telefone": "", "cpf": "", "tipoPlano": ""};
+    
+    if (typeof valores === 'undefined') {
+        valores = {
+            nome: '',
+            email: '',
+            telefone: '',
+            cpf: '',
+            tipoPlano: 'mensal'
+        };
+    }
+    
+    if(typeof listaErros !== 'undefined' && listaErros) {
+        listaErros.errors.forEach(function(erro) {
+            if (erro.path == "nome") {
+                erroValidacao.nome = "erro-form";
+                msgErro.nome = erro.msg;
+            }
+            if (erro.path == "email") {
+                erroValidacao.email = "erro-form";
+                msgErro.email = erro.msg;
+            }
+            if (erro.path == "telefone") {
+                erroValidacao.telefone = "erro-form";
+                msgErro.telefone = erro.msg;
+            }
+            if (erro.path == "cpf") {
+                erroValidacao.cpf = "erro-form";
+                msgErro.cpf = erro.msg;
+            }
+            if (erro.path == "tipoPlano") {
+                erroValidacao.tipoPlano = "erro-form";
+                msgErro.tipoPlano = erro.msg;
+            }
+        });
+    }
+    %>
+
     <header class="header">
         <section class="left-section">
             <a href="/"><img src="imagens/logo.png" alt="Logo" class="logo"></a>
@@ -71,15 +113,20 @@
         <section class="left-container">
             <h1>Complete sua Assinatura</h1>
             <h2>Todos os campos são obrigatórios</h2>
-            <form action="#" method="post" class="form-assinatura">
+            <form class="form-assinatura">
                 <section class="campo-form">
                     <label for="nome">Nome Completo:</label>
                     <input type="text" 
                         name="nome" 
                         id="nome" 
+                        value="<%= valores.nome %>"
+                        class="<%= erroValidacao.nome %>"
                         maxlength="125"
                         placeholder="Digite seu nome completo"
                         oninput="this.value = this.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, '')">
+                    <% if (msgErro.nome) { %>
+                        <span class="erro-mensagem"><%= msgErro.nome %></span>
+                    <% } %>
                 </section>
                 
                 <section class="campo-form-conjunto">
@@ -88,17 +135,27 @@
                         <input type="email" 
                             name="email" 
                             id="email" 
+                            value="<%= valores.email %>"
+                            class="<%= erroValidacao.email %>"
                             maxlength="50"
                             placeholder="seu@email.com">
+                        <% if (msgErro.email) { %>
+                            <span class="erro-mensagem"><%= msgErro.email %></span>
+                        <% } %>
                     </section>
                     <section class="campo-form">
                         <label for="telefone">Celular:</label>
                         <input type="text" 
                             name="telefone" 
                             id="telefone" 
+                            value="<%= valores.telefone %>"
+                            class="<%= erroValidacao.telefone %>"
                             maxlength="15"
                             placeholder="(11) 99999-9999"
                             oninput="formatarTelefone(this)">
+                        <% if (msgErro.telefone) { %>
+                            <span class="erro-mensagem"><%= msgErro.telefone %></span>
+                        <% } %>
                     </section>
                 </section>
                 
@@ -108,19 +165,30 @@
                         <input type="text" 
                             name="cpf" 
                             id="cpf" 
+                            value="<%= valores.cpf %>"
+                            class="<%= erroValidacao.cpf %>"
                             maxlength="14"
                             placeholder="000.000.000-00"
                             oninput="formatarCPF(this)">
+                        <% if (msgErro.cpf) { %>
+                            <span class="erro-mensagem"><%= msgErro.cpf %></span>
+                        <% } %>
                     </section>
                     <section class="campo-form">
                         <label for="tipoPlano">Plano de Assinatura:</label>
                         <section class="custom-select">
-                            <select name="tipoPlano" id="tipoPlano" onchange="atualizarResumo()">
-                                <option value="mensal">Mensal</option>
-                                <option value="anual">Anual</option>
-                                <option value="semestral">Semestral</option>
+                            <select name="tipoPlano" 
+                                    id="tipoPlano" 
+                                    class="<%= erroValidacao.tipoPlano %>"
+                                    onchange="atualizarResumo()">
+                                <option value="mensal" <%= valores.tipoPlano === 'mensal' ? 'selected' : '' %>>Mensal</option>
+                                <option value="anual" <%= valores.tipoPlano === 'anual' ? 'selected' : '' %>>Anual</option>
+                                <option value="semestral" <%= valores.tipoPlano === 'semestral' ? 'selected' : '' %>>Semestral</option>
                             </select>
                         </section>
+                        <% if (msgErro.tipoPlano) { %>
+                            <span class="erro-mensagem"><%= msgErro.tipoPlano %></span>
+                        <% } %>
                     </section>
                 </section>
 
@@ -128,7 +196,7 @@
                     <h1>Métodos de pagamento</h1>
                     <section class="payment-methods">
                         <button type="button" class="payment-btn active" data-method="cartao" onclick="selecionarPagamento('cartao')">
-                            <section class="payment-icon"></svg></section>
+                            <section class="payment-icon"></section>
                             <span>Cartão</span>
                         </button>
                         <button type="button" class="payment-btn" data-method="pix" onclick="selecionarPagamento('pix')">
@@ -139,49 +207,6 @@
                             <section class="payment-icon"></section>
                             <span>Mercado Pago</span>
                         </button>
-                    </section>
-                </section>
-
-                <section class="campo-form cartao-form" id="cartaoForm">
-                    <section class="cartao-campos">
-                        <section class="campo-form">
-                            <label for="numeroCartao">Número do Cartão:</label>
-                            <input type="text" 
-                                name="numeroCartao" 
-                                id="numeroCartao" 
-                                maxlength="19"
-                                placeholder="0000 0000 0000 0000"
-                                oninput="formatarCartao(this)">
-                        </section>
-                        <section class="campo-form-conjunto">
-                            <section class="campo-form">
-                                <label for="validadeCartao">Validade:</label>
-                                <input type="text" 
-                                    name="validadeCartao" 
-                                    id="validadeCartao" 
-                                    maxlength="5"
-                                    placeholder="MM/AA"
-                                    oninput="formatarValidade(this)">
-                            </section>
-                            <section class="campo-form">
-                                <label for="cvvCartao">CVV:</label>
-                                <input type="text" 
-                                    name="cvvCartao" 
-                                    id="cvvCartao" 
-                                    maxlength="3"
-                                    placeholder="123"
-                                    oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-                            </section>
-                        </section>
-                        <section class="campo-form">
-                            <label for="nomeCartao">Nome no Cartão:</label>
-                            <input type="text" 
-                                name="nomeCartao" 
-                                id="nomeCartao" 
-                                maxlength="50"
-                                placeholder="Nome como impresso no cartão"
-                                oninput="this.value = this.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, '')">
-                        </section>
                     </section>
                 </section>
             </form>
@@ -289,7 +314,8 @@
     <script src="js/segurancaForms.js"></script>
     <script src="js/formatarCPF.js"></script>
     <script src="js/selectcustom.js"></script>
-    <script src="js/pagamento.js"></script>
+    <script src="js/planoDinamico.js"></script>
+    <script src="js/checkout-assinatura.js"></script>
     <script src="js/alerts.js"></script>
 </body>
 </html>

@@ -1,20 +1,3 @@
-
-function selecionarPagamento(metodo) {
-    document.querySelectorAll('.payment-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
-
-    document.querySelector(`[data-method="${metodo}"]`).classList.add('active');
-    
-    const cartaoForm = document.getElementById('cartaoForm');
-    if (metodo === 'cartao') {
-        cartaoForm.style.display = 'block';
-    } else {
-        cartaoForm.style.display = 'none';
-    }
-}
-
-// Função para atualizar resumo baseado no plano
 function atualizarResumo() {
     const planoSelect = document.getElementById('tipoPlano');
     const labelAssinatura = document.getElementById('labelAssinatura');

@@ -196,6 +196,41 @@ body {
 
 /* header */
 
+#payment-container {
+    display: none;
+    padding: 2rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin-top: 2rem;
+}
+
+#payment-container h2 {
+    margin-bottom: 1.5rem;
+    color: #333;
+    font-size: 1.5rem;
+}
+
+#wallet_container {
+    margin: 2rem 0;
+    min-height: 200px;
+}
+
+.voltar-btn {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 0.75rem 2rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 1rem;
+}
+
+.voltar-btn:hover {
+    background: #5a6268;
+}
+
 .back-button {
     display: flex;
     align-items: center;

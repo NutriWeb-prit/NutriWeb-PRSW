@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Sua função processarNotificacoes() existente...
+    
     function processarNotificacoes() {
         const urlParams = new URLSearchParams(window.location.search);
        
@@ -18,7 +20,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     'token_ausente': 'Link de recuperação inválido.',
                     'token_invalido': 'Link expirado ou inválido. Solicite um novo link.',
                     'erro_envio': 'Erro ao enviar email. Tente novamente.',
-                    'erro_redefinir': 'Erro ao redefinir senha. Tente novamente.'
+                    'erro_redefinir': 'Erro ao redefinir senha. Tente novamente.',
+                    
+                    // ========== NOVOS: ALERTAS DE PAGAMENTO ==========
+                    'transacao_nao_encontrada': 'Transação não encontrada. Tente novamente.',
+                    'processamento': 'Erro ao processar pagamento. Tente novamente.',
+                    'plano_ativo': 'Você já possui um plano ativo.',
+                    'apenas_nutricionistas': 'Apenas nutricionistas podem assinar planos premium.',
+                    'dados_incompletos': 'Preencha todos os dados para continuar.',
+                    'pagamento_recusado': 'Pagamento recusado. Verifique os dados e tente novamente.',
+                    'pagamento_cancelado': 'Pagamento cancelado pelo usuário.',
+                    'erro_mercadopago': 'Erro ao conectar com Mercado Pago. Tente novamente.'
                 },
                 padrao: 'Ocorreu um erro inesperado.'
             },
@@ -28,7 +40,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     'dados_atualizados': 'Dados atualizados com sucesso!',
                     'imagens_atualizadas': 'Imagens atualizadas com sucesso!',
                     'email_enviado': 'Email enviado! Verifique sua caixa de entrada e spam.',
-                    'senha_alterada': 'Senha alterada com sucesso! Faça login com sua nova senha.'
+                    'senha_alterada': 'Senha alterada com sucesso! Faça login com sua nova senha.',
+                    
+                    // ========== NOVOS: SUCESSO DE PAGAMENTO ==========
+                    'assinatura_confirmada': '🎉 Assinatura Premium ativada! Bem-vindo(a)!',
+                    'pagamento_processando': 'Pagamento em processamento. Você receberá confirmação em breve.'
                 },
                 padrao: 'Operação realizada com sucesso!'
             },
@@ -40,6 +56,18 @@ document.addEventListener('DOMContentLoaded', function() {
                     'cadastro_realizado': 'Cadastro realizado com sucesso!'
                 },
                 padrao: 'Operação realizada.'
+            },
+            
+            // ========== NOVO: CATEGORIA DE PAGAMENTO ==========
+            pagamento: {
+                param: 'pagamento',
+                mensagens: {
+                    'sucesso': '✅ Pagamento aprovado! Seu plano Premium está ativo.',
+                    'pendente': '⏳ Pagamento em análise. Aguarde a confirmação.',
+                    'erro': '❌ Erro no pagamento. Tente novamente.',
+                    'cancelado': 'Pagamento cancelado.'
+                },
+                padrao: 'Status de pagamento atualizado.'
             }
         };
 
