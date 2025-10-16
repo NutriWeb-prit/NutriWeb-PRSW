@@ -94,6 +94,16 @@ const NWController = {
             .matches(/\d/).withMessage("Insira uma senha válida!")
             .matches(/[\W_]/).withMessage("Insira uma senha válida!"),
 
+        body("confirmarSenha")
+            .notEmpty()
+            .withMessage("Por favor, confirme sua senha!")
+            .custom((confirmarSenha, { req }) => {
+                if (confirmarSenha !== req.body.senha) {
+                    throw new Error('As senhas não coincidem!');
+                }
+                return true;
+            }),
+
         body("ddd").isLength({min:2}).withMessage("Insira um DDD válido!"),
         
         body("telefone")
@@ -162,6 +172,16 @@ const NWController = {
             .matches(/[a-z]/).withMessage("Insira uma senha válida!")
             .matches(/\d/).withMessage("Insira uma senha válida!")
             .matches(/[\W_]/).withMessage("Insira uma senha válida!"),
+
+        body("confirmarSenha")
+            .notEmpty()
+            .withMessage("Por favor, confirme sua senha!")
+            .custom((confirmarSenha, { req }) => {
+                if (confirmarSenha !== req.body.senha) {
+                    throw new Error('As senhas não coincidem!');
+                }
+                return true;
+            }),
         
         body("area")
             .custom((value) => {

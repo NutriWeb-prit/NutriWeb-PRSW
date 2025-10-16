@@ -12,8 +12,8 @@
 </head>
     <body>
         <% 
-        let erroValidacao = {"nome" : "", "telefone":"", "email" : "", "senha" : "", "area":"", "crn":""};
-        let msgErro = {"nome" : "", "telefone":"", "email" : "", "senha" : "", "area":"", "crn":""};
+        let erroValidacao = {"nome" : "", "telefone":"", "email" : "", "senha" : "", "confirmarSenha":"", "area":"", "crn":""};
+        let msgErro = {"nome" : "", "telefone":"", "email" : "", "senha" : "", "confirmarSenha":"", "area":"", "crn":""};
         if(listaErros) {
             listaErros.errors.forEach( function(erro) {
                 if (erro.path == "nome") {
@@ -31,6 +31,10 @@
                 if (erro.path == "senha") {
                     erroValidacao.senha = "erro-form",
                     msgErro.senha = erro.msg
+                }
+                if (erro.path == "confirmarSenha") {
+                    erroValidacao.confirmarSenha = "erro-form",
+                    msgErro.confirmarSenha = erro.msg
                 }
                 if (erro.path == "area") {
                     erroValidacao.area = "erro-form",
@@ -107,6 +111,16 @@
                                 maxlength="25">
                             <% if (msgErro.senha) { %>
                                 <section class="erro-mensagem"><%= msgErro.senha %></section>
+                            <% } %>
+                            <input type="password" 
+                                id="confirmarSenha" 
+                                name="confirmarSenha" 
+                                value="<%= valores.confirmarSenha || '' %>" 
+                                class="<%= erroValidacao.confirmarSenha %>"
+                                placeholder="Confirme a Senha"
+                                maxlength="25">
+                            <% if (msgErro.confirmarSenha) { %>
+                                <section class="erro-mensagem"><%= msgErro.confirmarSenha %></section>
                             <% } %>
                             <section id="password-requirements">
                                 <section>A senha deve conter:</section>
