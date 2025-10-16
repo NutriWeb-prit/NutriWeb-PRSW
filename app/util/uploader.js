@@ -2,10 +2,6 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-// ============================================
-// STORAGE ORIGINAL (mantém como está)
-// ============================================
-
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const uploadDir = path.join(__dirname, '../public/uploads');
@@ -254,6 +250,98 @@ const uploadPublicacaoWithErrorHandling = (req, res, next) => {
         
         next();
     });
+
+    const adminStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        const uploadDir = path.join(__dirname, '../public/uploads');
+        
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir, { recursive: true });
+            console.log('📁 Diretório de uploads criado:', uploadDir);
+        }
+        
+        cb(null, uploadDir);
+    },
+    filename: (req, file, cb) => {
+        const timestamp = Date.now();
+        const randomNum = Math.floor(Math.random() * 10000);
+        const ext = path.extname(file.originalname);
+        const name = path.basename(file.originalname, ext);
+        const cleanName = name.replace(/[^a-zA-Z0-9]/g, '_').substring(0, 20);
+        const filename = `admin-${cleanName}-${timestamp}-${randomNum}${ext}`;
+        
+        console.log(`📸 Imagem admin será salva como: ${filename}`);
+        cb(null, filename);
+    }
+    });
+
+    const adminFileFilter = (req, file, cb) => {
+    console.log('Validando imagem admin:', file.originalname, 'Campo:', file.fieldname);
+    
+    if (file.fieldname === 'input-imagem') {
+        const allowedTypes = /jpeg|jpg|png|gif|webp/;
+        const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+        const mimetype = allowedTypes.test(file.mimetype);
+        
+        if (mimetype && extname) {
+            return cb(null, true);
+        } else {
+            return cb(new Error('Apenas imagens são permitidas (JPEG, PNG, GIF, WEBP)'));
+        }
+    }
+    
+    cb(new Error('Campo de arquivo não reconhecido'));
+    };
+
+    const uploadAdminMulter = multer({
+        storage: adminStorage,
+        limits: {
+            fileSize: 5 * 1024 * 1024, // 5MB
+            files: 1,
+            fields: 20
+        },
+        fileFilter: adminFileFilter
+    });
+
+    const uploadAdminWithErrorHandling = (req, res, next) => {
+    const uploadMiddleware = uploadAdminMulter.fields([
+        { name: 'input-imagem', maxCount: 1 }
+    ]);
+    
+    uploadMiddleware(req, res, async (err) => {
+        if (err) {
+            console.error('❌ Erro no upload admin:', err.message);
+            
+            let mensagemErro = 'Erro no upload da imagem';
+            
+            if (err.code === 'LIMIT_FILE_SIZE') {
+                mensagemErro = 'Imagem muito grande. Máximo: 5MB';
+            } else if (err.message.includes('Apenas imagens')) {
+                mensagemErro = err.message;
+            }
+            
+            // Buscar dados do usuário para reexibir o formulário
+            const NWModel = require("../models/NWModel");
+            const usuario = await NWModel.findId(req.body.id);
+            
+            return res.render("pages/adm-usuarios-editar", {
+                usuario: usuario,
+                valores: req.body,
+                listaErros: {
+                    array: () => [{ param: 'fotoPerfil', msg: mensagemErro }],
+                    isEmpty: () => false
+                },
+                usuarioLogado: req.session.usuario
+            });
+        }
+        
+        console.log('✅ Upload admin processado com sucesso');
+        console.log('Arquivos recebidos:', req.files ? Object.keys(req.files) : 'nenhum');
+        
+        next();
+    });
+};
+
 };
 
 module.exports = uploadWithErrorHandling;

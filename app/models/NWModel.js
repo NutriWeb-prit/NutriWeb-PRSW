@@ -2,97 +2,121 @@ const pool = require("../../config/pool_conexoes");
 
 const NWModel = {
     findAll: async () => {
-        try {
-            const [usuarios] = await pool.query(
-                `SELECT 
-                    u.id,
-                    u.NomeCompleto,
-                    u.Email,
-                    u.Telefone,
-                    u.UsuarioTipo,
-                    u.UsuarioStatus,
-                    CASE 
-                        WHEN u.UsuarioTipo = 'C' THEN 'Cliente'
-                        WHEN u.UsuarioTipo = 'N' THEN 'Nutricionista'
-                        WHEN u.UsuarioTipo = 'A' THEN 'Administrador'
-                        ELSE 'Desconhecido'
-                    END as TipoUsuarioNome,
-                    CASE 
-                        WHEN u.UsuarioStatus = 1 THEN 'Ativo'
-                        ELSE 'Inativo'
-                    END as StatusNome
-                FROM Usuarios u
-                ORDER BY u.NomeCompleto ASC`
-            );
-            
-            console.log("Usuários carregados:", usuarios.length);
-            return usuarios;
+    try {
+        const [usuarios] = await pool.query(
+            `SELECT 
+                u.id,
+                u.NomeCompleto,
+                u.Email,
+                u.Telefone,
+                u.UsuarioTipo,
+                u.UsuarioStatus,
+                p.CaminhoFotoPerfil,
+                CASE 
+                    WHEN p.CaminhoFotoPerfil IS NOT NULL THEN 1 
+                    ELSE 0 
+                END as FotoPerfil,
+                CASE 
+                    WHEN u.UsuarioTipo = 'C' THEN 'Cliente'
+                    WHEN u.UsuarioTipo = 'N' THEN 'Nutricionista'
+                    WHEN u.UsuarioTipo = 'A' THEN 'Administrador'
+                    ELSE 'Desconhecido'
+                END as TipoUsuarioNome,
+                CASE 
+                    WHEN u.UsuarioStatus = 1 THEN 'Ativo'
+                    ELSE 'Inativo'
+                END as StatusNome
+            FROM Usuarios u
+            LEFT JOIN Perfis p ON u.id = p.UsuarioId
+            ORDER BY u.NomeCompleto ASC`
+        );
+        
+        console.log("Usuários carregados:", usuarios.length);
+        return usuarios;
         } catch (erro) {
             console.error("Erro ao listar usuários:", erro);
             throw erro;
         }
     },
-    
+
+    // Query findId - Atualizada para incluir caminho da foto
     findId: async (id) => {
         try {
-            const [resultado] = await pool.query(
-                `SELECT 
-                    u.id,
-                    u.NomeCompleto,
-                    u.Email,
-                    u.Telefone,
-                    u.UsuarioTipo,
-                    u.UsuarioStatus,
-                    u.CEP,
-                    u.DataNascimento,
-                    CASE WHEN p.CaminhoFotoPerfil IS NOT NULL THEN 1 ELSE 0 END as FotoPerfil,
-                    CASE 
-                        WHEN u.UsuarioTipo = 'C' THEN 'Cliente'
-                        WHEN u.UsuarioTipo = 'N' THEN 'Nutricionista'
-                        WHEN u.UsuarioTipo = 'A' THEN 'Administrador'
-                        ELSE 'Desconhecido'
-                    END as TipoUsuarioNome,
-                    CASE 
-                        WHEN u.UsuarioStatus = 1 THEN 'Ativo'
-                        ELSE 'Inativo'
-                    END as StatusNome
-                FROM Usuarios u
-                LEFT JOIN Perfis p ON u.id = p.UsuarioId
-                WHERE u.id = ?`,
+        const [resultado] = await pool.query(
+            `SELECT 
+                u.id,
+                u.NomeCompleto,
+                u.Email,
+                u.Telefone,
+                u.UsuarioTipo,
+                u.UsuarioStatus,
+                u.CEP,
+                u.DataNascimento,
+                p.CaminhoFotoPerfil,
+                p.CaminhoFotoBanner,
+                CASE 
+                    WHEN p.CaminhoFotoPerfil IS NOT NULL THEN 1 
+                    ELSE 0 
+                END as FotoPerfil,
+                CASE 
+                    WHEN u.UsuarioTipo = 'C' THEN 'Cliente'
+                    WHEN u.UsuarioTipo = 'N' THEN 'Nutricionista'
+                    WHEN u.UsuarioTipo = 'A' THEN 'Administrador'
+                    ELSE 'Desconhecido'
+                END as TipoUsuarioNome,
+                CASE 
+                    WHEN u.UsuarioStatus = 1 THEN 'Ativo'
+                    ELSE 'Inativo'
+                END as StatusNome
+            FROM Usuarios u
+            LEFT JOIN Perfis p ON u.id = p.UsuarioId
+            WHERE u.id = ?`,
+            [id]
+        );
+        
+        if (resultado.length === 0) {
+            return null;
+        }
+
+        const usuario = resultado[0];
+        
+        // Buscar dados específicos de nutricionista
+        if (usuario.UsuarioTipo === 'N') {
+            const [nutriData] = await pool.query(
+                `SELECT Crn, RazaoSocial FROM Nutricionistas WHERE UsuarioId = ?`,
                 [id]
             );
             
-            if (resultado.length === 0) {
-                return null;
-            }
-    
-            const usuario = resultado[0];
-            
-            if (usuario.UsuarioTipo === 'N') {
-                const [nutriData] = await pool.query(
-                    `SELECT Crn, RazaoSocial FROM Nutricionistas WHERE UsuarioId = ?`,
-                    [id]
-                );
-                
-                if (nutriData.length > 0) {
-                    usuario.Crn = nutriData[0].Crn;
-                    usuario.RazaoSocial = nutriData[0].RazaoSocial;
-                }
+            if (nutriData.length > 0) {
+                usuario.Crn = nutriData[0].Crn;
+                usuario.RazaoSocial = nutriData[0].RazaoSocial;
             }
             
-            if (usuario.UsuarioTipo === 'C') {
-                const [clientData] = await pool.query(
-                    `SELECT CPF FROM Clientes WHERE UsuarioId = ?`,
-                    [id]
-                );
-                
-                if (clientData.length > 0) {
-                    usuario.CPF = clientData[0].CPF;
-                }
-            }
+            // Buscar SobreMim do perfil
+            const [perfilData] = await pool.query(
+                `SELECT SobreMim FROM Perfis WHERE UsuarioId = ?`,
+                [id]
+            );
             
-            console.log("Usuário encontrado:", usuario.NomeCompleto, "- Tem foto:", !!usuario.FotoPerfil);
-            return usuario;
+            if (perfilData.length > 0) {
+                usuario.SobreMim = perfilData[0].SobreMim;
+            }
+        }
+        
+        // Buscar dados específicos de cliente
+        if (usuario.UsuarioTipo === 'C') {
+            const [clientData] = await pool.query(
+                `SELECT CPF FROM Clientes WHERE UsuarioId = ?`,
+                [id]
+            );
+            
+            if (clientData.length > 0) {
+                usuario.CPF = clientData[0].CPF;
+            }
+        }
+        
+        console.log("Usuário encontrado:", usuario.NomeCompleto, "- Tem foto:", !!usuario.CaminhoFotoPerfil);
+        return usuario;
         } catch (erro) {
             console.error("Erro ao buscar usuário por ID:", erro);
             throw erro;
@@ -135,96 +159,98 @@ const NWModel = {
     },
     
     atualizarUsuarioCompletoADM: async (usuarioId, dadosAtualizacao, dadosEspecificos, tipoUsuario) => {
-        const conn = await pool.getConnection();
+    const conn = await pool.getConnection();
+    
+    try {
+        await conn.beginTransaction();
+
+        console.log("Iniciando transação de atualização - Usuário ID:", usuarioId);
+
+        // Atualizar dados gerais do usuário
+        const camposUsuario = Object.keys(dadosAtualizacao)
+            .map(campo => `${campo} = ?`)
+            .join(', ');
         
-        try {
-            await conn.beginTransaction();
-    
-            console.log("Iniciando transação de atualização - Usuário ID:", usuarioId);
-    
-            const camposUsuario = Object.keys(dadosAtualizacao)
-                .map(campo => `${campo} = ?`)
-                .join(', ');
-            
-            const valoresUsuario = Object.values(dadosAtualizacao);
-            valoresUsuario.push(usuarioId);
-    
-            const queryUsuario = `UPDATE Usuarios SET ${camposUsuario} WHERE id = ?`;
-            
-            await conn.query(queryUsuario, valoresUsuario);
-            console.log("✓ Dados gerais do usuário atualizados");
-    
-            if (dadosEspecificos.fotoPerfil) {
-                console.log("Processando atualização de avatar...");
-    
+        const valoresUsuario = Object.values(dadosAtualizacao);
+        valoresUsuario.push(usuarioId);
+
+        const queryUsuario = `UPDATE Usuarios SET ${camposUsuario} WHERE id = ?`;
+        
+        await conn.query(queryUsuario, valoresUsuario);
+        console.log("✓ Dados gerais do usuário atualizados");
+
+        if (dadosEspecificos.fotoPerfil) {
+            console.log("Processando atualização de avatar...");
+
+            const [perfilExistente] = await conn.query(
+                'SELECT id FROM Perfis WHERE UsuarioId = ?',
+                [usuarioId]
+            );
+
+            if (perfilExistente.length > 0) {
+                await conn.query(
+                    'UPDATE Perfis SET CaminhoFotoPerfil = ? WHERE UsuarioId = ?',
+                    [dadosEspecificos.fotoPerfil, usuarioId]
+                );
+                console.log("✓ Caminho do avatar atualizado em perfil existente");
+            } else {
+                await conn.query(
+                    'INSERT INTO Perfis (UsuarioId, CaminhoFotoPerfil) VALUES (?, ?)',
+                    [usuarioId, dadosEspecificos.fotoPerfil]
+                );
+                console.log("✓ Novo perfil criado com caminho do avatar");
+            }
+        }
+
+        if (tipoUsuario === 'N') {
+            const camposNutri = [];
+            const valoresNutri = [];
+
+            if (dadosEspecificos.Crn !== undefined && dadosEspecificos.Crn !== null) {
+                camposNutri.push('Crn = ?');
+                valoresNutri.push(dadosEspecificos.Crn);
+            }
+
+            if (dadosEspecificos.RazaoSocial !== undefined && dadosEspecificos.RazaoSocial !== null) {
+                camposNutri.push('RazaoSocial = ?');
+                valoresNutri.push(dadosEspecificos.RazaoSocial);
+            }
+
+            if (camposNutri.length > 0) {
+                valoresNutri.push(usuarioId);
+                const queryNutri = `UPDATE Nutricionistas SET ${camposNutri.join(', ')} WHERE UsuarioId = ?`;
+                await conn.query(queryNutri, valoresNutri);
+                console.log("✓ Dados do nutricionista atualizados");
+            }
+
+            // Atualizar SobreMim no perfil
+            if (dadosEspecificos.SobreMim !== undefined) {
                 const [perfilExistente] = await conn.query(
                     'SELECT id FROM Perfis WHERE UsuarioId = ?',
                     [usuarioId]
                 );
-    
+
                 if (perfilExistente.length > 0) {
                     await conn.query(
-                        'UPDATE Perfis SET FotoPerfil = ? WHERE UsuarioId = ?',
-                        [dadosEspecificos.fotoPerfil, usuarioId]
+                        'UPDATE Perfis SET SobreMim = ? WHERE UsuarioId = ?',
+                        [dadosEspecificos.SobreMim, usuarioId]
                     );
-                    console.log("✓ Avatar atualizado em perfil existente");
                 } else {
                     await conn.query(
-                        'INSERT INTO Perfis (UsuarioId, FotoPerfil) VALUES (?, ?)',
-                        [usuarioId, dadosEspecificos.fotoPerfil]
+                        'INSERT INTO Perfis (UsuarioId, SobreMim) VALUES (?, ?)',
+                        [usuarioId, dadosEspecificos.SobreMim]
                     );
-                    console.log("✓ Novo perfil criado com avatar");
                 }
+                console.log("✓ Perfil (Sobre Mim) atualizado");
             }
-    
-            if (tipoUsuario === 'N') {
-                const camposNutri = [];
-                const valoresNutri = [];
-    
-                if (dadosEspecificos.Crn !== undefined && dadosEspecificos.Crn !== null) {
-                    camposNutri.push('Crn = ?');
-                    valoresNutri.push(dadosEspecificos.Crn);
-                }
-    
-                if (dadosEspecificos.RazaoSocial !== undefined && dadosEspecificos.RazaoSocial !== null) {
-                    camposNutri.push('RazaoSocial = ?');
-                    valoresNutri.push(dadosEspecificos.RazaoSocial);
-                }
-    
-                if (camposNutri.length > 0) {
-                    valoresNutri.push(usuarioId);
-                    const queryNutri = `UPDATE Nutricionistas SET ${camposNutri.join(', ')} WHERE UsuarioId = ?`;
-                    await conn.query(queryNutri, valoresNutri);
-                    console.log("✓ Dados do nutricionista atualizados");
-                }
-    
-                if (dadosEspecificos.SobreMim !== undefined) {
-                    const [perfilExistente] = await conn.query(
-                        'SELECT id FROM Perfis WHERE UsuarioId = ?',
-                        [usuarioId]
-                    );
-    
-                    if (perfilExistente.length > 0) {
-                        await conn.query(
-                            'UPDATE Perfis SET SobreMim = ? WHERE UsuarioId = ?',
-                            [dadosEspecificos.SobreMim, usuarioId]
-                        );
-                    } else {
-                        await conn.query(
-                            'INSERT INTO Perfis (UsuarioId, SobreMim) VALUES (?, ?)',
-                            [usuarioId, dadosEspecificos.SobreMim]
-                        );
-                    }
-                    console.log("✓ Perfil (Sobre Mim) atualizado");
-                }
-            } else if (tipoUsuario === 'C') {
-                console.log("✓ Cliente atualizado (CPF é imutável)");
-            }
-    
-            await conn.commit();
-            console.log("✓✓ Transação confirmada com sucesso");
-            return true;
-    
+        } else if (tipoUsuario === 'C') {
+            console.log("✓ Cliente atualizado (CPF é imutável)");
+        }
+
+        await conn.commit();
+        console.log("✓✓ Transação confirmada com sucesso");
+        return true;
+
         } catch (erro) {
             await conn.rollback();
             console.error("✗ Erro na transação:", erro.message);

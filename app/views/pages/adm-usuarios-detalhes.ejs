@@ -35,7 +35,7 @@
                 <section class="card-header">
                     <section class="user-avatar">
                         <% if (usuario.FotoPerfil) { %>
-                            <img src="/adm/imagem/perfil/<%= usuario.id %>?t=<%= timestamp %>" 
+                            <img src="/<%= usuario.CaminhoFotoPerfil %>" 
                                  alt="Avatar de <%= usuario.NomeCompleto %>" 
                                  class="avatar-img"
                                  onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">

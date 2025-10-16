@@ -207,23 +207,46 @@ const ADMController = {
 
         console.log("Iniciando atualização do usuário ID:", id);
 
+        // Função auxiliar para validar imagem
+        const validarImagem = (arquivo, tipo) => {
+            console.log(`Validando ${tipo}:`, arquivo ? 'arquivo presente' : 'arquivo ausente');
+            if (!arquivo) return null;
+            
+            console.log(`${tipo} - Caminho:`, arquivo.path);
+            console.log(`${tipo} - Tamanho:`, arquivo.size, 'bytes');
+            console.log(`${tipo} - Tipo:`, arquivo.mimetype);
+            
+            if (arquivo.size > 5 * 1024 * 1024) {
+                throw new Error(`${tipo} muito grande. Máximo permitido: 5MB`);
+            }
+            
+            const tiposPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+            if (!tiposPermitidos.includes(arquivo.mimetype)) {
+                throw new Error(`Formato de ${tipo} não suportado. Use: JPEG, PNG, GIF ou WEBP`);
+            }
+            
+            // Retorna o caminho relativo
+            const caminhoRelativo = arquivo.path
+                .replace(/\\/g, '/') 
+                .split('public/')[1];
+            
+            console.log(`${tipo} será salvo em: ${caminhoRelativo}`);
+            return caminhoRelativo;
+        };
+
         let fotoPerfil = null;
         
         if (req.files && req.files['input-imagem']) {
-            const arquivo = req.files['input-imagem'][0];
-            
-            console.log("Arquivo enviado:", {
-                nome: arquivo.originalname,
-                tipo: arquivo.mimetype,
-                tamanho: arquivo.size
-            });
-
-            if (arquivo.size > 5 * 1024 * 1024) {
+            try {
+                const arquivo = req.files['input-imagem'][0];
+                fotoPerfil = validarImagem(arquivo, 'foto de perfil');
+                console.log("✓ Avatar validado com sucesso:", fotoPerfil);
+            } catch (erroValidacao) {
                 const usuario = await NWModel.findId(id);
                 const errors = {
                     array: () => [{ 
                         param: 'fotoPerfil', 
-                        msg: 'Arquivo muito grande! Máximo: 5MB' 
+                        msg: erroValidacao.message 
                     }],
                     isEmpty: () => false
                 };
@@ -234,27 +257,6 @@ const ADMController = {
                     usuarioLogado: req.session.usuario
                 });
             }
-
-            const tiposPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
-            if (!tiposPermitidos.includes(arquivo.mimetype)) {
-                const usuario = await NWModel.findId(id);
-                const errors = {
-                    array: () => [{ 
-                        param: 'fotoPerfil', 
-                        msg: 'Tipo de arquivo não suportado! Use: JPG, PNG, GIF ou WEBP' 
-                    }],
-                    isEmpty: () => false
-                };
-                return res.render("pages/adm-usuarios-editar", {
-                    usuario: usuario,
-                    valores: req.body,
-                    listaErros: errors,
-                    usuarioLogado: req.session.usuario
-                });
-            }
-
-            fotoPerfil = arquivo.buffer;
-            console.log("✓ Avatar validado com sucesso");
         }
 
         const dadosAtualizacao = {
@@ -290,7 +292,7 @@ const ADMController = {
         console.error("Erro ao atualizar usuário:", erro);
         res.redirect("/adm/usuarios?erro=erro_atualizacao");
     }
-},
+  },
 
   exibirExclusao: async (req, res) => {
     try {
