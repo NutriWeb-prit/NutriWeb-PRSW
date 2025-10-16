@@ -32,12 +32,12 @@ function adicionarComentarioInicial() {
             <img src="imagens/foto-exemplo-comentario.jpg" alt="Foto de perfil" class="foto-perfil" 
                  onerror="this.src='imagens/foto_perfil.jpg'">
             <section class="comentario-header">
-                <span class="nome-usuario">Luis Henrique</span>
+                <section class="nome-usuario">Luis Henrique</section>
             </section>
             <section class="menu-denunciar-comentario">
-                <span class="menu-pontos-comentarios">⋮</span>
+                <section class="menu-pontos-comentarios">⋮</section>
                 <section class="opcoes-comentario" style="display: none;">
-                    <span class="denunciar-comentario">Denunciar</span>
+                    <section class="denunciar-comentario">Denunciar</section>
                 </section>
             </section>
         </section>
@@ -71,12 +71,12 @@ function enviarComentario() {
                 <img src="${fotoPerfil}" alt="Foto de perfil" class="foto-perfil" 
                      onerror="this.src='imagens/foto_perfil.jpg'">
                 <section class="comentario-header">
-                    <span class="nome-usuario">${nomeUsuario}</span>
+                    <section class="nome-usuario">${nomeUsuario}</section>
                 </section>
                 <section class="menu-denunciar-comentario">
-                    <span class="menu-pontos-comentarios">⋮</span>
+                    <section class="menu-pontos-comentarios">⋮</section>
                     <section class="opcoes-comentario" style="display: none;">
-                        <span class="apagar-comentario">Apagar</span>
+                        <section class="apagar-comentario">Apagar</section>
                     </section>
                 </section>
             </section>

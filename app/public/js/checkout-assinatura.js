@@ -137,7 +137,7 @@ function mostrarAreaPagamento() {
             let paymentContainer = document.getElementById('payment-container');
             if (!paymentContainer) {
                 console.log('Criando container de pagamento...');
-                paymentContainer = document.createElement('div');
+                paymentContainer = document.createElement('section');
                 paymentContainer.id = 'payment-container';
                 paymentContainer.className = 'payment-container';
                 paymentContainer.innerHTML = `
@@ -145,7 +145,7 @@ function mostrarAreaPagamento() {
                     <p style="margin-bottom: 20px; color: #666;">
                         Escolha sua forma de pagamento abaixo:
                     </p>
-                    <div id="wallet_container"></div>
+                    <section id="wallet_container"></section>
                     <button class="voltar-btn" onclick="voltarParaFormulario()" style="margin-top: 20px;">
                         Voltar
                     </button>

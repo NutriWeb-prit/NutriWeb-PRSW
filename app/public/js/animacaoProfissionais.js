@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         cards.forEach((_, index) => {
-            const dot = document.createElement('span');
+            const dot = document.createElement('section');
             dot.classList.add('dot');
             if (index === 0) dot.classList.add('active');
             dot.addEventListener('click', () => {

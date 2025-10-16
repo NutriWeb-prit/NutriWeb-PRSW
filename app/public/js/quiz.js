@@ -113,23 +113,23 @@ function renderQuestion() {
     const q = questions[currentQuestion];
     
     let html = `
-        <div class="question-card active">
+        <section class="question-card active">
             <h3 class="question-text">${q.question}</h3>
-            <div class="options">
+            <section class="options">
     `;
     
     q.options.forEach((opt, idx) => {
         const isSelected = answers[currentQuestion] === idx;
         html += `
-            <div class="option ${isSelected ? 'selected' : ''}" onclick="selectOption(${idx})">
+            <section class="option ${isSelected ? 'selected' : ''}" onclick="selectOption(${idx})">
                 ${opt.text}
-            </div>
+            </section>
         `;
     });
     
     html += `
-            </div>
-        </div>
+            </section>
+        </section>
     `;
     
     container.innerHTML = html;
