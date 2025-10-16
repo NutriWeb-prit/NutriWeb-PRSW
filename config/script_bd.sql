@@ -485,3 +485,9 @@ INSERT INTO `NutricionistasFormacoes` (NutricionistaId, TipoFormacao, NomeFormac
 
 (36, 'graduacao', 'Nutrição', 'Universidade Federal do Espírito Santo'),
 (36, 'curso', 'Curso de Nutrição Ortomolecular e Funcional', 'Academia Brasileira de Medicina Ortomolecular');
+
+INSERT IGNORE INTO Status (TituloStatus) VALUES
+('A pagar'),
+('Em andamento'),
+('Pagamento Confirmado'),
+('Cancelado');
