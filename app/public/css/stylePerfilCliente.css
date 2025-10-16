@@ -132,23 +132,8 @@ main{
     border-radius: 10px;
 }   
 
-.avaliacao {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto 30px auto;
-    background: white;
-    padding: 25px;
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-}
-
-.nome_avaliador {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
+.sem-avaliacoes p {
+    color: #666;
 }
 
 .icone_conta{
@@ -317,10 +302,10 @@ main{
     text-align: left;
 }
 
-.contato{
-    color: #000;
+.contato {
     display: flex;
     align-items: center;
+    margin-bottom: 15px;    
 }
 
 .icone_contato{

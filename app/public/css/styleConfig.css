@@ -9,6 +9,16 @@ body {
     background-color: #f5f5f5;
 }
 
+.header-content {
+    width: 90%;
+    display: flex;
+    justify-content: flex-start;
+    padding: 20px;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
 .back-button {
     display: flex;
     align-items: center;
@@ -94,6 +104,7 @@ body {
     align-items: flex-start;
     justify-content: center;
     gap: 80px;
+    margin-top: 150px;
     margin-bottom: 150px;
 }
 

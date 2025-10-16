@@ -524,20 +524,44 @@
         <section class="cards-container">
             <section class="cards-wrapper">
                 <% if (publicacoes && publicacoes.length > 0) { %>
-                    <% publicacoes.forEach(function(card) { %>
+                    <% publicacoes.forEach(function(card, index) { %>
                         <section class="card"
                             data-id="<%= card.id %>"
+                            data-nutricionista-id="<%= card.nutricionistaId %>"
                             data-nome="<%= card.nome %>"
                             data-profissao="Nutrição <%= card.profissao %>"
                             data-imgperfil="<%= card.imgPerfil %>"
                             data-imgconteudo="<%= card.imgConteudo %>"
-                            data-legenda="<%= card.legenda.replace(/"/g, '&quot;') %>">
+                            data-legenda="<%= card.legenda.replace(/"/g, '&quot;') %>"
+                            data-premium="<%= card.premium && card.premium.temPremium ? 'true' : 'false' %>"
+                            data-premium-duracao="<%= card.premium && card.premium.duracao ? card.premium.duracao : '' %>">
                             
                             <a href="/perfilnutri?id=<%= card.nutricionistaId %>" class="card-perfil">
-                                <section class="card-header">
-                                    <img src="<%= card.imgPerfil %>" 
-                                         alt="<%= card.nome %>" 
-                                         onerror="this.src='imagens/foto_perfil.jpg'">
+                                <section class="card-header card-header-home">
+                                    <section class="perfil-foto-container">
+                                        <img src="<%= card.imgPerfil %>" 
+                                             alt="<%= card.nome %>" 
+                                             onerror="this.src='imagens/foto_perfil.jpg'">
+                                    
+                                        <% if (card.premium && card.premium.temPremium) { %>
+                                            <section class="selo-premium-star-home">
+                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <circle cx="12" cy="12" r="11" fill="url(#goldGradientDesktop<%= index %>)"/>
+                                                    <path d="M12 4L13.5 9H18.5L14.5 12L16 17L12 14L8 17L9.5 12L5.5 9H10.5L12 4Z"
+                                                        fill="white"
+                                                        stroke="white"
+                                                        stroke-width="0.5"/>
+                                                    <defs>
+                                                        <linearGradient id="goldGradientDesktop<%= index %>" x1="0%" y1="0%" x2="100%" y2="100%">
+                                                            <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+                                                            <stop offset="100%" style="stop-color:#FFA500;stop-opacity:1" />
+                                                        </linearGradient>
+                                                    </defs>
+                                                </svg>
+                                            </section>
+                                        <% } %>
+                                    </section>
+                                    
                                     <section>
                                         <section class="name"><%= card.nome %></section>
                                         <section class="profession">Nutrição <%= card.profissao %></section>
@@ -560,21 +584,11 @@
                         <p>Nenhuma publicação disponível no momento.</p>
                     </section>
                 <% } %>
-
             </section>
 
             <section class="banner-card-meio banner-card-meio-quiz">
                 <img src="imagens/banner3.png" onclick="irPagina()" alt="BannerPatrocinio"/>
             </section>
-
-            <button class="btn-verMais">
-                Ver mais
-                <svg class="seta-svg" width="25" height="25" viewBox="0 0 24 24" fill="none"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path d="M7 10l5 5 5-5" stroke="green" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </button>
-
         </section>
 
         <section id="modal" class="modal">
@@ -587,7 +601,26 @@
                         <section class="container-card-header">
                             <a href="/perfilnutri?id=1" class="card-perfil card-perfil-modal">
                                 <section class="card-header card-header-modal">
-                                    <img src="imagens/profissional1.png" alt="Profile" id="modal-profile">
+                                    <section class="perfil-foto-container">
+                                        <img src="/imagem/perfil/1.png" alt="Profile" id="modal-profile">
+                                        
+                                        <section class="selo-premium-star" id="modal-selo-premium" style="display: none;">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <circle cx="12" cy="12" r="11" fill="url(#goldGradientModal)"/>
+                                                <path d="M12 4L13.5 9H18.5L14.5 12L16 17L12 14L8 17L9.5 12L5.5 9H10.5L12 4Z"
+                                                    fill="white"
+                                                    stroke="white"
+                                                    stroke-width="0.5"/>
+                                                <defs>
+                                                    <linearGradient id="goldGradientModal" x1="0%" y1="0%" x2="100%" y2="100%">
+                                                        <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+                                                        <stop offset="100%" style="stop-color:#FFA500;stop-opacity:1" />
+                                                    </linearGradient>
+                                                </defs>
+                                            </svg>
+                                        </section>
+                                    </section>
+                                    
                                     <section>
                                         <section class="name" id="modal-name">Julia</section>
                                         <section class="profession">Nutricionista</section>
@@ -792,7 +825,7 @@
 
                 <a href="/perfilnutri?id=1">
                     <section class="card-nutri">
-                            <img src="imagens/profissional1.png" alt="Profissional 1" class="card-image">
+                            <img src="/imagem/perfil/1" alt="Profissional 1" class="card-image">
                             <section class="card-info">
                                 <h3 class="card-name">Julia Barros</h3>
                                 <p class="card-specialty">Nutrição Esportiva</p>
@@ -803,7 +836,7 @@
     
                 <a href="/perfilnutri?id=2">
                     <section class="card-nutri">
-                            <img src="imagens/profissional2.png" alt="Profissional 2" class="card-image">
+                            <img src="/imagem/perfil/2" alt="Profissional 2" class="card-image">
                             <section class="card-info">
                                 <h3 class="card-name">Roberta Santos</h3>
                                 <p class="card-specialty">Nutrição Clínica</p>
@@ -814,7 +847,7 @@
     
                 <a href="/perfilnutri?id=3">
                     <section class="card-nutri">
-                            <img src="imagens/profissional3.png" alt="Profissional 3" class="card-image">
+                            <img src="/imagem/perfil/3" alt="Profissional 3" class="card-image">
                             <section class="card-info">
                                 <h3 class="card-name">Flávia Flins</h3>
                                 <p class="card-specialty">Nutrição Estética</p>
@@ -825,7 +858,7 @@
     
                 <a href="/perfilnutri?id=4">
                     <section class="card-nutri">
-                            <img src="imagens/profissional4.png" alt="Profissional 4" class="card-image">
+                            <img src="/imagem/perfil/4" alt="Profissional 4" class="card-image">
                             <section class="card-info">
                                 <h3 class="card-name">Pablo Parron</h3>
                                 <p class="card-specialty">Nutrição Clínica</p>
@@ -836,7 +869,7 @@
     
                 <a href="/perfilnutri?id=5">
                     <section class="card-nutri">
-                            <img src="imagens/profissional5.png" alt="Profissional 5" class="card-image">
+                            <img src="/imagem/perfil/5" alt="Profissional 5" class="card-image">
                             <section class="card-info">
                                 <h3 class="card-name">Sophia Silva</h3>
                                 <p class="card-specialty">Nutrição Estética</p>
@@ -847,7 +880,7 @@
     
                 <a href="/perfilnutri?id=6">
                     <section class="card-nutri">
-                            <img src="imagens/profissional6.png" alt="Profissional 6" class="card-image">
+                            <img src="/imagem/perfil/6" alt="Profissional 6" class="card-image">
                             <section class="card-info">
                                 <h3 class="card-name">Camila Ocanã</h3>
                                 <p class="card-specialty">Nutrição Estética</p>
@@ -858,7 +891,7 @@
     
                 <a href="/perfilnutri?id=7">
                     <section class="card-nutri">
-                            <img src="imagens/profissional7.png" alt="Profissional 7" class="card-image">
+                            <img src="/imagem/perfil/7" alt="Profissional 7" class="card-image">
                             <section class="card-info">
                                 <h3 class="card-name">Agatha Matos</h3>
                                 <p class="card-specialty">Nutrição Estética</p>
@@ -869,7 +902,7 @@
     
                 <a href="/perfilnutri?id=8">
                     <section class="card-nutri">
-                            <img src="imagens/profissional8.png" alt="Profissional 8" class="card-image">
+                            <img src="/imagem/perfil/8" alt="Profissional 8" class="card-image">
                             <section class="card-info">
                                 <h3 class="card-name">Roberto Carlos</h3>
                                 <p class="card-specialty">Nutrição Esportiva</p>
@@ -880,7 +913,7 @@
     
                 <a href="/perfilnutri?id=9">
                     <section class="card-nutri">
-                            <img src="imagens/profissional9.png" alt="Profissional 9" class="card-image">
+                            <img src="/imagem/perfil/9" alt="Profissional 9" class="card-image">
                             <section class="card-info">
                                 <h3 class="card-name">Mariana Alves</h3>
                                 <p class="card-specialty">Nutrição Esportiva</p>
@@ -891,7 +924,7 @@
     
                 <a href="/perfilnutri?id=10">
                     <section class="card-nutri">
-                            <img src="imagens/profissional10.png" alt="Profissional 10" class="card-image">
+                            <img src="/imagem/perfil/10" alt="Profissional 10" class="card-image">
                             <section class="card-info">
                                 <h3 class="card-name">Lucas Mendes</h3>
                                 <p class="card-specialty">Nutrição Clínica</p>
@@ -902,7 +935,7 @@
     
                 <a href="/perfilnutri?id=11">
                     <section class="card-nutri">
-                            <img src="imagens/profissional11.png" alt="Profissional 11" class="card-image">
+                            <img src="/imagem/perfil/11" alt="Profissional 11" class="card-image">
                             <section class="card-info">
                                 <h3 class="card-name">Carla Souza</h3>
                                 <p class="card-specialty">Nutrição Clínica</p>
@@ -913,7 +946,7 @@
     
                 <a href="/perfilnutri?id=12">
                     <section class="card-nutri">
-                            <img src="imagens/profissional12.png" alt="Profissional 12" class="card-image">
+                            <img src="/imagem/perfil/12" alt="Profissional 12" class="card-image">
                             <section class="card-info">
                                 <h3 class="card-name">Renata Dias</h3>
                                 <p class="card-specialty">Nutrição Esportiva</p>
@@ -924,7 +957,7 @@
 
                 <a href="/perfilnutri?id=13">
                     <section class="card-nutri">
-                            <img src="imagens/profissional13.png" alt="Profissional 13" class="card-image">
+                            <img src="/imagem/perfil/13" alt="Profissional 13" class="card-image">
                             <section class="card-info">
                                 <h3 class="card-name">Bruno Teixeira</h3>
                                 <p class="card-specialty">Nutrição Vegetariana</p>
@@ -935,7 +968,7 @@
 
                 <a href="/perfilnutri?id=14">
                     <section class="card-nutri">
-                            <img src="imagens/profissional14.png" alt="Profissional 14" class="card-image">
+                            <img src="/imagem/perfil/14" alt="Profissional 14" class="card-image">
                             <section class="card-info">
                                 <h3 class="card-name">Larissa Lobato</h3>
                                 <p class="card-specialty">Nutrição Vegetariana</p>
@@ -946,7 +979,7 @@
 
                 <a href="/perfilnutri?id=15">
                     <section class="card-nutri">
-                            <img src="imagens/profissional15.png" alt="Profissional 15" class="card-image">
+                            <img src="/imagem/perfil/15" alt="Profissional 15" class="card-image">
                             <section class="card-info">
                                 <h3 class="card-name">Daniela Castro</h3>
                                 <p class="card-specialty">Nutrição Vegetariana</p>
@@ -957,7 +990,7 @@
 
                 <a href="/perfilnutri?id=16">
                     <section class="card-nutri">
-                            <img src="imagens/profissional16.png" alt="Profissional 16" class="card-image">
+                            <img src="/imagem/perfil/16" alt="Profissional 16" class="card-image">
                             <section class="card-info">
                                 <h3 class="card-name">Henrique Lopes</h3>
                                 <p class="card-specialty">Nutrição Vegetariana</p>
@@ -968,7 +1001,7 @@
 
                 <a href="/perfilnutri?id=17">
                     <section class="card-nutri">
-                            <img src="imagens/profissional17.png" alt="Profissional 17" class="card-image">
+                            <img src="/imagem/perfil/17" alt="Profissional 17" class="card-image">
                             <section class="card-info">
                                 <h3 class="card-name">Mirella Cunha</h3>
                                 <p class="card-specialty">Nutrição Materno-Infantil</p>
@@ -979,7 +1012,7 @@
 
                 <a href="/perfilnutri?id=18">
                     <section class="card-nutri">
-                            <img src="imagens/profissional18.png" alt="Profissional 18" class="card-image">
+                            <img src="/imagem/perfil/18" alt="Profissional 18" class="card-image">
                             <section class="card-info">
                                 <h3 class="card-name">Gustavo Ribeiro</h3>
                                 <p class="card-specialty">Nutrição Geriátrica</p>
@@ -990,7 +1023,7 @@
 
                 <a href="/perfilnutri?id=19">
                     <section class="card-nutri">
-                            <img src="imagens/profissional19.png" alt="Profissional 19" class="card-image">
+                            <img src="/imagem/perfil/19" alt="Profissional 19" class="card-image">
                             <section class="card-info">
                                 <h3 class="card-name">Tatiane Moura</h3>
                                 <p class="card-specialty">Nutrição Preventiva</p>
@@ -1001,7 +1034,7 @@
 
                 <a href="/perfilnutri?id=20">
                     <section class="card-nutri">
-                            <img src="imagens/profissional20.png" alt="Profissional 20" class="card-image">
+                            <img src="/imagem/perfil/20" alt="Profissional 20" class="card-image">
                             <section class="card-info">
                                 <h3 class="card-name">Eduardo Lima</h3>
                                 <p class="card-specialty">Nutrição Balanceada</p>
@@ -1012,7 +1045,7 @@
 
                 <a href="/perfilnutri?id=21">
                     <section class="card-nutri">
-                            <img src="imagens/profissional21.png" alt="Profissional 21" class="card-image">
+                            <img src="/imagem/perfil/21" alt="Profissional 21" class="card-image">
                             <section class="card-info">
                                 <h3 class="card-name">Amanda Torres</h3>
                                 <p class="card-specialty">Nutrição Funcional</p>
@@ -1023,7 +1056,7 @@
 
                 <a href="/perfilnutri?id=22">
                     <section class="card-nutri">
-                            <img src="imagens/profissional22.png" alt="Profissional 22" class="card-image">
+                            <img src="/imagem/perfil/22" alt="Profissional 22" class="card-image">
                             <section class="card-info">
                                 <h3 class="card-name">Fernando Lins</h3>
                                 <p class="card-specialty">Nutrição Preventiva</p>
@@ -1034,7 +1067,7 @@
 
                 <a href="/perfilnutri?id=23">
                     <section class="card-nutri">
-                            <img src="imagens/profissional23.png" alt="Profissional 23" class="card-image">
+                            <img src="/imagem/perfil/23" alt="Profissional 23" class="card-image">
                             <section class="card-info">
                                 <h3 class="card-name">Isabela Martins</h3>
                                 <p class="card-specialty">Nutrição Materno-Infantil</p>
@@ -1050,124 +1083,73 @@
             </section>
 
             <section class="cards-container-mobile">
-                <section class="cards-wrapper">
-                    <section class="card"
-                        data-id="1"
-                        data-nome="Julia"
-                        data-profissao="Nutricionista"
-                        data-imgperfil="imagens/profissional1.png"
-                        data-imgconteudo="imagens/img-post-kiwi.jpg"
-                        data-titulo="BENEFÍCIOS DO KIWI PARA A SAÚDE"
-                        data-conteudo1="O kiwi é uma excelente fonte de vitamina C, contribuindo para a imunidade e a saúde da pele."
-                        data-subtitulo1="SAÚDE EM DIA"
-                        data-conteudo2="Contém fibras que auxiliam no funcionamento do intestino e no controle do colesterol."
-                        data-subtitulo2="DIGESTÃO REGULADA"
-                        data-conteudo3="Ideal para lanches saudáveis, o kiwi ainda tem ação antioxidante e anti-inflamatória.">
-
-                        <a href="/perfilnutri?id=1" class="card-perfil">
-                            <section class="card-header">
-                                <img src="imagens/profissional1.png" alt="Profile">
-                                <section>
-                                    <section class="name">Julia</section>
-                                    <section class="profession">Nutricionista</section>
+                <% if (publicacoes && publicacoes.length > 0) { %>
+                    <% publicacoes.forEach(function(card, index) { %>
+                        <section class="card"
+                            data-id="<%= card.id %>"
+                            data-nutricionista-id="<%= card.nutricionistaId %>"
+                            data-nome="<%= card.nome %>"
+                            data-profissao="Nutrição <%= card.profissao %>"
+                            data-imgperfil="<%= card.imgPerfil %>"
+                            data-imgconteudo="<%= card.imgConteudo %>"
+                            data-legenda="<%= card.legenda.replace(/"/g, '&quot;') %>"
+                            data-premium="<%= card.premium && card.premium.temPremium ? 'true' : 'false' %>"
+                            data-premium-duracao="<%= card.premium && card.premium.duracao ? card.premium.duracao : '' %>">
+                            
+                            <a href="/perfilnutri?id=<%= card.nutricionistaId %>" class="card-perfil">
+                                <section class="card-header card-header-home">
+                                    <section class="perfil-foto-container">
+                                        <img src="<%= card.imgPerfil %>" 
+                                             alt="<%= card.nome %>" 
+                                             onerror="this.src='imagens/foto_perfil.jpg'">
+                                    
+                                        <% if (card.premium && card.premium.temPremium) { %>
+                                            <section class="selo-premium-star-home">
+                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <circle cx="12" cy="12" r="11" fill="url(#goldGradientMobile<%= index %>)"/>
+                                                    <path d="M12 4L13.5 9H18.5L14.5 12L16 17L12 14L8 17L9.5 12L5.5 9H10.5L12 4Z"
+                                                        fill="white"
+                                                        stroke="white"
+                                                        stroke-width="0.5"/>
+                                                    <defs>
+                                                        <linearGradient id="goldGradientMobile<%= index %>" x1="0%" y1="0%" x2="100%" y2="100%">
+                                                            <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+                                                            <stop offset="100%" style="stop-color:#FFA500;stop-opacity:1" />
+                                                        </linearGradient>
+                                                    </defs>
+                                                </svg>
+                                            </section>
+                                        <% } %>
+                                    </section>
+                                    
+                                    <section>
+                                        <section class="name"><%= card.nome %></section>
+                                        <section class="profession">Nutrição <%= card.profissao %></section>
+                                    </section>
                                 </section>
+                            </a>
+                            
+                            <img src="<%= card.imgConteudo %>" 
+                                 alt="Publicação" 
+                                 class="content-img" 
+                                 onerror="this.src='imagens/placeholder-post.jpg'">
+                            
+                            <section class="card-content">
+                                <p class="caption"><%= card.legenda %></p>
                             </section>
-                        </a>
-                        <img src="imagens/img-post-kiwi.jpg" alt="Content" class="content-img">
-                        <section class="caption">Legenda...</section>
+                        </section>
+                    <% }); %>
+                <% } else { %>
+                    <section style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #666;">
+                        <p>Nenhuma publicação disponível no momento.</p>
                     </section>
-                    
-                    <section class="card"
-                        data-id="2"
-                        data-nome="Roberta"
-                        data-profissao="Nutricionista"
-                        data-imgperfil="imagens/profissional2.png"
-                        data-imgconteudo="imagens/img-post-whey.jpg"
-                        data-titulo="O USO DO WHEY NA ALIMENTAÇÃO"
-                        data-conteudo1="O whey protein é uma proteína de alto valor biológico, ideal para recuperação muscular."
-                        data-subtitulo1="SUPLEMENTAÇÃO EFICIENTE"
-                        data-conteudo2="Pode ser utilizado por praticantes de atividade física e também como complemento proteico na rotina alimentar."
-                        data-subtitulo2="VERSATILIDADE"
-                        data-conteudo3="Consulte um nutricionista para orientações sobre a dose adequada às suas necessidades.">
-
-                        <a href="/perfilnutri?id=2" class="card-perfil">
-                            <section class="card-header">
-                                <img src="imagens/profissional2.png" alt="Profile">
-                                <section>
-                                    <section class="name">Roberta</section>
-                                    <section class="profession">Nutricionista</section>
-                                </section>
-                            </section>
-                        </a>
-                        <img src="imagens/img-post-whey.jpg" alt="Content" class="content-img">
-                        <section class="caption">Legenda...</section>
-                    </section>
-    
-                    <section class="card"
-                        data-id="3"
-                        data-nome="Flávia"
-                        data-profissao="Nutricionista"
-                        data-imgperfil="imagens/profissional3.png"
-                        data-imgconteudo="imagens/img-post-frutas.jfif"
-                        data-titulo="A IMPORTÂNCIA DAS FRUTAS NA ALIMENTAÇÃO"
-                        data-conteudo1="Frutas fornecem vitaminas, minerais e fibras essenciais para o funcionamento do organismo."
-                        data-subtitulo1="VITALIDADE NATURAL"
-                        data-conteudo2="Consumir uma variedade de frutas diariamente ajuda na prevenção de doenças crônicas."
-                        data-subtitulo2="VARIEDADE É FUNDAMENTAL"
-                        data-conteudo3="Opte sempre por frutas da estação para garantir frescor, sabor e melhor custo-benefício.">
-
-                        <a href="/perfilnutri?id=3" class="card-perfil">
-                            <section class="card-header">
-                                <img src="imagens/profissional3.png" alt="Profile">
-                                <section>
-                                    <section class="name">Flávia</section>
-                                    <section class="profession">Nutricionista</section>
-                                </section>
-                            </section>
-                        </a>
-                        <img src="imagens/img-post-frutas.jfif" alt="Content" class="content-img">
-                        <section class="caption">Legenda...</section>
-                    </section>
-    
-                    <section class="card"
-                        data-id="4"
-                        data-nome="Pablo"
-                        data-profissao="Nutricionista"
-                        data-imgperfil="imagens/profissional4.png"
-                        data-imgconteudo="imagens/img-post-kiwi.jpg"
-                        data-titulo="O PODER DO KIWI NA NUTRIÇÃO"
-                        data-conteudo1="Fruta rica em nutrientes e sabor, o kiwi pode fazer parte de diversas refeições."
-                        data-subtitulo1="REFRESCANTE E NUTRITIVO"
-                        data-conteudo2="Seus antioxidantes contribuem para a prevenção de inflamações e o equilíbrio do corpo."
-                        data-subtitulo2="IMUNIDADE FORTALECIDA"
-                        data-conteudo3="Incluir frutas como o kiwi é uma forma simples de melhorar a saúde diariamente.">
-
-                        <a href="/perfilnutri?id=4" class="card-perfil">
-                            <section class="card-header">
-                                <img src="imagens/profissional4.png" alt="Profile">
-                                <section>
-                                    <section class="name">Pablo</section>
-                                    <section class="profession">Nutricionista</section>
-                                </section>
-                            </section>
-                        </a>
-                        <img src="imagens/img-post-kiwi.jpg" alt="Content" class="content-img">
-                        <section class="caption">Legenda...</section>
-                    </section>
-                </section>
-
+                <% } %>
+            
                 <section class="banner-card-meio">
                     <a href="/tiponutri"><img src="imagens/banner3.png" alt="BannerPatrocinio"/></a>
                 </section>
-
-                <button class="btn-verMais">
-                    Ver mais
-                    <svg class="seta-svg" width="25" height="25" viewBox="0 0 24 24" fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path d="M7 10l5 5 5-5" stroke="green" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </button>
             </section>
+            
             <footer class="footer">
                 <section class="footer-container">
     
@@ -1207,7 +1189,6 @@
         const headerUsuario = JSON.parse('<%- JSON.stringify(headerUsuario || { estaLogado: false }) %>');
     </script>
     <script src="js/comentarios.js"></script>
-    <!-- <script src="js/verMais.js"></script> -->
     <script src="js/carrossel.js"></script>
     <script src="js/carrosselperfis.js"></script>
     <script src="js/filtro.js"></script>

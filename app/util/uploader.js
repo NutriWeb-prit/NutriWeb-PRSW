@@ -2,6 +2,10 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
+// ============================================
+// STORAGE ORIGINAL (mantém como está)
+// ============================================
+
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const uploadDir = path.join(__dirname, '../public/uploads');
@@ -13,14 +17,12 @@ const storage = multer.diskStorage({
         cb(null, uploadDir);
     },
     filename: (req, file, cb) => {
-        
         const timestamp = Date.now();
         const randomNum = Math.floor(Math.random() * 10000);
         const ext = path.extname(file.originalname);
         const name = path.basename(file.originalname, ext);
         
         const cleanName = name.replace(/[^a-zA-Z0-9]/g, '_').substring(0, 20);
-        
         const filename = `${cleanName}-${timestamp}-${randomNum}${ext}`;
         
         console.log(`Arquivo será salvo como: ${filename}`);
@@ -47,6 +49,28 @@ const imageStorage = multer.diskStorage({
         const filename = `${cleanName}-${timestamp}-${randomNum}${ext}`;
         
         console.log(`Imagem será salva como: ${filename}`);
+        cb(null, filename);
+    }
+});
+
+const publicacaoStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        const uploadDir = path.join(__dirname, '../public/uploads/publicacoes');
+        
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir, { recursive: true });
+            console.log('📁 Diretório de publicações criado:', uploadDir);
+        }
+        
+        cb(null, uploadDir);
+    },
+    filename: (req, file, cb) => {
+        const timestamp = Date.now();
+        const randomNum = Math.floor(Math.random() * 10000);
+        const ext = path.extname(file.originalname);
+        const filename = `publicacao-${timestamp}-${randomNum}${ext}`;
+        
+        console.log(`📸 Publicação será salva como: ${filename}`);
         cb(null, filename);
     }
 });
@@ -96,6 +120,20 @@ const imageFileFilter = (req, file, cb) => {
     cb(new Error('Campo de arquivo não reconhecido'));
 };
 
+const publicacaoFileFilter = (req, file, cb) => {
+    console.log('Validando imagem de publicação:', file.originalname);
+    
+    const allowedTypes = /jpeg|jpg|png|gif|webp/;
+    const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = allowedTypes.test(file.mimetype);
+    
+    if (mimetype && extname) {
+        return cb(null, true);
+    } else {
+        return cb(new Error('Apenas imagens são permitidas (JPEG, PNG, GIF, WEBP)'));
+    }
+};
+
 const upload = multer({
     storage: storage, 
     limits: {
@@ -114,6 +152,15 @@ const uploadImagens = multer({
         fields: 10
     },
     fileFilter: imageFileFilter
+});
+
+const uploadPublicacao = multer({
+    storage: publicacaoStorage,
+    limits: {
+        fileSize: 5 * 1024 * 1024, // 5MB
+        files: 1
+    },
+    fileFilter: publicacaoFileFilter
 });
 
 const uploadWithErrorHandling = (req, res, next) => {
@@ -184,5 +231,31 @@ const uploadImagensWithErrorHandling = (req, res, next) => {
     });
 };
 
+const uploadPublicacaoWithErrorHandling = (req, res, next) => {
+    const uploadMiddleware = uploadPublicacao.single('imagem');
+    
+    uploadMiddleware(req, res, (err) => {
+        if (err) {
+            console.error('❌ Erro no upload da publicação:', err.message);
+            
+            let parametroErro = 'erro_criar_publicacao';
+            
+            if (err.code === 'LIMIT_FILE_SIZE') {
+                parametroErro = 'imagem_invalida';
+            } else if (err.message.includes('Apenas imagens')) {
+                parametroErro = 'imagem_invalida';
+            }
+            
+            return res.redirect(`/perfilnutri?erro=${parametroErro}`);
+        }
+        
+        console.log('✅ Upload de publicação processado com sucesso');
+        console.log('Arquivo recebido:', req.file ? req.file.filename : 'nenhum');
+        
+        next();
+    });
+};
+
 module.exports = uploadWithErrorHandling;
 module.exports.uploadImagens = uploadImagensWithErrorHandling;
+module.exports.uploadPublicacao = uploadPublicacaoWithErrorHandling; // NOVO

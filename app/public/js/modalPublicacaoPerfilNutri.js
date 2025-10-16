@@ -14,6 +14,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const modalDescription = document.querySelector('.modal-description-publicacao');
     const modalLink = document.querySelector('.card-perfil-modal');
 
+    const seloPremiumModal = document.getElementById('selo-premium-modal');
+
     const inputComentario = document.getElementById('input-comentario-publicacao');
     const btnEnviar = document.getElementById('btn-enviar-publicacao');
     const listaComentarios = document.getElementById('comentarios-lista-publicacao');
@@ -65,13 +67,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const nome = elemento.dataset.nome || 'Nutricionista';
             const profissao = elemento.dataset.profissao || 'Nutricionista';
             const id = elemento.dataset.id || '1';
-            const titulo = elemento.dataset.titulo || 'Publicação';
             const conteudo1 = elemento.dataset.conteudo1 || '';
-            const subtitulo1 = elemento.dataset.subtitulo1 || '';
-            const conteudo2 = elemento.dataset.conteudo2 || '';
-            const subtitulo2 = elemento.dataset.subtitulo2 || '';
-            const conteudo3 = elemento.dataset.conteudo3 || '';
-
+            
+            const temPremium = elemento.dataset.premium === 'true';
+            
             if (modalImg && imgConteudo) modalImg.src = imgConteudo;
             if (modalImgMobile && imgConteudo) modalImgMobile.src = imgConteudo;
             
@@ -80,15 +79,18 @@ document.addEventListener('DOMContentLoaded', function() {
             if (modalProfession) modalProfession.textContent = profissao;
             if (modalLink) modalLink.href = `/perfilnutri?id=${id}`;
 
+            if (seloPremiumModal) {
+                if (temPremium) {
+                    seloPremiumModal.style.display = 'flex';
+                } else {
+                    seloPremiumModal.style.display = 'none';
+                }
+            }
+
             if (modalDescription) {
                 let htmlContent = '';
                 
-                if (titulo) htmlContent += `<h2>${titulo}</h2>`;
                 if (conteudo1) htmlContent += `<p>${conteudo1}</p>`;
-                if (subtitulo1) htmlContent += `<h3>${subtitulo1}</h3>`;
-                if (conteudo2) htmlContent += `<p>${conteudo2}</p>`;
-                if (subtitulo2) htmlContent += `<h3>${subtitulo2}</h3>`;
-                if (conteudo3) htmlContent += `<p>${conteudo3}</p>`;
                 
                 modalDescription.innerHTML = htmlContent || '<p>Sem descrição disponível.</p>';
             }

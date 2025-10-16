@@ -356,14 +356,15 @@ main{
     background: rgba(0, 0, 0, 0.8);
     justify-content: center;
     align-items: center;
-    z-index: 3;
+    z-index: 4;
 }
 
 .modal-content-publicacao {
+    display: flex;
     background: white;
+    height: 80vh;
     width: 90%;
     max-width: 1200px;
-    display: flex;
     border-radius: 10px;
     position: relative;
 }
@@ -387,6 +388,14 @@ main{
     flex: 2;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+}
+
+.modal-card-publicacao-bottom {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 50%;
 }
 
 .container-card-header {
@@ -394,6 +403,35 @@ main{
     align-items: center;
     justify-content: space-between;
     padding: 20px 20px 10px 0;
+}
+
+.perfil-foto-container-modal {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: visible;
+    flex-shrink: 0;
+}
+
+.perfil-foto-container-modal img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.selo-premium-star-modal {
+    position: absolute;
+    bottom: -4px;
+    right: -4px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: pulseGlow 2s ease-in-out infinite;
+    z-index: 10;
 }
 
 .card-header-modal-publicacao {
@@ -422,7 +460,6 @@ main{
     border: 1px solid #ccc;
     border-radius: 20px;
     padding: 8px 12px;
-    /* margin: 20px auto;  */
     margin-right: 20px;
     margin-top: 20px;
     margin-bottom: 20px;
@@ -457,20 +494,19 @@ main{
     color: #0056b3;
 }
 
-.modal-description-publicacao h2,
-.modal-description-publicacao h3 {
-    color: green;
-    margin-top: 20px;
+.modal-description-publicacao {
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right:20px;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    white-space: normal;
+    padding-bottom: 8px;
 }
 
 .modal-description-publicacao p {
-    margin-top: 10px;
-}
-
-.modal-description-publicacao {
-    padding: 0 20px;
-    overflow-y: auto;
-    max-height: 300px;
+    font-size: 20px;
+    margin-top: 25px;
 }
 
 .modal-description-publicacao::-webkit-scrollbar {
@@ -522,13 +558,13 @@ main{
 }
 
 .comentarios-lista {
-    max-height: 150px;
+    max-height: 190px;
     overflow-y: auto;
     display: none;
     flex-direction: column;
     gap: 10px;
-    margin: 0 20px;
-    padding-right: 10px;
+    margin-right: 10px;
+    border-radius: 8px;
 }
 
 .comentarios-lista::-webkit-scrollbar {
@@ -1218,7 +1254,7 @@ main{
     border: none;
     border-left: 3px solid black; 
     padding: 10px;
-    height: 120px;
+    height: 250px;
     font-size: 14px;
     resize: none;
     outline: none;
@@ -1559,12 +1595,18 @@ main{
 }
 
 #container_foto {
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: flex-start;
     flex-direction: column;
     flex-shrink: 0;
     margin-top: -58px;
+}
+
+.perfil-foto-container-principal {
+    position: relative;
+    display: inline-block;
 }
 
 #container_foto a {
@@ -1577,6 +1619,7 @@ main{
 }   
 
 .foto_perfil {
+    display: block;
     width: 200px;
     height: 200px;
     border-radius: 50%;
@@ -1584,6 +1627,48 @@ main{
     border: 2px solid white;
     box-shadow: 0 8px 25px rgba(0,0,0,0.15);
     background-color: #f0f0f0;
+}
+
+.selo-premium-star-perfil {
+    position: absolute;
+    bottom: 5px;
+    right: 15px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: pulseGlow 2s ease-in-out infinite;
+    transform: scale(1.5)
+}
+
+/* Selo premium no perfil - quando é visitante */
+.selo-premium-star-perfil-visitor {
+    position: absolute;
+    bottom: 5px;
+    right: 15px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: pulseGlow 2s ease-in-out infinite;
+    transform: scale(1.5)
+}
+
+.perfil-foto-container-principal {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    overflow: visible;
+}
+
+.perfil-foto-container-principal .foto_perfil {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
 #infrmacoes_nutri {
@@ -2018,25 +2103,185 @@ footer {
         display: none;
     }
 
+    .modal-publicacao {
+        padding: 0;
+        overflow-y: auto;
+    }
+
+    .modal-content-publicacao {
+        width: 95%;
+        max-width: 95%;
+        height: auto;
+        max-height: 90vh;
+        overflow-y: auto;
+        flex-direction: column;
+        padding: 0;
+        margin: 20px auto;
+    }
+
+    .container-card-header {
+        position: relative;
+        padding: 15px;
+        background-color: white;
+        width: 100%;
+        border-radius: 10px 10px 0 0;
+        z-index: 10;
+        box-sizing: border-box;
+        margin: 0;
+    }
+
     .modal-image-mobile {
         display: block;
-        width: 90%;
-        margin-top: 100px;
-        
+        width: 100%;
+        height: 400px;
+        margin: 0;
+        padding: 0;
+        background-color: #000;
+        overflow: hidden;
     }
 
     .modal-image-mobile img {
         width: 100%;
-        height: auto;
-        border-radius: 10px;
+        height: 100%;
+        object-fit: contain;
+        border-radius: 0;
+        background-color: #000;
     }
 
-    .container-card-header {
-        position: fixed;
-        padding: 20px 20px 10px 10px;
-        background-color: white;
-        width: 79%;
-        border-radius: 10px 10px 0 0;
+    .modal-card-publicacao {
+        width: 100%;
+        flex: none;
+        padding: 0;
+    }
+
+    .modal-card-publicacao-top {
+        width: 100%;
+    }
+
+    .modal-description-publicacao {
+        max-height: none;
+        overflow-y: visible;
+        padding: 15px;
+        margin: 0;
+    }
+
+    .modal-description-publicacao p {
+        font-size: 16px;
+        margin: 10px 0;
+        line-height: 1.5;
+        word-wrap: break-word;
+    }
+
+    .btn-favorite-comment {
+        padding: 10px 15px;
+        display: flex;
+        justify-content: flex-start;
+        gap: 15px;
+    }
+
+    .btn-favorite, .btn-comment {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .modal-card-publicacao-bottom {
+        width: 100%;
+        height: auto;
+        flex-direction: column;
+    }
+
+    .modal-card-publicacao-bottom-top {
+        width: 100%;
+    }
+
+    .comentarios-lista {
+        max-height: 200px;
+        padding: 0 15px;
+        width: calc(100% - 30px);
+        display: flex;
+    }
+
+    #comentarios-lista-publicacao {
+        width: 100%;
+        padding: 0;
+    }
+
+    .sem-comentarios {
+        padding: 20px 15px;
+        margin: 0;
+    }
+
+    .container-comentarios {
+        width: calc(100% - 30px);
+        margin: 15px;
+        padding: 10px 15px;
+        box-sizing: border-box;
+    }
+
+    .container-comentarios input {
+        font-size: 15px;
+    }
+
+    .close-modal-publicacao {
+        font-size: 35px;
+        padding: 5px;
+        line-height: 1;
+    }
+
+    .perfil-foto-container-modal {
+        width: 45px;
+        height: 45px;
+    }
+
+    .card-header-modal-publicacao {
+        gap: 10px;
+    }
+
+    .card-header-modal-publicacao .name {
+        font-size: 16px;
+    }
+
+    .card-header-modal-publicacao .profession {
+        font-size: 13px;
+    }
+
+    .denunciar-opcao {
+        top: auto;
+        bottom: 100%;
+        right: 0;
+        margin-bottom: 5px;
+    }
+
+    .comentario-publicacao {
+        padding: 10px 0;
+    }
+
+    .foto-perfil {
+        width: 35px;
+        height: 35px;
+    }
+
+    .nome-usuario {
+        font-size: 14px;
+    }
+
+    .texto-comentario {
+        font-size: 14px;
+        padding-left: 45px;
+    }
+
+    .modal-content-publicacao::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .modal-content-publicacao::-webkit-scrollbar-thumb {
+        background-color: #4CAF50;
+        border-radius: 3px;
+    }
+
+    body.modal-aberto {
+        overflow: hidden;
+        height: 100vh;
     }
 
     #titulopubli{
@@ -2103,10 +2348,12 @@ footer {
     }
 
     .modal-content-publicacao {
+        width: 80%;
         height: 70%;
         overflow-y: auto;
         align-items: center;
         flex-direction: column;
+        padding: 20px;
     }
 
     .modal-card-publicacao {
@@ -2115,8 +2362,12 @@ footer {
     }
 
     .modal-description-publicacao {
-        overflow-y: none;
-        max-height: auto;
+        max-height: 200px;
+        overflow-y: auto;
+        padding: 15px;
+        margin: 0;
+        scrollbar-width: thin;
+        scrollbar-color: #4CAF50 #f1f1f1;
     }
 
     .modal-left {

@@ -102,17 +102,17 @@
                     <section id="rede_sociais">
                         <h4>Informações de Contato</h4>
                         <% if (cliente && cliente.telefone) { %>
-                            <p class="contato">
+                            <section class="contato">
                                 <img src="imagens/contato-whatsapp.png" alt="" class="icone_contato">
                                 <section id="whatsapp"><%= cliente.telefone %></section>
-                            </p>
+                            </section>
                         <% } %>
              
                         <% if (cliente && cliente.email) { %>
-                            <p class="contato">
+                            <section class="contato">
                                 <img src="imagens/contato-email.png" alt="" class="icone_contato">
                                 <section id="email"><%= cliente.email %></section>
-                            </p>
+                            </section>
                         <% } %>
                     </section>
              
@@ -149,80 +149,9 @@
                 <section id="avaliar_nutri">
                     <h1 id="tituloavaliacao">Avaliações</h1>
                     <section id="container-avaliacoes">
-                        <article class="avaliacao">
-                            <section class="nome_avaliador">
-                                <section id="nome">
-                                    <img src="imagens/profissional4.png" alt="avaliador">
-                                    <p class="nome-escrito" id="nome1">Pablo Parron</p>
-                                </section>
-                            </section>
-                            <p class="comentario" id="comentario1">
-                                Pablo Parron: Ele é ótimo em resolver problemas rapidamente, mas poderia melhorar na comunicação.
-                            </p>
-                            <section id="container-estrela">
-                                <img src="imagens/estrela-ativa.png" alt="">
-                                <img src="imagens/estrela-ativa.png" alt="">
-                                <img src="imagens/estrela-ativa.png" alt="">
-                                <img src="imagens/estrela-ativa.png" alt="">
-                                <img src="imagens/estrela.png" class="stay-desativada" alt="">
-                            </section>
-                        </article>
-                 
-                        <article class="avaliacao">
-                            <section class="nome_avaliador">
-                                <section id="nome">
-                                    <img src="imagens/profissional3.png" alt="avaliador">
-                                    <p class="nome-escrito" id="nome2">Flávia Flins</p>
-                                </section>
-
-                            </section>
-                            <p class="comentario" id="comentario2">
-                                Flávia Flins: Criativa e talentosa, sempre traz ideias novas para os projetos.
-                            </p>
-                            <section id="container-estrela">
-                                <img src="imagens/estrela-ativa.png" alt="">
-                                <img src="imagens/estrela-ativa.png" alt="">
-                                <img src="imagens/estrela-ativa.png" alt="">
-                                <img src="imagens/estrela-ativa.png" alt="">
-                                <img src="imagens/estrela.png" class="stay-desativada" alt="">
-                            </section>
-                        </article>
-                        <article class="avaliacao">
-                            <section class="nome_avaliador">
-                                <section id="nome">
-                                    <img src="imagens/profissional1.png" alt="avaliador">
-                                    <p class="nome-escrito" id="nome3">Julia Barros</p>
-                                </section>
-                            </section>
-                            <p class="comentario" id="comentario3">
-                                Julia Barros: Sempre disposta a ajudar, tem uma energia incrível e é super dedicada.
-                            </p>
-                            <section id="container-estrela">
-                                <img src="imagens/estrela-ativa.png" alt="">
-                                <img src="imagens/estrela-ativa.png" alt="">
-                                <img src="imagens/estrela-ativa.png" alt="">
-                                <img src="imagens/estrela-ativa.png" alt="">
-                                <img src="imagens/estrela.png" class="stay-desativada" alt="">
-                            </section>
-                        </article>
-                         <article class="avaliacao">
-                            <section class="nome_avaliador">
-                                <section id="nome">
-                                    <img src="imagens/profissional2.png" alt="avaliador">
-                                    <p class="nome-escrito" id="nome4">Roberta Santos</p>
-                                </section>
-                            </section>
-                            <p class="comentario" id="comentario4">
-                                Roberta Santos: Muito profissional, mas às vezes parece um pouco distante nas conversas.
-                            </p>
-                            <section id="container-estrela">
-                                <img src="imagens/estrela-ativa.png" alt="">
-                                <img src="imagens/estrela-ativa.png" alt="">
-                                <img src="imagens/estrela-ativa.png" alt="">
-                                <img src="imagens/estrela-ativa.png" alt="">
-                                <img src="imagens/estrela.png" class="stay-desativada" alt="">
-                            </section>
-                        </article>
+                        <section class="sem-avaliacoes">
+                            <p>Nenhum nutricionista avaliado ainda.</p>
+                        </section>
                     </section>
                 </section>
 

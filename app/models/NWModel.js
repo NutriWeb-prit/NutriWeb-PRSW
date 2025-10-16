@@ -906,6 +906,173 @@ const NWModel = {
         }
     },
 
+    findPublicacoesNutricionista: async (nutricionistaId) => {
+        try {
+            console.log("Buscando publicações do nutricionista ID:", nutricionistaId);
+            
+            const [publicacoes] = await pool.query(`
+                SELECT
+                    p.id as PublicacaoId,
+                    p.Legenda,
+                    p.Categoria,
+                    p.MediaEstrelas,
+                    p.CaminhoFoto,
+                    p.DataCriacao,
+                    
+                    u.id as UsuarioId,
+                    u.NomeCompleto,
+                    
+                    n.id as NutricionistaId,
+                    
+                    perf.CaminhoFotoPerfil as FotoPerfil,
+                    
+                    GROUP_CONCAT(DISTINCT esp.Nome SEPARATOR ', ') as Especializacoes
+                FROM Publicacoes p
+                
+                INNER JOIN NutricionistaPublicacao np ON p.id = np.PublicacaoId
+                INNER JOIN Nutricionistas n ON np.NutricionistaId = n.id
+                INNER JOIN Usuarios u ON n.UsuarioId = u.id
+                
+                LEFT JOIN Perfis perf ON u.id = perf.UsuarioId
+                LEFT JOIN NutricionistasEspecializacoes ne ON n.id = ne.NutricionistaId
+                LEFT JOIN Especializacoes esp ON ne.EspecializacaoId = esp.id
+                
+                WHERE n.id = ? AND u.UsuarioStatus = 1
+                
+                GROUP BY p.id, u.id, n.id, p.Legenda, p.Categoria, p.MediaEstrelas, 
+                         p.CaminhoFoto, p.DataCriacao, perf.CaminhoFotoPerfil
+                ORDER BY p.DataCriacao DESC
+                LIMIT 50
+            `, [nutricionistaId]);
+            
+            console.log(`Publicações encontradas para nutricionista ${nutricionistaId}:`, publicacoes.length);
+            
+            return publicacoes;
+            
+        } catch (error) {
+            console.error("Erro ao buscar publicações do nutricionista:", error.message);
+            throw error;
+        }
+    },
+
+    /* ---------------------------- PUBLICAÇÕES ---------------------------------*/
+
+    criarPublicacao: async (dadosPublicacao, nutricionistaId) => {
+        const conn = await pool.getConnection();
+        
+        try {
+            await conn.beginTransaction();
+
+            console.log('Criando publicação para nutricionista ID:', nutricionistaId);
+
+            const [publicacaoResult] = await conn.query(
+                `INSERT INTO Publicacoes (CaminhoFoto, Legenda, Categoria, UsuarioId) 
+                 VALUES (?, ?, ?, ?)`,
+                [
+                    dadosPublicacao.CaminhoFoto,
+                    dadosPublicacao.Legenda,
+                    dadosPublicacao.Categoria,
+                    dadosPublicacao.UsuarioId
+                ]
+            );
+            
+            const publicacaoId = publicacaoResult.insertId;
+
+            await conn.query(
+                `INSERT INTO NutricionistaPublicacao (NutricionistaId, PublicacaoId) 
+                 VALUES (?, ?)`,
+                [nutricionistaId, publicacaoId]
+            );
+
+            await conn.commit();
+            console.log('✅ Publicação criada com sucesso - ID:', publicacaoId);
+
+            return { publicacaoId, nutricionistaId };
+
+        } catch (error) {
+            await conn.rollback();
+            console.error('Erro ao criar publicação:', error.message);
+            throw error;
+        } finally {
+            conn.release();
+        }
+    },
+
+    verificarPropriedadePublicacao: async (publicacaoId, usuarioId) => {
+        try {
+            const [rows] = await pool.query(
+                `SELECT p.id 
+                 FROM Publicacoes p
+                 WHERE p.id = ? AND p.UsuarioId = ?`,
+                [publicacaoId, usuarioId]
+            );
+
+            return rows.length > 0;
+
+        } catch (error) {
+            console.error('Erro ao verificar propriedade da publicação:', error.message);
+            throw error;
+        }
+    },
+
+    buscarPublicacaoPorId: async (publicacaoId) => {
+        try {
+            const [rows] = await pool.query(
+                `SELECT 
+                    p.id as PublicacaoId,
+                    p.Legenda,
+                    p.Categoria,
+                    p.MediaEstrelas,
+                    p.CaminhoFoto,
+                    p.DataCriacao,
+                    u.id as UsuarioId,
+                    u.NomeCompleto,
+                    n.id as NutricionistaId,
+                    perf.CaminhoFotoPerfil as FotoPerfil,
+                    GROUP_CONCAT(DISTINCT esp.Nome SEPARATOR ', ') as Especializacoes
+                FROM Publicacoes p
+                INNER JOIN NutricionistaPublicacao np ON p.id = np.PublicacaoId
+                INNER JOIN Nutricionistas n ON np.NutricionistaId = n.id
+                INNER JOIN Usuarios u ON n.UsuarioId = u.id
+                LEFT JOIN Perfis perf ON u.id = perf.UsuarioId
+                LEFT JOIN NutricionistasEspecializacoes ne ON n.id = ne.NutricionistaId
+                LEFT JOIN Especializacoes esp ON ne.EspecializacaoId = esp.id
+                WHERE p.id = ? AND u.UsuarioStatus = 1
+                GROUP BY p.id, u.id, n.id, p.Legenda, p.Categoria, p.MediaEstrelas, 
+                         p.CaminhoFoto, p.DataCriacao, perf.CaminhoFotoPerfil`,
+                [publicacaoId]
+            );
+
+            if (rows.length === 0) {
+                return null;
+            }
+
+            const publicacao = rows[0];
+            
+            return {
+                id: publicacao.PublicacaoId,
+                legenda: publicacao.Legenda || '',
+                categoria: publicacao.Categoria,
+                mediaEstrelas: publicacao.MediaEstrelas || 0,
+                dataCriacao: publicacao.DataCriacao,
+                imgConteudo: publicacao.CaminhoFoto ? `/imagem/publicacao/${publicacao.PublicacaoId}` : null,
+                autor: {
+                    id: publicacao.UsuarioId,
+                    nutricionistaId: publicacao.NutricionistaId,
+                    nome: publicacao.NomeCompleto,
+                    fotoPerfil: publicacao.FotoPerfil ? `/imagem/perfil/${publicacao.UsuarioId}` : 'imagens/foto_perfil.jpg',
+                    profissao: publicacao.Especializacoes || 'Nutricionista'
+                }
+            };
+
+        } catch (error) {
+            console.error('Erro ao buscar publicação por ID:', error.message);
+            throw error;
+        }
+    },
+
+    /* ---------------------------- PUBLICAÇÕES ---------------------------------*/
+
     findPerfilCompleto: async (usuarioId) => {
         try {
             const [clienteResult] = await pool.query(

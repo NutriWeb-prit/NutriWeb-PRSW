@@ -44,6 +44,15 @@ router.get("/indexPerfilNutri",
     NWController.redirecionarParaMeuPerfil
 );
 
+router.post(
+    '/publicacao/criar',
+    verificarPermissao(['N']),
+    upload.uploadPublicacao, // Usa o middleware do seu uploader.js
+    NWController.validacaoPublicacao,
+    NWController.criarPublicacao
+);
+
+
 router.get("/config", async function (req, res) {
     if (!req.session.usuario || !req.session.usuario.id || !req.session.usuario.tipo) {
         return res.redirect('/login');

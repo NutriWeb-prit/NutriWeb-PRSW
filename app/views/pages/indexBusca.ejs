@@ -13,17 +13,13 @@
     <%- include('../partials/header.ejs') %>
 
     <section class="home-mobile">
-
         <section class="menu">
-
             <section class="left-section">
                 <a href="/"><img src="imagens/logo.png" alt="Logo" class="logo"></a>
             </section>
-
             <section class="right-section">
                 <section class="material-icons search-icon md-24 menu-icon">menu</section>
             </section>
-
         </section>
 
         <section class="mobile-menu hidden">
@@ -35,7 +31,6 @@
                 <li><a href="/login">Entrar</a></li>
             </ul>
         </section>
-
     </section>
 
     <main class="main-busca">
@@ -59,15 +54,36 @@
                                 <% resultados.publicacoes.forEach(pub => { %>
                                     <article class="item-publicacao">
                                         <section class="info-autor">
-                                            <% if (pub.autor.fotoPerfil) { %>
-                                                <img src="<%= pub.autor.fotoPerfil %>" 
-                                                     alt="<%= pub.autor.nome %>" 
-                                                     class="foto-autor">
-                                            <% } else { %>
-                                                <img src="imagens/foto_perfil.jpg" 
-                                                     alt="<%= pub.autor.nome %>" 
-                                                     class="foto-autor">
-                                            <% } %>
+                                            <section class="perfil-foto-container-busca">
+                                                <% if (pub.autor.fotoPerfil) { %>
+                                                    <img src="<%= pub.autor.fotoPerfil %>" 
+                                                         alt="<%= pub.autor.nome %>" 
+                                                         class="foto-autor">
+                                                <% } else { %>
+                                                    <img src="imagens/foto_perfil.jpg" 
+                                                         alt="<%= pub.autor.nome %>" 
+                                                         class="foto-autor">
+                                                <% } %>
+                                                
+                                                <% if (pub.autor.premium && pub.autor.premium.temPremium) { %>
+                                                    <section class="selo-premium-star-busca">
+                                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <circle cx="12" cy="12" r="11" fill="url(#goldGradientBusca<%= pub.id %>)"/>
+                                                            <path d="M12 4L13.5 9H18.5L14.5 12L16 17L12 14L8 17L9.5 12L5.5 9H10.5L12 4Z"
+                                                                fill="white"
+                                                                stroke="white"
+                                                                stroke-width="0.5"/>
+                                                            <defs>
+                                                                <linearGradient id="goldGradientBusca<%= pub.id %>" x1="0%" y1="0%" x2="100%" y2="100%">
+                                                                    <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+                                                                    <stop offset="100%" style="stop-color:#FFA500;stop-opacity:1" />
+                                                                </linearGradient>
+                                                            </defs>
+                                                        </svg>
+                                                    </section>
+                                                <% } %>
+                                            </section>
+                                            
                                             <section class="nome-autor">
                                                 <a href="/perfilnutri?id=<%= pub.autor.id %>"><%= pub.autor.nome %></a>
                                             </section>
@@ -86,8 +102,6 @@
                                             <% if (pub.temFoto) { %>
                                                 <section class="indicador-foto">Contém imagem</section>
                                             <% } %>
-                                            
-                                            <a href="<%= pub.url %>" class="link-ver-mais">Ver publicação completa →</a>
                                         </section>
                                     </article>
                                 <% }); %>
@@ -101,19 +115,39 @@
                             <section class="lista-nutricionistas">
                                 <% resultados.nutricionistas.forEach(nut => { %>
                                     <article class="item-nutricionista">
-                                        <% if (nut.fotoPerfil) { %>
-                                            <img src="<%= nut.fotoPerfil %>" 
-                                                 alt="<%= nut.nome %>" 
-                                                 class="foto-nutricionista">
-                                        <% } else if (nut.nutricionistaId >=0 && nut.nutricionistaId <= 36) { %>
-                                            <img src="imagens/profissional<%= nut.nutricionistaId %>.png" 
-                                                 alt="<%= nut.nome %>" 
-                                                 class="foto-nutricionista">
-                                        <% } else { %>
-                                            <img src="imagens/foto_perfil.jpg" 
-                                                 alt="<%= nut.nome %>" 
-                                                 class="foto-nutricionista">
-                                        <% } %>
+                                        <section class="perfil-foto-container-busca-nutri">
+                                            <% if (nut.fotoPerfil) { %>
+                                                <img src="<%= nut.fotoPerfil %>" 
+                                                     alt="<%= nut.nome %>" 
+                                                     class="foto-nutricionista">
+                                            <% } else if (nut.nutricionistaId >=0 && nut.nutricionistaId <= 36) { %>
+                                                <img src="imagens/profissional<%= nut.nutricionistaId %>.png" 
+                                                     alt="<%= nut.nome %>" 
+                                                     class="foto-nutricionista">
+                                            <% } else { %>
+                                                <img src="imagens/foto_perfil.jpg" 
+                                                     alt="<%= nut.nome %>" 
+                                                     class="foto-nutricionista">
+                                            <% } %>
+                                            
+                                            <% if (nut.premium && nut.premium.temPremium) { %>
+                                                <section class="selo-premium-star-busca-nutri">
+                                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <circle cx="12" cy="12" r="11" fill="url(#goldGradientNutri<%= nut.nutricionistaId %>)"/>
+                                                        <path d="M12 4L13.5 9H18.5L14.5 12L16 17L12 14L8 17L9.5 12L5.5 9H10.5L12 4Z"
+                                                            fill="white"
+                                                            stroke="white"
+                                                            stroke-width="0.5"/>
+                                                        <defs>
+                                                            <linearGradient id="goldGradientNutri<%= nut.nutricionistaId %>" x1="0%" y1="0%" x2="100%" y2="100%">
+                                                                <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+                                                                <stop offset="100%" style="stop-color:#FFA500;stop-opacity:1" />
+                                                            </linearGradient>
+                                                        </defs>
+                                                    </svg>
+                                                </section>
+                                            <% } %>
+                                        </section>
                                         
                                         <section class="info-nutricionista">
                                             <h3 class="nome-nutricionista">
@@ -176,7 +210,6 @@
 
     <footer class="footer-desktop">
         <section class="footer-container">
-
             <section class="footer-logo">
                 <a href="/"><img src="imagens/logo.png" alt="Logo" class="logo"></a>
                 <a href="/"><h3>NutriWeb</h3></a>

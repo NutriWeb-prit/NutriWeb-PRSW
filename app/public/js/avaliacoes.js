@@ -133,7 +133,7 @@ window.addEventListener('DOMContentLoaded', function() {
         if (!containerAvaliacoes) return;
         
         if (avaliacoes.length === 0) {
-            containerAvaliacoes.innerHTML = '<div class="sem-avaliacoes"><p>Seja o primeiro a avaliar!</p></div>';
+            containerAvaliacoes.innerHTML = '<section class="sem-avaliacoes"><p>Seja o primeiro a avaliar!</p></section>';
             removerBotaoCarregarMais();
             return;
         }
@@ -253,7 +253,7 @@ window.addEventListener('DOMContentLoaded', function() {
         }
         
         if (avaliacoes.length === 0) {
-            containerAvaliacoes.innerHTML = '<div class="sem-avaliacoes"><p>Seja o primeiro a avaliar!</p></div>';
+            containerAvaliacoes.innerHTML = '<section class="sem-avaliacoes"><p>Seja o primeiro a avaliar!</p></section>';
         } else {
             renderizarAvaliacoes();
         }

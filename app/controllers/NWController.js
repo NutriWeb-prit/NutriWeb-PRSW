@@ -1,4 +1,5 @@
 const NWModel = require("../models/NWModel");
+const pagamentoModel = require("../models/pagamentoModel")
 const {body, validationResult} = require("express-validator");
 
 const bcrypt = require('bcryptjs');
@@ -281,6 +282,16 @@ const NWController = {
         })
     ],
 
+    validacaoPublicacao: [
+        body("legenda")
+            .optional()
+            .isLength({max: 1000})
+            .withMessage("A legenda deve ter no máximo 1000 caracteres"),
+        body("categoria")
+            .isIn(['Dica', 'Receita'])
+            .withMessage("Categoria inválida. Escolha entre 'Dica' ou 'Receita'")
+    ],
+
     /* --------------------------------------- BUSCA ------------------------------------ */
 
     buscar: async (req, res) => {
@@ -289,7 +300,7 @@ const NWController = {
             
             console.log('=== BUSCA EXECUTADA ===');
             console.log('Termo recebido:', termo);
-
+            
             if (!termo) {
                 console.log('Sem termo - renderizando página inicial');
                 return res.render('pages/indexBusca', {
@@ -316,10 +327,40 @@ const NWController = {
                 nutricionistas: resultados.nutricionistas?.length || 0
             });
             
+            const publicacoesProcessadas = await Promise.all(
+                (resultados.publicacoes || []).map(async (pub) => {
+                    const premiumInfo = await pagamentoModel.verificarPremiumAtivo(pub.autor.nutricionistaId || pub.autor.id);
+                    
+                    return {
+                        ...pub,
+                        autor: {
+                            ...pub.autor,
+                            premium: premiumInfo
+                        }
+                    };
+                })
+            );
+            
+            const nutricionistasProcessados = await Promise.all(
+                (resultados.nutricionistas || []).map(async (nut) => {
+                    const premiumInfo = await pagamentoModel.verificarPremiumAtivo(nut.nutricionistaId);
+                    
+                    return {
+                        ...nut,
+                        premium: premiumInfo
+                    };
+                })
+            );
+            
+            console.log('Dados Premium processados:', {
+                publicacoesComPremium: publicacoesProcessadas.filter(p => p.autor.premium.temPremium).length,
+                nutricionistasComPremium: nutricionistasProcessados.filter(n => n.premium.temPremium).length
+            });
+    
             const dadosParaView = {
-                publicacoes: resultados.publicacoes || [],
-                nutricionistas: resultados.nutricionistas || [],
-                totalResultados: (resultados.publicacoes?.length || 0) + (resultados.nutricionistas?.length || 0)
+                publicacoes: publicacoesProcessadas,
+                nutricionistas: nutricionistasProcessados,
+                totalResultados: publicacoesProcessadas.length + nutricionistasProcessados.length
             };
     
             res.render('pages/indexBusca', {
@@ -509,6 +550,86 @@ const NWController = {
         }
     },
 
+    /* ---------------------------------- PUBLICAÇÕES ------------------------------------ */
+
+    criarPublicacao: async (req, res) => {
+        try {
+            if (!req.session.usuario || req.session.usuario.tipo !== 'N') {
+                return res.redirect('/login?erro=apenas_nutricionistas_publicacao');
+            }
+
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                console.log('Erros de validação:', errors.array());
+                return res.redirect('/perfilnutri?erro=dados_invalidos');
+            }
+
+            if (!req.file) {
+                return res.redirect('/perfilnutri?erro=imagem_obrigatoria');
+            }
+
+            const imagemValidada = validarImagemPublicacao(req.file);
+
+            const usuarioId = req.session.usuario.id;
+            
+            const nutricionistaId = await NWModel.findNutricionistaIdByUsuarioId(usuarioId);
+            
+            if (!nutricionistaId) {
+                return res.redirect('/perfilnutri?erro=nutricionista_nao_encontrado');
+            }
+
+            const dadosPublicacao = {
+                CaminhoFoto: imagemValidada,
+                Legenda: req.body.legenda || null,
+                Categoria: req.body.categoria,
+                UsuarioId: usuarioId
+            };
+
+            const resultado = await NWModel.criarPublicacao(dadosPublicacao, nutricionistaId);
+
+            console.log('Publicação criada com sucesso - ID:', resultado.publicacaoId);
+
+            return res.redirect('/perfilnutri?sucesso=publicacao_criada');
+
+        } catch (error) {
+            console.error('Erro ao criar publicação:', error.message);
+            
+            if (error.message.includes('muito grande') || error.message.includes('não suportado')) {
+                return res.redirect('/perfilnutri?erro=imagem_invalida');
+            }
+            
+            return res.redirect('/perfilnutri?erro=erro_criar_publicacao');
+        }
+    },
+
+    buscarPublicacao: async (req, res) => {
+        try {
+            const publicacaoId = req.params.id;
+
+            const publicacao = await NWModel.buscarPublicacaoPorId(publicacaoId);
+
+            if (!publicacao) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Publicação não encontrada'
+                });
+            }
+
+            return res.status(200).json({
+                success: true,
+                publicacao: publicacao
+            });
+
+        } catch (error) {
+            console.error('Erro ao buscar publicação:', error.message);
+            
+            return res.status(500).json({
+                success: false,
+                message: 'Erro interno do servidor. Tente novamente.'
+            });
+        }
+    },
+
     /* --------------------------------------- MÉTODOS ------------------------------------ */
 
     processarLogin: (req, res) => {
@@ -626,31 +747,43 @@ const NWController = {
     mostrarHome: async (req, res) => {
         try {
             console.log("Buscando publicações do banco...");
+            
             const publicacoes = await NWModel.buscarPublicacoes();
             
-            const publicacoesProcessadas = publicacoes.map(pub => {
-                const legenda = pub.Legenda || 'Sem legenda disponível';
-                
-                console.log('Processando publicação:', {
-                    id: pub.PublicacaoId,
-                    legenda: legenda.substring(0, 50) + '...'
-                });
-                
-                return {
-                    id: pub.PublicacaoId || pub.id,
-                    nutricionistaId: pub.NutricionistaId,
-                    nome: pub.NomeCompleto,
-                    profissao: pub.Especializacoes || 'Nutrição',
-                    imgPerfil: pub.FotoPerfil ? `/imagem/perfil/${pub.UsuarioId}` : 'imagens/foto_perfil.jpg',
-                    imgConteudo: pub.CaminhoFoto || 'imagens/placeholder-post.jpg',
-                    legenda: legenda,
-                    categoria: pub.Categoria || 'Nutrição',
-                    mediaEstrelas: pub.MediaEstrelas || 5,
-                    dataPublicacao: pub.DataPublicacao || pub.DataCriacao || new Date().toISOString()
-                };
-            });
+            const publicacoesProcessadas = await Promise.all(
+                publicacoes.map(async (pub) => {
+                    const legenda = pub.Legenda || 'Sem legenda disponível';
+                    
+                    const premiumInfo = await pagamentoModel.verificarPremiumAtivo(pub.NutricionistaId);
+                    
+                    console.log('Processando publicação:', {
+                        id: pub.PublicacaoId,
+                        nutricionistaId: pub.NutricionistaId,
+                        temPremium: premiumInfo.temPremium,
+                        legenda: legenda.substring(0, 50) + '...'
+                    });
+                    
+                    // Usar caminho direto da foto igual à busca
+                    const fotoPerfil = pub.FotoPerfil || 'imagens/foto_perfil.jpg';
+                    
+                    return {
+                        id: pub.PublicacaoId || pub.id,
+                        nutricionistaId: pub.NutricionistaId,
+                        usuarioId: pub.UsuarioId,
+                        nome: pub.NomeCompleto,
+                        profissao: pub.Especializacoes || 'Nutrição',
+                        imgPerfil: fotoPerfil,
+                        imgConteudo: pub.CaminhoFoto || 'imagens/placeholder-post.jpg',
+                        legenda: legenda,
+                        categoria: pub.Categoria || 'Nutrição',
+                        mediaEstrelas: pub.MediaEstrelas || 5,
+                        dataPublicacao: pub.DataPublicacao || pub.DataCriacao || new Date().toISOString(),
+                        premium: premiumInfo
+                    };
+                })
+            );
             
-            console.log(`${publicacoesProcessadas.length} publicações carregadas`);
+            console.log(`${publicacoesProcessadas.length} publicações carregadas com informações de Premium`);
             
             return res.render('pages/indexHome', {
                 publicacoes: publicacoesProcessadas,
@@ -753,18 +886,19 @@ const NWController = {
     mostrarPerfilNutricionista: async (req, res) => {
         try {
             let usuarioId = null;
+            let nutricionistaId = null;
             let isOwner = false;
             
             const usuarioLogado = req.session.usuario && req.session.usuario.logado;
             
             if (req.query.id) {
-                const nutricionistaIdPublico = parseInt(req.query.id);
+                nutricionistaId = parseInt(req.query.id);
                 
-                if (isNaN(nutricionistaIdPublico) || nutricionistaIdPublico < 1) {
+                if (isNaN(nutricionistaId) || nutricionistaId < 1) {
                     return res.redirect('/?erro=nutricionista_nao_encontrado');
                 }
                 
-                usuarioId = await NWModel.findUsuarioIdByNutricionistaId(nutricionistaIdPublico);
+                usuarioId = await NWModel.findUsuarioIdByNutricionistaId(nutricionistaId);
                 
                 if (!usuarioId) {
                     return res.redirect('/?erro=nutricionista_nao_encontrado');
@@ -774,17 +908,23 @@ const NWController = {
                 
                 if (usuarioLogado && req.session.usuario.tipo === 'N' && req.session.usuario.id === usuarioId) {
                     isOwner = true;
-                    console.log("É o dono do perfil");
+                    console.log("✅ É o dono do perfil");
                 }
             } 
             else {
                 if (!usuarioLogado || req.session.usuario.tipo !== 'N') {
                     return res.redirect('/login?erro=acesso_negado');
                 }
+                
                 usuarioId = req.session.usuario.id;
                 isOwner = true;
+                
+                nutricionistaId = await NWModel.findNutricionistaIdByUsuarioId(usuarioId);
+                
+                if (!nutricionistaId) {
+                    return res.redirect('/?erro=nutricionista_nao_encontrado');
+                }
             }
-            
             
             const dadosBasicos = await NWModel.findPerfilNutri(usuarioId);
             
@@ -793,9 +933,36 @@ const NWController = {
             }
             
             const { nutricionista, formacoes, contatosSociais } = dadosBasicos;
-
+    
+            const premiumInfo = await pagamentoModel.verificarPremiumAtivo(nutricionistaId);
+            console.log("🌟 Status Premium:", premiumInfo);
+    
+            let publicacoes = [];
+            try {
+                const publicacoesRaw = await NWModel.findPublicacoesNutricionista(nutricionistaId);
+                
+                publicacoes = publicacoesRaw.map(pub => ({
+                    id: pub.PublicacaoId,
+                    legenda: pub.Legenda || '',
+                    categoria: pub.Categoria,
+                    mediaEstrelas: pub.MediaEstrelas || 0,
+                    dataCriacao: pub.DataCriacao,
+                    imgConteudo: pub.CaminhoFoto,
+                    nome: pub.NomeCompleto,
+                    nutricionistaId: pub.NutricionistaId,
+                    // CORRIGIDO: Usar caminho direto
+                    imgPerfil: pub.FotoPerfil || 'imagens/foto_perfil.jpg',
+                    profissao: pub.Especializacoes || 'Geral'
+                }));
+                
+                console.log(`✅ ${publicacoes.length} publicações carregadas`);
+            } catch (erroPublicacoes) {
+                console.error("⚠️ Erro ao carregar publicações:", erroPublicacoes);
+            }
+    
             const dadosProcessados = {
-                id: nutricionista.id,
+                id: nutricionista.NutricionistaId,
+                usuarioId: nutricionista.id,
                 nome: nutricionista.NomeCompleto,
                 email: nutricionista.Email,
                 telefone: nutricionista.Telefone ? 
@@ -805,13 +972,12 @@ const NWController = {
                 sobreMim: nutricionista.SobreMim || "Este nutricionista ainda não adicionou uma descrição.",
                 especializacoes: nutricionista.Especializacoes || "Nenhuma especialização cadastrada",
                 
-                fotoPerfil: nutricionista.FotoPerfil ? 
-                    `/imagem/perfil/${usuarioId}` : 
-                    '/imagens/foto_perfil.jpg',
+                // CORRIGIDO: Usar caminhos diretos
+                fotoPerfil: nutricionista.FotoPerfil || 'imagens/foto_perfil.jpg',
+                fotoBanner: nutricionista.FotoBanner || 'imagens/bannerperfilnutri.png',
                 
-                fotoBanner: nutricionista.FotoBanner ? 
-                    `/imagem/banner/${usuarioId}` : 
-                    '/imagens/bannerperfilnutri.png'
+                // Adiciona informações de Premium
+                premium: premiumInfo
             };
             
             const formacoesProcessadas = formacoes.map(formacao => ({
@@ -828,16 +994,31 @@ const NWController = {
                 return acc;
             }, {});
             
+            console.log("✅ Dados completos do perfil:", {
+                nutricionistaId: dadosProcessados.id,
+                usuarioId: dadosProcessados.usuarioId,
+                nome: dadosProcessados.nome,
+                isOwner: isOwner,
+                quantidadePublicacoes: publicacoes.length,
+                temFotoPerfil: !!nutricionista.FotoPerfil,
+                temFotoBanner: !!nutricionista.FotoBanner,
+                temPremium: premiumInfo.temPremium,
+                fotoPerfil: dadosProcessados.fotoPerfil,
+                fotoBanner: dadosProcessados.fotoBanner
+            });
+            
             return res.render("pages/indexPerfilNutri", {
                 erro: null,
                 nutricionista: dadosProcessados,
                 formacoes: formacoesProcessadas,
                 contatosSociais: contatosProcessados,
                 isOwner: isOwner,
+                publicacoes: publicacoes,
                 usuarioLogado: usuarioLogado
             });
             
         } catch (erro) {
+            console.error("❌ Erro ao carregar perfil do nutricionista:", erro);
             return res.redirect('/?erro=erro_interno');
         }
     },
@@ -1215,6 +1396,36 @@ function validarArquivosNutricionista(req) {
             'certificado de curso'
         )
     };
+}
+
+function validarImagemPublicacao(arquivo) {
+    if (!arquivo) {
+        throw new Error('Imagem é obrigatória');
+    }
+    
+    console.log('✅ Validando imagem de publicação:', {
+        originalname: arquivo.originalname,
+        filename: arquivo.filename,
+        size: arquivo.size,
+        mimetype: arquivo.mimetype,
+        path: arquivo.path
+    });
+    
+    if (arquivo.size > 5 * 1024 * 1024) {
+        throw new Error('Imagem muito grande. Máximo: 5MB');
+    }
+    
+    const tiposPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+    if (!tiposPermitidos.includes(arquivo.mimetype)) {
+        throw new Error('Formato não suportado');
+    }
+    
+    const caminhoRelativo = arquivo.path
+        .replace(/\\/g, '/')
+        .split('public/')[1];
+    
+    console.log('✅ Caminho relativo da publicação:', caminhoRelativo);
+    return caminhoRelativo;
 }
 
 module.exports = NWController;
