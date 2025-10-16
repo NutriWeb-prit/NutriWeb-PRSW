@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     const modal = document.getElementById('modal');
-    const btnNovaPublicacao = document.getElementById('novapublicacao'); // Botão que abre o modal
+    const btnNovaPublicacao = document.getElementById('novapublicacao');
     const fecharModal = document.getElementById('fecharModal');
     const inputImagem = document.getElementById('input-imagem');
     const previewImage = document.getElementById('preview-image');

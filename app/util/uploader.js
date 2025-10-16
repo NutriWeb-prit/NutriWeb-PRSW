@@ -320,7 +320,6 @@ const uploadPublicacaoWithErrorHandling = (req, res, next) => {
                 mensagemErro = err.message;
             }
             
-            // Buscar dados do usuário para reexibir o formulário
             const NWModel = require("../models/NWModel");
             const usuario = await NWModel.findId(req.body.id);
             

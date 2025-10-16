@@ -783,7 +783,6 @@ const NWController = {
                         legenda: legenda.substring(0, 50) + '...'
                     });
                     
-                    // Usar caminho direto da foto igual à busca
                     const fotoPerfil = pub.FotoPerfil || 'imagens/foto_perfil.jpg';
                     
                     return {
@@ -970,7 +969,6 @@ const NWController = {
                     imgConteudo: pub.CaminhoFoto,
                     nome: pub.NomeCompleto,
                     nutricionistaId: pub.NutricionistaId,
-                    // CORRIGIDO: Usar caminho direto
                     imgPerfil: pub.FotoPerfil || 'imagens/foto_perfil.jpg',
                     profissao: pub.Especializacoes || 'Geral'
                 }));
@@ -992,11 +990,9 @@ const NWController = {
                 sobreMim: nutricionista.SobreMim || "Este nutricionista ainda não adicionou uma descrição.",
                 especializacoes: nutricionista.Especializacoes || "Nenhuma especialização cadastrada",
                 
-                // CORRIGIDO: Usar caminhos diretos
                 fotoPerfil: nutricionista.FotoPerfil || 'imagens/foto_perfil.jpg',
                 fotoBanner: nutricionista.FotoBanner || 'imagens/bannerperfilnutri.png',
                 
-                // Adiciona informações de Premium
                 premium: premiumInfo
             };
             

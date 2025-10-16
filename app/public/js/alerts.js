@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', function() {
             erro: {
                 param: 'erro',
                 mensagens: {
-                    // Erros de sistema
                     'nutricionista_nao_encontrado': 'Nutricionista não encontrado.',
                     'acesso_negado': 'Acesso negado. Faça login.',
                     'nutricionista_sem_dados': 'Nutricionista não possui dados cadastrados.',
@@ -16,14 +15,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     'logout': 'Erro ao fazer logout.',
                     'nenhuma_imagem': 'Nenhuma imagem foi selecionada.',
                     'nenhum_dado_alterado': 'Nenhum dado foi alterado.',
-                    
-                    // Erros de autenticação
                     'token_ausente': 'Link de recuperação inválido.',
                     'token_invalido': 'Link expirado ou inválido. Solicite um novo link.',
                     'erro_envio': 'Erro ao enviar email. Tente novamente.',
                     'erro_redefinir': 'Erro ao redefinir senha. Tente novamente.',
-                    
-                    // Erros de pagamento
                     'transacao_nao_encontrada': 'Transação não encontrada. Tente novamente.',
                     'processamento': 'Erro ao processar pagamento. Tente novamente.',
                     'plano_ativo': 'Você já possui um plano ativo.',
@@ -32,8 +27,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     'pagamento_recusado': 'Pagamento recusado. Verifique os dados e tente novamente.',
                     'pagamento_cancelado': 'Pagamento cancelado pelo usuário.',
                     'erro_mercadopago': 'Erro ao conectar com Mercado Pago. Tente novamente.',
-                    
-                    // Erros de publicação - NOVO
                     'apenas_nutricionistas_publicacao': 'Apenas nutricionistas podem criar publicações.',
                     'imagem_obrigatoria': 'A imagem é obrigatória para criar uma publicação.',
                     'imagem_invalida': 'Formato de imagem inválido. Use: JPEG, PNG, GIF ou WEBP (máx. 5MB).',
@@ -47,17 +40,12 @@ document.addEventListener('DOMContentLoaded', function() {
             sucesso: {
                 param: 'sucesso',
                 mensagens: {
-                    // Sucessos de sistema
                     'dados_atualizados': 'Dados atualizados com sucesso!',
                     'imagens_atualizadas': 'Imagens atualizadas com sucesso!',
                     'email_enviado': 'Email enviado! Verifique sua caixa de entrada e spam.',
                     'senha_alterada': 'Senha alterada com sucesso! Faça login com sua nova senha.',
-                    
-                    // Sucessos de pagamento
                     'assinatura_confirmada': '🎉 Assinatura Premium ativada! Bem-vindo(a)!',
                     'pagamento_processando': 'Pagamento em processamento. Você receberá confirmação em breve.',
-                    
-                    // Sucessos de publicação - NOVO
                     'publicacao_criada': '✅ Publicação criada com sucesso!',
                     'publicacao_atualizada': '✅ Publicação atualizada com sucesso!',
                     'publicacao_excluida': '✅ Publicação excluída com sucesso!'

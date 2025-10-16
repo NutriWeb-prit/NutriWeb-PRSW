@@ -39,7 +39,6 @@ const NWModel = {
         }
     },
 
-    // Query findId - Atualizada para incluir caminho da foto
     findId: async (id) => {
         try {
         const [resultado] = await pool.query(
@@ -80,7 +79,6 @@ const NWModel = {
 
         const usuario = resultado[0];
         
-        // Buscar dados específicos de nutricionista
         if (usuario.UsuarioTipo === 'N') {
             const [nutriData] = await pool.query(
                 `SELECT Crn, RazaoSocial FROM Nutricionistas WHERE UsuarioId = ?`,
@@ -92,7 +90,6 @@ const NWModel = {
                 usuario.RazaoSocial = nutriData[0].RazaoSocial;
             }
             
-            // Buscar SobreMim do perfil
             const [perfilData] = await pool.query(
                 `SELECT SobreMim FROM Perfis WHERE UsuarioId = ?`,
                 [id]
@@ -103,7 +100,6 @@ const NWModel = {
             }
         }
         
-        // Buscar dados específicos de cliente
         if (usuario.UsuarioTipo === 'C') {
             const [clientData] = await pool.query(
                 `SELECT CPF FROM Clientes WHERE UsuarioId = ?`,
@@ -166,7 +162,6 @@ const NWModel = {
 
         console.log("Iniciando transação de atualização - Usuário ID:", usuarioId);
 
-        // Atualizar dados gerais do usuário
         const camposUsuario = Object.keys(dadosAtualizacao)
             .map(campo => `${campo} = ?`)
             .join(', ');
@@ -223,7 +218,6 @@ const NWModel = {
                 console.log("✓ Dados do nutricionista atualizados");
             }
 
-            // Atualizar SobreMim no perfil
             if (dadosEspecificos.SobreMim !== undefined) {
                 const [perfilExistente] = await conn.query(
                     'SELECT id FROM Perfis WHERE UsuarioId = ?',
