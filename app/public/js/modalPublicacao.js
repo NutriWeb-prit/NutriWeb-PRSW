@@ -1,7 +1,4 @@
-// Script para o modal de publicação
 document.addEventListener('DOMContentLoaded', function() {
-    
-    // Elementos do modal
     const modal = document.getElementById('modal');
     const btnNovaPublicacao = document.getElementById('novapublicacao'); // Botão que abre o modal
     const fecharModal = document.getElementById('fecharModal');
@@ -12,10 +9,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const charCount = document.getElementById('char-count');
     const btnPostar = document.querySelector('.btn-postar');
 
-    // Elementos de categoria (adicione ao HTML)
     let selectCategoria = document.getElementById('categoria');
     
-    // Se não existir, criar dinamicamente
     if (!selectCategoria && legendaTextarea) {
         const categoriaContainer = document.createElement('section');
         categoriaContainer.className = 'categoria-container';
@@ -40,10 +35,8 @@ document.addEventListener('DOMContentLoaded', function() {
         selectCategoria = document.getElementById('categoria');
     }
 
-    // Estado da publicação
     let imagemSelecionada = null;
 
-    // Abrir modal
     if (btnNovaPublicacao) {
         btnNovaPublicacao.addEventListener('click', function(e) {
             e.preventDefault();
@@ -51,12 +44,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Fechar modal
     if (fecharModal) {
         fecharModal.addEventListener('click', fecharModalFunc);
     }
 
-    // Fechar ao clicar fora
     if (modal) {
         modal.addEventListener('click', function(e) {
             if (e.target === modal) {
@@ -65,20 +56,17 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Preview da imagem
     if (inputImagem) {
         inputImagem.addEventListener('change', function(e) {
             const arquivo = e.target.files[0];
             
             if (arquivo) {
-                // Validar tamanho
                 if (arquivo.size > 5 * 1024 * 1024) {
                     mostrarNotificacao('Imagem muito grande. Máximo: 5MB');
                     inputImagem.value = '';
                     return;
                 }
 
-                // Validar tipo
                 const tiposPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
                 if (!tiposPermitidos.includes(arquivo.type)) {
                     mostrarNotificacao('Formato não suportado. Use: JPEG, PNG, GIF ou WEBP');
@@ -86,7 +74,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
 
-                // Criar preview
                 const reader = new FileReader();
                 reader.onload = function(event) {
                     previewImage.src = event.target.result;
@@ -101,7 +88,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Contador de caracteres
     if (legendaTextarea) {
         legendaTextarea.addEventListener('input', function() {
             const count = this.value.length;
@@ -118,7 +104,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Postar publicação
     if (btnPostar) {
         btnPostar.addEventListener('click', async function(e) {
             e.preventDefault();
@@ -126,7 +111,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Funções auxiliares
     function abrirModal() {
         if (modal) {
             modal.style.display = 'flex';
@@ -155,7 +139,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     async function publicarPost() {
-        // Validações
         if (!imagemSelecionada) {
             mostrarNotificacao('Por favor, selecione uma imagem');
             return;
@@ -173,31 +156,25 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // Desabilitar botão
         btnPostar.disabled = true;
         btnPostar.textContent = 'Publicando...';
 
         try {
-            // Criar FormData
             const formData = new FormData();
             formData.append('imagem', imagemSelecionada);
             formData.append('legenda', legenda);
             formData.append('categoria', selectCategoria.value);
 
-            // Enviar para o servidor
             const response = await fetch('/publicacao/criar', {
                 method: 'POST',
                 body: formData
             });
 
             if (response.redirected) {
-                // Servidor redirecionou, seguir o redirect
                 window.location.href = response.url;
             } else if (response.ok) {
-                // Sucesso (caso retorne JSON)
                 window.location.href = '/perfilnutri?sucesso=publicacao_criada';
             } else {
-                // Erro
                 window.location.href = '/perfilnutri?erro=erro_criar_publicacao';
             }
 
@@ -210,7 +187,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Função global de notificação
 function mostrarNotificacao(mensagem, delay = 0) {
     setTimeout(() => {
         alert(mensagem);
