@@ -30,11 +30,11 @@ class EmailService {
                         </style>
                     </head>
                     <body>
-                        <div class="container">
-                            <div class="header">
+                        <section class="container">
+                            <section class="header">
                                 <h1>NutriWeb</h1>
-                            </div>
-                            <div class="content">
+                            </section>
+                            <section class="content">
                                 <h2>Olá, ${nomeUsuario}!</h2>
                                 <p>Recebemos uma solicitação para redefinir a senha da sua conta.</p>
                                 
@@ -44,18 +44,18 @@ class EmailService {
                                     </a>
                                 </center>
                                 
-                                <div class="warning">
+                                <section class="warning">
                                     <strong>Importante:</strong>
                                     <ul>
                                         <li>Este link expira em <strong>1 hora</strong></li>
                                         <li>Se você não solicitou, ignore este email</li>
                                     </ul>
-                                </div>
-                            </div>
-                            <div class="footer">
+                                </section>
+                            </section>
+                            <section class="footer">
                                 <p>&copy; 2025 NutriWeb. Todos os direitos reservados.</p>
-                            </div>
-                        </div>
+                            </section>
+                        </section>
                     </body>
                     </html>
                 `,
